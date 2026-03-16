@@ -1,0 +1,76 @@
+<mxfile host="65bd71144e">
+    <diagram id="AzureStorageRedundancy" name="Azure Storage Hierarchy">
+        <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                
+                <!-- REGION 1 (PRIMARY) -->
+                <mxCell id="primary_region" value="PRIMARY REGION" style="swimlane;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;fillColor=none;strokeColor=#0078D4;fontStyle=1;fontSize=14;horizontal=1;startSize=40;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="80" width="880" height="480" as="geometry"/>
+                </mxCell>
+
+                <!-- LRS Components -->
+                <mxCell id="lrs_box" value="LRS (Locally Redundant Storage)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;startSize=30;" vertex="1" parent="primary_region">
+                    <mxGeometry x="40" y="80" width="220" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="dc1" value="Data Center 1&#10;(3 Copies of Data)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="lrs_box">
+                    <mxGeometry x="30" y="50" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="dc2" value="Data Center 2&#10;(3 Copies of Data)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="lrs_box">
+                    <mxGeometry x="30" y="140" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="dc3" value="Data Center 3&#10;(3 Copies of Data)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="lrs_box">
+                    <mxGeometry x="30" y="230" width="160" height="60" as="geometry"/>
+                </mxCell>
+
+                <!-- ZRS Boundary -->
+                <mxCell id="zrs_box" value="ZRS (Zone Redundant Storage)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#d79b00;strokeWidth=3;dashed=1;verticalAlign=bottom;fontStyle=1;fontColor=#d79b00;" vertex="1" parent="primary_region">
+                    <mxGeometry x="20" y="60" width="840" height="380" as="geometry"/>
+                </mxCell>
+
+                <!-- Availability Zones -->
+                <mxCell id="az1" value="Availability Zone 1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="primary_region">
+                    <mxGeometry x="40" y="420" width="220" height="30" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="az2_box" value="Availability Zone 2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="primary_region">
+                    <mxGeometry x="330" y="80" width="220" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="az3_box" value="Availability Zone 3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="primary_region">
+                    <mxGeometry x="620" y="80" width="220" height="340" as="geometry"/>
+                </mxCell>
+
+                <!-- Replication Arrows for ZRS -->
+                <mxCell id="sync_rep1" value="Synchronous Replication" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;strokeWidth=2;fontColor=#d79b00;" edge="1" parent="primary_region" source="lrs_box" target="az2_box">
+                    <mxGeometry y="20" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="sync_rep2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;strokeWidth=2;" edge="1" parent="primary_region" source="az2_box" target="az3_box">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+                <!-- REGION 2 (SECONDARY) -->
+                <mxCell id="secondary_region" value="SECONDARY REGION" style="swimlane;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;fillColor=none;strokeColor=#B20000;fontStyle=1;fontSize=14;startSize=40;" vertex="1" parent="1">
+                    <mxGeometry x="1100" y="80" width="300" height="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="lrs_secondary" value="LRS (3 Copies)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="secondary_region">
+                    <mxGeometry x="50" y="190" width="200" height="120" as="geometry"/>
+                </mxCell>
+
+                <!-- GEO REPLICATION ARROWS -->
+                <mxCell id="grs_arrow" value="GRS / GZRS&#10;(Asynchronous Geo-Replication)" style="edgeStyle=elbowEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=4;strokeColor=#6600CC;fontSize=14;fontColor=#6600CC;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="zrs_box" target="lrs_secondary">
+                    <mxGeometry x="0.1" y="30" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+
+                <!-- LEGEND / ANNOTATIONS -->
+                <mxCell id="gzrs_label" value="GZRS = ZRS in Primary + LRS in Secondary" style="text;html=1;strokeColor=#6600CC;fillColor=#ffffff;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontStyle=1;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="940" y="480" width="140" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

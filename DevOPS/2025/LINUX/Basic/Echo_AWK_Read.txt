@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "$(date)"
+echo "sudo mkdir shell"
+echo -e "\n................................................. \nDisk Information :\n............................................ \n$(df -h)"
+echo -e "\n................................................. \nRAM Information :\n............................................. \n$(free -h)"
+echo "........................................."
+echo "FREE disk is $(df -h | awk 'NR==3 {print $2}')"
+echo "........................................."
+echo "FREE RAM is $(free -h | awk 'NR==2 {print $4}')"
+rank=1
+echo "rank is $rank"
+echo "read command will prompt value of rank as character so that is why there is no dollar"
+read -p "who won the T20 World Cup 2024(Only Capital words): " i
+
+if [[ $i == INDIA ]] ; then
+
+        echo "HURRAY!!!"
+elif [[ $i != INDIA ]]; then
+
+        echo "OH NO !!!"
+
+fi

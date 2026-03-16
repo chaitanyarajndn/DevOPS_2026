@@ -1,0 +1,65 @@
+
+
+								★━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━★
+							  🌟 Internet Information Services 🌟
+								★━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━★
+
+
+
+cHECK IF IIS INSTALLED ON WINDOWS:
+══════════════════════════════════════
+
+
+C:\Windows\System32>reg query HKLM\SOFTWARE\Microsoft\InetStp /v VersionString
+ERROR: The system was unable to find the specified registry key or value.
+
+C:\Windows\System32>reg query HKLM\SOFTWARE\Microsoft\InetStp /v VersionString
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\InetStp
+    VersionString    REG_SZ    Version 10.0
+
+
+C:\Windows\System32>
+C:\Windows\System32>
+C:\Windows\System32>
+
+
+
+
+
+Installing IIS on Windows 11
+══════════════════════════════════════
+
+
+
+Click on the Start menu and type Control Panel in the search bar. Select Control Panel from the results.
+
+In the Control Panel, click on Programs.
+
+Select Turn Windows features on or off under the Programs and Features section.
+
+Scroll down the list and locate Internet Information Services (IIS).
+
+Check the box next to Internet Information Services. To enable additional features, expand the IIS tree and select the desired components.
+
+Click OK to apply the changes. Windows will install the necessary files.
+
+Restart your computer when prompted to complete the installation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

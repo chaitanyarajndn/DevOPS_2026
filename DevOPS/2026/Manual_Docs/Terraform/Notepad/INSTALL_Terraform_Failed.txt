@@ -1,0 +1,257 @@
+
+
+
+
+C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+
+Install the terraform CLI by installing a pre-compiled executable or compiling it from source.
+
+
+Pre-compiled executable
+
+Compile from source
+To compile the Terraform executable from source, first clone the HashiCorp Terraform repository.
+
+git clone https://github.com/hashicorp/terraform
+
+Navigate to the new directory.
+
+cd terraform
+
+Next, compile the binary. The following command compiles the binary and stores it in $GOPATH/bin/terraform.
+
+go install
+
+Finally, make sure that the terraform binary is available on your system's PATH. This process will differ depending on your operating system.
+
+
+MacOS or Linux
+
+Windows
+Print out a semicolon-separated list of locations in your PATH.
+
+ path
+
+Move the Terraform executable to one of the listed locations.
+
+ move Downloads\terraform ...
+
+For more details about adding binaries to your path, refer to the documentation for Windows.
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+
+
+Add the folder to PATH using the Windows GUI
+Quick overview: open Environment Variables, edit your User or System PATH, add the folder C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity\Terraform, then save and reopen terminals.
+Steps using System Properties
+- Press Win + R, type sysdm.cpl, and press Enter.
+- Click Advanced tab.
+- Click Environment Variables.
+- Under User variables for <your user>, select Path and click Edit.
+- Click New, paste:
+C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity
+- Click OK on each dialog to save.
+Alternative via Settings
+- Open Settings → System → About.
+- Click Advanced system settings on the right.
+- Follow steps 3–6 from the System Properties method.
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+
+
+
+
+
+
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity> pwd
+
+Path
+----
+C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity
+
+
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity> path
+path : The term 'path' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and
+try again.
+At line:1 char:1
++ path
++ ~~~~
+    + CategoryInfo          : ObjectNotFound: (path:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity> ls
+
+
+    Directory: C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        08-03-2026     22:35                Terraform
+
+
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity> git clone https://github.com/hashicorp/terraform
+Cloning into 'terraform'...
+remote: Enumerating objects: 340357, done.
+remote: Counting objects: 100% (1350/1350), done.
+remote: Compressing objects: 100% (583/583), done.
+remote: Total 340357 (delta 1013), reused 767 (delta 767), pack-reused 339007 (from 3)
+Receiving objects: 100% (340357/340357), 346.05 MiB | 8.84 MiB/s, done.
+Resolving deltas: 100% (218583/218583), done.
+Updating files: 100% (5157/5157), done.
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity> ls
+
+
+    Directory: C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        08-03-2026     23:00                terraform
+
+
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity> cd .\terraform\
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity\terraform>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity\terraform>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity\terraform> ls
+
+
+    Directory: C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity\terraform
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        08-03-2026     23:00                .changes
+d-----        08-03-2026     23:00                .github
+d-----        08-03-2026     23:00                .release
+d-----        08-03-2026     23:00                docs
+d-----        08-03-2026     23:00                internal
+d-----        08-03-2026     23:00                scripts
+d-----        08-03-2026     23:00                testing
+d-----        08-03-2026     23:00                tools
+d-----        08-03-2026     23:00                version
+d-----        08-03-2026     23:00                website
+-a----        08-03-2026     23:00            898 .changie.yaml
+-a----        08-03-2026     23:00            557 .copywrite.hcl
+-a----        08-03-2026     23:00            270 .git-blame-ignore-revs
+-a----        08-03-2026     23:00            213 .gitignore
+-a----        08-03-2026     23:00              6 .go-version
+-a----        08-03-2026     23:00            222 .tfdev
+-a----        08-03-2026     23:00          15024 BUGPROCESS.md
+-a----        08-03-2026     23:00           2790 build.Dockerfile
+-a----        08-03-2026     23:00           1903 BUILDING.md
+-a----        08-03-2026     23:00            427 catalog-info.yaml
+-a----        08-03-2026     23:00           8598 CHANGELOG.md
+-a----        08-03-2026     23:00           2594 checkpoint.go
+-a----        08-03-2026     23:00           2009 CODEOWNERS
+-a----        08-03-2026     23:00          12706 commands.go
+-a----        08-03-2026     23:00            917 Dockerfile
+-a----        08-03-2026     23:00            992 experiments.go
+-a----        08-03-2026     23:00          18146 go.mod
+-a----        08-03-2026     23:00         104533 go.sum
+-a----        08-03-2026     23:00           2746 help.go
+-a----        08-03-2026     23:00           5014 LICENSE
+-a----        08-03-2026     23:00          14944 main.go
+-a----        08-03-2026     23:00           8823 main_test.go
+-a----        08-03-2026     23:00           1403 Makefile
+-a----        08-03-2026     23:00          10107 provider_source.go
+-a----        08-03-2026     23:00           3983 README.md
+-a----        08-03-2026     23:00            266 signal_unix.go
+-a----        08-03-2026     23:00            233 signal_windows.go
+-a----        08-03-2026     23:00            672 staticcheck.conf
+-a----        08-03-2026     23:00           3490 telemetry.go
+-a----        08-03-2026     23:00            226 version.go
+-a----        08-03-2026     23:00            464 working_dir.go
+
+
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity\terraform>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity\terraform>
+PS C:\Users\chait\OneDrive\Documents\DEVOPS\2026\Activity\terraform>
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+
+
+
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+
+
+
+
+
+
+
+
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,172 @@
+
+
+************************************************************************************************************************
+************************************************************************************************************************
+
+************************************************************************************************************************
+
+************************************************************************************************************************
+
+
+******************************	Create a new GIT-HUB DIRECTORY on the command line:	*************************************
+
+cd to the directory you want to make as github directory - 
+
+WARNING !!!! dONOT USE MAIN DIRECTORY AS GIT HUB DIRECTORY . Please create a different directory and cd into that:  
+
+git init    				--- to initiate the dirctory into GIT HUB Directory.
+
+git config --global user.name "chaitanyarajndn"
+git config --global user.email "chaitanyarajndn@gmail.com"
+
+Create a test file to check:
+echo "# Devops" >> README.txt
+
+git add <filename.txt>
+git add .      ------------   to add all file at once.
+git commit -m "<type any comment related to your filename>"
+
+git status    -----------  <to check the
+
+git log        ----------   <to check the log file>
+chetan@Chaitanya-Raj:~/github/try-ssh$ git log
+commit 87b26ca35da54bbd4aa4193b92266a00364fb0cf (HEAD -> main)
+Author: chaitanyarajndn <chaitanyarajndn@gmail.com>
+Date:   Sun Jul 14 14:48:29 2024 +0530
+
+    file.txt edited for tsting
+
+git show <commit number>
+
+git branch -M master   (it is optional may or maynot required)
+
+So, git branch -M master renames the current branch to master. For example, if you are on a branch named main and you run git branch -M master, the main branch will be renamed to master.This command is particularly useful when you want to standardize branch names or switch the default branch from a different name to master.
+
+****************************** ADD NEW REPOSITORY FROM GITHUB TO GITHUB CLI	*********************************************
+
+git remote add origin <HTTP Repository LINK>   	-----  (If user want to add repository with HTTP Repository Link)
+
+OR
+
+PAT - Private Access Token
+
+git remote set-url --add origin https://<PAT>@github.com/<Username>/<REPO>.git     ------  (If user want to add repository with PAT Repository Link)
+
+OR
+
+
+
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git - 
+to add more than 1 repository link. (Make sure your repository are not same )
+
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/Linux.git
+
+
+git push -u origin master
+
+***********************************************************************************************************************
+
+PUSH FILES TO GITHUB FROM LOCAL REPOSITORY:
+
+
+git init
+git add .  - (to add and stage all files at once)
+git add <file-name>
+
+
+git rm --cached <file-name>   - to move back to untrack/unstage
+git restore --staged <file>...   - to move back to untrack/unstage
+
+
+git status
+git commit -m "<Message>"    - to commit and keep track of added files.
+git branch -M master
+git push -u origin master
+
+
+
+git log   -------- to check logs
+git log --oneline
+
+Author: chaitanyarajndn <chaitanyarajndn@gmail.com>
+
+***********************************************************************************************************************
+git remote -v
+
+git reset --hard HEAD~1
+
+
+git reset --soft HEAD~1
+
+
+
+Set global username and email for Git (Locally).
+
+git config --global user.name "chaitanyarajndn"
+git config --global user.email "chaitanyarajndn@gmail.com"
+
+Initialise an empty Git Repository
+git init
+
+Clone an existing Git Repository
+git clone https://github.com/chaitanyarajndn/Dev_LAB.git
+
+Add file/stage to git
+git add <filename>
+
+Add all the files to git
+git add .
+
+Commit all the staged files to git
+git commit -m "<your commit message>"
+
+TO REVERT THE COMMIT :
+git reset --hard HEAD~1   - TO REVERT ONLY COMMIT
+git reset --soft HEAD~1	  - TO REMOVE COMMIT AND STAGE(ADD)
+
+Restore the file from being modified to Tracked
+git restore <filename>
+git checkout <filename>
+
+Show the status of your Git respository
+git status
+
+Show the branches of your git repository
+git branch
+
+Checkout to a new branch
+git checkout -b <branch name>
+
+Checkout to an existing branch
+git checkout <branch name>
+
+Remove a branch from Git
+git branch -d <branch name>
+
+Show remote origin URL
+git remote -v
+
+Add remote origin URL
+git remote add origin <your remote git URL>
+
+Remove remote origin URL
+git remote remove origin 
+
+Fetch all the remote branches
+git fetch
+
+Push your local changes to remote branch
+git push origin <branch name>
+
+Pull your remote changes to local branch
+git pull origin <branch name>
+
+Check you git commits and logs
+git log
+
+
+PAT - Private Access Token
+Alternatively, you can push the remote URL with your PAT:
+
+
+https://github.com/chaitanyarajndn/Test.git

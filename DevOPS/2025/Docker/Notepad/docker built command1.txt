@@ -1,0 +1,12 @@
+docker build -t my_app:V1 .
+
+docker run -p 8080:5000 --name test_flask my_app:V1
+
+CMD ["python", "app.py"]
+
+
+3.9-alpine3.19
+
+CMD ["flask", "run", "--host=0.0.0.0"]
+
+18.117.84.100:8080

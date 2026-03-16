@@ -1,0 +1,117 @@
+
+
+DEVOPS NOTE:
+
+
+
+ONBOARDING AND OFFBOARDING IN DEVOPS (AZURE USER)
+
+INTRA-SYNC , AZURE HYBRID IN USER MANAGEMENT IN AZURE
+
+
+DONT GIVE DIRECT ACCESS TO USER. CREATE GROUP & GIVE CONTRIBUTOR ACCESS TO GROUP. Later add user into group.
+
+dont give owner access to user.
+
+
+
+During onboarding process , the role assignment to user is automated . if project is new then probably there is manual role provision at beginning. 
+
+ 
+
+chaitanyarajndn@b18g141.online
+
+
+B18@g141
+
+New password - 08 March 2026 - Infy@248001
+
+
+
+
+Siksha Sathi • Batch 18
+GROUP: B18_G141 Lead: Jitendra Gehlot
+Assigned Credentials
+ Agreement Digitally Signed
+User Principal Name	Authentication
+anjusaini2329@b18g141.online	
+==============================
+kslpatel1986@b18g141.online	
+==============================
+tyunjay@b18g141.online	
+==============================
+sudheerdubey1988@b18g141.online	
+==============================
+singhamarjeet0007@b18g141.online	
+==============================
+kmd.shahrukh@b18g141.online	
+==============================
+vandanasingh2729@b18g141.online	
+==============================
+siddharthshuklaqa@b18g141.online	
+==============================
+pankaj.kumar660@b18g141.online	
+==============================
+vsraghav0@b18g141.online	
+==============================
+chaitanyarajndn@b18g141.online	
+=================================
+ramdhyan4us@b18g141.online	
+==============================
+najmus.cloud789@b18g141.online	
+==============================
+eustressonly@b18g141.online	
+==============================
+akashjadhav7875374@b18g141.online	
+==============================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

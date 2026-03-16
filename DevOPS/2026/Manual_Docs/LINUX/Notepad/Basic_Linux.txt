@@ -1,0 +1,155 @@
+root@Chaitanya-Raj:~# LS CPU
+LS: command not found
+root@Chaitanya-Raj:~# lscpu
+Architecture:             x86_64
+  CPU op-mode(s):         32-bit, 64-bit
+  Address sizes:          39 bits physical, 48 bits virtual
+  Byte Order:             Little Endian
+CPU(s):                   24
+  On-line CPU(s) list:    0-23
+Vendor ID:                GenuineIntel
+  Model name:             13th Gen Intel(R) Core(TM) i7-13700HX
+    CPU family:           6
+    Model:                191
+    Thread(s) per core:   2
+    Core(s) per socket:   12
+    Socket(s):            1
+    Stepping:             2
+    BogoMIPS:             4608.00
+    Flags:                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology tsc_
+                          reliable nonstop_tsc cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf
+                          _lm abm 3dnowprefetch ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_n
+                          i xsaveopt xsavec xgetbv1 xsaves avx_vnni vnmi umip waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize flush_l1d arch_capabilities
+Virtualization features:
+  Virtualization:         VT-x
+  Hypervisor vendor:      Microsoft
+  Virtualization type:    full
+Caches (sum of all):
+  L1d:                    576 KiB (12 instances)
+  L1i:                    384 KiB (12 instances)
+  L2:                     15 MiB (12 instances)
+  L3:                     30 MiB (1 instance)
+NUMA:
+  NUMA node(s):           1
+  NUMA node0 CPU(s):      0-23
+Vulnerabilities:
+  Gather data sampling:   Not affected
+  Itlb multihit:          Not affected
+  L1tf:                   Not affected
+  Mds:                    Not affected
+  Meltdown:               Not affected
+  Mmio stale data:        Not affected
+  Reg file data sampling: Vulnerable: No microcode
+  Retbleed:               Mitigation; Enhanced IBRS
+  Spec rstack overflow:   Not affected
+  Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+  Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S
+  Srbds:                  Not affected
+  Tsx async abort:        Not affected
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# hostname -I
+172.20.177.219
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# uptime
+ 14:31:53 up 5 min,  1 user,  load average: 0.00, 0.00, 0.00
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# ps
+    PID TTY          TIME CMD
+    319 pts/0    00:00:00 bash
+    441 pts/0    00:00:00 ps
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# top
+top - 14:32:23 up 6 min,  1 user,  load average: 0.00, 0.00, 0.00
+Tasks:  23 total,   1 running,  22 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :  15850.1 total,  15097.5 free,    595.2 used,    355.7 buff/cache
+MiB Swap:   4096.0 total,   4096.0 free,      0.0 used.  15255.0 avail Mem
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 root      20   0   21716  12288   9408 S   0.0   0.1   0:00.22 systemd
+      2 root      20   0    3120   1920   1920 S   0.0   0.0   0:00.00 init-systemd(Ub
+      7 root      20   0    3136   1920   1728 S   0.0   0.0   0:00.00 init
+     50 root      19  -1   34048  11712  10944 S   0.0   0.1   0:00.04 systemd-journal
+     96 root      20   0   25260   6144   4800 S   0.0   0.0   0:00.06 systemd-udevd
+    108 systemd+  20   0   21452  11520   9792 S   0.0   0.1   0:00.04 systemd-resolve
+    109 systemd+  20   0   91020   7488   6720 S   0.0   0.0   0:00.02 systemd-timesyn
+    195 root      20   0    4236   2496   2304 S   0.0   0.0   0:00.00 cron
+    196 message+  20   0    9536   4992   4416 S   0.0   0.0   0:00.02 dbus-daemon
+    203 root      20   0   17964   8448   7488 S   0.0   0.1   0:00.05 systemd-logind
+    205 root      20   0 1756096  11520   9792 S   0.0   0.1   0:00.06 wsl-pro-service
+    214 root      20   0    3160   1728   1728 S   0.0   0.0   0:00.00 agetty
+    225 syslog    20   0  222508   5184   4416 S   0.0   0.0   0:00.04 rsyslogd
+    227 root      20   0    3116   1728   1728 S   0.0   0.0   0:00.00 agetty
+    237 root      20   0  107008  22080  12864 S   0.0   0.1   0:00.04 unattended-upgr
+    317 root      20   0    3124    768    768 S   0.0   0.0   0:00.00 SessionLeader
+    318 root      20   0    3140    960    960 S   0.0   0.0   0:00.00 Relay(319)
+    319 root      20   0    6072   4992   3456 S   0.0   0.0   0:00.00 bash
+    320 root      20   0    6664   4032   3456 S   0.0   0.0   0:00.00 login
+    363 root      20   0   20308  10752   9024 S   0.0   0.1   0:00.04 systemd
+    364 root      20   0   21148   3436   1728 S   0.0   0.0   0:00.00 (sd-pam)
+    386 root      20   0    6072   4992   3456 S   0.0   0.0   0:00.00 bash
+    442 root      20   0    9316   5376   3264 R   0.0   0.0   0:00.00 top
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+root@Chaitanya-Raj:~# free -h
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       591Mi        14Gi       3.6Mi       355Mi        14Gi
+Swap:          4.0Gi          0B       4.0Gi
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# du -h
+4.0K    ./.cache
+16K     ./tmp
+4.0K    ./.ssh
+4.0K    ./.config/procps
+8.0K    ./.config
+52K     .
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+none            7.8G     0  7.8G   0% /usr/lib/modules/6.6.87.2-microsoft-standard-WSL2
+none            7.8G  4.0K  7.8G   1% /mnt/wsl
+drivers         465G  209G  257G  45% /usr/lib/wsl/drivers
+/dev/sdd       1007G  1.3G  955G   1% /
+none            7.8G   72K  7.8G   1% /mnt/wslg
+none            7.8G     0  7.8G   0% /usr/lib/wsl/lib
+rootfs          7.8G  2.7M  7.8G   1% /init
+none            7.8G  580K  7.8G   1% /run
+none            7.8G     0  7.8G   0% /run/lock
+none            7.8G     0  7.8G   0% /run/shm
+none            7.8G   76K  7.8G   1% /mnt/wslg/versions.txt
+none            7.8G   76K  7.8G   1% /mnt/wslg/doc
+C:\             465G  209G  257G  45% /mnt/c
+D:\             489G  370G  119G  76% /mnt/d
+tmpfs           1.6G   20K  1.6G   1% /run/user/0
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#

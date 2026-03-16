@@ -1,0 +1,161 @@
+
+
+
+Basic search
+grep "git" GITCOMMAND.txt
+
+
+
+Show line numbers
+grep -n "git" GITCOMMAND.txt
+
+
+
+Case-INSENSITIVE search
+grep -i "Git" GITCOMMAND.txt
+
+
+Matches:
+
+* `git`
+* `Git`
+* `GIT`
+
+
+
+Count matches (not lines, matches)
+grep -o "git" GITCOMMAND.txt | wc -l
+
+
+Count matching **lines** instead:
+grep -c "git" GITCOMMAND.txt
+
+
+Show context (lines above/below)
+Very powerful for logs & notes.
+
+
+
+2 lines AFTER match
+grep -A 2 "git clone" GITCOMMAND.txt
+
+
+2 lines BEFORE match
+grep -B 2 "git clone" GITCOMMAND.txt
+
+
+2 lines BEFORE & AFTER
+grep -C 2 "git clone" GITCOMMAND.txt
+
+
+
+
+Match whole words only / Avoid partial matches.
+grep -w "git" GITCOMMAND.txt
+
+
+✅ Matches `git`
+❌ Won’t match `github`
+
+
+Search for multiple patterns
+
+
+OR condition
+grep -E "clone|commit|push" GITCOMMAND.txt
+
+
+Invert match (show NON-matching lines)
+grep -v "git" GITCOMMAND.txt
+
+
+👉 Great for filtering noise / Search URLs only
+grep "https://" GITCOMMAND.txt
+
+
+Only GitHub URLs:
+grep "github.com" GITCOMMAND.txt
+
+
+
+
+Regex power (real grep strength)
+
+
+Lines starting with `git`
+grep "^git" GITCOMMAND.txt
+
+
+Lines ending with `.git`
+grep "\.git$" GITCOMMAND.txt
+
+
+Lines containing `git` followed by space
+grep "git " GITCOMMAND.txt
+
+
+Highlight matches (very nice)
+grep --color=auto "git" GITCOMMAND.txt
+
+
+Recursive grep (real-world usage) / Search in all `.txt` files:
+grep -R "git clone" /root/tmp
+
+
+Only certain file types:
+grep -R --include="*.txt" "git" /root/tmp
+
+
+
+Practical mini exercises 💪
+
+Try these:
+
+
+# 1. Find all git remote commands
+grep "git remote" GITCOMMAND.txt
+
+# 2. Count how many clone commands exist
+grep -c "git clone" GITCOMMAND.txt
+
+# 3. Show clone command with 3 lines of context
+grep -C 3 "git clone" GITCOMMAND.txt
+
+# 4. Show all separator lines (symbols only)
+grep "^[^a-zA-Z0-9]*$" GITCOMMAND.txt
+
+
+
+
+🔥 Pro tip (grep + pipe)
+
+grep "git" GITCOMMAND.txt | grep "remote"
+
+
+Equivalent to:
+grep "git.*remote" GITCOMMAND.txt
+
+
+
+
+Next level (if you want)
+
+I can teach you next:
+
+* `grep` vs `egrep` vs `fgrep`
+* `grep` with `awk` & `sed`
+* Searching logs like a Linux admin
+* Real interview-style grep questions
+
+Just tell me 👉 **beginner / intermediate / admin-level**
+
+
+
+
+
+
+
+
+
+
+

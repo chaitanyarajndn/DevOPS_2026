@@ -1,0 +1,61 @@
+chetan@Chaitanya-Raj:~/github$ git config --global user.name "chaitanyarajndn"
+chetan@Chaitanya-Raj:~/github$ git config --global user.email "chaitanyarajndn@gmail.com"
+chetan@Chaitanya-Raj:~/github$ git init
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint:   git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint:   git branch -m <name>
+Initialized empty Git repository in /home/chetan/github/.git/
+chetan@Chaitanya-Raj:~/github$ git log
+fatal: your current branch 'master' does not have any commits yet
+chetan@Chaitanya-Raj:~/github$ git config --global user.name "chaitanyarajndn"
+chetan@Chaitanya-Raj:~/github$ git config --global user.email "chaitanyarajndn@gmail.com"
+
+chetan@Chaitanya-Raj:~/github$ ll
+total 20
+drwxrwxrwx 3 chetan chetan 4096 Jul 13 23:53 ./
+drwxr-x--- 8 chetan chetan 4096 Jul 13 23:52 ../
+drwxr-xr-x 7 chetan chetan 4096 Jul 13 23:51 .git/
+-rw-r--r-- 1 chetan chetan 6441 Jul 13 23:53 usermanagement.txt
+chetan@Chaitanya-Raj:~/github$ git add usermanagement.txt
+chetan@Chaitanya-Raj:~/github$ git log
+fatal: your current branch 'master' does not have any commits yet
+chetan@Chaitanya-Raj:~/github$ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   usermanagement.txt
+
+chetan@Chaitanya-Raj:~/github$ git commit -m "new"
+[master (root-commit) 70ea004] new
+ 1 file changed, 250 insertions(+)
+ create mode 100644 usermanagement.txt
+chetan@Chaitanya-Raj:~/github$ git status
+On branch master
+nothing to commit, working tree clean
+chetan@Chaitanya-Raj:~/github$ git log
+commit 70ea00452482bc7f2d54ed7f7a431876d63304bb (HEAD -> master)
+Author: chaitanyarajndn <chaitanyarajndn@gmail.com>
+Date:   Sat Jul 13 23:55:46 2024 +0530
+
+    new
+chetan@Chaitanya-Raj:~/github$ git remote add origin https://github.com/chaitanyarajndn/Linux.git
+chetan@Chaitanya-Raj:~/github$ git remote -v
+origin  https://github.com/chaitanyarajndn/Linux.git (fetch)
+origin  https://github.com/chaitanyarajndn/Linux.git (push)
+chetan@Chaitanya-Raj:~/github$ git remote --help
+chetan@Chaitanya-Raj:~/github$ git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+chetan@Chaitanya-Raj:~/github$ git remote -v
+origin  https://github.com/chaitanyarajndn/Linux.git (fetch)
+origin  https://github.com/chaitanyarajndn/Linux.git (push)
+origin  https://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@github.com/chaitanyarajndn/Linux.git (push)
+chetan@Chaitanya-Raj:~/github$

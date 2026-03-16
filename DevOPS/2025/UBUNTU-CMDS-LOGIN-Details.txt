@@ -1,0 +1,71 @@
+
+
+*****************	TO INSTALL ubuntu liscence before installing software from  microsoft STORE ************************
+
+wsl --install Ubuntu (In Windows CMD Powershell AS ADMIN)
+
+wsl --set-default-version 2  (In Windows cmd as administrator)
+
+*************************************************************************************************************************
+
+sudo su - root
+
+***********************************************************************************************************************
+Username - chetan
+
+Password  : Infy@1028517
+
+******************************	TO UPGRADE UBUNTU AND REBOOT	****************************************************
+
+Open the terminal application
+For remote server use the ssh command to login. For example:ssh user@server-name
+Fetch update software list by running the sudo apt-get update command
+Update Ubuntu software by running the sudo apt-get upgrade command
+Finally, reboot the Ubuntu box by running the sudo reboot command.
+
+
+*****************************************************************************************************************************
+
+scp -r /home/chetan/backup/ root@103.127.29.67:/root/ 		- 	 TO TRANSFER ALL FILES IN A DIRECTORY AT ONE COMMAND.
+
+
+********************	how tO MOVE to laptop C: DRIVE FROM LINUX		*************************************************
+
+cd /mnt/c
+
+*************************************		LAPTOP C DRIVE		************************************
+
+cd /mnt/c/Users/chait/OneDrive/Documents/GIT_HUB/LINUX/Shell_Script 
+
+****************************************************************************************************************************************
+
+//l.localhost/Ubuntu-22.04/home/chetan/scripts
+
+****************************************************************************************************************************************
+
+cp -r mnt/c/Users/chait/OneDrive/Documents/GIT_HUB/* /home/chetan/scripts
+
+****************************************************************************************************************************************
+sudo apt-get install dos2unix 
+
+dos2unix usermanagement.txt
+unix2dos FILENAME
+
+****************************************************************************************************************************************
+
+cd /home/chetan/scripts/LINUX/Shell_Script
+
+****************************************************************************************************************************************
+
+tail -n 1 /etc/passwd | awk -F: '{print $1}'
+
+****************************************************************************************************************************************
+
+
+
+****************************************************************************************************************************************
+
+
+
+***************************************************************************************************************************************
+

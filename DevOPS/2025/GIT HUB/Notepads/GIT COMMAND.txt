@@ -1,0 +1,126 @@
+
+
+
+								★━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━★
+								  🌟  G I T  C O M M A N D S 🌟
+								★━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━★
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════	
+		
+git commit -m "Added new directory LINUX"
+
+
+https://github.com/chaitanyarajndn/Linux.git
+
+git remote add origin https://github.com/chaitanyarajndn/Linux.git
+
+https://github.com/chaitanyarajndn/Linux.git
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+
+
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+
+
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+
+
+https://github.com/chaitanyarajndn/Dev_LAB.git
+
+
+git push -u origin main https://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@github.com/chaitanyarajndn/Dev_LAB.git
+
+
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+
+
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/devlab.git
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+git remote set-url --add origin git@github.com:chaitanyarajndn/try-ssh.git
+
+git remote set-url --add origin git@github.com:chaitanyarajndn/devlab.git
+
+
+*******************************************************************************************************************************
+
+
+git clone 
+
+git clone https://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@github.com/chaitanyarajndn/testonly.git
+
+
+*********************************************************************************************************************************
+
+
+https://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@github.com/chaitanyarajndn/testonly.git
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+git remote add origin https://github.com/chaitanyarajndn/testonly.git
+
+git remote add origin https://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@github.com/chaitanyarajndn/testonly.git
+
+
+************************************************************************************************************************
+
+
+******************************************************************************************
+
+
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/testonly.git
+
+
+************************************************************************************************************************
+******************************************************************************************
+************************************************************************************************************************
+******************************************************************************************
+******************************************************************************************
+************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

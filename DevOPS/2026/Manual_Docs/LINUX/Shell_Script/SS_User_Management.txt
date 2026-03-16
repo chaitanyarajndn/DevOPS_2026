@@ -1,0 +1,112 @@
+#!/bin/bash
+
+#This_is_Usermanagement_Script#
+
+#define_Function_for_creating_User#
+
+function create_user {
+
+        function create {
+
+                read -p "Enter new Username: " username
+
+        while [ -z "$username" ]; do
+
+                echo "Username should not be empty!!!"
+
+                read -p "Enter Username again: " username
+
+        done
+                read -p "Enter password for $username": password
+
+        useradd -m $username -p $password
+
+        echo "user $username created successfully"
+        
+		}
+
+        create
+
+        read -p "Do you want to continue (Y or N) : " c
+
+while [[ $c == Y ]]; do
+
+        create
+
+        read -p "Do you want to continue (Y or N) : " c
+
+done
+
+if [[ $c == N ]]; then
+
+        echo "............ User Management Script Ended .........................."
+
+        break
+fi
+
+}
+
+#Function to delete user if it exists#
+
+function delete_user {
+
+#promt to Enter the usename manually#
+
+read -p "Enter username to be deleted: " username
+
+#Loop created so that username should not be empty#
+
+while [ -z "$username" ]; do
+
+        echo "Username cannot be empty!!!"
+        read -p "Enter username again: " username
+done
+
+function repeat {
+
+        if grep -q "^$username:" /etc/passwd; then
+
+                userdel -r $username
+                echo "........................User $username deleted successfully..............................."
+        else
+                echo "User $username does not exist."
+        fi
+
+}
+
+repeat
+
+read -p "Do you want to continue (Type Y or N): " choice
+
+while [ "$choice" == Y ]; do
+
+        read -p "Enter the username to be deleted: " username
+
+        repeat
+
+        read -p "Do you want to continue (Type Y or N): " choice
+
+    if [ "$choice" == N ]; then
+
+        echo ".................#Stopping the script#..............."
+
+        break
+
+        fi
+
+done
+
+}
+
+
+read -p "Choose the option for User Management("C" to create_user or "D" to delete_user): " O
+
+if [[ $O == C ]]; then
+
+        create_user
+
+elif [[ $O == D ]]; then
+
+        delete_user
+
+fi

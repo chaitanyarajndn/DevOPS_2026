@@ -1,0 +1,386 @@
+
+
+⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫
+			✪  AZURE CLI COMMANDS - GENERIC CHEAT SHEET  ✪ 
+⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫
+
+
+◼◼◼ ■■■ LOGIN & SUBSCRIPTION ■■■ ◼◼◼
+
+# Login to Azure
+az login
+
+# Show current subscription
+az account show
+
+# List all subscriptions
+az account list -o table
+
+# Set active subscription
+az account set --subscription "<subscription-id>"
+
+NOTE:
+- You must be logged in and have an active subscription before creating any resource groups or resources.
+- Subscription is the top-level container for all resources.
+
+
+
+◼◼◼ ■■■ RESOURCE GROUPS ■■■ ◼◼◼
+
+
+# Create a resource group
+az group create --name <resource-group-name> --location <region>
+
+# Show details of a resource group
+az group show --name <resource-group-name>
+
+# List all resource groups
+az group list -o table
+
+# Delete a resource group
+az group delete --name <resource-group-name> --yes
+
+NOTE:
+- Resource groups exist inside a subscription.
+- You cannot create storage accounts, VMs, or networks without a resource group.
+
+
+◼◼◼ ■■■ STORAGE ACCOUNTS ■■■ ◼◼◼
+
+
+# Create a storage account
+az storage account create --name <storage-account-name> --resource-group <resource-group-name> --location <region> --sku <sku-type> --kind StorageV2 --min-tls-version TLS1_2
+
+# Show details of a storage account
+az storage account show --name <storage-account-name> --resource-group <resource-group-name>
+
+# List all storage accounts
+az storage account list -o table
+
+# Delete a storage account
+az storage account delete --name <storage-account-name> --resource-group <resource-group-name> --yes
+
+NOTE:
+- Storage accounts must be created inside a resource group.
+- Storage account names must be globally unique, lowercase, 3–24 characters.
+
+
+◼◼◼ ■■■ VIRTUAL MACHINES ■■■ ◼◼◼
+
+
+# Create a VM
+az vm create --resource-group <resource-group-name> --name <vm-name> --image <image-type> --admin-username <username> --admin-password <password>
+
+
+In Azure, the `--image` parameter specifies the operating system and base configuration for your virtual machine. It can be a marketplace image (like Ubuntu, Windows Server, or Red Hat), a custom image you’ve created, or an image from a shared gallery. Choosing the right image type determines the OS, preinstalled software, and baseline configuration of your VM.
+
+🔑 Types of Image Options in Azure CLI
+
+1. Marketplace Images (Most Common)
+- Provided by Microsoft and third-party vendors.
+- Examples:  
+  - `UbuntuLTS` → Latest Ubuntu Long-Term Support release  
+  - `Win2019Datacenter` → Windows Server 2019 Datacenter edition  
+  - `Debian`, `CentOS`, `RedHat`, etc.
+- Best for standard OS deployments with minimal customization.
+
+2. Custom Images
+- Created by you from an existing VM, VHD, or snapshot.
+- Useful when you need preconfigured environments (e.g., with your apps, tools, or security settings).
+- Stored in Azure Compute Gallery (formerly Shared Image Gallery).
+- Example usage:  
+  ```bash
+  az vm create \
+    --resource-group MyRG \
+    --name MyVM \
+    --image /subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/images/<custom-image-name>
+
+
+3. Shared Gallery Images
+- Images stored in Azure Compute Gallery can be shared across subscriptions, tenants, or organizations.
+- Ideal for large-scale deployments where consistency is critical.
+- Supports versioning (e.g., `1.0.0`, `2.0.0`) for controlled rollouts.
+
+4. Image Builder (Advanced)
+- Azure VM Image Builder lets you automate creation of custom images.
+- You can define a pipeline that installs software, applies patches, and configures settings before distributing the image.
+- Best for DevOps workflows and repeatable builds.
+
+---
+
+📊 Comparison Table
+
+| Image Type            | Source                          | Best Use Case                          | Example Value in CLI |
+|------------------------|---------------------------------|----------------------------------------|----------------------|
+| Marketplace Image      | Azure Marketplace               | Standard OS (Ubuntu, Windows, etc.)     | `UbuntuLTS`          |
+| Custom Image           | Captured VM / VHD / Snapshot    | Preconfigured apps & settings           | `/subscriptions/.../images/MyImage` |
+| Shared Gallery Image   | Azure Compute Gallery           | Enterprise-scale, version-controlled    | `MyGallery/MyImage/1.0.0` |
+| Image Builder Output   | Automated pipeline              | DevOps automation, repeatable builds    | Depends on gallery path |
+
+---
+
+⚠️ Key Considerations
+- Cost: The image itself doesn’t add cost, but licensing (e.g., Windows Server) may affect billing.  
+- Updates: Marketplace images are updated regularly; custom images require you to maintain them.  
+- Consistency: For multiple VMs, use custom or gallery images to ensure identical configurations.  
+- Security: Always patch and harden custom images before reuse.
+
+---
+
+👉 If you’re just starting, use a Marketplace image like `UbuntuLTS` or `Win2019Datacenter`. If you need repeatable, preconfigured environments (e.g., dev/test setups), go with custom images or gallery images for scalability. 
+
+
+# Show details of a VM
+az vm show --resource-group <resource-group-name> --name <vm-name>
+
+# List all VMs
+az vm list -o table
+
+# Delete a VM
+az vm delete --resource-group <resource-group-name> --name <vm-name> --yes
+
+NOTE:
+- VMs must be created inside a resource group.
+- VMs often require networking components (VNet, subnet, public IP, NSG).
+
+
+
+◼◼◼ ■■■ NETWORKING ■■■ ◼◼◼
+
+
+# Create a virtual network
+az network vnet create --name <vnet-name> --resource-group <resource-group-name> --location <region> --address-prefix <CIDR>
+
+# Create a subnet
+az network vnet subnet create --name <subnet-name> --resource-group <resource-group-name> --vnet-name <vnet-name> --address-prefix <CIDR>
+
+# Create a public IP
+az network public-ip create --name <public-ip-name> --resource-group <resource-group-name> --location <region>
+
+# Delete a virtual network
+az network vnet delete --name <vnet-name> --resource-group <resource-group-name>
+
+NOTE:
+- Networking resources (VNets, subnets, IPs) must be inside a resource group.
+- VMs depend on networking resources to connect internally and externally.
+
+
+◼◼◼ ■■■ GENERAL ■■■ ◼◼◼
+
+
+# List all available regions
+az account list-locations -o table
+
+# Check Azure CLI version
+az version
+
+# Upgrade Azure CLI
+az upgrade
+
+
+
+◼◼◼ ■■■ DEPENDENCY & HIERARCHY NOTES ■■■ ◼◼◼
+
+
+1. **Subscription** → Top-level container. All resources must belong to a subscription.
+2. **Resource Group** → Logical container inside a subscription. Required before creating storage accounts, VMs, or networking.
+3. **Storage Account** → Must be inside a resource group. Used to store blobs, files, queues, tables.
+4. **Virtual Machines (VMs)** → Must be inside a resource group. Typically require networking (VNet, subnet, public IP).
+5. **Networking Resources** → Must be inside a resource group. Provide connectivity for VMs and other services.
+6. **Regions** → Every resource must be assigned to a region. Resource group and resources must be in supported regions.
+
+
+◼◼◼ ■■■ KEY REQUIREMENTS TO REMEMBER ■■■ ◼◼◼
+
+
+- You cannot create a resource group without a subscription.
+- You cannot create a storage account, VM, or network without a resource group.
+- Storage account names must be globally unique and lowercase.
+- VMs require networking resources for connectivity.
+- Always check available regions before creating resources.
+- Deleting a resource group deletes all resources inside it.
+
+
+
+⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫
+			✪  AZURE COST NOTES - WHAT INCURS CHARGES  ✪ 
+⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫
+
+
+
+SUBSCRIPTION
+-------------------------------------------
+- Having a subscription itself does not cost money.
+- Costs are incurred only when you provision resources inside the subscription.
+
+
+RESOURCE GROUPS
+-------------------------------------------
+- Resource groups are free.
+- They are logical containers; no charges for creating or deleting them.
+- Costs come only from resources inside the group.
+
+
+STORAGE ACCOUNTS
+-------------------------------------------
+- Creating a storage account is free.
+- Costs are incurred when:
+  - You store data (per GB/month).
+  - You perform read/write operations (transactions).
+  - You enable redundancy (LRS, GRS, ZRS).
+  - You use premium storage (SSD-based).
+- Example: Storing 100 GB in Standard_LRS will incur storage + transaction costs.
+
+
+VIRTUAL MACHINES (VMs)
+-------------------------------------------
+- Costs are incurred when:
+  - VM is running (per hour billing).
+  - VM size (CPU, RAM) determines rate.
+  - OS disk and data disks (storage costs).
+  - Public IP addresses (dynamic IP is free, static IP incurs cost).
+  - Bandwidth (outbound internet traffic is billed).
+- Private IP addresses are free.
+- Stopped (deallocated) VMs do not incur compute charges, but disks still incur storage costs.
+
+
+NETWORKING
+-------------------------------------------
+- Virtual Networks (VNets) are free.
+- Subnets are free.
+- Network Security Groups (NSGs) are free.
+- Public IP addresses:
+  - Dynamic IP → free.
+  - Static IP → billed.
+- Load balancers, VPN gateways, ExpressRoute → billed.
+- Outbound data transfer (egress traffic to internet) → billed.
+- Inbound traffic (ingress) → free.
+
+
+GENERAL NOTES
+-------------------------------------------
+- Regions: Pricing varies slightly by region.
+- Tags: Free, but useful for cost tracking.
+- Deleting a resource group deletes all resources, stopping billing for them.
+- Always check Azure Pricing Calculator for exact rates.
+
+
+===========================================
+HIERARCHY & COST RELATIONSHIP
+===========================================
+1. Subscription → Free container, but enables billing.
+2. Resource Group → Free container, organizes resources.
+3. Storage Account → Costs for data stored, redundancy, transactions.
+4. Virtual Machine → Costs for compute, disks, public IP, outbound traffic.
+5. Networking → Free for VNets/subnets, costs for public IPs, gateways, load balancers, outbound traffic.
+
+
+===========================================
+KEY REMINDERS
+===========================================
+- Private IPs are free; public IPs may cost.
+- Stopping a VM does not stop disk charges.
+- Resource groups themselves are free.
+- Outbound internet traffic always costs.
+- Use pricing calculator before provisioning.
+
+
+
+
+
+\
+⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫
+			✪  AZURE RESOURCE HIERARCHY & COST NOTES  ✪ 
+⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫⧫
+
+
+HIERARCHY TREE (TEXTUAL REPRESENTATION)
+-------------------------------------------
+Subscription
+   └── Resource Group
+         ├── Storage Accounts
+         │      ├── Blobs, Files, Queues, Tables
+         │      └── Costs: Data stored, redundancy, transactions
+         │
+         ├── Virtual Machines
+         │      ├── VM Instances (CPU, RAM)
+         │      ├── OS Disks & Data Disks
+         │      └── Costs: Compute runtime, disks, public IPs, outbound traffic
+         │
+         └── Networking
+                ├── Virtual Networks (VNets)
+                ├── Subnets
+                ├── Public IPs
+                └── Costs: Static public IPs, load balancers, gateways, outbound traffic
+
+
+-------------------------------------------
+DEPENDENCIES
+-------------------------------------------
+- Subscription → Required before anything else.
+- Resource Group → Must exist inside a subscription.
+- Storage Accounts → Must exist inside a resource group.
+- Virtual Machines → Must exist inside a resource group, usually depend on networking.
+- Networking → Must exist inside a resource group, required for VM connectivity.
+
+-------------------------------------------
+COST NOTES
+-------------------------------------------
+- Subscription: Free container, billing starts only when resources are provisioned.
+- Resource Group: Free container, no direct cost.
+- Storage Account: Costs for data stored, redundancy type, transactions.
+- Virtual Machine: Costs for compute runtime, disks, public IPs, outbound traffic.
+- Networking: VNets/subnets free; static public IPs, load balancers, gateways, outbound traffic billed.
+- Private IPs: Free.
+- Public IPs: Dynamic free, static billed.
+- Outbound internet traffic: Always billed.
+- Inbound traffic: Free.
+
+
+-------------------------------------------
+REQUIREMENTS TO CREATE PARAMETERS
+-------------------------------------------
+1. Subscription → Must exist to hold all resources.
+2. Resource Group → Must exist inside a subscription before creating resources.
+3. Storage Account → Requires resource group; name must be globally unique & lowercase.
+4. Virtual Machine → Requires resource group; usually requires networking setup.
+5. Networking → Requires resource group; VNets/subnets must be defined before attaching to VMs.
+
+
+===========================================
+KEY REMINDERS
+===========================================
+- You cannot create resources without a subscription and resource group.
+- Containers (subscription, resource group, VNet) are free.
+- Resources (VMs, storage, public IPs, outbound traffic) incur costs.
+- Deleting a resource group deletes all resources inside it, stopping billing.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

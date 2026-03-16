@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200">
+  <style>
+    .role-node { fill: #dae8fc; stroke: #6c8ebf; stroke-width: 2; }
+    .text { font-family: Arial; font-size: 11px; font-weight: bold; }
+    .line { stroke: #6c8ebf; stroke-width: 1.5; fill: none; }
+  </style>
+
+  <rect x="300" y="10" width="200" height="40" rx="5" style="fill:#e1d5e7;stroke:#9673a6;" />
+  <text x="310" y="35" class="text">YouTube to Private Meet [cite: 5]</text>
+
+  <rect x="340" y="70" width="120" height="40" rx="5" class="role-node" />
+  <text x="350" y="95" class="text">Bhakua: Owner [cite: 13, 14]</text>
+
+  <path d="M 400 110 L 400 130 L 150 130 L 150 150" class="line" />
+  <path d="M 400 130 L 400 150" class="line" />
+  <path d="M 400 130 L 650 130 L 650 150" class="line" />
+
+  <rect x="90" y="150" width="120" height="40" rx="5" class="role-node" />
+  <text x="100" y="175" class="text">Girls: Group Leads [cite: 4]</text>
+
+  <rect x="340" y="150" width="120" height="40" rx="5" class="role-node" />
+  <text x="350" y="175" class="text">Bill: Contributor [cite: 8, 9]</text>
+
+  <rect x="590" y="150" width="120" height="40" rx="5" class="role-node" />
+  <text x="600" y="175" class="text">Interns: Readers [cite: 51, 57]</text>
+</svg>

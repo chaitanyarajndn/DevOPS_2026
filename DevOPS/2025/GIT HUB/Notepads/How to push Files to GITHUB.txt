@@ -1,0 +1,180 @@
+C:\Users\chait\OneDrive\Documents\GIT_HUB
+
+
+chait@Chaitanya-Raj MINGW64 ~
+$ git --version
+git version 2.45.2.windows.1
+
+chait@Chaitanya-Raj MINGW64 ~
+$ cd C:\Users\chait\OneDrive\Documents\GIT HUB
+bash: cd: too many arguments
+
+chait@Chaitanya-Raj MINGW64 ~
+$ cd onedrive
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive
+$ ll
+total 41
+drwxr-xr-x 1 chait 197609      0 Oct 23  2023  Attachments/
+-rw-r--r-- 1 chait 197609  22793 Nov 30  2021  ChaitanyaRaj1996.docx
+drwxr-xr-x 1 chait 197609      0 Jul  9 02:30  Desktop/
+-rw-r--r-- 1 chait 197609      0 Dec 25  2022 'Document 1.docx'
+-rw-r--r-- 1 chait 197609      0 Dec 22  2022  Document.docx
+drwxr-xr-x 1 chait 197609      0 Jul  9 02:32  Documents/
+-rw-r--r-- 1 chait 197609 398083 Jul 18  2017 'Getting started with OneDrive.pdf'
+-rwxr-xr-x 1 chait 197609   1164 Oct 23  2023 'Personal Vault.lnk'*
+drwxr-xr-x 1 chait 197609      0 Feb 24 19:12  Pictures/
+-rw-r--r-- 1 chait 197609     96 Oct 23  2023  desktop.ini
+drwxr-xr-x 1 chait 197609      0 Oct 23  2023  doc/
+drwxr-xr-x 1 chait 197609      0 Oct 23  2023  veds/
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive
+$ cd Documents
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents
+$ ll
+total 157
+-rw-r--r-- 1 chait 197609   9417 Feb 19 20:00  Book2.xlsx
+drwxr-xr-x 1 chait 197609      0 Dec 29  2023 'Call Of Duty Black Ops Cold War'/
+drwxr-xr-x 1 chait 197609      0 Nov  1  2023 'Custom Office Templates'/
+drwxr-xr-x 1 chait 197609      0 Oct 23  2023  Downloads/
+drwxr-xr-x 1 chait 197609      0 Jul  9 02:33 'GIT HUB'/
+drwxr-xr-x 1 chait 197609      0 Oct 23  2023 'Inventor Server for AutoCAD'/
+drwxr-xr-x 1 chait 197609      0 Jul  8 23:25  LOGS/
+drwxr-xr-x 1 chait 197609      0 Dec  2  2023  MOHW_DayOnePatch_PC/
+drwxr-xr-x 1 chait 197609      0 Nov  9  2023 'My Cheat Tables'/
+drwxr-xr-x 1 chait 197609      0 Nov  5  2023 'My Games'/
+-rw-r--r-- 1 chait 197609 131782 Oct 24  2023  OD329415970884668100.pdf
+drwxr-xr-x 1 chait 197609      0 Oct 23  2023 'Office Lens'/
+drwxr-xr-x 1 chait 197609      0 Nov 29  2023 'Rockstar Games'/
+drwxr-xr-x 1 chait 197609      0 Jan 26 18:12 'WB Games'/
+-rw-r--r-- 1 chait 197609    418 Oct 23  2023  desktop.ini
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents
+$ cd GIT_HUB
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB
+$ git init
+Initialized empty Git repository in C:/Users/chait/OneDrive/Documents/GIT_HUB/.git/
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git status
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        SS_Create_User.txt
+        SS_Delete_User.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git add .
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   SS_Create_User.txt
+        new file:   SS_Delete_User.txt
+
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git commit -m "first commit"
+[master (root-commit) 538b5b8] first commit
+ 2 files changed, 87 insertions(+)
+ create mode 100644 SS_Create_User.txt
+ create mode 100644 SS_Delete_User.txt
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git status
+On branch master
+nothing to commit, working tree clean
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git remote add origin https://github.com/chaitanyarajndn/Devops.git
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git push -u origin main
+error: src refspec main does not match any
+error: failed to push some refs to 'https://github.com/chaitanyarajndn/Devops.git'
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git push -u origin master
+info: please complete authentication in your browser...
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 24 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 912 bytes | 912.00 KiB/s, done.
+Total 4 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://github.com/chaitanyarajndn/Devops.git
+ * [new branch]      master -> master
+branch 'master' set up to track 'origin/master'.
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        deleted:    SS_Create_User.txt
+        deleted:    SS_Delete_User.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        LINUX/
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git add .
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        renamed:    SS_Create_User.txt -> LINUX/Shell_Script/SS_Create_User.txt
+        renamed:    SS_Delete_User.txt -> LINUX/Shell_Script/SS_Delete_User.txt
+
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git commit -m "first commit"
+[master 746fbf8] first commit
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ rename SS_Create_User.txt => LINUX/Shell_Script/SS_Create_User.txt (100%)
+ rename SS_Delete_User.txt => LINUX/Shell_Script/SS_Delete_User.txt (100%)
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$ git push -u origin master
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 24 threads
+Compressing objects: 100% (1/1), done.
+Writing objects: 100% (3/3), 274 bytes | 274.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://github.com/chaitanyarajndn/Devops.git
+   538b5b8..746fbf8  master -> master
+branch 'master' set up to track 'origin/master'.
+
+chait@Chaitanya-Raj MINGW64 ~/onedrive/Documents/GIT_HUB (master)
+$

@@ -1,0 +1,42 @@
+Branching is a powerful feature in Git that allows you to diverge from the main line of development and continue to work without affecting that main line. This is useful for developing new features, fixing bugs, or experimenting. Here’s an overview of how to work with branches in Git.
+
+Key Concepts
+
+Branch: A branch in Git is simply a lightweight movable pointer to a commit.
+
+Master/Main: The default branch when you create a Git repository. Over time, many projects have moved from using master to main for the default branch name.
+
+HEAD: The pointer to the current branch reference, which tells Git where you are in the commit history.
+Common Branching Commands
+
+
+1. Creating a New Branch
+
+To create a new branch:		git branch <branch-name>
+
+To create and switch to a new branch in one command:		git checkout -b <branch-name>
+
+2. Listing Branches
+
+To list all branches:		git branch
+
+To list all branches, including remote branches:		git branch -a
+
+
+3. Switching Branches
+
+To switch to an existing branch:	git checkout <branch-name>
+
+
+4. Renaming a Branch
+
+To rename the current branch:		git branch -m <new-branch-name>
+
+To rename a branch from another branch:			git branch -m <old-branch-name> <new-branch-name>
+
+
+5. Deleting a Branch
+
+To delete a branch:		git branch -d <branch-name>
+
+To force delete a branch (if it hasn't been merged):		git branch -D <branch-name>

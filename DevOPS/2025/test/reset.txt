@@ -1,0 +1,24 @@
+Removing a commit in Git can be done in several ways, depending on the context and what you aim to achieve. Below are some common methods to remove a commit:
+
+1. Using git reset
+The git reset command is used to undo changes by moving the HEAD pointer and resetting the staging area. This can be done in two main ways: soft and hard reset.
+
+Soft Reset
+A soft reset will move the HEAD to a previous commit but leave your working directory and the staging area intact. This is useful if you want to undo commits but keep your changes.
+
+# Move the HEAD to the specified commit
+git reset --soft <commit-hash>
+
+
+Hard Reset
+A hard reset will move the HEAD to a previous commit and discard all changes in the working directory and staging area. This is useful if you want to completely remove changes.
+
+# Move the HEAD to the specified commit and discard changes
+git reset --hard <commit-hash>
+
+
+2. Using git revert
+The git revert command creates a new commit that undoes the changes from a specified commit. This is useful for undoing changes without rewriting history.
+
+# Revert the specified commit
+git revert <commit-hash>

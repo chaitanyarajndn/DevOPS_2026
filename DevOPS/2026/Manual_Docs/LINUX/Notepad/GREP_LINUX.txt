@@ -1,0 +1,535 @@
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# ll
+total 36
+drwx------  5 root root 4096 Jan  7 11:56 ./
+drwxr-xr-x 22 root root 4096 Jan  7 12:42 ../
+-rw-------  1 root root  745 Jan  7 13:24 .bash_history
+-rw-r--r--  1 root root 3106 Apr 22  2024 .bashrc
+drwx------  2 root root 4096 Jan  4 14:02 .cache/
+-rw-r--r--  1 root root    0 Jan  7 11:41 .motd_shown
+-rw-r--r--  1 root root  161 Apr 22  2024 .profile
+drwx------  2 root root 4096 Jan  6  2025 .ssh/
+-rw-------  1 root root 1307 Jan  7 11:56 .viminfo
+drwxrwxrwx  2 root root 4096 Jan  7 13:23 tmp/
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# cd tmp/
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# ll
+total 20
+drwxrwxrwx 2 root root 4096 Jan  7 13:23 ./
+drwx------ 5 root root 4096 Jan  7 11:56 ../
+-rwxrwxrwx 1 root root 4726 Jan  7 13:24 GITCOMMAND.txt*
+-rwxrwxrwx 1 root root  500 Jan  4 15:24 createuser.sh*
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# cat GITCOMMAND.txt
+
+
+
+                                                                ★━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━★
+                                                                  🌟  G I T  C O M M A N D S 🌟
+                                                                ★━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━★
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+git commit -m "Added new directory LINUX"
+
+
+https://github.com/chaitanyarajndn/Linux.git
+
+git remote add origin https://github.com/chaitanyarajndn/Linux.git
+
+https://github.com/chaitanyarajndn/Linux.git
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+
+
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+
+
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+
+
+https://github.com/chaitanyarajndn/Dev_LAB.git
+
+
+git push -u origin main https://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@github.com/chaitanyarajndn/Dev_LAB.git
+
+
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+
+
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/devlab.git
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+git remote set-url --add origin git@github.com:chaitanyarajndn/try-ssh.git
+
+git remote set-url --add origin git@github.com:chaitanyarajndn/devlab.git
+
+
+*******************************************************************************************************************************
+
+
+git clone
+
+git clone https://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@github.com/chaitanyarajndn/testonly.git
+
+
+*********************************************************************************************************************************
+
+
+https://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@github.com/chaitanyarajndn/testonly.git
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+git remote add origin https://github.com/chaitanyarajndn/testonly.git
+
+git remote add origin https://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@github.com/chaitanyarajndn/testonly.git
+
+
+************************************************************************************************************************
+
+
+******************************************************************************************
+
+
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/testonly.git
+
+
+************************************************************************************************************************
+******************************************************************************************
+************************************************************************************************************************
+******************************************************************************************
+******************************************************************************************
+************************************************************************************************************************
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# PWD
+PWD: command not found
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# pwd
+/root/tmp
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# ll
+total 20
+drwxrwxrwx 2 root root 4096 Jan  7 13:23 ./
+drwx------ 5 root root 4096 Jan  7 11:56 ../
+-rwxrwxrwx 1 root root 4726 Jan  7 13:24 GITCOMMAND.txt*
+-rwxrwxrwx 1 root root  500 Jan  4 15:24 createuser.sh*
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -n "git" /root/tmp/GITCOMMAND.txt
+11:git commit -m "Added new directory LINUX"
+14:https://github.com/chaitanyarajndn/Linux.git
+16:git remote add origin https://github.com/chaitanyarajndn/Linux.git
+18:https://github.com/chaitanyarajndn/Linux.git
+24:git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+27:git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+30:git remote set-url --add origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+33:https://github.com/chaitanyarajndn/Dev_LAB.git
+36:git push -u origin main https://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@github.com/chaitanyarajndn/Dev_LAB.git
+39:git remote set-url --delete origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+42:git remote set-url --add origin https://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@github.com/chaitanyarajndn/devlab.git
+48:git remote set-url --add origin git@github.com:chaitanyarajndn/try-ssh.git
+50:git remote set-url --add origin git@github.com:chaitanyarajndn/devlab.git
+56:git clone
+58:git clone https://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@github.com/chaitanyarajndn/testonly.git
+64:https://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@github.com/chaitanyarajndn/testonly.git
+70:git remote add origin https://github.com/chaitanyarajndn/testonly.git
+72:git remote add origin https://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@github.com/chaitanyarajndn/testonly.git
+81:git remote set-url --delete origin https://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@github.com/chaitanyarajndn/testonly.git
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep "git" GITCOMMAND.txt
+git commit -m "Added new directory LINUX"
+https://github.com/chaitanyarajndn/Linux.git
+git remote add origin https://github.com/chaitanyarajndn/Linux.git
+https://github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+https://github.com/chaitanyarajndn/Dev_LAB.git
+git push -u origin main https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/devlab.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/try-ssh.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/devlab.git
+git clone
+git clone https://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@github.com/chaitanyarajndn/testonly.git
+https://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@github.com/chaitanyarajndn/testonly.git
+git remote add origin https://github.com/chaitanyarajndn/testonly.git
+git remote add origin https://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@github.com/chaitanyarajndn/testonly.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/testonly.git
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -i "Git" GITCOMMAND.txt
+git commit -m "Added new directory LINUX"
+https://github.com/chaitanyarajndn/Linux.git
+git remote add origin https://github.com/chaitanyarajndn/Linux.git
+https://github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+https://github.com/chaitanyarajndn/Dev_LAB.git
+git push -u origin main https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/devlab.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/try-ssh.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/devlab.git
+git clone
+git clone https://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@github.com/chaitanyarajndn/testonly.git
+https://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@github.com/chaitanyarajndn/testonly.git
+git remote add origin https://github.com/chaitanyarajndn/testonly.git
+git remote add origin https://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@github.com/chaitanyarajndn/testonly.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/testonly.git
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -o "git" GITCOMMAND.txt | wc -l
+51
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -c "git" GITCOMMAND.txt
+19
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -A 2 "git clone" GITCOMMAND.txt
+git clone
+
+git clone https://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@github.com/chaitanyarajndn/testonly.git
+
+
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -B 2 "git clone" GITCOMMAND.txt
+
+
+git clone
+
+git clone https://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@github.com/chaitanyarajndn/testonly.git
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -C 2 "git clone" GITCOMMAND.txt
+
+
+git clone
+
+git clone https://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@github.com/chaitanyarajndn/testonly.git
+
+
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -w "git" GITCOMMAND.txt
+git commit -m "Added new directory LINUX"
+https://github.com/chaitanyarajndn/Linux.git
+git remote add origin https://github.com/chaitanyarajndn/Linux.git
+https://github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+https://github.com/chaitanyarajndn/Dev_LAB.git
+git push -u origin main https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/devlab.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/try-ssh.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/devlab.git
+git clone
+git clone https://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@github.com/chaitanyarajndn/testonly.git
+https://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@github.com/chaitanyarajndn/testonly.git
+git remote add origin https://github.com/chaitanyarajndn/testonly.git
+git remote add origin https://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@github.com/chaitanyarajndn/testonly.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/testonly.git
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -E "clone|commit|push" GITCOMMAND.txt
+git commit -m "Added new directory LINUX"
+git push -u origin main https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git clone
+git clone https://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@github.com/chaitanyarajndn/testonly.git
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -v "git" GITCOMMAND.txt
+
+
+
+                                                                ★━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━★
+                                                                  🌟  G I T  C O M M A N D S 🌟
+                                                                ★━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━★
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+
+
+
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+
+
+
+*******************************************************************************************************************************
+
+
+
+
+
+*********************************************************************************************************************************
+
+
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+
+
+
+************************************************************************************************************************
+
+
+******************************************************************************************
+
+
+
+
+************************************************************************************************************************
+******************************************************************************************
+************************************************************************************************************************
+******************************************************************************************
+******************************************************************************************
+************************************************************************************************************************
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep "^git" GITCOMMAND.txt
+git commit -m "Added new directory LINUX"
+git remote add origin https://github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git push -u origin main https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/devlab.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/try-ssh.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/devlab.git
+git clone
+git clone https://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@github.com/chaitanyarajndn/testonly.git
+git remote add origin https://github.com/chaitanyarajndn/testonly.git
+git remote add origin https://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@github.com/chaitanyarajndn/testonly.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/testonly.git
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep --color=auto "git" GITCOMMAND.txt
+git commit -m "Added new directory LINUX"
+https://github.com/chaitanyarajndn/Linux.git
+git remote add origin https://github.com/chaitanyarajndn/Linux.git
+https://github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+https://github.com/chaitanyarajndn/Dev_LAB.git
+git push -u origin main https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/devlab.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/try-ssh.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/devlab.git
+git clone
+git clone https://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@github.com/chaitanyarajndn/testonly.git
+https://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@github.com/chaitanyarajndn/testonly.git
+git remote add origin https://github.com/chaitanyarajndn/testonly.git
+git remote add origin https://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@github.com/chaitanyarajndn/testonly.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/testonly.git
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -R "git clone" /root/tmp
+/root/tmp/GITCOMMAND.txt:git clone
+/root/tmp/GITCOMMAND.txt:git clone https://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@github.com/chaitanyarajndn/testonly.git
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -R --include="*.txt" "git" /root/tmp
+/root/tmp/GITCOMMAND.txt:git commit -m "Added new directory LINUX"
+/root/tmp/GITCOMMAND.txt:https://github.com/chaitanyarajndn/Linux.git
+/root/tmp/GITCOMMAND.txt:git remote add origin https://github.com/chaitanyarajndn/Linux.git
+/root/tmp/GITCOMMAND.txt:https://github.com/chaitanyarajndn/Linux.git
+/root/tmp/GITCOMMAND.txt:git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+/root/tmp/GITCOMMAND.txt:git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+/root/tmp/GITCOMMAND.txt:git remote set-url --add origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+/root/tmp/GITCOMMAND.txt:https://github.com/chaitanyarajndn/Dev_LAB.git
+/root/tmp/GITCOMMAND.txt:git push -u origin main https://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@github.com/chaitanyarajndn/Dev_LAB.git
+/root/tmp/GITCOMMAND.txt:git remote set-url --delete origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+/root/tmp/GITCOMMAND.txt:git remote set-url --add origin https://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@github.com/chaitanyarajndn/devlab.git
+/root/tmp/GITCOMMAND.txt:git remote set-url --add origin git@github.com:chaitanyarajndn/try-ssh.git
+/root/tmp/GITCOMMAND.txt:git remote set-url --add origin git@github.com:chaitanyarajndn/devlab.git
+/root/tmp/GITCOMMAND.txt:git clone
+/root/tmp/GITCOMMAND.txt:git clone https://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@github.com/chaitanyarajndn/testonly.git
+/root/tmp/GITCOMMAND.txt:https://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@github.com/chaitanyarajndn/testonly.git
+/root/tmp/GITCOMMAND.txt:git remote add origin https://github.com/chaitanyarajndn/testonly.git
+/root/tmp/GITCOMMAND.txt:git remote add origin https://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@github.com/chaitanyarajndn/testonly.git
+/root/tmp/GITCOMMAND.txt:git remote set-url --delete origin https://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@github.com/chaitanyarajndn/testonly.git
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep "git remote" GITCOMMAND.txt
+git remote add origin https://github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Linux.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/Dev_LAB.git
+git remote set-url --add origin https://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@github.com/chaitanyarajndn/devlab.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/try-ssh.git
+git remote set-url --add origin git@github.com:chaitanyarajndn/devlab.git
+git remote add origin https://github.com/chaitanyarajndn/testonly.git
+git remote add origin https://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@github.com/chaitanyarajndn/testonly.git
+git remote set-url --delete origin https://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@github.com/chaitanyarajndn/testonly.git
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep -c "git clone" GITCOMMAND.txt
+2
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp# grep "^[^a-zA-Z0-9]*$" GITCOMMAND.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#
+root@Chaitanya-Raj:~/tmp#

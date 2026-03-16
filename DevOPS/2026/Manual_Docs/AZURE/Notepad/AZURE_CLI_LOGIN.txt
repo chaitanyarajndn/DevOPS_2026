@@ -1,0 +1,156 @@
+
+
+
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗  
+
+	No     Subscription name    Subscription ID                       Tenant
+	-----  -------------------  ------------------------------------  ------------------------------------
+	[1] *  Chaitanya_Ndn        633c7acd-a50e-4b4f-a660-021cc74b0019  753f6bb3-2161-49b9-9591-ae1a80b3f24a
+
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝  
+
+
+
+
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32> az login
+Select the account you want to log in with. For more information on login with Azure CLI, see https://go.microsoft.com/fwlink/?linkid=2271136
+
+Retrieving tenants and subscriptions for the selection...
+Authentication failed against tenant 753f6bb3-2161-49b9-9591-ae1a80b3f24a 'Default Directory': SubError: basic_action V2Error: invalid_grant AADSTS50076: Due to a configuration change made by your administrator, or because you moved to a new location, you must use multi-factor authentication to access '797f4846-ba00-4fd7-ba43-dac1f8f63013'. Trace ID: 6e5f9fd2-3224-4b5d-9b7f-a29255b8e700 Correlation ID: 0dc42561-bab3-4a9f-823f-4f30779afc06 Timestamp: 2026-03-07 17:42:29Z. Status: Response_Status.Status_InteractionRequired, Error code: 3399614476, Tag: 557973645
+If you need to access subscriptions in the following tenants, please use `az login --tenant TENANT_ID`.
+753f6bb3-2161-49b9-9591-ae1a80b3f24a 'Default Directory'
+No subscriptions found for chaitanyarajndn@gmail.com.
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32> az login --tenant 753f6bb3-2161-49b9-9591-ae1a80b3f24a
+Select the account you want to log in with. For more information on login with Azure CLI, see https://go.microsoft.com/fwlink/?linkid=2271136
+
+Retrieving subscriptions for the selection...
+
+[Tenant and subscription selection]
+
+No     Subscription name    Subscription ID                       Tenant
+-----  -------------------  ------------------------------------  ------------------------------------
+[1] *  Chaitanya_Ndn        633c7acd-a50e-4b4f-a660-021cc74b0019  753f6bb3-2161-49b9-9591-ae1a80b3f24a
+
+The default is marked with an *; the default tenant is '753f6bb3-2161-49b9-9591-ae1a80b3f24a' and subscription is 'Chaitanya_Ndn' (633c7acd-a50e-4b4f-a660-021cc74b0019).
+
+Select a subscription and tenant (Type a number or Enter for no changes): 1
+
+Tenant: 753f6bb3-2161-49b9-9591-ae1a80b3f24a
+Subscription: Chaitanya_Ndn (633c7acd-a50e-4b4f-a660-021cc74b0019)
+
+[Announcements]
+With the new Azure CLI login experience, you can select the subscription you want to use more easily. Learn more about it and its configuration at https://go.microsoft.com/fwlink/?linkid=2271236
+
+If you encounter any problem, please open an issue at https://aka.ms/azclibug
+
+[Warning] The login output has been updated. Please be aware that it no longer displays the full list of available subscriptions by default.
+
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32> az account show
+{
+  "environmentName": "AzureCloud",
+  "homeTenantId": "753f6bb3-2161-49b9-9591-ae1a80b3f24a",
+  "id": "633c7acd-a50e-4b4f-a660-021cc74b0019",
+  "isDefault": true,
+  "managedByTenants": [],
+  "name": "Chaitanya_Ndn",
+  "state": "Enabled",
+  "tenantDefaultDomain": "chaitanyarajndngmail.onmicrosoft.com",
+  "tenantDisplayName": "Default Directory",
+  "tenantId": "753f6bb3-2161-49b9-9591-ae1a80b3f24a",
+  "user": {
+    "name": "chaitanyarajndn@gmail.com",
+    "type": "user"
+  }
+}
+PS C:\WINDOWS\system32>
+
+
+
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+
+	No     Subscription name    Subscription ID                       Tenant
+	-----  -------------------  ------------------------------------  ------------------------------------
+	[1] *  Chaitanya_DevOPS     594ca230-6fcf-4aa3-81ac-5e4d3ec2027c  63a179fa-9037-4ddd-a7f3-646a89a65804
+
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝  
+
+
+
+
+PS C:\WINDOWS\system32>
+PS C:\WINDOWS\system32> az login --tenant 63a179fa-9037-4ddd-a7f3-646a89a65804
+Select the account you want to log in with. For more information on login with Azure CLI, see https://go.microsoft.com/fwlink/?linkid=2271136
+
+Retrieving subscriptions for the selection...
+
+[Tenant and subscription selection]
+
+No     Subscription name    Subscription ID                       Tenant
+-----  -------------------  ------------------------------------  ------------------------------------
+[1] *  Chaitanya_DevOPS     594ca230-6fcf-4aa3-81ac-5e4d3ec2027c  63a179fa-9037-4ddd-a7f3-646a89a65804
+
+The default is marked with an *; the default tenant is '63a179fa-9037-4ddd-a7f3-646a89a65804' and subscription is 'Chaitanya_DevOPS' (594ca230-6fcf-4aa3-81ac-5e4d3ec2027c).
+
+Select a subscription and tenant (Type a number or Enter for no changes):
+
+Tenant: 63a179fa-9037-4ddd-a7f3-646a89a65804
+Subscription: Chaitanya_DevOPS (594ca230-6fcf-4aa3-81ac-5e4d3ec2027c)
+
+[Announcements]
+With the new Azure CLI login experience, you can select the subscription you want to use more easily. Learn more about it and its configuration at https://go.microsoft.com/fwlink/?linkid=2271236
+
+If you encounter any problem, please open an issue at https://aka.ms/azclibug
+
+[Warning] The login output has been updated. Please be aware that it no longer displays the full list of available subscriptions by default.
+
+PS C:\WINDOWS\system32>
+
+
+
+
+
+
+PS C:\WINDOWS\system32> az account show
+{
+  "environmentName": "AzureCloud",
+  "homeTenantId": "63a179fa-9037-4ddd-a7f3-646a89a65804",
+  "id": "594ca230-6fcf-4aa3-81ac-5e4d3ec2027c",
+  "isDefault": true,
+  "managedByTenants": [],
+  "name": "Chaitanya_DevOPS",
+  "state": "Enabled",
+  "tenantId": "63a179fa-9037-4ddd-a7f3-646a89a65804",
+  "user": {
+    "name": "chaitanyarajndn@b18g141.online",
+    "type": "user"
+  }
+}
+PS C:\WINDOWS\system32>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

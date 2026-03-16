@@ -1,0 +1,32 @@
+#!/bin/bash
+
+
+#define_Function
+
+function create_user {
+
+        read -p "Enter username: " username
+
+        while [ -z "$username" ]; do
+
+                echo "Username should not be empty!!!"
+
+                read -p "Enter username again: " username
+        done
+
+        read -p "Enter password for $username": password
+
+        useradd -m $username -p $password
+
+        echo "user $username created successfully"
+}
+
+#Loop_to_create_users
+
+for ((i=1 ; i<=2; i++))
+do
+
+        create_user
+
+done
+

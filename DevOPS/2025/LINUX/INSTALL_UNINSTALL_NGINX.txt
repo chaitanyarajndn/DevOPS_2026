@@ -1,0 +1,242 @@
+
+
+
+To run Nginx on Ubuntu, 
+
+Install it using sudo apt update
+sudo apt install nginx
+
+
+The service starts automatically, but can be managed with 
+
+
+	sudo systemctl stop nginx
+
+	sudo systemctl start nginx
+
+	sudo systemctl restart nginx
+
+	sudo systemctl status nginx
+
+
+
+Open port 80 via the firewall with 
+
+
+	sudo ufw app list
+
+	sudo ufw allow 'Nginx HTTP'
+
+	sudo ufw status
+
+
+
+
+Verify by browsing to http://localhost. 
+
+
+
+
+curl -4 icanhazip.com
+
+
+152.59.88.207
+
+http://152.59.88.207
+
+
+
+
+
+
+completely undo / clean up everything related to Nginx** and bring the system back to the state **as if you never tried running a web server**.
+
+
+Below is a **safe, step-by-step rollback**. Follow in order.
+
+---
+
+🔴 STEP 1: Stop Nginx service
+
+
+sudo systemctl stop nginx
+
+
+Verify:
+
+
+systemctl status nginx
+
+
+You should see:		inactive (dead)
+
+
+---
+
+🔴 STEP 2: Disable Nginx from auto-start
+
+
+sudo systemctl disable nginx
+
+
+(Optional double check)
+
+
+systemctl is-enabled nginx
+
+
+Expected:
+
+
+disabled
+
+
+---
+
+🔴 STEP 3: Remove Nginx completely (recommended)
+
+This removes:
+
+* Nginx binaries
+* Default configs
+* Service files
+
+
+sudo apt remove --purge nginx nginx-common nginx-core -y
+
+
+---
+
+🔴 STEP 4: Remove leftover config & cache files
+
+Sometimes configs remain even after purge.
+
+
+sudo rm -rf /etc/nginx
+sudo rm -rf /var/log/nginx
+sudo rm -rf /var/cache/nginx
+
+
+---
+
+🔴 STEP 5: Clean unused packages
+
+
+sudo apt autoremove -y
+sudo apt autoclean
+
+
+---
+
+🔴 STEP 6: Restore `/var/www` (optional but clean)
+
+If you don’t need web hosting files anymore:
+
+
+sudo rm -rf /var/www
+
+
+Or recreate default empty structure:
+
+
+sudo mkdir -p /var/www
+sudo chown -R root:root /var/www
+
+
+---
+
+🔴 STEP 7: Reset UFW (optional)
+
+You didn’t enable it, but to **fully reset**:
+
+
+sudo ufw reset
+
+
+Check:
+
+
+sudo ufw status
+
+
+Expected:
+
+
+Status: inactive
+
+
+---
+
+🔴 STEP 8: Verify NOTHING is listening on port 80
+
+
+ss -tulnp | grep :80
+
+
+Expected:
+
+
+(no output)
+
+
+✔ Means port 80 is completely free
+
+---
+
+🔴 STEP 9: Final verification
+
+Run:
+
+
+nginx -v
+
+
+Expected:
+
+
+command not found
+
+
+✅ Nginx is **fully removed**
+
+---
+
+🧹 SYSTEM STATUS AFTER CLEANUP
+
+✔ No Nginx
+✔ No web server
+✔ No auto-start services
+✔ No open ports
+✔ No configs
+✔ Clean system
+
+---
+
+🧠 Important reassurance
+
+You **did not break anything** earlier.
+Installing Nginx is **safe and reversible** — and you just reversed it cleanly 👍
+
+---
+
+🚀 What do you want next?
+
+Choose one:
+1️⃣ Learn Linux safely (no servers)
+2️⃣ Re-install Nginx later **properly on a VPS**
+3️⃣ Learn Docker instead
+4️⃣ Networking fundamentals (CGNAT, ports, IPs)
+
+Just reply with the number.
+
+
+
+
+
+
+
+
+
+
+
+

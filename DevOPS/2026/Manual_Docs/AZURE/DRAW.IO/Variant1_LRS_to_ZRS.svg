@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1600" height="900" viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Variant1_LRS_to_ZRS</title>
+  <defs>
+    <style type="text/css"><![CDATA[
+      .txt { font-family: Arial, Helvetica, sans-serif; fill:#222222; }
+      .label { font-size:16px; font-weight:700; }
+      .note { font-size:12px; fill:#222222; }
+      .lrs { fill:#0B5FFF; stroke:#083FD6; stroke-width:2; rx:10; ry:10; }
+      .zrs { fill:#E8FFF3; stroke:#00A86B; stroke-width:2; rx:12; ry:12; }
+      .arrow { stroke:#222222; stroke-width:3; fill:none; marker-end:url(#arrowhead); marker-start:url(#arrowhead); }
+    ]]></style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#222222"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="800" y="40" text-anchor="middle" class="txt label">Storage Redundancy Variant 1 LRS to ZRS</text>
+
+  <!-- LRS datacenters -->
+  <g id="LRS_Group">
+    <rect x="80" y="120" width="220" height="120" class="lrs"/>
+    <text x="190" y="160" text-anchor="middle" class="txt label" fill="#ffffff">Datacenter 1</text>
+    <text x="190" y="185" text-anchor="middle" class="note" fill="#ffffff">3 replicas (intra-datacenter)</text>
+
+    <rect x="80" y="280" width="220" height="120" class="lrs"/>
+    <text x="190" y="320" text-anchor="middle" class="txt label" fill="#ffffff">Datacenter 2</text>
+    <text x="190" y="345" text-anchor="middle" class="note" fill="#ffffff">3 replicas (intra-datacenter)</text>
+
+    <rect x="80" y="440" width="220" height="120" class="lrs"/>
+    <text x="190" y="480" text-anchor="middle" class="txt label" fill="#ffffff">Datacenter 3</text>
+    <text x="190" y="505" text-anchor="middle" class="note" fill="#ffffff">3 replicas (intra-datacenter)</text>
+  </g>
+
+  <!-- ZRS cluster -->
+  <g id="ZRS_Group">
+    <rect x="520" y="160" width="960" height="420" class="zrs"/>
+    <text x="1000" y="190" text-anchor="middle" class="txt label">ZRS Cluster (Zone A / Zone B / Zone C)</text>
+
+    <!-- Zone A -->
+    <rect x="560" y="220" width="260" height="260" fill="#ffffff" stroke="#00A86B" stroke-width="2" rx="10" ry="10"/>
+    <text x="690" y="250" class="txt label" text-anchor="middle">Zone A</text>
+    <rect x="620" y="290" width="120" height="80" fill="#0B5FFF" stroke="#083FD6" rx="8" ry="8"/>
+    <text x="680" y="335" text-anchor="middle" class="txt" fill="#ffffff">LRS</text>
+
+    <!-- Zone B -->
+    <rect x="860" y="220" width="260" height="260" fill="#ffffff" stroke="#00A86B" stroke-width="2" rx="10" ry="10"/>
+    <text x="990" y="250" class="txt label" text-anchor="middle">Zone B</text>
+    <rect x="920" y="290" width="120" height="80" fill="#0B5FFF" stroke="#083FD6" rx="8" ry="8"/>
+    <text x="980" y="335" text-anchor="middle" class="txt" fill="#ffffff">LRS</text>
+
+    <!-- Zone C -->
+    <rect x="1160" y="220" width="260" height="260" fill="#ffffff" stroke="#00A86B" stroke-width="2" rx="10" ry="10"/>
+    <text x="1290" y="250" class="txt label" text-anchor="middle">Zone C</text>
+    <rect x="1220" y="290" width="120" height="80" fill="#0B5FFF" stroke="#083FD6" rx="8" ry="8"/>
+    <text x="1280" y="335" text-anchor="middle" class="txt" fill="#ffffff">LRS</text>
+  </g>
+
+  <!-- Arrows from LRS to Zones -->
+  <path d="M300 180 L620 330" class="arrow"/>
+  <path d="M300 340 L940 330" class="arrow"/>
+  <path d="M300 500 L1260 330" class="arrow"/>
+
+  <!-- Cross-zone arrows -->
+  <path d="M740 370 L860 370" stroke="#222222" stroke-width="3" marker-end="url(#arrowhead)" marker-start="url(#arrowhead)"/>
+  <path d="M1060 370 L1180 370" stroke="#222222" stroke-width="3" marker-end="url(#arrowhead)" marker-start="url(#arrowhead)"/>
+  <text x="1000" y="420" class="note" text-anchor="middle">ZRS — cross-zone replication (sync)</text>
+
+  <!-- Legend -->
+  <g transform="translate(520,620)">
+    <rect x="0" y="0" width="420" height="120" fill="#ffffff" stroke="#cccccc" rx="8" ry="8"/>
+    <text x="10" y="24" class="txt label">Legend</text>
+    <rect x="12" y="36" width="18" height="12" fill="#0B5FFF" stroke="#083FD6"/>
+    <text x="36" y="46" class="txt">LRS — intra-datacenter replicas</text>
+    <rect x="12" y="62" width="18" height="12" fill="#00A86B" stroke="#00A86B"/>
+    <text x="36" y="72" class="txt">ZRS — cross-zone replication</text>
+    <path d="M12 92 L40 92" stroke="#222222" stroke-width="3" marker-end="url(#arrowhead)"/>
+    <text x="46" y="98" class="txt">Solid arrow = sync</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="800" y="860" text-anchor="middle" class="note">Storage Redundancy — Variant 1 | Author: [Your Name] | Date: [YYYY-MM-DD]</text>
+</svg>
