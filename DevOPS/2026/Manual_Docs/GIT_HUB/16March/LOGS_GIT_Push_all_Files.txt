@@ -1,0 +1,1741 @@
+cnandan@C-5CG2145W4V:~$
+cnandan@C-5CG2145W4V:~$
+cnandan@C-5CG2145W4V:~$ sudo -i
+[sudo] password for cnandan:
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~# date
+Mon Mar 16 09:25:08 CDT 2026
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~# cd /home/cnandan/
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# ls -lrth
+total 8.0K
+drwxrwxrwx 4 cnandan cnandan 4.0K Mar 16 05:08 DevOPS
+drwxrwxrwx 2 cnandan cnandan 4.0K Mar 16 08:45 Github
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# cd Github/
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -lrth
+total 0
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git fetch origin
+fatal: not a git repository (or any of the parent directories): .git
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git init
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint:   git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint:   git branch -m <name>
+Initialized empty Git repository in /home/cnandan/Github/.git/
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git fetch origin
+fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git --version
+git version 2.43.0
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git branch -a
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git branch
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git branch -m main
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git branch -a
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git remote add origin https://github.com/chaitanyarajndn/DevOPS_2026.git
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -lrth
+total 0
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git remote -v
+origin  https://github.com/chaitanyarajndn/DevOPS_2026.git (fetch)
+origin  https://github.com/chaitanyarajndn/DevOPS_2026.git (push)
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -lrth
+total 4.0K
+drwxr-xr-x 3 cnandan cnandan 4.0K Mar 16 10:18 2026
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# chmod -R 777 2026
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# cd 2026/
+root@C-5CG2145W4V:/home/cnandan/Github/2026#
+root@C-5CG2145W4V:/home/cnandan/Github/2026#
+root@C-5CG2145W4V:/home/cnandan/Github/2026# ls -lrth
+total 4.0K
+drwxrwxrwx 8 cnandan cnandan 4.0K Mar 16 10:18 Manual_Docs
+root@C-5CG2145W4V:/home/cnandan/Github/2026#
+root@C-5CG2145W4V:/home/cnandan/Github/2026#
+root@C-5CG2145W4V:/home/cnandan/Github/2026#
+root@C-5CG2145W4V:/home/cnandan/Github/2026# cd ..
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# pwd
+/home/cnandan/Github
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -lrth
+total 4.0K
+drwxrwxrwx 3 cnandan cnandan 4.0K Mar 16 10:18 2026
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -al
+total 16
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 10:18 .
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 ..
+drwxr-xr-x 7 root    root    4096 Mar 16 09:52 .git
+drwxrwxrwx 3 cnandan cnandan 4096 Mar 16 10:18 2026
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -lrth
+total 4.0K
+drwxr-xr-x 4 cnandan cnandan 4.0K Mar 16 10:24 DevOPS
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# cd DevOPS/
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# ls -lrth
+total 8.0K
+drwxr-xr-x 3 cnandan cnandan 4.0K Mar 16 10:24 2026
+drwxr-xr-x 6 cnandan cnandan 4.0K Mar 16 10:24 2025
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git add .
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git status
+On branch main
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   2025/1707069509002.pdf
+        new file:   2025/1707069509002.pdf:Zone.Identifier
+        new file:   2025/AWS-iSSUE.pptx
+        new file:   2025/AWS-iSSUE.pptx:Zone.Identifier
+        new file:   2025/Docker-runtime.gif
+        new file:   2025/Docker-runtime.gif:Zone.Identifier
+        new file:   2025/Docker/Docker-Notes.docx
+        new file:   2025/Docker/Docker-Notes.docx:Zone.Identifier
+        new file:   2025/Docker/Docker.pdf
+        new file:   2025/Docker/Docker.pdf:Zone.Identifier
+        new file:   2025/Docker/FORMAT.docx
+        new file:   2025/Docker/FORMAT.docx:Zone.Identifier
+        new file:   2025/Docker/Notepad/create docker file.txt
+        new file:   2025/Docker/Notepad/create docker file.txt:Zone.Identifier
+        new file:   2025/Docker/Notepad/docker built command1.txt
+        new file:   2025/Docker/Notepad/docker built command1.txt:Zone.Identifier
+        new file:   2025/Docker/Notepad/docker run command.txt
+        new file:   2025/Docker/Notepad/docker run command.txt:Zone.Identifier
+        new file:   2025/Docker/Notepad/sudo usermodify command.txt
+        new file:   2025/Docker/Notepad/sudo usermodify command.txt:Zone.Identifier
+        new file:   2025/Doker.docx
+        new file:   2025/Doker.docx:Zone.Identifier
+        new file:   2025/FORMAT.docx
+        new file:   2025/FORMAT.docx:Zone.Identifier
+        new file:   2025/GIT HUB/GITHUB.docx
+        new file:   2025/GIT HUB/GITHUB.docx:Zone.Identifier
+        new file:   2025/GIT HUB/GitHub.pdf
+        new file:   2025/GIT HUB/GitHub.pdf:Zone.Identifier
+        new file:   2025/GIT HUB/Notepads/GIT COMMAND.txt
+        new file:   2025/GIT HUB/Notepads/GIT COMMAND.txt:Zone.Identifier
+        new file:   2025/GIT HUB/Notepads/GIT OUTPUT.txt
+        new file:   2025/GIT HUB/Notepads/GIT OUTPUT.txt:Zone.Identifier
+        new file:   2025/GIT HUB/Notepads/GIT-Pushcommand.txt
+        new file:   2025/GIT HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier
+        new file:   2025/GIT HUB/Notepads/How to push Files to GITHUB.txt
+        new file:   2025/GIT HUB/Notepads/How to push Files to GITHUB.txt:Zone.Identifier
+        new file:   2025/GREP.docx
+        new file:   2025/GREP.docx:Zone.Identifier
+        new file:   2025/Git Basic Commands Cheat Sheet .pdf
+        new file:   2025/Git Basic Commands Cheat Sheet .pdf:Zone.Identifier
+        new file:   2025/LINUX/Basic/Echo_AWK_Read.txt
+        new file:   2025/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier
+        new file:   2025/LINUX/GREP_Commands.txt
+        new file:   2025/LINUX/GREP_Commands.txt:Zone.Identifier
+        new file:   2025/LINUX/INSTALL_UNINSTALL_NGINX.txt
+        new file:   2025/LINUX/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier
+        new file:   2025/LINUX/LINUX NOTES/Linux-1.pdf
+        new file:   2025/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier
+        new file:   2025/LINUX/LINUX NOTES/Shell Script.pdf
+        new file:   2025/LINUX/LINUX NOTES/Shell Script.pdf:Zone.Identifier
+        new file:   2025/LINUX/Shell_Script/SS_Create_User.txt
+        new file:   2025/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier
+        new file:   2025/LINUX/Shell_Script/SS_Delete_User.txt
+        new file:   2025/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier
+        new file:   2025/LINUX/Shell_Script/SS_User_Management.txt
+        new file:   2025/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier
+        new file:   2025/LINUX/Shell_Script/change_password.sh
+        new file:   2025/LINUX/Shell_Script/change_password.sh:Zone.Identifier
+        new file:   2025/LINUX/WSL_DOC.txt
+        new file:   2025/LINUX/WSL_DOC.txt:Zone.Identifier
+        new file:   2025/Linux-VI-editor.docx
+        new file:   2025/Linux-VI-editor.docx:Zone.Identifier
+        new file:   2025/NOTEPAD_HEADING.txt
+        new file:   2025/NOTEPAD_HEADING.txt:Zone.Identifier
+        new file:   2025/Networking Terminologies.docx
+        new file:   2025/Networking Terminologies.docx:Zone.Identifier
+        new file:   2025/UBUNTU-CMDS-LOGIN-Details.txt
+        new file:   2025/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier
+        new file:   2025/docker_screenshots.pptx
+        new file:   2025/docker_screenshots.pptx:Zone.Identifier
+        new file:   2025/test/git-branching.txt
+        new file:   2025/test/git-branching.txt:Zone.Identifier
+        new file:   2025/test/reset.txt
+        new file:   2025/test/reset.txt:Zone.Identifier
+        new file:   2025/usermanagement.txt
+        new file:   2025/usermanagement.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/14March/AZURE_Cheat_Sheet.txt
+        new file:   2026/Manual_Docs/AZURE/14March/AZURE_Cheat_Sheet.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx
+        new file:   2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/8March/Create_Azure_RG_Using_Terraform_Azure_CLI.docx
+        new file:   2026/Manual_Docs/AZURE/8March/Create_Azure_RG_Using_Terraform_Azure_CLI.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/8March/Register_Create_User.docx
+        new file:   2026/Manual_Docs/AZURE/8March/Register_Create_User.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/8March/Storage_Redundancy.docx
+        new file:   2026/Manual_Docs/AZURE/8March/Storage_Redundancy.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/8March/Users_Groups_Roles_Azure_Resource.docx
+        new file:   2026/Manual_Docs/AZURE/8March/Users_Groups_Roles_Azure_Resource.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/AZURE_1.pdf
+        new file:   2026/Manual_Docs/AZURE/AZURE_1.pdf:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/Azure_EntraIDSetup.svg
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/Azure_EntraIDSetup.svg:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/GroupFormation_Roles.svg
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/GroupFormation_Roles.svg:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/Variant1_LRS_to_ZRS.svg
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/Variant1_LRS_to_ZRS.svg:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/structure.svg
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/structure.svg:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/Azure_Resource_Group.png
+        new file:   2026/Manual_Docs/AZURE/Images/Azure_Resource_Group.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/Azure_Resource_Hierarchy.png
+        new file:   2026/Manual_Docs/AZURE/Images/Azure_Resource_Hierarchy.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/Imperative_Declarative.png
+        new file:   2026/Manual_Docs/AZURE/Images/Imperative_Declarative.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/Imperative_Declarative_2.png
+        new file:   2026/Manual_Docs/AZURE/Images/Imperative_Declarative_2.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/LRS_ZRS_GRS_GZRS_structured.png
+        new file:   2026/Manual_Docs/AZURE/Images/LRS_ZRS_GRS_GZRS_structured.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/Storage_Redundancy.png
+        new file:   2026/Manual_Docs/AZURE/Images/Storage_Redundancy.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/confirm.png
+        new file:   2026/Manual_Docs/AZURE/Images/confirm.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_CLI_LOGIN.txt
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_CLI_LOGIN.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_Class_Notes.txt
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_Class_Notes.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_Regions.txt
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_Regions.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Notepad/root@Chaitanya-Raj ~Azure.txt
+        new file:   2026/Manual_Docs/AZURE/Notepad/root@Chaitanya-Raj ~Azure.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Presentation1.pptx
+        new file:   2026/Manual_Docs/AZURE/Presentation1.pptx:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Docker-Notes.docx
+        new file:   2026/Manual_Docs/Docker/Docker-Notes.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Docker.pdf
+        new file:   2026/Manual_Docs/Docker/Docker.pdf:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/FORMAT.docx
+        new file:   2026/Manual_Docs/Docker/FORMAT.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Notepad/create_docker_file.txt
+        new file:   2026/Manual_Docs/Docker/Notepad/create_docker_file.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Notepad/docker_built_command1.txt
+        new file:   2026/Manual_Docs/Docker/Notepad/docker_built_command1.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Notepad/docker_run_command.txt
+        new file:   2026/Manual_Docs/Docker/Notepad/docker_run_command.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Notepad/sudo_usermodify_command.txt
+        new file:   2026/Manual_Docs/Docker/Notepad/sudo_usermodify_command.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/GITHUB.docx
+        new file:   2026/Manual_Docs/GIT_HUB/GITHUB.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/GitHub.pdf
+        new file:   2026/Manual_Docs/GIT_HUB/GitHub.pdf:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT-Pushcommand.txt
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT_COMMAND.txt
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT_COMMAND.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT_OUTPUT.txt
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT_OUTPUT.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/Push_Files_GITHUB.txt
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/Push_Files_GITHUB.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Basic/Echo_AWK_Read.txt
+        new file:   2026/Manual_Docs/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/LINUX NOTES/Linux-1.pdf
+        new file:   2026/Manual_Docs/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/LINUX NOTES/Shell_Script.pdf
+        new file:   2026/Manual_Docs/LINUX/LINUX NOTES/Shell_Script.pdf:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/Basic_Linux.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/Basic_Linux.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/CREATEUSER_SCRIPT.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/CREATEUSER_SCRIPT.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/GREP_Commands.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/GREP_Commands.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/GREP_LINUX.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/GREP_LINUX.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_IIS.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_IIS.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_NIGNX.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_NIGNX.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_UNINSTALL_NGINX.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/Install_Run_Uninstall_NGINX.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/Install_Run_Uninstall_NGINX.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/LINUX_1.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/LINUX_1.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/WSL_DOC.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/WSL_DOC.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/modifyuser_binbash_SHELL.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/modifyuser_binbash_SHELL.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_Create_User.txt
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_Delete_User.txt
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_User_Management.txt
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/change_password.sh
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/change_password.sh:Zone.Identifier
+        new file:   2026/Manual_Docs/NOTEPAD_HEADING.txt
+        new file:   2026/Manual_Docs/NOTEPAD_HEADING.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/Template.docx
+        new file:   2026/Manual_Docs/Template.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/Terraform/Notepad/INSTALL_Terraform_Failed.txt
+        new file:   2026/Manual_Docs/Terraform/Notepad/INSTALL_Terraform_Failed.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/Terraform/Notepad/Install_Terraform_Success.txt
+        new file:   2026/Manual_Docs/Terraform/Notepad/Install_Terraform_Success.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/UBUNTU-CMDS-LOGIN-Details.txt
+        new file:   2026/Manual_Docs/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier
+
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git commit -m "Initial commit"
+[main (root-commit) d5dbd01] Initial commit
+ Committer: root <root@C-5CG2145W4V.localdomain>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 194 files changed, 31698 insertions(+)
+ create mode 100644 DevOPS/2025/1707069509002.pdf
+ create mode 100644 DevOPS/2025/1707069509002.pdf:Zone.Identifier
+ create mode 100644 DevOPS/2025/AWS-iSSUE.pptx
+ create mode 100644 DevOPS/2025/AWS-iSSUE.pptx:Zone.Identifier
+ create mode 100644 DevOPS/2025/Docker-runtime.gif
+ create mode 100644 DevOPS/2025/Docker-runtime.gif:Zone.Identifier
+ create mode 100644 DevOPS/2025/Docker/Docker-Notes.docx
+ create mode 100644 DevOPS/2025/Docker/Docker-Notes.docx:Zone.Identifier
+ create mode 100644 DevOPS/2025/Docker/Docker.pdf
+ create mode 100644 DevOPS/2025/Docker/Docker.pdf:Zone.Identifier
+ create mode 100644 DevOPS/2025/Docker/FORMAT.docx
+ create mode 100644 DevOPS/2025/Docker/FORMAT.docx:Zone.Identifier
+ create mode 100644 DevOPS/2025/Docker/Notepad/create docker file.txt
+ create mode 100644 DevOPS/2025/Docker/Notepad/create docker file.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/Docker/Notepad/docker built command1.txt
+ create mode 100644 DevOPS/2025/Docker/Notepad/docker built command1.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/Docker/Notepad/docker run command.txt
+ create mode 100644 DevOPS/2025/Docker/Notepad/docker run command.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/Docker/Notepad/sudo usermodify command.txt
+ create mode 100644 DevOPS/2025/Docker/Notepad/sudo usermodify command.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/Doker.docx
+ create mode 100644 DevOPS/2025/Doker.docx:Zone.Identifier
+ create mode 100644 DevOPS/2025/FORMAT.docx
+ create mode 100644 DevOPS/2025/FORMAT.docx:Zone.Identifier
+ create mode 100644 DevOPS/2025/GIT HUB/GITHUB.docx
+ create mode 100644 DevOPS/2025/GIT HUB/GITHUB.docx:Zone.Identifier
+ create mode 100644 DevOPS/2025/GIT HUB/GitHub.pdf
+ create mode 100644 DevOPS/2025/GIT HUB/GitHub.pdf:Zone.Identifier
+ create mode 100644 DevOPS/2025/GIT HUB/Notepads/GIT COMMAND.txt
+ create mode 100644 DevOPS/2025/GIT HUB/Notepads/GIT COMMAND.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/GIT HUB/Notepads/GIT OUTPUT.txt
+ create mode 100644 DevOPS/2025/GIT HUB/Notepads/GIT OUTPUT.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/GIT HUB/Notepads/GIT-Pushcommand.txt
+ create mode 100644 DevOPS/2025/GIT HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/GIT HUB/Notepads/How to push Files to GITHUB.txt
+ create mode 100644 DevOPS/2025/GIT HUB/Notepads/How to push Files to GITHUB.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/GREP.docx
+ create mode 100644 DevOPS/2025/GREP.docx:Zone.Identifier
+ create mode 100644 DevOPS/2025/Git Basic Commands Cheat Sheet .pdf
+ create mode 100644 DevOPS/2025/Git Basic Commands Cheat Sheet .pdf:Zone.Identifier
+ create mode 100644 DevOPS/2025/LINUX/Basic/Echo_AWK_Read.txt
+ create mode 100644 DevOPS/2025/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/LINUX/GREP_Commands.txt
+ create mode 100644 DevOPS/2025/LINUX/GREP_Commands.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/LINUX/INSTALL_UNINSTALL_NGINX.txt
+ create mode 100644 DevOPS/2025/LINUX/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/LINUX/LINUX NOTES/Linux-1.pdf
+ create mode 100644 DevOPS/2025/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier
+ create mode 100644 DevOPS/2025/LINUX/LINUX NOTES/Shell Script.pdf
+ create mode 100644 DevOPS/2025/LINUX/LINUX NOTES/Shell Script.pdf:Zone.Identifier
+ create mode 100644 DevOPS/2025/LINUX/Shell_Script/SS_Create_User.txt
+ create mode 100644 DevOPS/2025/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/LINUX/Shell_Script/SS_Delete_User.txt
+ create mode 100644 DevOPS/2025/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/LINUX/Shell_Script/SS_User_Management.txt
+ create mode 100644 DevOPS/2025/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/LINUX/Shell_Script/change_password.sh
+ create mode 100644 DevOPS/2025/LINUX/Shell_Script/change_password.sh:Zone.Identifier
+ create mode 100644 DevOPS/2025/LINUX/WSL_DOC.txt
+ create mode 100644 DevOPS/2025/LINUX/WSL_DOC.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/Linux-VI-editor.docx
+ create mode 100644 DevOPS/2025/Linux-VI-editor.docx:Zone.Identifier
+ create mode 100644 DevOPS/2025/NOTEPAD_HEADING.txt
+ create mode 100644 DevOPS/2025/NOTEPAD_HEADING.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/Networking Terminologies.docx
+ create mode 100644 DevOPS/2025/Networking Terminologies.docx:Zone.Identifier
+ create mode 100644 DevOPS/2025/UBUNTU-CMDS-LOGIN-Details.txt
+ create mode 100644 DevOPS/2025/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/docker_screenshots.pptx
+ create mode 100644 DevOPS/2025/docker_screenshots.pptx:Zone.Identifier
+ create mode 100644 DevOPS/2025/test/git-branching.txt
+ create mode 100644 DevOPS/2025/test/git-branching.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/test/reset.txt
+ create mode 100644 DevOPS/2025/test/reset.txt:Zone.Identifier
+ create mode 100644 DevOPS/2025/usermanagement.txt
+ create mode 100644 DevOPS/2025/usermanagement.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/14March/AZURE_Cheat_Sheet.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/14March/AZURE_Cheat_Sheet.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/8March/Create_Azure_RG_Using_Terraform_Azure_CLI.docx
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/8March/Create_Azure_RG_Using_Terraform_Azure_CLI.docx:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/8March/Register_Create_User.docx
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/8March/Register_Create_User.docx:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/8March/Storage_Redundancy.docx
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/8March/Storage_Redundancy.docx:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/8March/Users_Groups_Roles_Azure_Resource.docx
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/8March/Users_Groups_Roles_Azure_Resource.docx:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/AZURE_1.pdf
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/AZURE_1.pdf:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Azure_EntraIDSetup.svg
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Azure_EntraIDSetup.svg:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/GroupFormation_Roles.svg
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/GroupFormation_Roles.svg:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Variant1_LRS_to_ZRS.svg
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Variant1_LRS_to_ZRS.svg:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/structure.svg
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/structure.svg:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Group.png
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Group.png:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Hierarchy.png
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Hierarchy.png:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative.png
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative.png:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative_2.png
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative_2.png:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/LRS_ZRS_GRS_GZRS_structured.png
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/LRS_ZRS_GRS_GZRS_structured.png:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/Storage_Redundancy.png
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/Storage_Redundancy.png:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/confirm.png
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Images/confirm.png:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_CLI_LOGIN.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_CLI_LOGIN.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Class_Notes.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Class_Notes.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Regions.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Regions.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Notepad/root@Chaitanya-Raj ~Azure.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Notepad/root@Chaitanya-Raj ~Azure.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Presentation1.pptx
+ create mode 100644 DevOPS/2026/Manual_Docs/AZURE/Presentation1.pptx:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Docker-Notes.docx
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Docker-Notes.docx:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Docker.pdf
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Docker.pdf:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/FORMAT.docx
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/FORMAT.docx:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Notepad/create_docker_file.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Notepad/create_docker_file.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Notepad/docker_built_command1.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Notepad/docker_built_command1.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Notepad/docker_run_command.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Notepad/docker_run_command.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Notepad/sudo_usermodify_command.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/Docker/Notepad/sudo_usermodify_command.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/GITHUB.docx
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/GITHUB.docx:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/GitHub.pdf
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/GitHub.pdf:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT-Pushcommand.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_COMMAND.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_COMMAND.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_OUTPUT.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_OUTPUT.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/Push_Files_GITHUB.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/Push_Files_GITHUB.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Basic/Echo_AWK_Read.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Linux-1.pdf
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Shell_Script.pdf
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Shell_Script.pdf:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/Basic_Linux.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/Basic_Linux.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/CREATEUSER_SCRIPT.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/CREATEUSER_SCRIPT.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_Commands.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_Commands.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_LINUX.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_LINUX.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_IIS.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_IIS.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_NIGNX.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_NIGNX.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_UNINSTALL_NGINX.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/Install_Run_Uninstall_NGINX.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/Install_Run_Uninstall_NGINX.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/LINUX_1.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/LINUX_1.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/WSL_DOC.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/WSL_DOC.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/modifyuser_binbash_SHELL.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Notepad/modifyuser_binbash_SHELL.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Create_User.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Delete_User.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_User_Management.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/change_password.sh
+ create mode 100644 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/change_password.sh:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/NOTEPAD_HEADING.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/NOTEPAD_HEADING.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/Template.docx
+ create mode 100644 DevOPS/2026/Manual_Docs/Template.docx:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/Terraform/Notepad/INSTALL_Terraform_Failed.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/Terraform/Notepad/INSTALL_Terraform_Failed.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/Terraform/Notepad/Install_Terraform_Success.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/Terraform/Notepad/Install_Terraform_Success.txt:Zone.Identifier
+ create mode 100644 DevOPS/2026/Manual_Docs/UBUNTU-CMDS-LOGIN-Details.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git status
+On branch main
+nothing to commit, working tree clean
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git log
+commit d5dbd015e2b5c67ecadacb49e80f7c93cfec92a9 (HEAD -> main)
+Author: root <root@C-5CG2145W4V.localdomain>
+Date:   Mon Mar 16 10:28:59 2026 -0500
+
+    Initial commit
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git show d5dbd015e2b5c67ecadacb49e80f7c93cfec92a9
+commit d5dbd015e2b5c67ecadacb49e80f7c93cfec92a9 (HEAD -> main)
+Author: root <root@C-5CG2145W4V.localdomain>
+Date:   Mon Mar 16 10:28:59 2026 -0500
+
+    Initial commit
+
+diff --git a/DevOPS/2025/1707069509002.pdf b/DevOPS/2025/1707069509002.pdf
+new file mode 100644
+index 0000000..6f23373
+--- /dev/null
++++ b/DevOPS/2025/1707069509002.pdf
+@@ -0,0 +1,11034 @@
++%PDF-1.7
++%<F6><E4><FC><DF>
++1 0 obj
++<<
++/Type /Catalog
++/Pages 2 0 R
++/Lang (en)
++/StructTreeRoot 3 0 R
++/MarkInfo <<
++/Marked true
++>>
++/Metadata 4 0 R
++/ViewerPreferences 5 0 R
++>>
++endobj
++6 0 obj
++<<
++>>
++endobj
++2 0 obj
++<<
++/Type /Pages
++/Count 16
++/Kids [7 0 R 8 0 R 9 0 R 10 0 R 11 0 R 12 0 R 13 0 R 14 0 R 15 0 R 16 0 R
++17 0 R 18 0 R 19 0 R 20 0 R 21 0 R 22 0 R]
++>>
++endobj
++3 0 obj
++<<
++/Type /StructTreeRoot
++/RoleMap 23 0 R
++/ParentTree 24 0 R
++/K [25 0 R]
++/ParentTreeNextKey 16
++>>
++endobj
++4 0 obj
++<<
++/Length 0
++/Type /Metadata
++/Subtype /XML
++>>
++stream^M
++^M
++endstream
++endobj
++5 0 obj
++<<
++/DisplayDocTitle true
++>>
++endobj
++7 0 obj
++<<
++/Type /Page
++/Parent 2 0 R
++/Resources <<
++/ExtGState <<
++/GS5 26 0 R
++/GS8 27 0 R
++>>
++/Font <<
++/F1 28 0 R
++/F2 29 0 R
++/F3 30 0 R
++/F4 31 0 R
++/F5 32 0 R
++>>
++/XObject <<
++/Image20 33 0 R
++>>
++/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
++>>
++/MediaBox [0 0 595.32 841.92]
++/Contents 34 0 R
++/Group <<
++/Type /Group
++/S /Transparency
++/CS /DeviceRGB
++>>
++/Tabs /S
++/StructParents 0
++/Annots []
++>>
++endobj
++8 0 obj
++<<
++/Type /Page
++/Parent 2 0 R
++/Resources <<
++/ExtGState <<
++/GS5 26 0 R
++/GS8 27 0 R
++>>
++/Font <<
++/F1 28 0 R
++/F4 31 0 R
++/F3 30 0 R
++/F2 29 0 R
++/F5 32 0 R
++>>
++/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
++>>
++/MediaBox [0 0 595.32 841.92]
++/Contents 35 0 R
++/Group <<
++/Type /Group
++/S /Transparency
++/CS /DeviceRGB
++>>
++/Tabs /S
++/StructParents 1
++/StructParents 1
++/Annots []
++>>
++endobj
++9 0 obj
++<<
++/Type /Page
++/Parent 2 0 R
++/Resources <<
++/ExtGState <<
++/GS5 26 0 R
++/GS8 27 0 R
++>>
++/Font <<
++/F1 28 0 R
++/F4 31 0 R
++/F3 30 0 R
++/F2 29 0 R
++/F5 32 0 R
++/F6 36 0 R
++>>
++/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
++>>
++/MediaBox [0 0 595.32 841.92]
++/Contents 37 0 R
++/Group <<
++/Type /Group
++/S /Transparency
++/CS /DeviceRGB
++>>
++/Tabs /S
++/StructParents 2
++/Annots []
++>>
++endobj
++10 0 obj
++<<
++/Type /Page
++/Parent 2 0 R
++/Resources <<
++/ExtGState <<
++/GS5 26 0 R
++/GS8 27 0 R
++>>
++/Font <<
++/F2 29 0 R
++/F3 30 0 R
++/F5 32 0 R
++/F1 28 0 R
++/F6 36 0 R
++>>
++/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
++>>
+:
++endobj
++9 0 obj
++<<
++/Type /Page
++/Parent 2 0 R
++/Resources <<
++/ExtGState <<
++/GS5 26 0 R
++/GS8 27 0 R
++>>
++/Font <<
++/F1 28 0 R
++/F4 31 0 R
++/F3 30 0 R
++/F2 29 0 R
++/F5 32 0 R
++/F6 36 0 R
++>>
++/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
++>>
++/MediaBox [0 0 595.32 841.92]
++/Contents 37 0 R
++/Group <<
++/Type /Group
++/S /Transparency
++/CS /DeviceRGB
++>>
++/Tabs /S
++/StructParents 2
++/Annots []
++>>
++endobj
++10 0 obj
++<<
++/Type /Page
++/Parent 2 0 R
++/Resources <<
++/ExtGState <<
++/GS5 26 0 R
++/GS8 27 0 R
++>>
++/Font <<
++/F2 29 0 R
++/F3 30 0 R
++/F5 32 0 R
++/F1 28 0 R
++/F6 36 0 R
++>>
++/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
++>>
++/MediaBox [0 0 595.32 841.92]
++/Contents 38 0 R
++/Group <<
+
+[1]+  Stopped                 git show d5dbd015e2b5c67ecadacb49e80f7c93cfec92a9
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git push -u origin main
+Username for 'https://github.com': chaitanyarajndn
+Password for 'https://chaitanyarajndn@github.com':
+remote: Invalid username or token. Password authentication is not supported for Git operations.
+fatal: Authentication failed for 'https://github.com/chaitanyarajndn/DevOPS_2026.git/'
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git remote -v
+origin  https://github.com/chaitanyarajndn/DevOPS_2026.git (fetch)
+origin  https://github.com/chaitanyarajndn/DevOPS_2026.git (push)
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git push -u origin main
+Username for 'https://github.com': chaitanyarajndn
+Password for 'https://chaitanyarajndn@github.com':
+remote: Invalid username or token. Password authentication is not supported for Git operations.
+fatal: Authentication failed for 'https://github.com/chaitanyarajndn/DevOPS_2026.git/'
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git log --oneline
+d5dbd01 (HEAD -> main) Initial commit
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git reset --hard d5dbd01
+HEAD is now at d5dbd01 Initial commit
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git status
+On branch main
+nothing to commit, working tree clean
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# ls -lrth
+total 8.0K
+drwxr-xr-x 3 cnandan cnandan 4.0K Mar 16 10:24 2026
+drwxr-xr-x 6 cnandan cnandan 4.0K Mar 16 10:24 2025
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# cd ..
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -lrth
+total 4.0K
+drwxr-xr-x 4 cnandan cnandan 4.0K Mar 16 10:24 DevOPS
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# pwd
+/home/cnandan/Github
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git remote -v
+origin  https://github.com/chaitanyarajndn/DevOPS_2026.git (fetch)
+origin  https://github.com/chaitanyarajndn/DevOPS_2026.git (push)
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -al
+total 16
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 10:24 .
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 ..
+drwxr-xr-x 8 root    root    4096 Mar 16 10:42 .git
+drwxr-xr-x 4 cnandan cnandan 4096 Mar 16 10:24 DevOPS
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# rm -rf .git/
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -al
+total 12
+drwxrwxrwx 3 cnandan cnandan 4096 Mar 16 10:46 .
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 ..
+drwxr-xr-x 4 cnandan cnandan 4096 Mar 16 10:24 DevOPS
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git remote -v
+fatal: not a git repository (or any of the parent directories): .git
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -lrth
+total 4.0K
+drwxr-xr-x 4 cnandan cnandan 4.0K Mar 16 10:24 DevOPS
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -al
+total 12
+drwxrwxrwx 3 cnandan cnandan 4096 Mar 16 10:46 .
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 ..
+drwxr-xr-x 4 cnandan cnandan 4096 Mar 16 10:24 DevOPS
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git init
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint:   git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint:   git branch -m <name>
+Initialized empty Git repository in /home/cnandan/Github/.git/
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -lrth
+total 4.0K
+drwxr-xr-x 4 cnandan cnandan 4.0K Mar 16 10:24 DevOPS
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -al
+total 16
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 10:47 .
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 ..
+drwxr-xr-x 7 root    root    4096 Mar 16 10:47 .git
+drwxr-xr-x 4 cnandan cnandan 4096 Mar 16 10:24 DevOPS
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# rm -rf DevOPS/
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -lrth
+total 0
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -al
+total 12
+drwxrwxrwx 3 cnandan cnandan 4096 Mar 16 10:54 .
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 ..
+drwxr-xr-x 7 root    root    4096 Mar 16 10:47 .git
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git remote -v
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git remote add origin https://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@github.com/chaitanyarajndn/DevOPS_2026.git
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git remote -v
+origin  https://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@github.com/chaitanyarajndn/DevOPS_2026.git (fetch)
+origin  https://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@github.com/chaitanyarajndn/DevOPS_2026.git (push)
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# chmod -R 777 DevOPS/
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -al
+total 16
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 10:55 .
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 ..
+drwxr-xr-x 7 root    root    4096 Mar 16 10:54 .git
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 10:55 DevOPS
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# cd DevOPS/
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# ls -al
+total 16
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 10:55 .
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 10:55 ..
+drwxrwxrwx 6 cnandan cnandan 4096 Mar 16 10:55 2025
+drwxrwxrwx 3 cnandan cnandan 4096 Mar 16 10:55 2026
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# cd ../../
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# ls -la
+total 40
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 .
+drwxr-xr-x 3 root    root    4096 Mar 16 06:59 ..
+-rw------- 1 cnandan cnandan  143 Mar 16 09:24 .bash_history
+-rw-r--r-- 1 cnandan cnandan  220 Mar 16 06:59 .bash_logout
+-rw-r--r-- 1 cnandan cnandan 3771 Mar 16 06:59 .bashrc
+drwx------ 2 cnandan cnandan 4096 Mar 16 07:00 .cache
+-rw------- 1 cnandan cnandan   20 Mar 16 07:02 .lesshst
+-rw-rw-r-- 1 cnandan cnandan    0 Mar 16 07:00 .motd_shown
+-rw-r--r-- 1 cnandan cnandan  807 Mar 16 06:59 .profile
+-rw-r--r-- 1 cnandan cnandan    0 Mar 16 07:08 .sudo_as_admin_successful
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 05:08 DevOPS
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 10:55 Github
+root@C-5CG2145W4V:/home/cnandan# cd Github/
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -al
+total 16
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 10:55 .
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 ..
+drwxr-xr-x 7 root    root    4096 Mar 16 10:54 .git
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 10:55 DevOPS
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git branch -m main
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git remote -v
+origin  https://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@github.com/chaitanyarajndn/DevOPS_2026.git (fetch)
+origin  https://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@github.com/chaitanyarajndn/DevOPS_2026.git (push)
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git branch -a
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git status
+On branch main
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        DevOPS/
+
+nothing added to commit but untracked files present (use "git add" to track)
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# cd DevOPS/
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# ls -lrth
+total 8.0K
+drwxrwxrwx 3 cnandan cnandan 4.0K Mar 16 10:55 2026
+drwxrwxrwx 6 cnandan cnandan 4.0K Mar 16 10:55 2025
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git status
+On branch main
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        ./
+
+nothing added to commit but untracked files present (use "git add" to track)
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git add .
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git status
+On branch main
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   2025/1707069509002.pdf
+        new file:   2025/1707069509002.pdf:Zone.Identifier
+        new file:   2025/AWS-iSSUE.pptx
+        new file:   2025/AWS-iSSUE.pptx:Zone.Identifier
+        new file:   2025/Docker-runtime.gif
+        new file:   2025/Docker-runtime.gif:Zone.Identifier
+        new file:   2025/Docker/Docker-Notes.docx
+        new file:   2025/Docker/Docker-Notes.docx:Zone.Identifier
+        new file:   2025/Docker/Docker.pdf
+        new file:   2025/Docker/Docker.pdf:Zone.Identifier
+        new file:   2025/Docker/FORMAT.docx
+        new file:   2025/Docker/FORMAT.docx:Zone.Identifier
+        new file:   2025/Docker/Notepad/create docker file.txt
+        new file:   2025/Docker/Notepad/create docker file.txt:Zone.Identifier
+        new file:   2025/Docker/Notepad/docker built command1.txt
+        new file:   2025/Docker/Notepad/docker built command1.txt:Zone.Identifier
+        new file:   2025/Docker/Notepad/docker run command.txt
+        new file:   2025/Docker/Notepad/docker run command.txt:Zone.Identifier
+        new file:   2025/Docker/Notepad/sudo usermodify command.txt
+        new file:   2025/Docker/Notepad/sudo usermodify command.txt:Zone.Identifier
+        new file:   2025/Doker.docx
+        new file:   2025/Doker.docx:Zone.Identifier
+        new file:   2025/FORMAT.docx
+        new file:   2025/FORMAT.docx:Zone.Identifier
+        new file:   2025/GIT HUB/GITHUB.docx
+        new file:   2025/GIT HUB/GITHUB.docx:Zone.Identifier
+        new file:   2025/GIT HUB/GitHub.pdf
+        new file:   2025/GIT HUB/GitHub.pdf:Zone.Identifier
+        new file:   2025/GIT HUB/Notepads/GIT COMMAND.txt
+        new file:   2025/GIT HUB/Notepads/GIT COMMAND.txt:Zone.Identifier
+        new file:   2025/GIT HUB/Notepads/GIT OUTPUT.txt
+        new file:   2025/GIT HUB/Notepads/GIT OUTPUT.txt:Zone.Identifier
+        new file:   2025/GIT HUB/Notepads/GIT-Pushcommand.txt
+        new file:   2025/GIT HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier
+        new file:   2025/GIT HUB/Notepads/How to push Files to GITHUB.txt
+        new file:   2025/GIT HUB/Notepads/How to push Files to GITHUB.txt:Zone.Identifier
+        new file:   2025/GREP.docx
+        new file:   2025/GREP.docx:Zone.Identifier
+        new file:   2025/Git Basic Commands Cheat Sheet .pdf
+        new file:   2025/Git Basic Commands Cheat Sheet .pdf:Zone.Identifier
+        new file:   2025/LINUX/Basic/Echo_AWK_Read.txt
+        new file:   2025/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier
+        new file:   2025/LINUX/GREP_Commands.txt
+        new file:   2025/LINUX/GREP_Commands.txt:Zone.Identifier
+        new file:   2025/LINUX/INSTALL_UNINSTALL_NGINX.txt
+        new file:   2025/LINUX/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier
+        new file:   2025/LINUX/LINUX NOTES/Linux-1.pdf
+        new file:   2025/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier
+        new file:   2025/LINUX/LINUX NOTES/Shell Script.pdf
+        new file:   2025/LINUX/LINUX NOTES/Shell Script.pdf:Zone.Identifier
+        new file:   2025/LINUX/Shell_Script/SS_Create_User.txt
+        new file:   2025/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier
+        new file:   2025/LINUX/Shell_Script/SS_Delete_User.txt
+        new file:   2025/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier
+        new file:   2025/LINUX/Shell_Script/SS_User_Management.txt
+        new file:   2025/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier
+        new file:   2025/LINUX/Shell_Script/change_password.sh
+        new file:   2025/LINUX/Shell_Script/change_password.sh:Zone.Identifier
+        new file:   2025/LINUX/WSL_DOC.txt
+        new file:   2025/LINUX/WSL_DOC.txt:Zone.Identifier
+        new file:   2025/Linux-VI-editor.docx
+        new file:   2025/Linux-VI-editor.docx:Zone.Identifier
+        new file:   2025/NOTEPAD_HEADING.txt
+        new file:   2025/NOTEPAD_HEADING.txt:Zone.Identifier
+        new file:   2025/Networking Terminologies.docx
+        new file:   2025/Networking Terminologies.docx:Zone.Identifier
+        new file:   2025/UBUNTU-CMDS-LOGIN-Details.txt
+        new file:   2025/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier
+        new file:   2025/docker_screenshots.pptx
+        new file:   2025/docker_screenshots.pptx:Zone.Identifier
+        new file:   2025/test/git-branching.txt
+        new file:   2025/test/git-branching.txt:Zone.Identifier
+        new file:   2025/test/reset.txt
+        new file:   2025/test/reset.txt:Zone.Identifier
+        new file:   2025/usermanagement.txt
+        new file:   2025/usermanagement.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/14March/AZURE_Cheat_Sheet.txt
+        new file:   2026/Manual_Docs/AZURE/14March/AZURE_Cheat_Sheet.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx
+        new file:   2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/8March/Create_Azure_RG_Using_Terraform_Azure_CLI.docx
+        new file:   2026/Manual_Docs/AZURE/8March/Create_Azure_RG_Using_Terraform_Azure_CLI.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/8March/Register_Create_User.docx
+        new file:   2026/Manual_Docs/AZURE/8March/Register_Create_User.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/8March/Storage_Redundancy.docx
+        new file:   2026/Manual_Docs/AZURE/8March/Storage_Redundancy.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/8March/Users_Groups_Roles_Azure_Resource.docx
+        new file:   2026/Manual_Docs/AZURE/8March/Users_Groups_Roles_Azure_Resource.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/AZURE_1.pdf
+        new file:   2026/Manual_Docs/AZURE/AZURE_1.pdf:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/Azure_EntraIDSetup.svg
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/Azure_EntraIDSetup.svg:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/GroupFormation_Roles.svg
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/GroupFormation_Roles.svg:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/Variant1_LRS_to_ZRS.svg
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/Variant1_LRS_to_ZRS.svg:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/structure.svg
+        new file:   2026/Manual_Docs/AZURE/DRAW.IO/structure.svg:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/Azure_Resource_Group.png
+        new file:   2026/Manual_Docs/AZURE/Images/Azure_Resource_Group.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/Azure_Resource_Hierarchy.png
+        new file:   2026/Manual_Docs/AZURE/Images/Azure_Resource_Hierarchy.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/Imperative_Declarative.png
+        new file:   2026/Manual_Docs/AZURE/Images/Imperative_Declarative.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/Imperative_Declarative_2.png
+        new file:   2026/Manual_Docs/AZURE/Images/Imperative_Declarative_2.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/LRS_ZRS_GRS_GZRS_structured.png
+        new file:   2026/Manual_Docs/AZURE/Images/LRS_ZRS_GRS_GZRS_structured.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/Storage_Redundancy.png
+        new file:   2026/Manual_Docs/AZURE/Images/Storage_Redundancy.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Images/confirm.png
+        new file:   2026/Manual_Docs/AZURE/Images/confirm.png:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_CLI_LOGIN.txt
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_CLI_LOGIN.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_Class_Notes.txt
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_Class_Notes.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_Regions.txt
+        new file:   2026/Manual_Docs/AZURE/Notepad/AZURE_Regions.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Notepad/root@Chaitanya-Raj ~Azure.txt
+        new file:   2026/Manual_Docs/AZURE/Notepad/root@Chaitanya-Raj ~Azure.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/AZURE/Presentation1.pptx
+        new file:   2026/Manual_Docs/AZURE/Presentation1.pptx:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Docker-Notes.docx
+        new file:   2026/Manual_Docs/Docker/Docker-Notes.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Docker.pdf
+        new file:   2026/Manual_Docs/Docker/Docker.pdf:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/FORMAT.docx
+        new file:   2026/Manual_Docs/Docker/FORMAT.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Notepad/create_docker_file.txt
+        new file:   2026/Manual_Docs/Docker/Notepad/create_docker_file.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Notepad/docker_built_command1.txt
+        new file:   2026/Manual_Docs/Docker/Notepad/docker_built_command1.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Notepad/docker_run_command.txt
+        new file:   2026/Manual_Docs/Docker/Notepad/docker_run_command.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/Docker/Notepad/sudo_usermodify_command.txt
+        new file:   2026/Manual_Docs/Docker/Notepad/sudo_usermodify_command.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/GITHUB.docx
+        new file:   2026/Manual_Docs/GIT_HUB/GITHUB.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/GitHub.pdf
+        new file:   2026/Manual_Docs/GIT_HUB/GitHub.pdf:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT-Pushcommand.txt
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT_COMMAND.txt
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT_COMMAND.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT_OUTPUT.txt
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/GIT_OUTPUT.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/Push_Files_GITHUB.txt
+        new file:   2026/Manual_Docs/GIT_HUB/Notepads/Push_Files_GITHUB.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/GIT_HUB/~$GITHUB.docx
+        new file:   2026/Manual_Docs/GIT_HUB/~$GITHUB.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Basic/Echo_AWK_Read.txt
+        new file:   2026/Manual_Docs/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/LINUX NOTES/Linux-1.pdf
+        new file:   2026/Manual_Docs/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/LINUX NOTES/Shell_Script.pdf
+        new file:   2026/Manual_Docs/LINUX/LINUX NOTES/Shell_Script.pdf:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/Basic_Linux.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/Basic_Linux.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/CREATEUSER_SCRIPT.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/CREATEUSER_SCRIPT.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/GREP_Commands.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/GREP_Commands.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/GREP_LINUX.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/GREP_LINUX.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_IIS.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_IIS.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_NIGNX.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_NIGNX.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_UNINSTALL_NGINX.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/Install_Run_Uninstall_NGINX.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/Install_Run_Uninstall_NGINX.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/LINUX_1.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/LINUX_1.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/WSL_DOC.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/WSL_DOC.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Notepad/modifyuser_binbash_SHELL.txt
+        new file:   2026/Manual_Docs/LINUX/Notepad/modifyuser_binbash_SHELL.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_Create_User.txt
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_Delete_User.txt
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_User_Management.txt
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/change_password.sh
+        new file:   2026/Manual_Docs/LINUX/Shell_Script/change_password.sh:Zone.Identifier
+        new file:   2026/Manual_Docs/NOTEPAD_HEADING.txt
+        new file:   2026/Manual_Docs/NOTEPAD_HEADING.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/Template.docx
+        new file:   2026/Manual_Docs/Template.docx:Zone.Identifier
+        new file:   2026/Manual_Docs/Terraform/Notepad/INSTALL_Terraform_Failed.txt
+        new file:   2026/Manual_Docs/Terraform/Notepad/INSTALL_Terraform_Failed.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/Terraform/Notepad/Install_Terraform_Success.txt
+        new file:   2026/Manual_Docs/Terraform/Notepad/Install_Terraform_Success.txt:Zone.Identifier
+        new file:   2026/Manual_Docs/UBUNTU-CMDS-LOGIN-Details.txt
+        new file:   2026/Manual_Docs/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier
+
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git commit -m "Initial commit"
+[main (root-commit) edbdde1] Initial commit
+ Committer: root <root@C-5CG2145W4V.localdomain>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 196 files changed, 31698 insertions(+)
+ create mode 100755 DevOPS/2025/1707069509002.pdf
+ create mode 100755 DevOPS/2025/1707069509002.pdf:Zone.Identifier
+ create mode 100755 DevOPS/2025/AWS-iSSUE.pptx
+ create mode 100755 DevOPS/2025/AWS-iSSUE.pptx:Zone.Identifier
+ create mode 100755 DevOPS/2025/Docker-runtime.gif
+ create mode 100755 DevOPS/2025/Docker-runtime.gif:Zone.Identifier
+ create mode 100755 DevOPS/2025/Docker/Docker-Notes.docx
+ create mode 100755 DevOPS/2025/Docker/Docker-Notes.docx:Zone.Identifier
+ create mode 100755 DevOPS/2025/Docker/Docker.pdf
+ create mode 100755 DevOPS/2025/Docker/Docker.pdf:Zone.Identifier
+ create mode 100755 DevOPS/2025/Docker/FORMAT.docx
+ create mode 100755 DevOPS/2025/Docker/FORMAT.docx:Zone.Identifier
+ create mode 100755 DevOPS/2025/Docker/Notepad/create docker file.txt
+ create mode 100755 DevOPS/2025/Docker/Notepad/create docker file.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/Docker/Notepad/docker built command1.txt
+ create mode 100755 DevOPS/2025/Docker/Notepad/docker built command1.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/Docker/Notepad/docker run command.txt
+ create mode 100755 DevOPS/2025/Docker/Notepad/docker run command.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/Docker/Notepad/sudo usermodify command.txt
+ create mode 100755 DevOPS/2025/Docker/Notepad/sudo usermodify command.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/Doker.docx
+ create mode 100755 DevOPS/2025/Doker.docx:Zone.Identifier
+ create mode 100755 DevOPS/2025/FORMAT.docx
+ create mode 100755 DevOPS/2025/FORMAT.docx:Zone.Identifier
+ create mode 100755 DevOPS/2025/GIT HUB/GITHUB.docx
+ create mode 100755 DevOPS/2025/GIT HUB/GITHUB.docx:Zone.Identifier
+ create mode 100755 DevOPS/2025/GIT HUB/GitHub.pdf
+ create mode 100755 DevOPS/2025/GIT HUB/GitHub.pdf:Zone.Identifier
+ create mode 100755 DevOPS/2025/GIT HUB/Notepads/GIT COMMAND.txt
+ create mode 100755 DevOPS/2025/GIT HUB/Notepads/GIT COMMAND.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/GIT HUB/Notepads/GIT OUTPUT.txt
+ create mode 100755 DevOPS/2025/GIT HUB/Notepads/GIT OUTPUT.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/GIT HUB/Notepads/GIT-Pushcommand.txt
+ create mode 100755 DevOPS/2025/GIT HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/GIT HUB/Notepads/How to push Files to GITHUB.txt
+ create mode 100755 DevOPS/2025/GIT HUB/Notepads/How to push Files to GITHUB.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/GREP.docx
+ create mode 100755 DevOPS/2025/GREP.docx:Zone.Identifier
+ create mode 100755 DevOPS/2025/Git Basic Commands Cheat Sheet .pdf
+ create mode 100755 DevOPS/2025/Git Basic Commands Cheat Sheet .pdf:Zone.Identifier
+ create mode 100755 DevOPS/2025/LINUX/Basic/Echo_AWK_Read.txt
+ create mode 100755 DevOPS/2025/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/LINUX/GREP_Commands.txt
+ create mode 100755 DevOPS/2025/LINUX/GREP_Commands.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/LINUX/INSTALL_UNINSTALL_NGINX.txt
+ create mode 100755 DevOPS/2025/LINUX/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/LINUX/LINUX NOTES/Linux-1.pdf
+ create mode 100755 DevOPS/2025/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier
+ create mode 100755 DevOPS/2025/LINUX/LINUX NOTES/Shell Script.pdf
+ create mode 100755 DevOPS/2025/LINUX/LINUX NOTES/Shell Script.pdf:Zone.Identifier
+ create mode 100755 DevOPS/2025/LINUX/Shell_Script/SS_Create_User.txt
+ create mode 100755 DevOPS/2025/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/LINUX/Shell_Script/SS_Delete_User.txt
+ create mode 100755 DevOPS/2025/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/LINUX/Shell_Script/SS_User_Management.txt
+ create mode 100755 DevOPS/2025/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/LINUX/Shell_Script/change_password.sh
+ create mode 100755 DevOPS/2025/LINUX/Shell_Script/change_password.sh:Zone.Identifier
+ create mode 100755 DevOPS/2025/LINUX/WSL_DOC.txt
+ create mode 100755 DevOPS/2025/LINUX/WSL_DOC.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/Linux-VI-editor.docx
+ create mode 100755 DevOPS/2025/Linux-VI-editor.docx:Zone.Identifier
+ create mode 100755 DevOPS/2025/NOTEPAD_HEADING.txt
+ create mode 100755 DevOPS/2025/NOTEPAD_HEADING.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/Networking Terminologies.docx
+ create mode 100755 DevOPS/2025/Networking Terminologies.docx:Zone.Identifier
+ create mode 100755 DevOPS/2025/UBUNTU-CMDS-LOGIN-Details.txt
+ create mode 100755 DevOPS/2025/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/docker_screenshots.pptx
+ create mode 100755 DevOPS/2025/docker_screenshots.pptx:Zone.Identifier
+ create mode 100755 DevOPS/2025/test/git-branching.txt
+ create mode 100755 DevOPS/2025/test/git-branching.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/test/reset.txt
+ create mode 100755 DevOPS/2025/test/reset.txt:Zone.Identifier
+ create mode 100755 DevOPS/2025/usermanagement.txt
+ create mode 100755 DevOPS/2025/usermanagement.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/14March/AZURE_Cheat_Sheet.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/14March/AZURE_Cheat_Sheet.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/8March/Create_Azure_RG_Using_Terraform_Azure_CLI.docx
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/8March/Create_Azure_RG_Using_Terraform_Azure_CLI.docx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/8March/Register_Create_User.docx
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/8March/Register_Create_User.docx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/8March/Storage_Redundancy.docx
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/8March/Storage_Redundancy.docx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/8March/Users_Groups_Roles_Azure_Resource.docx
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/8March/Users_Groups_Roles_Azure_Resource.docx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/AZURE_1.pdf
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/AZURE_1.pdf:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Azure_EntraIDSetup.svg
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Azure_EntraIDSetup.svg:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/GroupFormation_Roles.svg
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/GroupFormation_Roles.svg:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Variant1_LRS_to_ZRS.svg
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Variant1_LRS_to_ZRS.svg:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/structure.svg
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/structure.svg:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Group.png
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Group.png:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Hierarchy.png
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Hierarchy.png:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative.png
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative.png:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative_2.png
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative_2.png:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/LRS_ZRS_GRS_GZRS_structured.png
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/LRS_ZRS_GRS_GZRS_structured.png:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/Storage_Redundancy.png
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/Storage_Redundancy.png:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/confirm.png
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Images/confirm.png:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_CLI_LOGIN.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_CLI_LOGIN.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Class_Notes.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Class_Notes.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Regions.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Regions.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Notepad/root@Chaitanya-Raj ~Azure.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Notepad/root@Chaitanya-Raj ~Azure.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Presentation1.pptx
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/Presentation1.pptx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Docker-Notes.docx
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Docker-Notes.docx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Docker.pdf
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Docker.pdf:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/FORMAT.docx
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/FORMAT.docx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Notepad/create_docker_file.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Notepad/create_docker_file.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Notepad/docker_built_command1.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Notepad/docker_built_command1.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Notepad/docker_run_command.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Notepad/docker_run_command.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Notepad/sudo_usermodify_command.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/Docker/Notepad/sudo_usermodify_command.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/GITHUB.docx
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/GITHUB.docx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/GitHub.pdf
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/GitHub.pdf:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT-Pushcommand.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_COMMAND.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_COMMAND.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_OUTPUT.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_OUTPUT.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/Push_Files_GITHUB.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/Push_Files_GITHUB.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/~$GITHUB.docx
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/~$GITHUB.docx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Basic/Echo_AWK_Read.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Linux-1.pdf
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Shell_Script.pdf
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Shell_Script.pdf:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/Basic_Linux.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/Basic_Linux.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/CREATEUSER_SCRIPT.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/CREATEUSER_SCRIPT.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_Commands.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_Commands.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_LINUX.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_LINUX.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_IIS.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_IIS.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_NIGNX.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_NIGNX.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_UNINSTALL_NGINX.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/Install_Run_Uninstall_NGINX.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/Install_Run_Uninstall_NGINX.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/LINUX_1.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/LINUX_1.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/WSL_DOC.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/WSL_DOC.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/modifyuser_binbash_SHELL.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Notepad/modifyuser_binbash_SHELL.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Create_User.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Delete_User.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_User_Management.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/change_password.sh
+ create mode 100755 DevOPS/2026/Manual_Docs/LINUX/Shell_Script/change_password.sh:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/NOTEPAD_HEADING.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/NOTEPAD_HEADING.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/Template.docx
+ create mode 100755 DevOPS/2026/Manual_Docs/Template.docx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/Terraform/Notepad/INSTALL_Terraform_Failed.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/Terraform/Notepad/INSTALL_Terraform_Failed.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/Terraform/Notepad/Install_Terraform_Success.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/Terraform/Notepad/Install_Terraform_Success.txt:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/UBUNTU-CMDS-LOGIN-Details.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git status
+On branch main
+nothing to commit, working tree clean
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git log --oneline
+edbdde1 (HEAD -> main) Initial commit
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git symbolic-ref HEAD
+refs/heads/main
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git push -u origin main
+To https://github.com/chaitanyarajndn/DevOPS_2026.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/chaitanyarajndn/DevOPS_2026.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git config --global init.defaultBranch main
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git checkout main
+Already on 'main'
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git fetch origin
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 885 bytes | 442.00 KiB/s, done.
+From https://github.com/chaitanyarajndn/DevOPS_2026
+ * [new branch]      main       -> origin/main
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git pull --rebase origin main
+From https://github.com/chaitanyarajndn/DevOPS_2026
+ * branch            main       -> FETCH_HEAD
+Successfully rebased and updated refs/heads/main.
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git push -u origin main
+Enumerating objects: 106, done.
+Counting objects: 100% (106/106), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (101/101), done.
+Writing objects: 100% (105/105), 42.58 MiB | 2.56 MiB/s, done.
+Total 105 (delta 14), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (14/14), done.
+To https://github.com/chaitanyarajndn/DevOPS_2026.git
+   bcef466..716b5eb  main -> main
+branch 'main' set up to track 'origin/main'.
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# ls -lrth
+total 8.0K
+drwxrwxrwx 3 cnandan cnandan 4.0K Mar 16 10:55 2026
+drwxr-xr-x 6 root    root    4.0K Mar 16 11:09 2025
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# cd ../../
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# ls -al
+total 40
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 .
+drwxr-xr-x 3 root    root    4096 Mar 16 06:59 ..
+-rw------- 1 cnandan cnandan  143 Mar 16 09:24 .bash_history
+-rw-r--r-- 1 cnandan cnandan  220 Mar 16 06:59 .bash_logout
+-rw-r--r-- 1 cnandan cnandan 3771 Mar 16 06:59 .bashrc
+drwx------ 2 cnandan cnandan 4096 Mar 16 07:00 .cache
+-rw------- 1 cnandan cnandan   20 Mar 16 07:02 .lesshst
+-rw-rw-r-- 1 cnandan cnandan    0 Mar 16 07:00 .motd_shown
+-rw-r--r-- 1 cnandan cnandan  807 Mar 16 06:59 .profile
+-rw-r--r-- 1 cnandan cnandan    0 Mar 16 07:08 .sudo_as_admin_successful
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 05:08 DevOPS
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 11:09 Github
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# chmod -R 777 Github/
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# ll
+total 40
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 ./
+drwxr-xr-x 3 root    root    4096 Mar 16 06:59 ../
+-rw------- 1 cnandan cnandan  143 Mar 16 09:24 .bash_history
+-rw-r--r-- 1 cnandan cnandan  220 Mar 16 06:59 .bash_logout
+-rw-r--r-- 1 cnandan cnandan 3771 Mar 16 06:59 .bashrc
+drwx------ 2 cnandan cnandan 4096 Mar 16 07:00 .cache/
+-rw------- 1 cnandan cnandan   20 Mar 16 07:02 .lesshst
+-rw-rw-r-- 1 cnandan cnandan    0 Mar 16 07:00 .motd_shown
+-rw-r--r-- 1 cnandan cnandan  807 Mar 16 06:59 .profile
+-rw-r--r-- 1 cnandan cnandan    0 Mar 16 07:08 .sudo_as_admin_successful
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 05:08 DevOPS/
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 11:09 Github/
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# cd  Github/
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -al
+total 20
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 11:09 .
+drwxr-x--- 5 cnandan cnandan 4096 Mar 16 08:45 ..
+drwxrwxrwx 8 root    root    4096 Mar 16 11:10 .git
+drwxrwxrwx 4 cnandan cnandan 4096 Mar 16 11:09 DevOPS
+-rwxrwxrwx 1 root    root      36 Mar 16 11:09 README.md
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git push -u origin main
+branch 'main' set up to track 'origin/main'.
+Everything up-to-date
+root@C-5CG2145W4V:/home/cnandan/Github# ls -lrth
+total 8.0K
+-rwxrwxrwx 1 root    root      36 Mar 16 11:09 README.md
+drwxrwxrwx 4 cnandan cnandan 4.0K Mar 16 11:09 DevOPS
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# cd DevOPS/
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# ls -lrth
+total 8.0K
+drwxrwxrwx 3 cnandan cnandan 4.0K Mar 16 10:55 2026
+drwxrwxrwx 6 root    root    4.0K Mar 16 11:09 2025
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git add .
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   2026/Manual_Docs/GIT_HUB/16March/Github_Prepare.txt
+        new file:   2026/Manual_Docs/GIT_HUB/16March/Upto_Git_Push_Commands.txt
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   ../README.md
+
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git commit -m "2nd commit"
+[main e98b7bf] 2nd commit
+ Committer: root <root@C-5CG2145W4V.localdomain>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 2 files changed, 392 insertions(+)
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/16March/Github_Prepare.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/GIT_HUB/16March/Upto_Git_Push_Commands.txt
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git status
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   ../README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git log oneline
+fatal: ambiguous argument 'oneline': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git log --oneline
+e98b7bf (HEAD -> main) 2nd commit
+716b5eb (origin/main) Initial commit
+bcef466 Initial commit
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git status
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   ../README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git push -u origin main
+Enumerating objects: 14, done.
+Counting objects: 100% (14/14), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (8/8), done.
+Writing objects: 100% (9/9), 2.58 KiB | 2.58 MiB/s, done.
+Total 9 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/chaitanyarajndn/DevOPS_2026.git
+   716b5eb..e98b7bf  main -> main
+branch 'main' set up to track 'origin/main'.
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS# git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   ../README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/Github/DevOPS#
