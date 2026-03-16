@@ -1,0 +1,152 @@
+cnandan@C-5CG2145W4V:~$
+cnandan@C-5CG2145W4V:~$
+cnandan@C-5CG2145W4V:~$
+cnandan@C-5CG2145W4V:~$ sudo su - root
+[sudo] password for cnandan:
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~# ls -lrth /home/cnandan/
+total 0
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~# ls -lrth
+total 0
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~#
+root@C-5CG2145W4V:~# cd /home/cnandan/
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# ls -lrth
+total 0
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# ls -lrth
+total 23M
+-rwxrwxrwx 1 cnandan cnandan 402 Jul 17  2025 desktop.ini
+-rwxrwxrwx 1 cnandan cnandan 12M Aug 25  2025 vIMS_MOP_3FE-4060124-BY5001-RJZZA_E2306_GR_v-CSD_CSD-SM_Complete_Shutdown_Startup_V3.0_Lab_Prod_08212025_RA_ATS.docx
+-rwxrwxrwx 1 cnandan cnandan 11M Aug 29  2025 vIMS_MOP_3FE-4060124-BY5001-RJZZA_E2306_GR_v-CSD_CSD-SM_Complete_Shutdown_Startup_V3.0_Lab_Prod_08212025_RA_ATS.docx.7z
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# ls -al
+total 22828
+drwxr-x--- 3 cnandan cnandan     4096 Mar 16 08:38 .
+drwxr-xr-x 3 root    root        4096 Mar 16 06:59 ..
+-rw------- 1 cnandan cnandan      111 Mar 16 07:10 .bash_history
+-rw-r--r-- 1 cnandan cnandan      220 Mar 16 06:59 .bash_logout
+-rw-r--r-- 1 cnandan cnandan     3771 Mar 16 06:59 .bashrc
+drwx------ 2 cnandan cnandan     4096 Mar 16 07:00 .cache
+-rw------- 1 cnandan cnandan       20 Mar 16 07:02 .lesshst
+-rw-rw-r-- 1 cnandan cnandan        0 Mar 16 07:00 .motd_shown
+-rw-r--r-- 1 cnandan cnandan      807 Mar 16 06:59 .profile
+-rw-r--r-- 1 cnandan cnandan        0 Mar 16 07:08 .sudo_as_admin_successful
+-rwxrwxrwx 1 cnandan cnandan      402 Jul 17  2025 desktop.ini
+-rwxrwxrwx 1 cnandan cnandan 12093161 Aug 25  2025 vIMS_MOP_3FE-4060124-BY5001-RJZZA_E2306_GR_v-CSD_CSD-SM_Complete_Shutdown_Startup_V3.0_Lab_Prod_08212025_RA_ATS.docx
+-rwxrwxrwx 1 cnandan cnandan 11243456 Aug 29  2025 vIMS_MOP_3FE-4060124-BY5001-RJZZA_E2306_GR_v-CSD_CSD-SM_Complete_Shutdown_Startup_V3.0_Lab_Prod_08212025_RA_ATS.docx.7z
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# rm *
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# ls -la
+total 32
+drwxr-x--- 3 cnandan cnandan 4096 Mar 16 08:40 .
+drwxr-xr-x 3 root    root    4096 Mar 16 06:59 ..
+-rw------- 1 cnandan cnandan  111 Mar 16 07:10 .bash_history
+-rw-r--r-- 1 cnandan cnandan  220 Mar 16 06:59 .bash_logout
+-rw-r--r-- 1 cnandan cnandan 3771 Mar 16 06:59 .bashrc
+drwx------ 2 cnandan cnandan 4096 Mar 16 07:00 .cache
+-rw------- 1 cnandan cnandan   20 Mar 16 07:02 .lesshst
+-rw-rw-r-- 1 cnandan cnandan    0 Mar 16 07:00 .motd_shown
+-rw-r--r-- 1 cnandan cnandan  807 Mar 16 06:59 .profile
+-rw-r--r-- 1 cnandan cnandan    0 Mar 16 07:08 .sudo_as_admin_successful
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# ls -lrth
+total 4.0K
+drwxrwxrwx 4 cnandan cnandan 4.0K Mar 16 05:08 DevOPS
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# cd
+.cache/ DevOPS/
+root@C-5CG2145W4V:/home/cnandan# cd DevOPS/
+root@C-5CG2145W4V:/home/cnandan/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/DevOPS# ls -lrth
+total 8.0K
+drwxrwxrwx 3 cnandan cnandan 4.0K Mar 16 05:09 2026
+drwxrwxrwx 6 cnandan cnandan 4.0K Mar 16 05:36 2025
+root@C-5CG2145W4V:/home/cnandan/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/DevOPS# cd 2026
+root@C-5CG2145W4V:/home/cnandan/DevOPS/2026#
+root@C-5CG2145W4V:/home/cnandan/DevOPS/2026#
+root@C-5CG2145W4V:/home/cnandan/DevOPS/2026# ls -lrth
+total 4.0K
+drwxrwxrwx 8 cnandan cnandan 4.0K Mar 16 08:27 Manual_Docs
+root@C-5CG2145W4V:/home/cnandan/DevOPS/2026#
+root@C-5CG2145W4V:/home/cnandan/DevOPS/2026#
+root@C-5CG2145W4V:/home/cnandan/DevOPS/2026# cd ../DevOPS
+-bash: cd: ../DevOPS: No such file or directory
+root@C-5CG2145W4V:/home/cnandan/DevOPS/2026#
+root@C-5CG2145W4V:/home/cnandan/DevOPS/2026#
+root@C-5CG2145W4V:/home/cnandan/DevOPS/2026# CD ../
+CD: command not found
+root@C-5CG2145W4V:/home/cnandan/DevOPS/2026# cd ../
+root@C-5CG2145W4V:/home/cnandan/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/DevOPS# cd ../cnandan
+-bash: cd: ../cnandan: No such file or directory
+root@C-5CG2145W4V:/home/cnandan/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/DevOPS#
+root@C-5CG2145W4V:/home/cnandan/DevOPS# cd ../
+root@C-5CG2145W4V:/home/cnandan# ls -lrth
+total 8.0K
+drwxrwxrwx 4 cnandan cnandan 4.0K Mar 16 05:08 DevOPS
+drwxr-xr-x 2 cnandan cnandan 4.0K Mar 16 08:45 Github
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# chmod 777 *
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# ls -lrth
+total 8.0K
+drwxrwxrwx 4 cnandan cnandan 4.0K Mar 16 05:08 DevOPS
+drwxrwxrwx 2 cnandan cnandan 4.0K Mar 16 08:45 Github
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan#
+root@C-5CG2145W4V:/home/cnandan# cd Github/
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# ls -lrth
+total 0
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git remote add origin https://github.com/chaitanyarajndn/DevOPS_2026.git
+fatal: not a git repository (or any of the parent directories): .git
+root@C-5CG2145W4V:/home/cnandan/Github# git branch -a
+fatal: not a git repository (or any of the parent directories): .git
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# git branch -a
+fatal: not a git repository (or any of the parent directories): .git
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github# pwd
+/home/cnandan/Github
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
+root@C-5CG2145W4V:/home/cnandan/Github#
