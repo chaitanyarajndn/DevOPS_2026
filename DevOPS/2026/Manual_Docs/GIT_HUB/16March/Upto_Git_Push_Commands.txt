@@ -17,6 +17,12 @@ cd /home/cnandan/
 
 cd /home/cnandan/Github/
 
+git config --global --add safe.directory /home/cnandan/Github
+
+git config --global user.name "chaitanyarajndn"
+
+git config --global user.email "chaitanyarajndn@gmail.com"
+
 git init
 
 git fetch origin
@@ -54,6 +60,13 @@ git remote add origin https://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@github.co
 
 
 git add .
+
+git status
+
+git log --oneline
+
+git symbolic-ref HEAD
+
 git commit -m "Initial commit"
 
 
