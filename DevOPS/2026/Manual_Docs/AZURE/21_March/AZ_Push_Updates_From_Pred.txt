@@ -1,0 +1,323 @@
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az account show
+{
+  "environmentName": "AzureCloud",
+  "homeTenantId": "63a179fa-9037-4ddd-a7f3-646a89a65804",
+  "id": "594ca230-6fcf-4aa3-81ac-5e4d3ec2027c",
+  "isDefault": true,
+  "managedByTenants": [],
+  "name": "Jitendra Gehlot_DevOPS",
+  "state": "Enabled",
+  "tenantId": "63a179fa-9037-4ddd-a7f3-646a89a65804",
+  "user": {
+    "name": "chaitanyarajndn@b18g141.online",
+    "type": "user"
+  }
+}
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# cd /home/chetan/Github/
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# ls -lrth
+total 8.0K
+drwxr-xr-x 4 root root 4.0K Mar 21 10:48 DevOPS
+-rw-r--r-- 1 root root   36 Mar 21 10:48 README.md
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# chmod -R 777 DevOPS/
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# ls -lrth
+total 8.0K
+drwxrwxrwx 4 root root 4.0K Mar 21 10:48 DevOPS
+-rw-r--r-- 1 root root   36 Mar 21 10:48 README.md
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# cd DevOPS/
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS# ls -lrth
+total 8.0K
+drwxrwxrwx 3 root root 4.0K Mar 21 10:48 2026
+drwxrwxrwx 6 root root 4.0K Mar 21 10:48 2025
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS# cd ..
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# pwd
+/home/chetan/Github
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# ls -al
+total 20
+drwxrwxrwx 4 root   root   4096 Mar 21 10:48 .
+drwxr-x--- 7 chetan chetan 4096 Mar 21 10:40 ..
+drwxr-xr-x 8 root   root   4096 Mar 21 10:48 .git
+drwxrwxrwx 4 root   root   4096 Mar 21 10:48 DevOPS
+-rw-r--r-- 1 root   root     36 Mar 21 10:48 README.md
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git remote -v
+origin  https://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@github.com/chaitanyarajndn/DevOPS_2026.git (fetch)
+origin  https://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@github.com/chaitanyarajndn/DevOPS_2026.git (push)
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git add .
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git status
+On branch main
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        renamed:    DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx -> DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI_V1.docx
+        new file:   DevOPS/2026/Manual_Docs/AZURE/21_March/AZ_CLI_Create_Delete_Storage_Account.txt
+        new file:   DevOPS/2026/Manual_Docs/AZURE/21_March/Create_Delete_RG_Storage_Account_AZ_CLI.docx:Zone.Identifier
+        new file:   DevOPS/2026/Manual_Docs/AZURE/21_March/Create_Delete_RG_Storage_Account_AZ_CLI_V2.docx
+        modified:   DevOPS/2026/Manual_Docs/GIT_HUB/16March/Github_Prepare.txt
+        modified:   DevOPS/2026/Manual_Docs/GIT_HUB/16March/LOGS_GIT_Push_all_Files.txt
+        modified:   DevOPS/2026/Manual_Docs/GIT_HUB/16March/Upto_Git_Push_Commands.txt
+        new file:   DevOPS/2026/Manual_Docs/GIT_HUB/21_March/Pull_File_from_GITHUB_GUI.txt
+
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git commit -m "5th commit - Acer Laptop"
+[main 0a9e491] 5th commit - Acer Laptop
+ Committer: root <root@Chaitanya-Raj.localdomain>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 8 files changed, 1063 insertions(+)
+ rename DevOPS/2026/Manual_Docs/AZURE/14March/{Create_Delete_RG_Storage_Account_AZ_CLI.docx => Create_Delete_RG_Storage_Account_AZ_CLI_V1.docx} (86%)
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/21_March/AZ_CLI_Create_Delete_Storage_Account.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/21_March/Create_Delete_RG_Storage_Account_AZ_CLI.docx:Zone.Identifier
+ create mode 100755 DevOPS/2026/Manual_Docs/AZURE/21_March/Create_Delete_RG_Storage_Account_AZ_CLI_V2.docx
+ mode change 100644 => 100755 DevOPS/2026/Manual_Docs/GIT_HUB/16March/Github_Prepare.txt
+ mode change 100644 => 100755 DevOPS/2026/Manual_Docs/GIT_HUB/16March/LOGS_GIT_Push_all_Files.txt
+ mode change 100644 => 100755 DevOPS/2026/Manual_Docs/GIT_HUB/16March/Upto_Git_Push_Commands.txt
+ create mode 100755 DevOPS/2026/Manual_Docs/GIT_HUB/21_March/Pull_File_from_GITHUB_GUI.txt
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git status
+On branch main
+nothing to commit, working tree clean
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git log
+commit 0a9e491ad42e9856ec65b85adb30f716abf3008b (HEAD -> main)
+Author: root <root@Chaitanya-Raj.localdomain>
+Date:   Sat Mar 21 13:49:48 2026 +0000
+
+    5th commit - Acer Laptop
+
+commit de699cc86f8fb692ff4dc1d35d8a5e8f9a0b0cfd (origin/main)
+Author: chaitanyarajndn <chaitanyarajndn@gmail.com>
+Date:   Mon Mar 16 13:30:02 2026 -0500
+
+    4th commit
+
+commit e34b43f8e1b179c12dbb654d0d787b8ba79c900b
+Author: chaitanyarajndn <chaitanyarajndn@gmail.com>
+Date:   Mon Mar 16 13:27:48 2026 -0500
+
+    3rd commit
+
+commit e98b7bf5e02f75a9afa317a06947d1b86fe1d944
+Author: root <root@C-5CG2145W4V.localdomain>
+Date:   Mon Mar 16 11:26:47 2026 -0500
+
+    2nd commit
+
+commit 716b5eb2b511427bd631905e91a223d66c81219b
+Author: root <root@C-5CG2145W4V.localdomain>
+Date:   Mon Mar 16 10:59:41 2026 -0500
+
+    Initial commit
+
+commit bcef466e3aab5408df1b160069a9bb8d0eaa2c4a
+Author: Chaitanya Raj Nandan <chaitanyarajndn@gmail.com>
+Date:   Mon Mar 16 05:20:01 2026 -0500
+
+    Initial commit
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git show 0a9e491ad42e9856ec65b85adb30f716abf3008b
+commit 0a9e491ad42e9856ec65b85adb30f716abf3008b (HEAD -> main)
+Author: root <root@Chaitanya-Raj.localdomain>
+Date:   Sat Mar 21 13:49:48 2026 +0000
+
+    5th commit - Acer Laptop
+
+diff --git a/DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx b/DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI_V1.docx
+similarity index 86%
+rename from DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx
+rename to DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI_V1.docx
+index 63a249f..9cfe5bb 100755
+Binary files a/DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx and b/DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI_V1.docx differ
+diff --git a/DevOPS/2026/Manual_Docs/AZURE/21_March/AZ_CLI_Create_Delete_Storage_Account.txt b/DevOPS/2026/Manual_Docs/AZURE/21_March/AZ_CLI_Create_Delete_Storage_Account.txt
+new file mode 100755
+index 0000000..d137be3
+--- /dev/null
++++ b/DevOPS/2026/Manual_Docs/AZURE/21_March/AZ_CLI_Create_Delete_Storage_Account.txt
+@@ -0,0 +1,742 @@
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~# date^M
++Sat Mar 21 09:51:13 UTC 2026^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~# az login --tenant 63a179fa-9037-4ddd-a7f3-646a89a65804^M
++A web browser has been opened at https://login.microsoftonline.com/63a179fa-9037-4ddd-a7f3-646a89a65804/oauth2/v2.0/authorize. Please continue the login in the web browser. If no web browser is available or if the web browser fails to open, use device code flow with `az login --use-device-code`.^M
++gio: https://login.microsoftonline.com/63a179fa-9037-4ddd-a7f3-646a89a65804/oauth2/v2.0/authorize?client_id=04b07795-8ddb-461a-bbee-02f9e1bf7b46&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A36553&scope=https%3A%2F%2Fmanagement.core.windows.net%2F%2F.default+offline_access+openid+profile&state=GPgpnkiYHMWfuNRI&code_challenge=bMRSA8vn6nzAM21nwa31PJS94CRNPCiJxG5ybbIYPzg&code_challenge_method=S256&nonce=d7f98520fefa4fb2bb3eb25ef11d9385e28a7104b85899a69b967517a03bb7eb&client_info=1&claims=%7B%22access_token%22%3A+%7B%22xms_cc%22%3A+%7B%22values%22%3A+%5B%22CP1%22%5D%7D%7D%7D&prompt=select_account: Operation not supported^M
++^M
++Retrieving subscriptions for the selection...^M
++^M
++[Tenant and subscription selection]^M
++^M
++No     Subscription name       Subscription ID                       Tenant^M
++-----  ----------------------  ------------------------------------  ------------------------------------^M
++[1] *  Jitendra Gehlot_DevOPS  594ca230-6fcf-4aa3-81ac-5e4d3ec2027c  63a179fa-9037-4ddd-a7f3-646a89a65804^M
++^M
++The default is marked with an *; the default tenant is '63a179fa-9037-4ddd-a7f3-646a89a65804' and subscription is 'Jitendra Gehlot_DevOPS' (594ca230-6fcf-4aa3-81ac-5e4d3ec2027c).^M
++^M
++Select a subscription and tenant (Type a number or Enter for no changes): 1^M
++^M
++Tenant: 63a179fa-9037-4ddd-a7f3-646a89a65804^M
++Subscription: Jitendra Gehlot_DevOPS (594ca230-6fcf-4aa3-81ac-5e4d3ec2027c)^M
++^M
++[Announcements]^M
++With the new Azure CLI login experience, you can select the subscription you want to use more easily. Learn more about it and its configuration at https://go.microsoft.com/fwlink/?linkid=2271236^M
++^M
++If you encounter any problem, please open an issue at https://aka.ms/azclibug^M
++^M
++[Warning] The login output has been updated. Please be aware that it no longer displays the full list of available subscriptions by default.^M
++^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~# az group list -o table^M
++Name           Location      Status^M
++-------------  ------------  ---------^M
++anjusaini      centralindia  Succeeded^M
++annu           centralindia  Succeeded^M
+:
+Binary files a/DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx and b/DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI_V1.docx differ
+diff --git a/DevOPS/2026/Manual_Docs/AZURE/21_March/AZ_CLI_Create_Delete_Storage_Account.txt b/DevOPS/2026/Manual_Docs/AZURE/21_March/AZ_CLI_Create_Delete_Storage_Account.txt
+new file mode 100755
+index 0000000..d137be3
+--- /dev/null
++++ b/DevOPS/2026/Manual_Docs/AZURE/21_March/AZ_CLI_Create_Delete_Storage_Account.txt
+@@ -0,0 +1,742 @@
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~# date^M
++Sat Mar 21 09:51:13 UTC 2026^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~# az login --tenant 63a179fa-9037-4ddd-a7f3-646a89a65804^M
++A web browser has been opened at https://login.microsoftonline.com/63a179fa-9037-4ddd-a7f3-646a89a65804/oauth2/v2.0/authorize. Please continue the login in the web browser. If no web browser is available or if the web browser fails to open, use device code flow with `az login --use-device-code`.^M
++gio: https://login.microsoftonline.com/63a179fa-9037-4ddd-a7f3-646a89a65804/oauth2/v2.0/authorize?client_id=04b07795-8ddb-461a-bbee-02f9e1bf7b46&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A36553&scope=https%3A%2F%2Fmanagement.core.windows.net%2F%2F.default+offline_access+openid+profile&state=GPgpnkiYHMWfuNRI&code_challenge=bMRSA8vn6nzAM21nwa31PJS94CRNPCiJxG5ybbIYPzg&code_challenge_method=S256&nonce=d7f98520fefa4fb2bb3eb25ef11d9385e28a7104b85899a69b967517a03bb7eb&client_info=1&claims=%7B%22access_token%22%3A+%7B%22xms_cc%22%3A+%7B%22values%22%3A+%5B%22CP1%22%5D%7D%7D%7D&prompt=select_account: Operation not supported^M
++^M
++Retrieving subscriptions for the selection...^M
++^M
++[Tenant and subscription selection]^M
++^M
++No     Subscription name       Subscription ID                       Tenant^M
++-----  ----------------------  ------------------------------------  ------------------------------------^M
++[1] *  Jitendra Gehlot_DevOPS  594ca230-6fcf-4aa3-81ac-5e4d3ec2027c  63a179fa-9037-4ddd-a7f3-646a89a65804^M
++^M
++The default is marked with an *; the default tenant is '63a179fa-9037-4ddd-a7f3-646a89a65804' and subscription is 'Jitendra Gehlot_DevOPS' (594ca230-6fcf-4aa3-81ac-5e4d3ec2027c).^M
++^M
++Select a subscription and tenant (Type a number or Enter for no changes): 1^M
++^M
++Tenant: 63a179fa-9037-4ddd-a7f3-646a89a65804^M
++Subscription: Jitendra Gehlot_DevOPS (594ca230-6fcf-4aa3-81ac-5e4d3ec2027c)^M
++^M
++[Announcements]^M
++With the new Azure CLI login experience, you can select the subscription you want to use more easily. Learn more about it and its configuration at https://go.microsoft.com/fwlink/?linkid=2271236^M
++^M
++If you encounter any problem, please open an issue at https://aka.ms/azclibug^M
++^M
++[Warning] The login output has been updated. Please be aware that it no longer displays the full list of available subscriptions by default.^M
++^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~#^M
++root@Chaitanya-Raj:~# az group list -o table^M
++Name           Location      Status^M
++-------------  ------------  ---------^M
++anjusaini      centralindia  Succeeded^M
++annu           centralindia  Succeeded^M
+
+[1]+  Stopped                 git show 0a9e491ad42e9856ec65b85adb30f716abf3008b
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git status
+On branch main
+nothing to commit, working tree clean
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git log --oneline
+0a9e491 (HEAD -> main) 5th commit - Acer Laptop
+de699cc (origin/main) 4th commit
+e34b43f 3rd commit
+e98b7bf 2nd commit
+716b5eb Initial commit
+bcef466 Initial commit
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git symbolic-ref HEAD
+refs/heads/main
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git push -u origin main
+Enumerating objects: 23, done.
+Counting objects: 100% (23/23), done.
+Delta compression using up to 24 threads
+Compressing objects: 100% (14/14), done.
+Writing objects: 100% (15/15), 2.21 MiB | 1.78 MiB/s, done.
+Total 15 (delta 7), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (7/7), completed with 5 local objects.
+To https://github.com/chaitanyarajndn/DevOPS_2026.git
+   de699cc..0a9e491  main -> main
+branch 'main' set up to track 'origin/main'.
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git fetch origin
+
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
