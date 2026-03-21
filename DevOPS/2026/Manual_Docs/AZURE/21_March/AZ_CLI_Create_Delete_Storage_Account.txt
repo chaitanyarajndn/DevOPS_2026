@@ -1,0 +1,742 @@
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# date
+Sat Mar 21 09:51:13 UTC 2026
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az login --tenant 63a179fa-9037-4ddd-a7f3-646a89a65804
+A web browser has been opened at https://login.microsoftonline.com/63a179fa-9037-4ddd-a7f3-646a89a65804/oauth2/v2.0/authorize. Please continue the login in the web browser. If no web browser is available or if the web browser fails to open, use device code flow with `az login --use-device-code`.
+gio: https://login.microsoftonline.com/63a179fa-9037-4ddd-a7f3-646a89a65804/oauth2/v2.0/authorize?client_id=04b07795-8ddb-461a-bbee-02f9e1bf7b46&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A36553&scope=https%3A%2F%2Fmanagement.core.windows.net%2F%2F.default+offline_access+openid+profile&state=GPgpnkiYHMWfuNRI&code_challenge=bMRSA8vn6nzAM21nwa31PJS94CRNPCiJxG5ybbIYPzg&code_challenge_method=S256&nonce=d7f98520fefa4fb2bb3eb25ef11d9385e28a7104b85899a69b967517a03bb7eb&client_info=1&claims=%7B%22access_token%22%3A+%7B%22xms_cc%22%3A+%7B%22values%22%3A+%5B%22CP1%22%5D%7D%7D%7D&prompt=select_account: Operation not supported
+
+Retrieving subscriptions for the selection...
+
+[Tenant and subscription selection]
+
+No     Subscription name       Subscription ID                       Tenant
+-----  ----------------------  ------------------------------------  ------------------------------------
+[1] *  Jitendra Gehlot_DevOPS  594ca230-6fcf-4aa3-81ac-5e4d3ec2027c  63a179fa-9037-4ddd-a7f3-646a89a65804
+
+The default is marked with an *; the default tenant is '63a179fa-9037-4ddd-a7f3-646a89a65804' and subscription is 'Jitendra Gehlot_DevOPS' (594ca230-6fcf-4aa3-81ac-5e4d3ec2027c).
+
+Select a subscription and tenant (Type a number or Enter for no changes): 1
+
+Tenant: 63a179fa-9037-4ddd-a7f3-646a89a65804
+Subscription: Jitendra Gehlot_DevOPS (594ca230-6fcf-4aa3-81ac-5e4d3ec2027c)
+
+[Announcements]
+With the new Azure CLI login experience, you can select the subscription you want to use more easily. Learn more about it and its configuration at https://go.microsoft.com/fwlink/?linkid=2271236
+
+If you encounter any problem, please open an issue at https://aka.ms/azclibug
+
+[Warning] The login output has been updated. Please be aware that it no longer displays the full list of available subscriptions by default.
+
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az group list -o table
+Name           Location      Status
+-------------  ------------  ---------
+anjusaini      centralindia  Succeeded
+annu           centralindia  Succeeded
+anvi           centralindia  Succeeded
+my-website-rg  centralindia  Succeeded
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# pwd
+/root
+root@Chaitanya-Raj:~# ls -al
+total 56
+drwx------  9 root root 4096 Feb 22 14:40 .
+drwxr-xr-x 32 root root 4096 Mar 21 09:50 ..
+drwxr-xr-x  5 root root 4096 Mar 21 09:56 .azure
+-rw-------  1 root root 3697 Mar  7 17:43 .bash_history
+-rw-r--r--  1 root root 3106 Apr 22  2024 .bashrc
+drwx------  3 root root 4096 Feb 22 14:40 .cache
+drwx------  3 root root 4096 Jan  7 14:32 .config
+-rw-------  1 root root   20 Feb 22 14:37 .lesshst
+-rw-r--r--  1 root root    0 Mar 21 09:50 .motd_shown
+-rw-r--r--  1 root root  161 Apr 22  2024 .profile
+drwx------  2 root root 4096 Jan  6  2025 .ssh
+-rw-------  1 root root 1307 Jan  7 11:56 .viminfo
+drwxrwxrwx  2 root root 4096 Feb 22 14:28 Azure
+drwxrwxrwx  3 root root 4096 Jan 11 17:40 temp
+drwxrwxrwx  2 root root 4096 Jan  7 13:23 tmp
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# cd Azure/
+root@Chaitanya-Raj:~/Azure#
+root@Chaitanya-Raj:~/Azure#
+root@Chaitanya-Raj:~/Azure# ls -la
+total 16
+drwxrwxrwx 2 root root 4096 Feb 22 14:28 .
+drwx------ 9 root root 4096 Feb 22 14:40 ..
+-rw-r--r-- 1 root root 4663 Feb 22 14:28 install_AzureCLI.sh
+root@Chaitanya-Raj:~/Azure#
+root@Chaitanya-Raj:~/Azure#
+root@Chaitanya-Raj:~/Azure# cd /
+root@Chaitanya-Raj:/# ls -la
+total 2844
+drwxr-xr-x  32 root root    4096 Mar 21 09:50 .
+drwxr-xr-x  32 root root    4096 Mar 21 09:50 ..
+lrwxrwxrwx   1 root root       7 Apr 22  2024 bin -> usr/bin
+drwxr-xr-x   2 root root    4096 Feb 26  2024 bin.usr-is-merged
+drwxr-xr-x   2 root root    4096 Apr 22  2024 boot
+drwxr-xr-x  15 root root    3860 Mar 21 09:50 dev
+drwxr-xr-x  90 root root    4096 Mar 21 09:50 etc
+drwxr-xr-x   3 root root    4096 Jan  4 15:25 home
+-rwxr-xr-x   1 root root 2781568 Dec 12 01:58 init
+lrwxrwxrwx   1 root root       7 Apr 22  2024 lib -> usr/lib
+drwxr-xr-x   2 root root    4096 Apr  8  2024 lib.usr-is-merged
+lrwxrwxrwx   1 root root       9 Apr 22  2024 lib64 -> usr/lib64
+drwx------   2 root root   16384 Jan  4 14:02 lost+found
+drwxr-xr-x   2 root root    4096 Jan  6  2025 media
+drwxr-xr-x   6 root root    4096 Jan  4 14:02 mnt
+drwxr-xr-x   3 root root    4096 Feb 22 14:38 opt
+dr-xr-xr-x 340 root root       0 Mar 21 09:50 proc
+drwx------   9 root root    4096 Feb 22 14:40 root
+drwxr-xr-x  20 root root     620 Mar 21 10:31 run
+lrwxrwxrwx   1 root root       8 Apr 22  2024 sbin -> usr/sbin
+drwxr-xr-x   2 root root    4096 Mar 31  2024 sbin.usr-is-merged
+drwxr-xr-x   2 root root    4096 Jan  4 14:02 snap
+drwxr-xr-x   2 root root    4096 Jan  6  2025 srv
+dr-xr-xr-x  13 root root       0 Mar 21 09:50 sys
+drwxrwxrwt   9 root root    4096 Mar 21 10:30 tmp
+drwxr-xr-x  12 root root    4096 Jan  6  2025 usr
+drwxr-xr-x  14 root root    4096 Jan 11 17:14 var
+drwx------   2 root root    4096 Mar 15 16:59 wslBBhPnP
+drwx------   2 root root    4096 Mar  8 17:07 wslCBbcBo
+drwx------   2 root root    4096 Mar 15 16:59 wslDoflDP
+drwx------   2 root root    4096 Mar  8 17:07 wslGIAgJn
+drwx------   2 root root    4096 Mar 15 16:59 wslNkjHnP
+drwx------   2 root root    4096 Mar  8 17:07 wslPnBgBo
+drwx------   2 root root    4096 Mar  8 17:07 wslbhbiBo
+drwx------   2 root root    4096 Mar 15 16:59 wslclGMnP
+drwx------   2 root root    4096 Mar 15 16:59 wslfciLlP
+drwx------   2 root root    4096 Mar  8 17:07 wslhCPhAo
+root@Chaitanya-Raj:/# cd /home/chetan/
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# ls -la
+total 32
+drwxr-x--- 4 chetan chetan 4096 Jan  7 12:08 .
+drwxr-xr-x 3 root   root   4096 Jan  4 15:25 ..
+-rw------- 1 chetan chetan   62 Jan  7 12:08 .bash_history
+-rw-r--r-- 1 chetan chetan  220 Mar 31  2024 .bash_logout
+-rw-r--r-- 1 chetan chetan 3771 Mar 31  2024 .bashrc
+drwxr-xr-x 2 chetan chetan 4096 Jan  7 11:56 .landscape
+-rw-rw-r-- 1 chetan chetan    0 Jan  7 11:56 .motd_shown
+-rw-r--r-- 1 chetan chetan  807 Mar 31  2024 .profile
+drwxrwxrwx 2 root   root   4096 Jan  4 15:26 tmp
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# cd tmp
+root@Chaitanya-Raj:/home/chetan/tmp#
+root@Chaitanya-Raj:/home/chetan/tmp# ls -al
+total 8
+drwxrwxrwx 2 root   root   4096 Jan  4 15:26 .
+drwxr-x--- 4 chetan chetan 4096 Jan  7 12:08 ..
+root@Chaitanya-Raj:/home/chetan/tmp#
+root@Chaitanya-Raj:/home/chetan/tmp#
+root@Chaitanya-Raj:/home/chetan/tmp#
+root@Chaitanya-Raj:/home/chetan/tmp# cd
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# cd /home/chetan/tmp
+root@Chaitanya-Raj:/home/chetan/tmp#
+root@Chaitanya-Raj:/home/chetan/tmp#
+root@Chaitanya-Raj:/home/chetan/tmp#
+root@Chaitanya-Raj:/home/chetan/tmp# ls -al
+total 8
+drwxrwxrwx 2 root   root   4096 Jan  4 15:26 .
+drwxr-x--- 4 chetan chetan 4096 Jan  7 12:08 ..
+root@Chaitanya-Raj:/home/chetan/tmp#
+root@Chaitanya-Raj:/home/chetan/tmp#
+root@Chaitanya-Raj:/home/chetan/tmp# cd ..
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# pwd
+/home/chetan
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# ls -al
+total 36
+drwxr-x--- 5 chetan chetan 4096 Mar 21 10:36 .
+drwxr-xr-x 3 root   root   4096 Jan  4 15:25 ..
+-rw------- 1 chetan chetan   62 Jan  7 12:08 .bash_history
+-rw-r--r-- 1 chetan chetan  220 Mar 31  2024 .bash_logout
+-rw-r--r-- 1 chetan chetan 3771 Mar 31  2024 .bashrc
+drwxr-xr-x 2 chetan chetan 4096 Jan  7 11:56 .landscape
+-rw-rw-r-- 1 chetan chetan    0 Jan  7 11:56 .motd_shown
+-rw-r--r-- 1 chetan chetan  807 Mar 31  2024 .profile
+drwxr-xr-x 2 root   root   4096 Mar 21 10:36 Github
+drwxrwxrwx 2 root   root   4096 Jan  4 15:26 tmp
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# chmod 777 Github/\
+> ^C
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# chmod 777 Github
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# ls -lrth
+total 8.0K
+drwxrwxrwx 2 root root 4.0K Jan  4 15:26 tmp
+drwxrwxrwx 2 root root 4.0K Mar 21 10:36 Github
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# mkdir Use ; chmod 777 Use
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# ls -lrth
+total 12K
+drwxrwxrwx 2 root root 4.0K Jan  4 15:26 tmp
+drwxrwxrwx 2 root root 4.0K Mar 21 10:36 Github
+drwxrwxrwx 2 root root 4.0K Mar 21 10:37 Use
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# cd Github/
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git fetch origin
+fatal: not a git repository (or any of the parent directories): .git
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# pws
+Command 'pws' not found, did you mean:
+  command 'aws' from snap aws-cli (1.44.53)
+  command 'pwd' from deb coreutils (9.4-3ubuntu6.2)
+  command 'rpws' from deb ratpoison (1.4.9-1)
+  command 'pwn' from deb python3-pwntools (4.11.1-1)
+  command 'aws' from deb awscli (2.14.6-1)
+  command 'pcs' from deb pcs (0.11.6-1ubuntu1)
+  command 'pvs' from deb lvm2 (2.03.16-3ubuntu3.2)
+  command 'pps' from deb libpmix-bin (5.0.1-4)
+  command 'psw' from deb wise (2.4.1-23)
+  command 'ps' from deb procps (2:4.0.4-4ubuntu3.2)
+  command 'pms' from deb pms (0.42-1.1)
+  command 'pts' from deb openafs-client (1.8.10-2.1ubuntu3.4)
+See 'snap info <snapname>' for additional versions.
+root@Chaitanya-Raj:/home/chetan/Github# pwd
+/home/chetan/Github
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git init
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint:   git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint:   git branch -m <name>
+Initialized empty Git repository in /home/chetan/Github/.git/
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# ls -lrth
+total 0
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# ls -al
+total 12
+drwxrwxrwx 3 root   root   4096 Mar 21 10:42 .
+drwxr-x--- 7 chetan chetan 4096 Mar 21 10:40 ..
+drwxr-xr-x 7 root   root   4096 Mar 21 10:42 .git
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git --version
+git version 2.43.0
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git branch -a
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git branch -m main
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git remote add origin https://github.com/chaitanyarajndn/DevOPS_2026.git
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git remote -v
+origin  https://github.com/chaitanyarajndn/DevOPS_2026.git (fetch)
+origin  https://github.com/chaitanyarajndn/DevOPS_2026.git (push)
+root@Chaitanya-Raj:/home/chetan/Github# git remote add origin https://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@github.com/chaitanyarajndn/DevOPS_2026.git
+error: remote origin already exists.
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git remote set-url origin https://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@github.com/chaitanyarajndn/DevOPS_2026.git
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git remote -v
+origin  https://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@github.com/chaitanyarajndn/DevOPS_2026.git (fetch)
+origin  https://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@github.com/chaitanyarajndn/DevOPS_2026.git (push)
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git pull origin main
+remote: Enumerating objects: 133, done.
+remote: Counting objects: 100% (25/25), done.
+remote: Compressing objects: 100% (16/16), done.
+remote: Total 133 (delta 8), reused 21 (delta 6), pack-reused 108 (from 2)
+Receiving objects: 100% (133/133), 42.60 MiB | 6.86 MiB/s, done.
+Resolving deltas: 100% (22/22), done.
+From https://github.com/chaitanyarajndn/DevOPS_2026
+ * branch            main       -> FETCH_HEAD
+ * [new branch]      main       -> origin/main
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# ls -lrth
+total 8.0K
+drwxr-xr-x 4 root root 4.0K Mar 21 10:48 DevOPS
+-rw-r--r-- 1 root root   36 Mar 21 10:48 README.md
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# cd DevOPS/
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS# ls -lrth
+total 8.0K
+drwxr-xr-x 3 root root 4.0K Mar 21 10:48 2026
+drwxr-xr-x 6 root root 4.0K Mar 21 10:48 2025
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS# az account show
+{
+  "environmentName": "AzureCloud",
+  "homeTenantId": "63a179fa-9037-4ddd-a7f3-646a89a65804",
+  "id": "594ca230-6fcf-4aa3-81ac-5e4d3ec2027c",
+  "isDefault": true,
+  "managedByTenants": [],
+  "name": "Jitendra Gehlot_DevOPS",
+  "state": "Enabled",
+  "tenantId": "63a179fa-9037-4ddd-a7f3-646a89a65804",
+  "user": {
+    "name": "chaitanyarajndn@b18g141.online",
+    "type": "user"
+  }
+}
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS# pwd
+/home/chetan/Github/DevOPS
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS#
+root@Chaitanya-Raj:/home/chetan/Github/DevOPS# cd
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az account show
+{
+  "environmentName": "AzureCloud",
+  "homeTenantId": "63a179fa-9037-4ddd-a7f3-646a89a65804",
+  "id": "594ca230-6fcf-4aa3-81ac-5e4d3ec2027c",
+  "isDefault": true,
+  "managedByTenants": [],
+  "name": "Jitendra Gehlot_DevOPS",
+  "state": "Enabled",
+  "tenantId": "63a179fa-9037-4ddd-a7f3-646a89a65804",
+  "user": {
+    "name": "chaitanyarajndn@b18g141.online",
+    "type": "user"
+  }
+}
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az group create --name RG_Test_Prod --location centralindia
+{
+  "id": "/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/RG_Test_Prod",
+  "location": "centralindia",
+  "managedBy": null,
+  "name": "RG_Test_Prod",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az group list -o table
+Name           Location      Status
+-------------  ------------  ---------
+anjusaini      centralindia  Succeeded
+annu           centralindia  Succeeded
+anvi           centralindia  Succeeded
+my-website-rg  centralindia  Succeeded
+RG_Test_Prod   centralindia  Succeeded
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az group show --name RG_Test_Prod
+{
+  "id": "/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/RG_Test_Prod",
+  "location": "centralindia",
+  "managedBy": null,
+  "name": "RG_Test_Prod",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az storage account create --name Test_DB --resource-group RG_Test_Prod --location centralindia --sku Standard_LRS --kind StorageV2 --min-tls-version TLS1_2
+The --min-tls-version argument values TLS1_0 and TLS1_1 have been retired on 2026/02/03 and will be removed on 2026/03/03.
+(AccountNameInvalid) Test_DB is not a valid storage account name. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only.
+Code: AccountNameInvalid
+Message: Test_DB is not a valid storage account name. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only.
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az storage account create --name testdb2026 --resource-group RG_Test_Prod --location centralindia --sku Standard_LRS --kind StorageV2 --min-tls-version TLS1_2
+The --min-tls-version argument values TLS1_0 and TLS1_1 have been retired on 2026/02/03 and will be removed on 2026/03/03.
+{
+  "accessTier": "Hot",
+  "accountMigrationInProgress": null,
+  "allowBlobPublicAccess": false,
+  "allowCrossTenantReplication": false,
+  "allowSharedKeyAccess": null,
+  "allowedCopyScope": null,
+  "azureFilesIdentityBasedAuthentication": null,
+  "blobRestoreStatus": null,
+  "creationTime": "2026-03-21T11:13:05.075996+00:00",
+  "customDomain": null,
+  "defaultToOAuthAuthentication": null,
+  "dnsEndpointType": null,
+  "dualStackEndpointPreference": null,
+  "enableExtendedGroups": null,
+  "enableHttpsTrafficOnly": true,
+  "enableNfsV3": null,
+  "encryption": {
+    "encryptionIdentity": null,
+    "keySource": "Microsoft.Storage",
+    "keyVaultProperties": null,
+    "requireInfrastructureEncryption": null,
+    "services": {
+      "blob": {
+        "enabled": true,
+        "keyType": "Account",
+        "lastEnabledTime": "2026-03-21T11:13:05.177838+00:00"
+      },
+      "file": {
+        "enabled": true,
+        "keyType": "Account",
+        "lastEnabledTime": "2026-03-21T11:13:05.177838+00:00"
+      },
+      "queue": null,
+      "table": null
+    }
+  },
+  "extendedLocation": null,
+  "failoverInProgress": null,
+  "geoPriorityReplicationStatus": null,
+  "geoReplicationStats": null,
+  "id": "/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/RG_Test_Prod/providers/Microsoft.Storage/storageAccounts/testdb2026",
+  "identity": null,
+  "immutableStorageWithVersioning": null,
+  "isHnsEnabled": null,
+  "isLocalUserEnabled": null,
+  "isSftpEnabled": null,
+  "isSkuConversionBlocked": null,
+  "keyCreationTime": {
+    "key1": "2026-03-21T11:13:05.167221+00:00",
+    "key2": "2026-03-21T11:13:05.167221+00:00"
+  },
+  "keyPolicy": null,
+  "kind": "StorageV2",
+  "largeFileSharesState": null,
+  "lastGeoFailoverTime": null,
+  "location": "centralindia",
+  "minimumTlsVersion": "TLS1_2",
+  "name": "testdb2026",
+  "networkRuleSet": {
+    "bypass": "AzureServices",
+    "defaultAction": "Allow",
+    "ipRules": [],
+    "ipv6Rules": [],
+    "resourceAccessRules": null,
+    "virtualNetworkRules": []
+  },
+  "placement": null,
+  "primaryEndpoints": {
+    "blob": "https://testdb2026.blob.core.windows.net/",
+    "dfs": "https://testdb2026.dfs.core.windows.net/",
+    "file": "https://testdb2026.file.core.windows.net/",
+    "internetEndpoints": null,
+    "ipv6Endpoints": null,
+    "microsoftEndpoints": null,
+    "queue": "https://testdb2026.queue.core.windows.net/",
+    "table": "https://testdb2026.table.core.windows.net/",
+    "web": "https://testdb2026.z29.web.core.windows.net/"
+  },
+  "primaryLocation": "centralindia",
+  "privateEndpointConnections": [],
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": null,
+  "resourceGroup": "RG_Test_Prod",
+  "routingPreference": null,
+  "sasPolicy": null,
+  "secondaryEndpoints": null,
+  "secondaryLocation": null,
+  "sku": {
+    "name": "Standard_LRS",
+    "tier": "Standard"
+  },
+  "statusOfPrimary": "available",
+  "statusOfSecondary": null,
+  "storageAccountSkuConversionStatus": null,
+  "tags": {},
+  "type": "Microsoft.Storage/storageAccounts",
+  "zones": null
+}
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az storage account list -o table
+AccessTier    AllowBlobPublicAccess    AllowCrossTenantReplication    AllowSharedKeyAccess    CreationTime                      DefaultToOAuthAuthentication    DnsEndpointType    EnableHttpsTrafficOnly    Kind       Location      MinimumTlsVersion    Name           PrimaryLocation    ProvisioningState    PublicNetworkAccess    ResourceGroup    SecondaryLocation    StatusOfPrimary    StatusOfSecondary
+------------  -----------------------  -----------------------------  ----------------------  --------------------------------  ------------------------------  -----------------  ------------------------  ---------  ------------  -------------------  -------------  -----------------  -------------------  ---------------------  ---------------  -------------------  -----------------  -------------------
+Hot           False                    False                          True                    2026-03-20T16:35:48.147555+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               anjusaini2329  centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                                                  2026-03-20T16:56:04.505251+00:00                                                     True                      StorageV2  centralindia  TLS1_0               annu           centralindia       Succeeded                                   anjusaini                             available
+Hot           False                    False                          True                    2026-03-20T16:59:51.737835+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               annuanvi       centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                                                  2026-03-21T09:45:17.822835+00:00                                                     True                      StorageV2  centralindia  TLS1_0               anviannu       centralindia       Succeeded                                   anjusaini                             available
+Hot           False                    False                          True                    2026-03-20T16:36:53.758360+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               jeetu1         centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                                                  2026-03-21T11:13:05.075996+00:00                                                     True                      StorageV2  centralindia  TLS1_2               testdb2026     centralindia       Succeeded                                   RG_Test_Prod                          available
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az storage account show --name testdb2026
+{
+  "accessTier": "Hot",
+  "accountMigrationInProgress": null,
+  "allowBlobPublicAccess": false,
+  "allowCrossTenantReplication": false,
+  "allowSharedKeyAccess": null,
+  "allowedCopyScope": null,
+  "azureFilesIdentityBasedAuthentication": null,
+  "blobRestoreStatus": null,
+  "creationTime": "2026-03-21T11:13:05.075996+00:00",
+  "customDomain": null,
+  "defaultToOAuthAuthentication": null,
+  "dnsEndpointType": null,
+  "dualStackEndpointPreference": null,
+  "enableExtendedGroups": null,
+  "enableHttpsTrafficOnly": true,
+  "enableNfsV3": null,
+  "encryption": {
+    "encryptionIdentity": null,
+    "keySource": "Microsoft.Storage",
+    "keyVaultProperties": null,
+    "requireInfrastructureEncryption": null,
+    "services": {
+      "blob": {
+        "enabled": true,
+        "keyType": "Account",
+        "lastEnabledTime": "2026-03-21T11:13:05.177838+00:00"
+      },
+      "file": {
+        "enabled": true,
+        "keyType": "Account",
+        "lastEnabledTime": "2026-03-21T11:13:05.177838+00:00"
+      },
+      "queue": null,
+      "table": null
+    }
+  },
+  "extendedLocation": null,
+  "failoverInProgress": null,
+  "geoPriorityReplicationStatus": null,
+  "geoReplicationStats": null,
+  "id": "/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/RG_Test_Prod/providers/Microsoft.Storage/storageAccounts/testdb2026",
+  "identity": null,
+  "immutableStorageWithVersioning": null,
+  "isHnsEnabled": null,
+  "isLocalUserEnabled": null,
+  "isSftpEnabled": null,
+  "isSkuConversionBlocked": null,
+  "keyCreationTime": {
+    "key1": "2026-03-21T11:13:05.167221+00:00",
+    "key2": "2026-03-21T11:13:05.167221+00:00"
+  },
+  "keyPolicy": null,
+  "kind": "StorageV2",
+  "largeFileSharesState": null,
+  "lastGeoFailoverTime": null,
+  "location": "centralindia",
+  "minimumTlsVersion": "TLS1_2",
+  "name": "testdb2026",
+  "networkRuleSet": {
+    "bypass": "AzureServices",
+    "defaultAction": "Allow",
+    "ipRules": [],
+    "ipv6Rules": [],
+    "resourceAccessRules": null,
+    "virtualNetworkRules": []
+  },
+  "placement": null,
+  "primaryEndpoints": {
+    "blob": "https://testdb2026.blob.core.windows.net/",
+    "dfs": "https://testdb2026.dfs.core.windows.net/",
+    "file": "https://testdb2026.file.core.windows.net/",
+    "internetEndpoints": null,
+    "ipv6Endpoints": null,
+    "microsoftEndpoints": null,
+    "queue": "https://testdb2026.queue.core.windows.net/",
+    "table": "https://testdb2026.table.core.windows.net/",
+    "web": "https://testdb2026.z29.web.core.windows.net/"
+  },
+  "primaryLocation": "centralindia",
+  "privateEndpointConnections": [],
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": null,
+  "resourceGroup": "RG_Test_Prod",
+  "routingPreference": null,
+  "sasPolicy": null,
+  "secondaryEndpoints": null,
+  "secondaryLocation": null,
+  "sku": {
+    "name": "Standard_LRS",
+    "tier": "Standard"
+  },
+  "statusOfPrimary": "available",
+  "statusOfSecondary": null,
+  "storageAccountSkuConversionStatus": null,
+  "tags": {},
+  "type": "Microsoft.Storage/storageAccounts",
+  "zones": null
+}
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az storage account delete --name testdb2026
+Are you sure you want to perform this operation? (y/n): y
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az storage account show --name testdb2026
+Storage account 'testdb2026' not found.
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az storage account list -o table
+AccessTier    AllowBlobPublicAccess    AllowCrossTenantReplication    AllowSharedKeyAccess    CreationTime                      DefaultToOAuthAuthentication    DnsEndpointType    EnableHttpsTrafficOnly    Kind       Location      MinimumTlsVersion    Name           PrimaryLocation    ProvisioningState    PublicNetworkAccess    ResourceGroup    SecondaryLocation    StatusOfPrimary    StatusOfSecondary
+------------  -----------------------  -----------------------------  ----------------------  --------------------------------  ------------------------------  -----------------  ------------------------  ---------  ------------  -------------------  -------------  -----------------  -------------------  ---------------------  ---------------  -------------------  -----------------  -------------------
+Hot           False                    False                          True                    2026-03-20T16:35:48.147555+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               anjusaini2329  centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                                                  2026-03-20T16:56:04.505251+00:00                                                     True                      StorageV2  centralindia  TLS1_0               annu           centralindia       Succeeded                                   anjusaini                             available
+Hot           False                    False                          True                    2026-03-20T16:59:51.737835+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               annuanvi       centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                                                  2026-03-21T09:45:17.822835+00:00                                                     True                      StorageV2  centralindia  TLS1_0               anviannu       centralindia       Succeeded                                   anjusaini                             available
+Hot           False                    False                          True                    2026-03-20T16:36:53.758360+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               jeetu1         centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az storage account list -o table
+AccessTier    AllowBlobPublicAccess    AllowCrossTenantReplication    AllowSharedKeyAccess    CreationTime                      DefaultToOAuthAuthentication    DnsEndpointType    EnableHttpsTrafficOnly    Kind       Location      MinimumTlsVersion    Name           PrimaryLocation    ProvisioningState    PublicNetworkAccess    ResourceGroup    SecondaryLocation    StatusOfPrimary    StatusOfSecondary
+------------  -----------------------  -----------------------------  ----------------------  --------------------------------  ------------------------------  -----------------  ------------------------  ---------  ------------  -------------------  -------------  -----------------  -------------------  ---------------------  ---------------  -------------------  -----------------  -------------------
+Hot           False                    False                          True                    2026-03-20T16:35:48.147555+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               anjusaini2329  centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                                                  2026-03-20T16:56:04.505251+00:00                                                     True                      StorageV2  centralindia  TLS1_0               annu           centralindia       Succeeded                                   anjusaini                             available
+Hot           False                    False                          True                    2026-03-20T16:59:51.737835+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               annuanvi       centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                                                  2026-03-21T09:45:17.822835+00:00                                                     True                      StorageV2  centralindia  TLS1_0               anviannu       centralindia       Succeeded                                   anjusaini                             available
+Hot           False                    False                          True                    2026-03-20T16:36:53.758360+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               jeetu1         centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az storage account list -o table
+AccessTier    AllowBlobPublicAccess    AllowCrossTenantReplication    AllowSharedKeyAccess    CreationTime                      DefaultToOAuthAuthentication    DnsEndpointType    EnableHttpsTrafficOnly    Kind       Location      MinimumTlsVersion    Name           PrimaryLocation    ProvisioningState    PublicNetworkAccess    ResourceGroup    SecondaryLocation    StatusOfPrimary    StatusOfSecondary
+------------  -----------------------  -----------------------------  ----------------------  --------------------------------  ------------------------------  -----------------  ------------------------  ---------  ------------  -------------------  -------------  -----------------  -------------------  ---------------------  ---------------  -------------------  -----------------  -------------------
+Hot           False                    False                          True                    2026-03-20T16:35:48.147555+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               anjusaini2329  centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                                                  2026-03-20T16:56:04.505251+00:00                                                     True                      StorageV2  centralindia  TLS1_0               annu           centralindia       Succeeded                                   anjusaini                             available
+Hot           False                    False                          True                    2026-03-20T16:59:51.737835+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               annuanvi       centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                                                  2026-03-21T09:45:17.822835+00:00                                                     True                      StorageV2  centralindia  TLS1_0               anviannu       centralindia       Succeeded                                   anjusaini                             available
+Hot           False                    False                          True                    2026-03-20T16:36:53.758360+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               jeetu1         centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                          True                    2026-03-21T13:20:26.877625+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               testdb2026     centralindia       Succeeded            Enabled                RG_Test_Prod                          available
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# az storage account list -o table
+AccessTier    AllowBlobPublicAccess    AllowCrossTenantReplication    AllowSharedKeyAccess    CreationTime                      DefaultToOAuthAuthentication    DnsEndpointType    EnableHttpsTrafficOnly    Kind       Location      MinimumTlsVersion    Name           PrimaryLocation    ProvisioningState    PublicNetworkAccess    ResourceGroup    SecondaryLocation    StatusOfPrimary    StatusOfSecondary
+------------  -----------------------  -----------------------------  ----------------------  --------------------------------  ------------------------------  -----------------  ------------------------  ---------  ------------  -------------------  -------------  -----------------  -------------------  ---------------------  ---------------  -------------------  -----------------  -------------------
+Hot           False                    False                          True                    2026-03-20T16:35:48.147555+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               anjusaini2329  centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                                                  2026-03-20T16:56:04.505251+00:00                                                     True                      StorageV2  centralindia  TLS1_0               annu           centralindia       Succeeded                                   anjusaini                             available
+Hot           False                    False                          True                    2026-03-20T16:59:51.737835+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               annuanvi       centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+Hot           False                    False                                                  2026-03-21T09:45:17.822835+00:00                                                     True                      StorageV2  centralindia  TLS1_0               anviannu       centralindia       Succeeded                                   anjusaini                             available
+Hot           False                    False                          True                    2026-03-20T16:36:53.758360+00:00  False                           Standard           True                      StorageV2  centralindia  TLS1_2               jeetu1         centralindia       Succeeded            Enabled                anjusaini        southindia           available          available
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
