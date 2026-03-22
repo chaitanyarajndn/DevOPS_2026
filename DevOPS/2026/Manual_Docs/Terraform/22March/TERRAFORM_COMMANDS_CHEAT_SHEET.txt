@@ -1,0 +1,47 @@
+TERRAFORM COMMANDS CHEAT SHEET
+==============================
+
+SETUP & INITIALIZATION
+----------------------
+terraform init                  -> Initialize working directory and download providers/modules
+terraform providers             -> Show providers required and installed
+terraform version               -> Display Terraform version installed
+
+PLANNING & VALIDATION
+---------------------
+terraform plan                  -> Preview the changes Terraform will make
+terraform validate              -> Check if configuration syntax is correct
+terraform fmt                   -> Format .tf files into standard style
+terraform graph                 -> Generate a dependency graph of resources
+
+APPLY & MANAGE INFRASTRUCTURE
+-----------------------------
+terraform apply                 -> Apply configuration interactively
+terraform apply -auto-approve   -> Apply configuration without asking for confirmation
+terraform destroy               -> Remove all resources interactively
+terraform destroy -auto-approve -> Remove all resources without asking for confirmation
+terraform refresh               -> Update state file with real-world resource values
+terraform show                  -> Display current state
+terraform show <planfile>       -> Display details of a saved plan file
+terraform output                -> Show all output values
+terraform output <name>         -> Show a specific output value
+
+STATE MANAGEMENT
+----------------
+terraform state list            -> List resources tracked in the state file
+terraform state show <resource> -> Show details of a resource in state
+terraform state rm <resource>   -> Remove a resource from state file
+terraform state mv <src> <dest> -> Move items within state file
+
+WORKSPACES
+----------
+terraform workspace list        -> List available workspaces
+terraform workspace new <name>  -> Create a new workspace
+terraform workspace select <name> -> Switch to a workspace
+terraform workspace delete <name> -> Delete a workspace
+
+DEBUGGING & UTILITIES
+---------------------
+terraform console               -> Open interactive console for evaluating expressions
+terraform force-unlock <lock-id> -> Manually unlock a stuck state lock
+terraform providers mirror <dir> -> Copy provider binaries locally for offline use
