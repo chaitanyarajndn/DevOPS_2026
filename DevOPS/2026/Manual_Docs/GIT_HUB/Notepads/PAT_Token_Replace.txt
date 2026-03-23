@@ -1,0 +1,68 @@
+✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦
+   GIT REMOTE BACKOUT & NEW PAT SETUP - QUICK GUIDE
+✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦
+
+
+# STEP 1: Check current remote
+
+Enter :  git remote -v  
+--> Shows the current remote URLs (fetch & push)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+# STEP 2: Remove old remote
+
+Enter :  git remote remove origin  
+--> Deletes the existing remote reference with expired PAT
+
+══════════════════════════════════════════════════════
+
+
+# STEP 3: Add new remote (Replace <NEW_PAT> with your token)
+
+Enter :  git remote add origin https://<NEW_PAT>@github.com/chaitanyarajndn/DevOPS_2026.git  
+--> Adds the new remote using your fresh PAT
+
+──────────────────────────────────────────────────────
+
+
+# STEP 4: Verify new remote
+
+Enter :  git remote -v  
+--> Confirms the remote now points to GitHub with new PAT
+
+✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦
+
+
+# STEP 5: Confirm HEAD points to main
+
+Enter :  git symbolic-ref HEAD  
+--> Displays which branch HEAD is pointing to (should be refs/heads/main)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+# STEP 6: Ensure remote origin default branch is main
+
+Enter :  git push -u origin main  
+--> Sets your local 'main' branch to track remote 'origin/main' (without creating new branch)
+
+══════════════════════════════════════════════════════
+
+
+# STEP 7: Test push
+
+Enter :  git push origin main  
+--> Pushes your local 'main' branch to the remote repo
+
+──────────────────────────────────────────────────────
+
+
+✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦
+   NOTES:
+   - Always replace <NEW_PAT> with your actual token.
+   - Keep your PAT secure; avoid sharing or committing it.
+   - If PAT expires again, repeat REMOVE + ADD steps.
+   - No new branch is created; origin is simply set to main.
+✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦

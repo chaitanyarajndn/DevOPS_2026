@@ -1,0 +1,499 @@
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# pwd
+/root
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~#
+root@Chaitanya-Raj:~# cd /home/chetan/
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# ls -lrth
+total 16K
+drwxrwxrwx 2 root root 4.0K Jan  4 15:26 tmp
+drwxrwxrwx 2 root root 4.0K Mar 21 10:37 Use
+drwxr-xr-x 2 root root 4.0K Mar 21 10:39 DevOPS
+drwxrwxrwx 4 root root 4.0K Mar 21 10:48 Github
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# chmod -R 777 DevOPS/
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# ls -lrth
+total 16K
+drwxrwxrwx 2 root root 4.0K Jan  4 15:26 tmp
+drwxrwxrwx 2 root root 4.0K Mar 21 10:37 Use
+drwxrwxrwx 2 root root 4.0K Mar 21 10:39 DevOPS
+drwxrwxrwx 4 root root 4.0K Mar 21 10:48 Github
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# ls -al
+total 44
+drwxr-x--- 7 chetan chetan 4096 Mar 21 10:40 .
+drwxr-xr-x 3 root   root   4096 Jan  4 15:25 ..
+-rw------- 1 chetan chetan   62 Jan  7 12:08 .bash_history
+-rw-r--r-- 1 chetan chetan  220 Mar 31  2024 .bash_logout
+-rw-r--r-- 1 chetan chetan 3771 Mar 31  2024 .bashrc
+drwxr-xr-x 2 chetan chetan 4096 Jan  7 11:56 .landscape
+-rw-rw-r-- 1 chetan chetan    0 Jan  7 11:56 .motd_shown
+-rw-r--r-- 1 chetan chetan  807 Mar 31  2024 .profile
+drwxrwxrwx 2 root   root   4096 Mar 21 10:39 DevOPS
+drwxrwxrwx 4 root   root   4096 Mar 21 10:48 Github
+drwxrwxrwx 2 root   root   4096 Mar 21 10:37 Use
+drwxrwxrwx 2 root   root   4096 Jan  4 15:26 tmp
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan#
+root@Chaitanya-Raj:/home/chetan# cd Github/
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# ls -lrth
+total 8.0K
+-rw-r--r-- 1 root root   36 Mar 21 10:48 README.md
+drwxrwxrwx 5 root root 4.0K Mar 22 11:12 DevOPS
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git --version
+git version 2.43.0
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git remote -v
+origin  https://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@github.com/chaitanyarajndn/DevOPS_2026.git (fetch)
+origin  https://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@github.com/chaitanyarajndn/DevOPS_2026.git (push)
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git pull origin main
+From https://github.com/chaitanyarajndn/DevOPS_2026
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git add .
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   DevOPS/2026/Manual_Docs/Terraform/22March/TERRAFORM_COMMANDS_CHEAT_SHEET.txt
+        new file:   DevOPS/2026/Manual_Docs/Terraform/22March/TerraformCLI_Login_Create_RG.docx
+        new file:   DevOPS/2026/Manual_Docs/Terraform/22March/Terraform_Create_RG.txt
+        new file:   DevOPS/DevOPS/2025/1707069509002.pdf
+        new file:   DevOPS/DevOPS/2025/1707069509002.pdf:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/1707069509002.pdf:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/AWS-iSSUE.pptx
+        new file:   DevOPS/DevOPS/2025/AWS-iSSUE.pptx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/AWS-iSSUE.pptx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker-runtime.gif
+        new file:   DevOPS/DevOPS/2025/Docker-runtime.gif:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker-runtime.gif:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Docker-Notes.docx
+        new file:   DevOPS/DevOPS/2025/Docker/Docker-Notes.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Docker-Notes.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Docker.pdf
+        new file:   DevOPS/DevOPS/2025/Docker/Docker.pdf:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Docker.pdf:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/FORMAT.docx
+        new file:   DevOPS/DevOPS/2025/Docker/FORMAT.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/FORMAT.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/create docker file.txt
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/create docker file.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/create docker file.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/docker built command1.txt
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/docker built command1.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/docker built command1.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/docker run command.txt
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/docker run command.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/docker run command.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/sudo usermodify command.txt
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/sudo usermodify command.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Docker/Notepad/sudo usermodify command.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Doker.docx
+        new file:   DevOPS/DevOPS/2025/Doker.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Doker.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/FORMAT.docx
+        new file:   DevOPS/DevOPS/2025/FORMAT.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/FORMAT.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/GITHUB.docx
+        new file:   DevOPS/DevOPS/2025/GIT HUB/GITHUB.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/GITHUB.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/GitHub.pdf
+        new file:   DevOPS/DevOPS/2025/GIT HUB/GitHub.pdf:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/GitHub.pdf:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/GIT COMMAND.txt
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/GIT COMMAND.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/GIT COMMAND.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/GIT OUTPUT.txt
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/GIT OUTPUT.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/GIT OUTPUT.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/GIT-Pushcommand.txt
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/How to push Files to GITHUB.txt
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/How to push Files to GITHUB.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GIT HUB/Notepads/How to push Files to GITHUB.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GREP.docx
+        new file:   DevOPS/DevOPS/2025/GREP.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/GREP.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Git Basic Commands Cheat Sheet .pdf
+        new file:   DevOPS/DevOPS/2025/Git Basic Commands Cheat Sheet .pdf:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Git Basic Commands Cheat Sheet .pdf:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/Basic/Echo_AWK_Read.txt
+        new file:   DevOPS/DevOPS/2025/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/GREP_Commands.txt
+        new file:   DevOPS/DevOPS/2025/LINUX/GREP_Commands.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/GREP_Commands.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/INSTALL_UNINSTALL_NGINX.txt
+        new file:   DevOPS/DevOPS/2025/LINUX/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/LINUX NOTES/Linux-1.pdf
+        new file:   DevOPS/DevOPS/2025/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/LINUX NOTES/Shell Script.pdf
+        new file:   DevOPS/DevOPS/2025/LINUX/LINUX NOTES/Shell Script.pdf:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/LINUX NOTES/Shell Script.pdf:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/SS_Create_User.txt
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/SS_Delete_User.txt
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/SS_User_Management.txt
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/change_password.sh
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/change_password.sh:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/Shell_Script/change_password.sh:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/WSL_DOC.txt
+        new file:   DevOPS/DevOPS/2025/LINUX/WSL_DOC.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/LINUX/WSL_DOC.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Linux-VI-editor.docx
+        new file:   DevOPS/DevOPS/2025/Linux-VI-editor.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Linux-VI-editor.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/NOTEPAD_HEADING.txt
+        new file:   DevOPS/DevOPS/2025/NOTEPAD_HEADING.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/NOTEPAD_HEADING.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Networking Terminologies.docx
+        new file:   DevOPS/DevOPS/2025/Networking Terminologies.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/Networking Terminologies.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/UBUNTU-CMDS-LOGIN-Details.txt
+        new file:   DevOPS/DevOPS/2025/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/docker_screenshots.pptx
+        new file:   DevOPS/DevOPS/2025/docker_screenshots.pptx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/docker_screenshots.pptx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/test/git-branching.txt
+        new file:   DevOPS/DevOPS/2025/test/git-branching.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/test/git-branching.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/test/reset.txt
+        new file:   DevOPS/DevOPS/2025/test/reset.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/test/reset.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/usermanagement.txt
+        new file:   DevOPS/DevOPS/2025/usermanagement.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2025/usermanagement.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/14March/AZURE_Cheat_Sheet.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/14March/AZURE_Cheat_Sheet.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/14March/AZURE_Cheat_Sheet.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI_V1.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/14March/Create_Delete_RG_Storage_Account_AZ_CLI_V1.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/21_March/AZ_CLI_Create_Delete_Storage_Account.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/21_March/AZ_CLI_Create_Delete_Storage_Account.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/21_March/Create_Delete_RG_Storage_Account_AZ_CLI.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/21_March/Create_Delete_RG_Storage_Account_AZ_CLI.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/21_March/Create_Delete_RG_Storage_Account_AZ_CLI_V2.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/21_March/Create_Delete_RG_Storage_Account_AZ_CLI_V2.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Create_Azure_RG_Using_Terraform_Azure_CLI.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Create_Azure_RG_Using_Terraform_Azure_CLI.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Create_Azure_RG_Using_Terraform_Azure_CLI.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Register_Create_User.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Register_Create_User.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Register_Create_User.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Storage_Redundancy.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Storage_Redundancy.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Storage_Redundancy.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Users_Groups_Roles_Azure_Resource.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Users_Groups_Roles_Azure_Resource.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/8March/Users_Groups_Roles_Azure_Resource.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/AZURE_1.pdf
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/AZURE_1.pdf:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/AZURE_1.pdf:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Azure_EntraIDSetup.svg
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Azure_EntraIDSetup.svg:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Azure_EntraIDSetup.svg:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/GroupFormation_Roles.svg
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/GroupFormation_Roles.svg:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/GroupFormation_Roles.svg:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Variant1_LRS_to_ZRS.svg
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Variant1_LRS_to_ZRS.svg:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/Variant1_LRS_to_ZRS.svg:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/structure.svg
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/structure.svg:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/DRAW.IO/structure.svg:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Group.png
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Group.png:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Group.png:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Hierarchy.png
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Hierarchy.png:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Azure_Resource_Hierarchy.png:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative.png
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative.png:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative.png:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative_2.png
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative_2.png:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Imperative_Declarative_2.png:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/LRS_ZRS_GRS_GZRS_structured.png
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/LRS_ZRS_GRS_GZRS_structured.png:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/LRS_ZRS_GRS_GZRS_structured.png:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Storage_Redundancy.png
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Storage_Redundancy.png:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/Storage_Redundancy.png:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/confirm.png
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/confirm.png:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Images/confirm.png:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_CLI_LOGIN.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_CLI_LOGIN.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_CLI_LOGIN.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Class_Notes.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Class_Notes.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Class_Notes.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Regions.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Regions.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/AZURE_Regions.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/root@Chaitanya-Raj ~Azure.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/root@Chaitanya-Raj ~Azure.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Notepad/root@Chaitanya-Raj ~Azure.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Presentation1.pptx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Presentation1.pptx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/AZURE/Presentation1.pptx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Docker-Notes.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Docker-Notes.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Docker-Notes.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Docker.pdf
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Docker.pdf:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Docker.pdf:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/FORMAT.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/FORMAT.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/FORMAT.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/create_docker_file.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/create_docker_file.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/create_docker_file.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/docker_built_command1.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/docker_built_command1.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/docker_built_command1.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/docker_run_command.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/docker_run_command.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/docker_run_command.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/sudo_usermodify_command.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/sudo_usermodify_command.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Docker/Notepad/sudo_usermodify_command.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/16March/Github_Prepare.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/16March/Github_Prepare.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/16March/LOGS_GIT_Push_all_Files.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/16March/LOGS_GIT_Push_all_Files.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/16March/Upto_Git_Push_Commands.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/16March/Upto_Git_Push_Commands.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/21_March/Pull_File_from_GITHUB_GUI.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/21_March/Pull_File_from_GITHUB_GUI.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/GITHUB.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/GITHUB.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/GITHUB.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/GitHub.pdf
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/GitHub.pdf:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/GitHub.pdf:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT-Pushcommand.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT-Pushcommand.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_COMMAND.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_COMMAND.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_COMMAND.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_OUTPUT.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_OUTPUT.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/GIT_OUTPUT.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/Push_Files_GITHUB.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/Push_Files_GITHUB.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/Notepads/Push_Files_GITHUB.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/~$GITHUB.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/~$GITHUB.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/GIT_HUB/~$GITHUB.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Basic/Echo_AWK_Read.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Basic/Echo_AWK_Read.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Linux-1.pdf
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Linux-1.pdf:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Shell_Script.pdf
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Shell_Script.pdf:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/LINUX NOTES/Shell_Script.pdf:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/Basic_Linux.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/Basic_Linux.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/Basic_Linux.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/CREATEUSER_SCRIPT.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/CREATEUSER_SCRIPT.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/CREATEUSER_SCRIPT.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_Commands.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_Commands.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_Commands.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_LINUX.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_LINUX.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/GREP_LINUX.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_IIS.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_IIS.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_IIS.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_NIGNX.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_NIGNX.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_NIGNX.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_UNINSTALL_NGINX.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/INSTALL_UNINSTALL_NGINX.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/Install_Run_Uninstall_NGINX.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/Install_Run_Uninstall_NGINX.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/Install_Run_Uninstall_NGINX.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/LINUX_1.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/LINUX_1.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/LINUX_1.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/WSL_DOC.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/WSL_DOC.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/WSL_DOC.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/modifyuser_binbash_SHELL.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/modifyuser_binbash_SHELL.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Notepad/modifyuser_binbash_SHELL.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Create_User.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Create_User.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Delete_User.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_Delete_User.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_User_Management.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/SS_User_Management.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/change_password.sh
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/change_password.sh:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/LINUX/Shell_Script/change_password.sh:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/NOTEPAD_HEADING.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/NOTEPAD_HEADING.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/NOTEPAD_HEADING.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Template.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Template.docx:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Template.docx:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Terraform/22March/TERRAFORM_COMMANDS_CHEAT_SHEET.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Terraform/22March/TerraformCLI_Login_Create_RG.docx
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Terraform/22March/Terraform_Create_RG.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Terraform/Notepad/INSTALL_Terraform_Failed.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Terraform/Notepad/INSTALL_Terraform_Failed.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Terraform/Notepad/INSTALL_Terraform_Failed.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Terraform/Notepad/Install_Terraform_Success.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Terraform/Notepad/Install_Terraform_Success.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/Terraform/Notepad/Install_Terraform_Success.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/UBUNTU-CMDS-LOGIN-Details.txt
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier
+        new file:   DevOPS/DevOPS/2026/Manual_Docs/UBUNTU-CMDS-LOGIN-Details.txt:Zone.Identifier:Zone.Identifier
+        new file:   DevOPS/DevOPS/Template.docx
+
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git reset
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        DevOPS/2026/Manual_Docs/Terraform/22March/
+        DevOPS/DevOPS/
+
+nothing added to commit but untracked files present (use "git add" to track)
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git add .
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   DevOPS/2026/Manual_Docs/Terraform/22March/TERRAFORM_COMMANDS_CHEAT_SHEET.txt
+        new file:   DevOPS/2026/Manual_Docs/Terraform/22March/TerraformCLI_Login_Create_RG.docx
+        new file:   DevOPS/2026/Manual_Docs/Terraform/22March/Terraform_Create_RG.txt
+        new file:   DevOPS/Template.docx
+
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git commit -m "8th commit Acer"
+[main 72ae8bf] 8th commit Acer
+ Committer: root <root@Chaitanya-Raj.localdomain>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 4 files changed, 581 insertions(+)
+ create mode 100644 DevOPS/2026/Manual_Docs/Terraform/22March/TERRAFORM_COMMANDS_CHEAT_SHEET.txt
+ create mode 100644 DevOPS/2026/Manual_Docs/Terraform/22March/TerraformCLI_Login_Create_RG.docx
+ create mode 100644 DevOPS/2026/Manual_Docs/Terraform/22March/Terraform_Create_RG.txt
+ create mode 100644 DevOPS/Template.docx
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git status
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git log --oneline
+72ae8bf (HEAD -> main) 8th commit Acer
+fc1970c (origin/main)  7th commit - Acer Updates
+6c06fab  6th commit - Acer Updates
+0a9e491 5th commit - Acer Laptop
+de699cc 4th commit
+e34b43f 3rd commit
+e98b7bf 2nd commit
+716b5eb Initial commit
+bcef466 Initial commit
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github# git push -u origin main
+Enumerating objects: 16, done.
+Counting objects: 100% (16/16), done.
+Delta compression using up to 24 threads
+Compressing objects: 100% (10/10), done.
+Writing objects: 100% (11/11), 195.61 KiB | 39.12 MiB/s, done.
+Total 11 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/chaitanyarajndn/DevOPS_2026.git
+   fc1970c..72ae8bf  main -> main
+branch 'main' set up to track 'origin/main'.
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#
+root@Chaitanya-Raj:/home/chetan/Github#

@@ -1,0 +1,154 @@
+══════════════════════════════════════════════════════
+🌟 TERRAFORM BLOCKS CHEAT SHEET 🌟
+══════════════════════════════════════════════════════
+
+
+1) SINGLE-LABEL BLOCK
+---------------------
+Format:
+
+
+Block_Name {
+   <ARGUMENTS>
+}
+
+
+
+Description (8 lines):
+1. Has only the block name, no labels.
+2. Used for global configuration or settings.
+3. Example: terraform {}, variable {}.
+4. Controls overall behavior of Terraform.
+5. Arguments inside define providers, backends, etc.
+6. Think of it as the "main settings page."
+7. Applies broadly, not tied to a specific resource.
+8. Simple structure: Block_Name { arguments }.
+
+----------------------------------------
+
+2) DOUBLE-LABEL BLOCK
+---------------------
+Format:
+
+
+Block_Name "label" {
+   <ARGUMENTS>
+}
+
+
+
+Description (8 lines):
+1. Has block name plus one label.
+2. Example: provider "azurerm" {}.
+3. Label identifies which provider/module is used.
+4. Inside, arguments configure that provider/module.
+5. Think of it as "category + specific choice."
+6. Useful when multiple providers are needed.
+7. Scope is narrower than single-label blocks.
+8. Structure: Block_Name "label" { arguments }.
+
+----------------------------------------
+
+3) TRIPLE-LABEL BLOCK
+---------------------
+Format:
+
+
+Block_Name "type" "name" {
+   <ARGUMENTS>
+}
+
+
+Description (8 lines):
+1. Has block name plus two labels.
+2. Example: resource "azurerm_resource_group" "example" {}.
+3. First label = resource type (what you create).
+4. Second label = resource name (nickname/identifier).
+5. Together they form a unique ID: type.name.
+6. Inside, arguments define properties (name, location).
+7. Think of it as "class + instance name."
+8. Structure: Block_Name "type" "name" { arguments }.
+
+----------------------------------------
+
+NESTED BLOCKS
+-------------
+Arguments themselves can be blocks.
+
+Example:
+resource "azurerm_virtual_network" "vnet" {
+   name                = "example-vnet"
+   location            = "East US"
+   resource_group_name = azurerm_resource_group.example.name
+
+   subnet {
+      name           = "subnet1"
+      address_prefix = "10.0.1.0/24"
+   }
+}
+
+========================================
+FLOW DIAGRAM (TEXT STYLE - EXPANDED)
+========================================
+
+Terraform Configuration
+   └── terraform { }
+        └── required_providers { }
+             └── provider "azurerm" { }
+                  └── features { }
+
+Resources
+   └── resource "azurerm_resource_group" "example"
+        └── arguments: name, location
+        └── (optional nested blocks like tags {})
+
+   └── resource "azurerm_virtual_network" "vnet"
+        └── arguments: name, location, rg_name
+        └── subnet { }
+             └── arguments: name, address_prefix
+
+General Flow:
+terraform {} → provider {} → resource {} → nested blocks
+
+========================================
+DIFFERENCES BETWEEN BLOCKS
+========================================
+
+| Feature              | Single-Label            | Double-Label              | Triple-Label                          |
+|----------------------|-------------------------|---------------------------|---------------------------------------|
+| Labels               | None                    | One                       | Two                                   |
+| Example              | terraform {}            | provider "azurerm" {}     | resource "azurerm_resource_group" "example" {} |
+| Purpose              | Global config           | Provider/module setup     | Resource definition                   |
+| Scope                | Applies to all configs  | Applies to one provider   | Applies to one resource instance      |
+| Identification       | By block name only      | By block name + label     | By type + name (unique ID)            |
+
+
+══════════════════════════════════════════════════════
+📖 OFFICIAL REFERENCE LINK
+══════════════════════════════════════════════════════
+Terraform Block Reference:
+
+
+https://developer.hashicorp.com/terraform/language/block/terraform
+══════════════════════════════════════════════════════
+
+🌟 END OF CHEAT SHEET 🌟
+══════════════════════════════════════════════════════
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
