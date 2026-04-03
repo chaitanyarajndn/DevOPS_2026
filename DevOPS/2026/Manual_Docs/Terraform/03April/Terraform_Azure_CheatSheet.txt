@@ -1,0 +1,141 @@
+
+===========================================
+Terraform + Azure Flowchart Cheat Sheet
+===========================================
+
+Terraform Workflow Overview
+---------------------------
+        +--------------------+
+        |  terraform init    |
+        +--------------------+
+                 |
+                 v
+        +--------------------+
+        |  terraform validate|
+        +--------------------+
+                 |
+                 v
+        +--------------------+
+        |  terraform plan    |
+        +--------------------+
+                 |
+                 v
+        +--------------------+
+        |  terraform apply   |
+        +--------------------+
+                 |
+                 v
+        +--------------------+
+        |  Infrastructure    |
+        |  Created in Azure  |
+        +--------------------+
+                 |
+                 v
+        +--------------------+
+        |  terraform destroy |
+        +--------------------+
+                 |
+                 v
+        +--------------------+
+        |  Infrastructure    |
+        |  Removed from Azure|
+        +--------------------+
+
+Parallel Formatting Path
+------------------------
+        +--------------------+
+        |  terraform fmt     |
+        +--------------------+
+                 |
+                 v
+        +--------------------+
+        |  Clean & Readable  |
+        |  Configuration     |
+        +--------------------+
+
+Azure Integration Flow
+----------------------
+Terraform → Azurerm Provider → Azure Resource Manager → Resource Group → Azure Cloud
+
+===========================================
+Detailed Command Explanations & Preconditions
+===========================================
+
+1️⃣ terraform init
+Purpose: Initializes the working directory and downloads required provider plugins (e.g., Azurerm).
+Preconditions:
+- Ensure .tf files are present and syntactically valid.
+- Internet access required to fetch providers.
+- Azure CLI or service principal credentials configured.
+Checks before running:
+- Verify provider block exists.
+- Confirm backend configuration if using remote state.
+
+2️⃣ terraform validate
+Purpose: Checks syntax and logical structure of configuration.
+Preconditions:
+- Run terraform init first.
+- All variables and modules defined.
+Checks before running:
+- Ensure no missing braces, quotes, or misplaced blocks.
+- Validate resource names follow Azure conventions.
+
+3️⃣ terraform plan
+Purpose: Previews changes Terraform will make.
+Preconditions:
+- Validation must pass.
+- Azure credentials active.
+Checks before running:
+- Confirm state file accessible.
+- Review plan output carefully for unintended changes.
+
+4️⃣ terraform apply
+Purpose: Executes plan and creates/updates infrastructure.
+Preconditions:
+- Plan output reviewed and approved.
+- Sufficient permissions in Azure.
+Checks before running:
+- Ensure no conflicting manual changes.
+- Confirm resource quotas and limits.
+
+5️⃣ terraform fmt
+Purpose: Formats configuration files for readability.
+Preconditions:
+- Can run anytime.
+Checks before running:
+- Ensure files saved and not locked.
+
+6️⃣ terraform destroy
+Purpose: Removes all resources defined in configuration.
+Preconditions:
+- Ensure correct workspace and state file.
+- Backup important data before destruction.
+Checks before running:
+- Confirm target environment.
+- Review destroy plan output carefully.
+
+===========================================
+Integration Logic (Azure Side)
+===========================================
+Terraform uses Azurerm Provider to communicate with Azure Resource Manager (ARM).
+ARM orchestrates resource creation inside a Resource Group (RG).
+RG acts as a logical container for resources deployed in Azure Cloud.
+
+===========================================
+Professional View
+===========================================
+Terraform is the architect, Azurerm the translator, and ARM the builder.
+Each command represents a stage in the construction process:
+- init lays the foundation.
+- validate checks the blueprint.
+- plan previews the build.
+- apply constructs the structure.
+- fmt ensures neatness.
+- destroy safely dismantles the setup.
+
+===========================================
+Troubleshooting Notes
+===========================================
+- Common errors: provider mismatch, syntax errors, authentication issues.
+- Always run terraform plan before apply.
+- Use terraform destroy cautiously; confirm environment before execution.

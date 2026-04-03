@@ -1,0 +1,235 @@
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform fmt         
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform providers   
+
+Providers required by configuration:
+.
+└── provider[registry.terraform.io/hashicorp/azurerm] 4.66.0
+
+Providers required by state:
+
+    provider[registry.terraform.io/hashicorp/azurerm]
+
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform plan        
+azurerm_resource_group.GRP1: Refreshing state... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test-rg-terraform]
+azurerm_resource_group.RG1: Refreshing state... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test-RG1]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # azurerm_resource_group.RG27March will be created
+  + resource "azurerm_resource_group" "RG27March" {
+      + id       = (known after apply)
+      + location = "westeurope"
+      + name     = "test_new_rg"
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform validate
+Success! The configuration is valid.
+
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform graph
+digraph G {
+  rankdir = "RL";
+  node [shape = rect, fontname = "sans-serif"];
+  "azurerm_resource_group.GRP1" [label="azurerm_resource_group.GRP1"];
+  "azurerm_resource_group.RG1" [label="azurerm_resource_group.RG1"];
+  "azurerm_resource_group.RG27March" [label="azurerm_resource_group.RG27March"];
+}
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform apply -auto-approve
+azurerm_resource_group.RG1: Refreshing state... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test-RG1]
+azurerm_resource_group.GRP1: Refreshing state... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test-rg-terraform]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # azurerm_resource_group.RG27March will be created
+  + resource "azurerm_resource_group" "RG27March" {
+      + id       = (known after apply)
+      + location = "westeurope"
+      + name     = "test_new_rg"
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+azurerm_resource_group.RG27March: Creating...
+azurerm_resource_group.RG27March: Still creating... [00m10s elapsed]
+azurerm_resource_group.RG27March: Still creating... [00m20s elapsed]
+azurerm_resource_group.RG27March: Still creating... [00m30s elapsed]
+azurerm_resource_group.RG27March: Still creating... [00m40s elapsed]
+azurerm_resource_group.RG27March: Still creating... [00m50s elapsed]
+azurerm_resource_group.RG27March: Creation complete after 51s [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform>  terraform show
+# azurerm_resource_group.RG27March:
+resource "azurerm_resource_group" "RG27March" {
+    id         = "/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg"
+    location   = "westeurope"
+    managed_by = null
+    name       = "test_new_rg"
+}
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+ *  History restored 
+
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+ *  History restored 
+
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> az account show
+{
+  "environmentName": "AzureCloud",
+  "homeTenantId": "63a179fa-9037-4ddd-a7f3-646a89a65804",
+  "id": "594ca230-6fcf-4aa3-81ac-5e4d3ec2027c",
+  "isDefault": true,
+  "managedByTenants": [],
+  "name": "Jitendra Gehlot_DevOPS",
+  "state": "Enabled",
+  "tenantId": "63a179fa-9037-4ddd-a7f3-646a89a65804",
+  "user": {
+    "name": "chaitanyarajndn@b18g141.online",
+    "type": "user"
+  }
+}
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform fmt
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform init
+Initializing provider plugins found in the configuration...
+- Reusing previous version of hashicorp/azurerm from the dependency lock file
+- Using previously-installed hashicorp/azurerm v4.66.0
+
+Initializing the backend...
+
+Initializing provider plugins found in the state...
+- Reusing previous version of hashicorp/azurerm
+- Using previously-installed hashicorp/azurerm v4.66.0
+
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform refresh
+azurerm_resource_group.RG27March: Refreshing state... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg]
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform state list
+azurerm_resource_group.RG27March
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform destroy -auto-approve
+azurerm_resource_group.RG27March: Refreshing state... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # azurerm_resource_group.RG27March will be destroyed
+  - resource "azurerm_resource_group" "RG27March" {
+      - id         = "/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg" -> null
+      - location   = "westeurope" -> null
+      - name       = "test_new_rg" -> null
+      - tags       = {} -> null
+        # (1 unchanged attribute hidden)
+    }
+
+Plan: 0 to add, 0 to change, 1 to destroy.
+azurerm_resource_group.RG27March: Destroying... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg]
+azurerm_resource_group.RG27March: Still destroying... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg, 00m10s elapsed]
+azurerm_resource_group.RG27March: Still destroying... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg, 00m20s elapsed]
+azurerm_resource_group.RG27March: Still destroying... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg, 00m30s elapsed]
+azurerm_resource_group.RG27March: Still destroying... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg, 00m40s elapsed]
+azurerm_resource_group.RG27March: Still destroying... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg, 00m50s elapsed]
+azurerm_resource_group.RG27March: Still destroying... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg, 01m00s elapsed]
+azurerm_resource_group.RG27March: Still destroying... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg, 01m10s elapsed]
+╷
+│ Error: deleting Resource Group (Subscription: "594ca230-6fcf-4aa3-81ac-5e4d3ec2027c"
+│ Resource Group Name: "test_new_rg"): Delete "https://management.azure.com/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg?api-version=2023-07-01": HTTP response was nil; connection may have been reset
+│
+│
+╵
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform destroy -auto-approve
+azurerm_resource_group.RG27March: Refreshing state... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # azurerm_resource_group.RG27March will be destroyed
+  - resource "azurerm_resource_group" "RG27March" {
+      - id         = "/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg" -> null
+      - location   = "westeurope" -> null
+      - name       = "test_new_rg" -> null
+      - tags       = {} -> null
+        # (1 unchanged attribute hidden)
+    }
+
+Plan: 0 to add, 0 to change, 1 to destroy.
+azurerm_resource_group.RG27March: Destroying... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg]
+azurerm_resource_group.RG27March: Still destroying... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg, 00m10s elapsed]
+azurerm_resource_group.RG27March: Still destroying... [id=/subscriptions/594ca230-6fcf-4aa3-81ac-5e4d3ec2027c/resourceGroups/test_new_rg, 00m20s elapsed]
+azurerm_resource_group.RG27March: Destruction complete after 23s
+
+Destroy complete! Resources: 1 destroyed.
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform refresh   
+╷
+│ Warning: Empty or non-existent state
+│
+│ There are currently no remote objects tracked in the state, so there is nothing to refresh.
+╵
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> terraform state list
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform> 
