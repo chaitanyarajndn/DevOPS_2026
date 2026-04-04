@@ -1,0 +1,28 @@
+Terraform_Docker_Git_Relation
+--------------------------------
+
+Terraform:
+- Builds environment (servers, networks, cloud setup).
+- Think of it as "building the house."
+
+Docker:
+- Runs apps inside containers (small boxes).
+- Think of it as "putting furniture inside the house."
+
+Git:
+- Saves versions of files.
+- Think of it as "keeping a diary of changes."
+
+Relationship:
+- Terraform builds the playground.
+- Docker plays inside it.
+- Git keeps track of the rules.
+
+Key Difference:
+- Terraform CLI → builds infra (outside the box).
+- Docker CLI → runs apps (inside the box).
+
+Troubleshooting:
+- State file corrupted → use backup.
+- Lock file missing → run terraform init.
+- Provider mismatch → terraform init -upgrade.

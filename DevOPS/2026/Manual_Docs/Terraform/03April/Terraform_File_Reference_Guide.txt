@@ -46,3 +46,141 @@ Summary
 ----------------------------------------
 - .terraform.lock.hcl ensures provider version consistency.
 - terraform.tfstate ensures Terraform knows what resources exist and manages them correctly.
+
+
+
+
+
+
+
+----------------------------------------
+Terraform File Reference Guide
+----------------------------------------
+
+1. .terraform.lock.hcl
+----------------------------------------
+Raw Content:
+# This file is maintained automatically by "terraform init".
+# Manual edits may be lost in future updates.
+
+provider "registry.terraform.io/hashicorp/azurerm" {
+  version     = "4.66.0"
+  constraints = "4.66.0"
+  hashes = [
+    "h1:1z90izeFtSLlN14fBIwT6K3D9JECZWRhhGsOtBdN6sY=",
+    ...
+  ]
+}
+
+Explanation:
+- Locks AzureRM provider version to 4.66.0.
+- Hashes verify provider integrity.
+- Ensures consistent builds across environments.
+- Auto-managed → do not edit manually.
+- Commit this file to Git.
+
+----------------------------------------
+2. terraform.tfstate
+----------------------------------------
+Raw Content:
+{
+  "version": 4,
+  "terraform_version": "1.15.0",
+  "serial": 10,
+  "lineage": "c4fc1373-7571-a826-78a4-ec2c3d65be01",
+  "outputs": {},
+  "resources": [],
+  "check_results": null
+}
+
+Explanation:
+- Tracks current resource state.
+- "resources": [] → no resources currently managed.
+- Serial = 10 → latest update count.
+- Do not commit to Git (use remote state).
+- Never edit manually.
+
+----------------------------------------
+3. terraform.tfstate.backup
+----------------------------------------
+Raw Content:
+{
+  "version": 4,
+  "terraform_version": "1.15.0",
+  "serial": 8,
+  "lineage": "c4fc1373-7571-a826-78a4-ec2c3d65be01",
+  "outputs": {},
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "azurerm_resource_group",
+      "name": "RG27March",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "attributes": {
+            "id": "/subscriptions/.../resourceGroups/test_new_rg",
+            "location": "westeurope",
+            "name": "test_new_rg"
+          }
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}
+
+Explanation:
+- Backup copy of the state file.
+- Shows resource group "test_new_rg" in West Europe.
+- Created automatically when state changes.
+- Recovery option if main tfstate is corrupted.
+- Do not commit or edit manually.
+
+----------------------------------------
+Quick Summary
+----------------------------------------
+- .terraform.lock.hcl → Locks provider versions (commit to Git).
+- terraform.tfstate → Current resource state (do not commit).
+- terraform.tfstate.backup → Previous state snapshot (auto backup, do not commit).
+
+----------------------------------------
+Troubleshooting
+----------------------------------------
+1. If terraform.tfstate is corrupted:
+   - Use terraform.tfstate.backup to restore.
+   - Rename backup → terraform.tfstate and re-run `terraform plan`.
+
+2. If .terraform.lock.hcl is missing:
+   - Run `terraform init` → regenerates lock file.
+   - Commit regenerated file to Git.
+
+3. If provider version mismatch occurs:
+   - Check .terraform.lock.hcl for locked version.
+   - Run `terraform init -upgrade` if you want to update provider.
+
+4. If state conflicts in team setup:
+   - Configure remote state (Azure Storage, S3, Terraform Cloud).
+   - Avoid local tfstate in shared projects.
+
+5. If resources drift from real cloud state:
+   - Run `terraform refresh` to sync state.
+   - Then run `terraform plan` to see differences.
+
+----------------------------------------
+End of Guide
+----------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
