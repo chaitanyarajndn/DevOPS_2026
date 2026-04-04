@@ -1,0 +1,48 @@
+----------------------------------------
+Terraform_File_Reference_Guide
+----------------------------------------
+
+1. .terraform.lock.hcl
+----------------------------------------
+Purpose:
+- Dependency lock file created by Terraform.
+
+Details:
+- Records the exact versions of providers (e.g., azurerm, aws).
+- Ensures consistent builds across environments (local, CI/CD).
+- Prevents unexpected behavior from provider version changes.
+- Similar to package-lock.json (Node.js) or requirements.txt (Python).
+
+Usage:
+- Should be committed to version control.
+- Auto-managed by Terraform; do not manually edit.
+
+----------------------------------------
+2. terraform.tfstate
+----------------------------------------
+Purpose:
+- State file that tracks real-world resources managed by Terraform.
+
+Details:
+- Maps Terraform configuration (.tf files) to actual cloud resources.
+- Stores metadata such as resource IDs, names, attributes, and dependencies.
+- Acts as Terraform’s “inventory ledger” of what exists and what Terraform controls.
+
+Usage:
+- Should NOT be manually edited.
+- Typically excluded from version control (use remote state storage instead).
+- Remote state (Azure Storage, S3, Terraform Cloud) avoids conflicts in team setups.
+
+----------------------------------------
+Key Differences
+----------------------------------------
+File                | Purpose                  | Commit to VCS? | Editable?
+--------------------|--------------------------|----------------|----------
+.terraform.lock.hcl | Locks provider versions  | Yes            | No (auto-managed)
+terraform.tfstate   | Tracks resource state    | No (use remote)| No (never edit manually)
+
+----------------------------------------
+Summary
+----------------------------------------
+- .terraform.lock.hcl ensures provider version consistency.
+- terraform.tfstate ensures Terraform knows what resources exist and manages them correctly.
