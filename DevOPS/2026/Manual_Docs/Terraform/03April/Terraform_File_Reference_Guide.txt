@@ -6,14 +6,14 @@ Terraform File Reference Guide (Deep Dive)
 1. .terraform.lock.hcl
 ----------------------------------------
 📌 Purpose:
-- **Dependency lock file** created by Terraform.
-- Ensures **consistent provider versions** across environments.
+- Dependency lock file created by Terraform.
+- Ensures consistent provider versions across environments.
 
 📖 Details:
 - Records exact versions of providers (e.g., azurerm, aws).
 - Prevents unexpected behavior from provider version changes.
-- Similar to **package-lock.json (Node.js)** or **requirements.txt (Python)**.
-- Contains **hashes** to verify provider integrity.
+- Similar to package-lock.json (Node.js) or requirements.txt (Python).
+- Contains hashes to verify provider integrity.
 
 🛠️ Usage:
 - ✅ Commit to version control (Git).
@@ -22,8 +22,8 @@ Terraform File Reference Guide (Deep Dive)
 ⚙️ Creation (When / Where / Why / How):
 - **When:** First run of `terraform init`.
 - **Where:** Root directory of your Terraform project.
-- **Why:** To guarantee provider version consistency and integrity.
-- **How:** Terraform queries provider registry → downloads provider binary → writes version + hashes.
+- **Why:** To guarantee provider version consistency and reproducibility.
+- **How:** Terraform queries provider registry → downloads provider binary → writes version + hashes into `.terraform.lock.hcl`.
 
 🗑️ Destruction:
 - Removed if `.terraform` directory is deleted or workspace reset.
@@ -46,8 +46,8 @@ provider "registry.terraform.io/hashicorp/azurerm" {
 2. terraform.tfstate
 ----------------------------------------
 📌 Purpose:
-- **State file** that tracks real-world resources managed by Terraform.
-- Acts as Terraform’s **inventory ledger**.
+- State file that tracks real-world resources managed by Terraform.
+- Acts as Terraform’s inventory ledger.
 
 📖 Details:
 - Maps Terraform configuration (.tf files) → actual cloud resources.
@@ -59,14 +59,16 @@ provider "registry.terraform.io/hashicorp/azurerm" {
 - ✅ Use remote state (Azure Storage, S3, Terraform Cloud).
 
 ⚙️ Creation (When / Where / Why / How):
-- **When:** First successful `terraform apply`.
-- **Where:** Root directory of project (or remote backend).
-- **Why:** To track deployed resources and maintain Terraform’s control.
-- **How:** Terraform queries cloud provider API → compares with `.tf` config → writes resource IDs, attributes, dependencies.
+- **When:**  
+  - First successful `terraform apply` → persistent `terraform.tfstate` created.  
+  - `terraform plan` → reads existing state; if none exists, builds a **temporary in‑memory state** (not saved).  
+- **Where:** Root directory of project (or remote backend).  
+- **Why:** To track deployed resources and maintain Terraform’s control.  
+- **How:** Terraform queries cloud provider API → compares with `.tf` config → writes resource IDs, attributes, dependencies into `terraform.tfstate`.
 
 🗑️ Destruction:
-- Deleted if you run `terraform destroy`.
-- Can be manually deleted → Terraform recreates fresh state.
+- Deleted if you run `terraform destroy` (resources removed, state cleared).
+- Can be manually deleted → Terraform recreates fresh state on next run.
 - If corrupted, restore from `terraform.tfstate.backup`.
 
 🔎 Raw Content Example:
@@ -84,7 +86,7 @@ provider "registry.terraform.io/hashicorp/azurerm" {
 3. terraform.tfstate.backup
 ----------------------------------------
 📌 Purpose:
-- **Backup copy** of the state file.
+- Backup copy of the state file.
 - Recovery option if main tfstate is corrupted.
 
 📖 Details:
@@ -143,21 +145,15 @@ terraform.tfstate   | Tracks resource state    | ❌ No (remote)  | ❌ No (neve
 tfstate.backup      | Previous state snapshot  | ❌ No           | ❌ No (never edit manually)
 
 ----------------------------------------
-Quick Summary
-----------------------------------------
-- 🔒 **.terraform.lock.hcl** → Locks provider versions (commit to Git).
-- 📂 **terraform.tfstate** → Current resource state (do not commit).
-- 🗂️ **terraform.tfstate.backup** → Previous state snapshot (auto backup).
-
-----------------------------------------
 Visual Lifecycle Flow (ASCII)
 ----------------------------------------
 
 Creation   →   Usage   →   Destruction
 
 .terraform.lock.hcl  → [ Providers Locked ] → X Deleted with `.terraform` reset
-terraform.tfstate    → [ Resources Tracked ] → 'terraform destroy' or manual delete
-tfstate.backup       → [ State Backed Up ]   → Auto Overwritten on next change
+terraform plan       → [ Reads existing / builds temporary state ] → No permanent tfstate written
+terraform apply      → [ Resources Tracked ] → Creates/updates terraform.tfstate + backup
+terraform destroy    → [ Removes resources ] → Updates/deletes terraform.tfstate
 
 ----------------------------------------
 Troubleshooting
@@ -175,7 +171,7 @@ Troubleshooting
    - Run `terraform init -upgrade` to update provider.
 
 4. ⚠️ If state conflicts in team setup:
-   - Configure **remote state** (Azure Storage, S3, Terraform Cloud).
+   - Configure remote state (Azure Storage, S3, Terraform Cloud).
    - Avoid local tfstate in shared projects.
 
 5. ⚠️ If resources drift from real cloud state:
