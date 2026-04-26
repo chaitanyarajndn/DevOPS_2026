@@ -1,0 +1,172 @@
+===============================
+AZURE TERRAFORM BACKEND NOTES
+===============================
+
+1. WHAT IS REMOTE STATE?
+-----------------------
+- Terraform state file (terraform.tfstate) stores current infra state
+- By default stored locally
+- Remote state = storing this file in Azure Blob Storage
+
+Definition:
+Backend is a configuration that defines where and how Terraform state is stored.
+
+--------------------------------
+
+2. WHY REMOTE BACKEND?
+----------------------
+Problems with local state:
+- No team collaboration
+- No locking (risk of corruption)
+- File can be deleted
+- Contains sensitive data
+
+Solution:
+- Store state in Azure Storage Account
+
+--------------------------------
+
+3. AZURE COMPONENTS USED
+------------------------
+- Resource Group
+- Storage Account
+- Blob Container
+- State File (.tfstate)
+
+Structure:
+Storage Account
+  -> Container
+      -> terraform.tfstate
+
+--------------------------------
+
+4. BACKEND CONFIGURATION
+------------------------
+terraform {
+  backend "azurerm" {
+    resource_group_name  = "rg-tfstate"
+    storage_account_name = "tfstate123"
+    container_name       = "tfstate"
+    key                  = "prod.tfstate"
+  }
+}
+
+--------------------------------
+
+5. HOW IT WORKS
+----------------
+
+terraform init:
+- Connects to Azure Storage
+- Checks/creates state file
+
+terraform apply:
+1. Acquire lock (blob lease)
+2. Read state
+3. Compare with code
+4. Apply changes
+5. Update state
+6. Release lock
+
+--------------------------------
+
+6. STATE LOCKING (AZURE)
+------------------------
+- Uses Blob Lease mechanism
+- Only one user/process can modify state
+- Prevents parallel execution issues
+
+--------------------------------
+
+7. SECURITY
+-----------
+State file may contain:
+- passwords
+- keys
+- connection strings
+
+Azure provides:
+- Encryption (default)
+- RBAC (access control)
+- Private endpoints (advanced)
+
+Best Practice:
+- Disable public access
+- Restrict access via IAM
+
+--------------------------------
+
+8. MULTI-ENVIRONMENT SETUP
+--------------------------
+Use different keys:
+
+dev.tfstate
+qa.tfstate
+prod.tfstate
+
+--------------------------------
+
+9. REMOTE STATE SHARING
+-----------------------
+Used to share outputs:
+
+data "terraform_remote_state" "example" {
+  backend = "azurerm"
+}
+
+--------------------------------
+
+10. COMMON ISSUES
+-----------------
+
+1. Auth issue:
+   - az login missing
+   - service principal misconfigured
+
+2. Backend already initialized:
+   terraform init -reconfigure
+
+3. Lock issue:
+   terraform force-unlock <LOCK_ID>
+
+4. Storage not found:
+   - wrong name / RG
+
+5. Variables not allowed:
+   backend does NOT support var.*
+
+--------------------------------
+
+11. CI/CD USAGE
+---------------
+Use backend-config:
+
+terraform init \
+  -backend-config="storage_account_name=tfstate123"
+
+--------------------------------
+
+12. BACKEND vs PROVIDER
+-----------------------
+
+Backend:
+- Stores state
+- Example: Azure Blob
+
+Provider:
+- Creates resources
+- Example: azurerm
+
+--------------------------------
+
+13. INTERVIEW SUMMARY
+---------------------
+Terraform backend in Azure stores the state file in Azure Blob Storage.
+It provides centralized state management, locking via blob lease,
+security, and team collaboration. It prevents conflicts and ensures
+consistent deployments.
+
+--------------------------------
+
+END OF NOTES
+===============================
