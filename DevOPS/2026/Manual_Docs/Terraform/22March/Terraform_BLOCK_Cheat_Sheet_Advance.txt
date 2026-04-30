@@ -1,0 +1,403 @@
+==============================================================
+***  TERRAFORM NOTES (BACKEND + VM + STORAGE)  ***
+==================================================
+
+## [ SCOPE ]
+
+✔ Backend (Azure Blob - tfstate)
+✔ Resource Group
+✔ Storage Account + Container
+✔ Virtual Machine (Basic)
+
+✔ Lifecycle: init ➜ plan ➜ apply ➜ state
+✔ DAG execution engine (dependency graph)
+✔ Backend locking + remote state consistency
+
+==============================================================
+[ 1) SINGLE-LABEL BLOCK : terraform {} ]
+========================================
+
+> > > PURPOSE
+
+---
+
+✔ Global configuration (NO labels)
+✔ Defines provider + backend
+✔ DOES NOT create infra  ❗
+✔ Executed ONLY during terraform init
+
+✔ Controls state storage + locking behavior
+✔ Ensures consistent provider + Terraform versions
+✔ Mandatory for team-based environments
+
+> > > BACKEND INTERNAL (DEEP)
+
+---
+
+✔ tfstate stored in Azure Blob (single source of truth)
+✔ Uses Blob Lease ➜ exclusive lock mechanism
+✔ Prevents concurrent apply operations
+✔ Ensures atomic updates to state file
+✔ Critical for avoiding infra drift + corruption
+
+> > > CODE (INLINE WHAT + WHY)
+
+---
+
+terraform {
+
+required_version = ">= 1.5.0"                 # Enforces minimum Terraform version ➜ prevents incompatible state operations
+
+required_providers {
+azurerm = {
+source  = "hashicorp/azurerm"             # Official provider source ➜ ensures trusted plugin binary
+version = "~> 3.0"                        # Locks major version ➜ avoids breaking API/schema changes
+}
+}
+
+backend "azurerm" {
+
+
+resource_group_name  = "rg-tfstate-demo"    # MUST exist BEFORE init ➜ backend cannot create infra resources
+
+storage_account_name = "sttfstatedemo123"   # Globally unique ➜ Azure enforces DNS-level uniqueness
+
+container_name       = "tfstate"            # Logical container ➜ stores multiple tfstate files (env separation)
+
+key                  = "dev.terraform.tfstate" # Unique state file ➜ maps to specific environment (dev/prod)
+
+
+}
+}
+
+> > > FLOW (ENGINE + INTERNAL LOGIC)
+
+---
+
+
+                terraform {}
+                     ➜
+                     ➜
+                terraform init
+                     ➜
+     [Load configuration into internal graph model]
+                     ➜
+     [Detect backend block ➜ switch to remote state]
+                     ➜
+     [Authenticate to Azure Storage using CLI/SPN]
+                     ➜
+     [Check container existence]
+          ➤ YES ➜ Continue
+          ➤ NO  ➜ FAIL (manual pre-creation required)
+                     ➜
+     [Check state file key]
+          ➤ Exists ➜ Download + sync local cache
+          ➤ New    ➜ Initialize empty state structure
+                     ➜
+     [Acquire LOCK using Blob Lease]
+     (Prevents concurrent writes to state file)
+                     ➜
+     [Download provider binaries locally]
+                     ➜
+            >>> TERRAFORM READY <<<
+
+
+==============================================================
+[ 2) DOUBLE-LABEL BLOCK : provider ]
+====================================
+
+> > > PURPOSE
+
+---
+
+✔ Connects Terraform ➜ Azure APIs
+✔ Handles authentication + request lifecycle
+✔ Required before any resource execution
+
+✔ Abstracts REST APIs into declarative syntax
+✔ Manages retries, throttling, error handling
+
+> > > CODE (INLINE COMMENTS)
+
+---
+
+provider "azurerm" {
+
+features {}                               # Mandatory block ➜ enables provider internal defaults and feature flags
+
+subscription_id = "11111111-2222-3333-4444-555555555555"  # Target subscription ➜ defines billing + resource scope
+}
+
+> > > FLOW (DETAILED)
+
+---
+
+
+             terraform init completed
+                     ➜
+          [Load provider configuration]
+                     ➜
+     [Detect authentication mechanism]
+          ➤ CLI (az login)
+          ➤ Service Principal (automation)
+          ➤ Managed Identity (Azure-hosted)
+                     ➜
+     [Validate RBAC permissions on subscription]
+                     ➜
+     [Load Azure Resource Manager endpoints]
+                     ➜
+     [Initialize API execution engine]
+     (handles retries, rate limits, failures)
+                     ➜
+            >>> PROVIDER READY <<<
+
+
+==============================================================
+[ 3) TRIPLE-LABEL BLOCK : resource ]
+====================================
+
+> > > CORE CONCEPT
+
+---
+
+✔ resource "TYPE" "NAME"
+✔ TYPE ➜ Azure service (VM, Storage, etc.)
+✔ NAME ➜ local identifier
+
+✔ Reference: type.name.attribute
+✔ Terraform builds DAG (Directed Acyclic Graph)
+✔ Executes based on dependency resolution
+
+---
+
+## [ 3.1 RESOURCE GROUP ]
+
+resource "azurerm_resource_group" "rg_demo" {
+
+name     = "rg-demo-full-001"              # Logical container ➜ groups all dependent resources
+
+location = "Central India"                # Region constraint ➜ all child resources inherit location
+}
+
+
+            APPLY
+              ➜
+     Azure Resource Manager API
+              ➜
+        RG CREATED
+  (Root dependency unlocked)
+
+
+---
+
+## [ 3.2 STORAGE ACCOUNT ]
+
+resource "azurerm_storage_account" "st_demo" {
+
+name = "stgfullinfra001"                   # MUST be globally unique ➜ Azure DNS constraint
+
+resource_group_name = azurerm_resource_group.rg_demo.name  # Implicit dependency ➜ RG must exist
+
+location = azurerm_resource_group.rg_demo.location         # Inherit RG location ➜ ensures consistency
+
+account_tier = "Standard"                 # Performance tier ➜ impacts cost + throughput
+
+account_replication_type = "LRS"          # Replication strategy ➜ local redundancy only
+}
+
+
+            RG READY
+              ➜
+    Resolve dependency reference
+              ➜
+    API request (Storage creation)
+              ➜
+        STORAGE CREATED
+
+
+---
+
+## [ 3.3 BLOB CONTAINER ]
+
+resource "azurerm_storage_container" "container_demo" {
+
+name = "app-data"                         # Logical container for blobs/files
+
+storage_account_name = azurerm_storage_account.st_demo.name  # Dependency ➜ requires storage account
+
+container_access_type = "private"         # Security setting ➜ prevents public access
+}
+
+
+          STORAGE READY
+              ➜
+    Container creation request
+              ➜
+         CONTAINER CREATED
+
+
+---
+
+## [ 3.4 VNET + SUBNET ]
+
+resource "azurerm_virtual_network" "vnet" {
+
+name = "vnet-demo"                        # Virtual network identifier
+
+address_space = ["10.0.0.0/16"]           # CIDR block ➜ defines full IP range
+
+location = azurerm_resource_group.rg_demo.location
+
+resource_group_name = azurerm_resource_group.rg_demo.name
+}
+
+resource "azurerm_subnet" "subnet" {
+
+name = "subnet-demo"
+
+resource_group_name = azurerm_resource_group.rg_demo.name
+
+virtual_network_name = azurerm_virtual_network.vnet.name    # Dependency ➜ subnet must belong to VNet
+
+address_prefixes = ["10.0.1.0/24"]                          # Sub-range ➜ carved from VNet space
+}
+
+
+            RG READY
+              ➜
+          VNET CREATED
+              ➜
+    Resolve VNet dependency
+              ➜
+         SUBNET CREATED
+  (Network layer prepared)
+
+
+---
+
+## [ 3.5 NETWORK INTERFACE ]
+
+resource "azurerm_network_interface" "nic" {
+
+name = "nic-demo"
+
+location = azurerm_resource_group.rg_demo.location
+
+resource_group_name = azurerm_resource_group.rg_demo.name
+
+ip_configuration {
+
+name = "internal"
+
+subnet_id = azurerm_subnet.subnet.id     # Hard dependency ➜ subnet must exist before NIC
+
+private_ip_address_allocation = "Dynamic" # Azure assigns IP automatically
+
+
+}
+}
+
+
+          SUBNET READY
+              ➜
+       NIC creation request
+              ➜
+           NIC CREATED
+
+
+---
+
+## [ 3.6 VIRTUAL MACHINE ]
+
+resource "azurerm_linux_virtual_machine" "vm" {
+
+name = "vm-demo"
+
+resource_group_name = azurerm_resource_group.rg_demo.name
+
+location = azurerm_resource_group.rg_demo.location
+
+size = "Standard_B1s"                     # Defines CPU + RAM ➜ impacts performance + cost
+
+admin_username = "azureuser"
+
+admin_password = "Password@1234"          # Not secure ➜ should use SSH keys or Key Vault
+
+network_interface_ids = [
+azurerm_network_interface.nic.id        # Hard dependency ➜ NIC must exist
+]
+
+os_disk {
+caching = "ReadWrite"
+storage_account_type = "Standard_LRS"   # Disk type ➜ cost vs performance tradeoff
+}
+
+source_image_reference {
+publisher = "Canonical"
+offer     = "UbuntuServer"
+sku       = "20_04-lts"
+version   = "latest"                    # Always pulls latest patched image
+}
+}
+
+
+            NIC READY
+              ➜
+     Resolve NIC dependency
+              ➜
+     Prepare VM provisioning request
+              ➜
+ Azure provisions compute + disk + network
+              ➜
+            VM CREATED
+
+
+==============================================================
+[ COMPLETE EXECUTION FLOW ]
+===========================
+
+
+                terraform init
+                     ➜
+          Backend + Provider Ready
+
+                terraform plan
+                     ➜
+     Compare config (.tf) with state (tfstate)
+                     ➜
+     Build DAG (dependency graph)
+
+                    RG
+                     ➜
+    ➜➜➜➜➜➜➜➜➜➜➜➜➜➜➜➜
+    ➜                       ➜
+ Storage                 VNet
+    ➜                       ➜
+ Container             Subnet
+                            ➜
+                           NIC
+                            ➜
+                           VM
+
+                terraform apply
+                     ➜
+     Execute graph in dependency-safe order
+                     ➜
+     Parallel execution where possible
+                     ➜
+     Update tfstate AFTER each resource
+
+
+==============================================================
+[ CRITICAL PRECAUTIONS ]
+========================
+
+❗ NEVER modify via Azure Portal ➜ DRIFT
+❗ Always run terraform plan before apply
+❗ Protect tfstate (contains sensitive metadata)
+❗ Use remote backend for team environments
+❗ Avoid hardcoding secrets
+
+==============================================================
+*** END ***
+===========

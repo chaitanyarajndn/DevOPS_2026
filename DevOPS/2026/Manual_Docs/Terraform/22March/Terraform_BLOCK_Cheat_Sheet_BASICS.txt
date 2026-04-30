@@ -1,0 +1,326 @@
+══════════════════════════════════════════════════════════════════
+✦✦✦  🌟 TERRAFORM NOTES (RG + STORAGE + BLOB) 🌟  ✦✦✦
+══════════════════════════════════════════════════════════════════
+
+
+🎯 SCOPE
+══════════════════════════════════════════════════
+✔ Resource Group  
+✔ Storage Account  
+✔ Blob Container  
+❌ No VM | ❌ No Backend  
+
+══════════════════════════════════════════════════
+
+
+🔷 1) SINGLE-LABEL BLOCK (terraform {})
+══════════════════════════════════════════════════
+
+🔹 Description:
+➤ No labels → only block name  
+➤ Used for 🌐 global configuration  
+➤ Defines required providers & versions  
+➤ Does NOT create infrastructure ❌  
+➤ Scope = entire project  
+➤ First executed during `terraform init`  
+➤ Controls Terraform behavior  
+
+🔹 Example:
+
+terraform {
+  required_version = ">= 1.5.0"        # Terraform version constraint
+
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"    # Azure provider source
+      version = "~> 3.0"               # Provider version
+    }
+  }
+}
+
+──────────────── FLOW ────────────────
+
+Write terraform {}
+        │
+        ▼
+terraform init
+        │
+        ▼
+✔ Provider downloaded
+✔ Version validated
+        │
+        ▼
+Terraform Ready
+
+
+══════════════════════════════════════════════════
+
+
+🔷 2) DOUBLE-LABEL BLOCK (provider)
+══════════════════════════════════════════════════
+
+🔹 Description:
+➤ Block + 1 label  
+➤ Used to 🔌 configure provider  
+➤ Example: provider "azurerm"  
+➤ Defines subscription, auth, features  
+➤ Scope = specific provider  
+➤ Required before creating resources  
+➤ Connects Terraform → Azure APIs  
+
+🔹 Example:
+
+provider "azurerm" {
+  features {}   # Mandatory block
+
+  subscription_id = "11111111-2222-3333-4444-555555555555"  # Dummy Subscription ID
+}
+
+──────────────── FLOW ────────────────
+
+terraform init done
+        │
+        ▼
+provider "azurerm"
+        │
+        ▼
+✔ Authenticate (az login)
+✔ Connect to Azure
+        │
+        ▼
+Provider Ready
+
+
+══════════════════════════════════════════════════
+
+
+🔷 3) TRIPLE-LABEL BLOCK (resource)
+══════════════════════════════════════════════════
+
+🔹 Description:
+➤ Block + 2 labels (type + name)  
+➤ Used to 🚀 create infrastructure  
+➤ type = resource type  
+➤ name = local identifier  
+➤ Unique ID → ⭐ type.name  
+➤ Supports dependency automatically  
+➤ Executed during plan & apply  
+
+────────────────────────────────────────────
+🔸 3.1 RESOURCE GROUP
+────────────────────────────────────────────
+
+🔹 Description:
+➤ Logical container in Azure  
+➤ Holds all related resources  
+➤ Required before most resources  
+
+🔹 Example:
+
+resource "azurerm_resource_group" "rg_demo" {
+  name     = "rg-demo-storage-001"   # Resource Group name
+  location = "Central India"         # Azure region
+}
+
+──────────────── FLOW ────────────────
+
+terraform plan
+        │
+        ▼
+Read RG config
+        │
+        ▼
+terraform apply
+        │
+        ▼
+✔ RG Created
+
+
+────────────────────────────────────────────
+🔸 3.2 STORAGE ACCOUNT
+────────────────────────────────────────────
+
+🔹 Description:
+➤ Core Azure storage service  
+➤ Stores blobs, files, queues  
+➤ Must be globally unique  
+➤ Depends on Resource Group  
+
+🔹 Example:
+
+resource "azurerm_storage_account" "st_demo" {
+  name                     = "stgdemostore001"   # Globally unique name
+  resource_group_name      = azurerm_resource_group.rg_demo.name  # RG reference
+  location                 = azurerm_resource_group.rg_demo.location
+  account_tier             = "Standard"          # Performance tier
+  account_replication_type = "LRS"               # Replication type
+
+  tags = {
+    environment = "dev"
+  }
+}
+
+──────────────── FLOW ────────────────
+
+RG Ready
+        │
+        ▼
+Storage Config Read
+        │
+        ▼
+Dependency Detected 🧠
+        │
+        ▼
+terraform apply
+        │
+        ▼
+✔ Storage Account Created
+
+
+────────────────────────────────────────────
+🔸 3.3 BLOB CONTAINER
+────────────────────────────────────────────
+
+🔹 Description:
+➤ Logical container inside storage account  
+➤ Stores blobs (files)  
+➤ Depends on storage account  
+➤ Access level controlled here  
+
+🔹 Example:
+
+resource "azurerm_storage_container" "container_demo" {
+  name                  = "demo-container"   # Container name
+  storage_account_name  = azurerm_storage_account.st_demo.name  # Storage reference
+  container_access_type = "private"          # Access level
+}
+
+──────────────── FLOW ────────────────
+
+Storage Ready
+        │
+        ▼
+Container Config Read
+        │
+        ▼
+Dependency Detected 🧠
+        │
+        ▼
+terraform apply
+        │
+        ▼
+✔ Container Created
+
+
+══════════════════════════════════════════════════
+
+
+📊 COMPLETE EXECUTION FLOW
+══════════════════════════════════════════════════
+
+Write Code
+        │
+        ▼
+terraform init
+        │
+        ▼
+terraform plan
+        │
+        ▼
+✔ DAG Created 🧠
+
+Execution Order:
+RG → Storage → Container
+        │
+        ▼
+terraform apply
+        │
+        ▼
+✔ Infra Created
+✔ State Updated
+
+
+══════════════════════════════════════════════════
+
+
+⚠️ PRE-CHECKS
+══════════════════════════════════════════════════
+
+✔ terraform -version  
+✔ terraform fmt  
+✔ terraform validate  
+✔ terraform plan  
+
+✔ az login  
+✔ az account show  
+
+
+══════════════════════════════════════════════════
+
+
+🚀 POST-CHECKS
+══════════════════════════════════════════════════
+
+✔ terraform state list  
+✔ terraform show  
+
+✔ az group show --name rg-demo-storage-001  
+✔ az storage account show --name stgdemostore001  
+
+✔ az storage container list ^
+  --account-name stgdemostore001 ^
+  --output table  
+
+
+══════════════════════════════════════════════════
+
+
+⚠️ PRECAUTIONS
+══════════════════════════════════════════════════
+
+❗ Storage name must be globally unique  
+❗ Lowercase only (Azure rule)  
+❗ No secrets in code  
+❗ Always run plan  
+
+
+══════════════════════════════════════════════════
+
+
+⚠️ POST PRECAUTIONS
+══════════════════════════════════════════════════
+
+❗ Do NOT edit in Azure Portal → DRIFT ⚠️  
+❗ Always run plan before re-apply  
+❗ Keep tfstate safe  
+
+══════════════════════════════════════════════════
+✦✦✦ END ✦✦✦
+══════════════════════════════════════════════════
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
