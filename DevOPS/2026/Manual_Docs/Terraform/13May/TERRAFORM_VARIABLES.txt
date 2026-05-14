@@ -1,0 +1,374 @@
+═══════════════════════════════════════════════════════════════════════
+                  🌍 TERRAFORM_VARIABLES
+═══════════════════════════════════════════════════════════════════════
+
+🔷 WHAT IS A VARIABLE ?
+───────────────────────────────────────────────────────────────────────
+Terraform Variable is a placeholder used to store values
+which can be dynamically reused inside Terraform code.
+
+It helps infrastructure become:
+✔ Dynamic
+✔ Reusable
+✔ Flexible
+✔ Scalable
+✔ Environment Independent
+
+Simple Meaning:
+Instead of hardcoding values directly inside resources,
+Terraform stores values separately using variables.
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 WHY VARIABLES EXIST ?
+═══════════════════════════════════════════════════════════════════════
+
+Without Variables:
+
+name = "rg-production"
+
+Problems:
+❌ Fixed values
+❌ Difficult maintenance
+❌ Repeated code changes
+❌ Hard multi-environment handling
+❌ Poor scalability
+
+With Variables:
+
+name = var.rg_name
+
+Benefits:
+✔ Same code reusable everywhere
+✔ Only values change
+✔ Better automation
+✔ Cleaner infrastructure
+✔ Faster deployments
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 REAL LIFE ANALOGY
+═══════════════════════════════════════════════════════════════════════
+
+Think of Variables like a blank form field.
+
+Example:
+
+Name : ___________
+
+Field remains same.
+Only entered value changes.
+
+Terraform Variables work exactly same way.
+
+var.rg_name can become:
+
+DEV   → rg-dev
+TEST  → rg-test
+UAT   → rg-uat
+PROD  → rg-prod
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 MAIN PURPOSE OF VARIABLES
+═══════════════════════════════════════════════════════════════════════
+
+✔ Remove hardcoding
+✔ Make infrastructure reusable
+✔ Support multiple environments
+✔ Improve automation
+✔ Reduce duplicate code
+✔ Improve maintainability
+✔ Standardize deployments
+✔ Improve CI/CD integration
+✔ Make Terraform modular
+✔ Simplify configuration management
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 WHERE VARIABLES ARE USED ?
+═══════════════════════════════════════════════════════════════════════
+
+Variables are commonly used for:
+
+✔ Resource Names
+✔ Regions / Locations
+✔ VM Sizes
+✔ Environment Names
+✔ CIDR Blocks
+✔ Tags
+✔ Storage Names
+✔ Credentials
+✔ Database Names
+✔ Application Settings
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 VARIABLES VS HARDCODING
+═══════════════════════════════════════════════════════════════════════
+
+❌ HARDCODING
+
+resource "azurerm_resource_group" "rg" {
+
+    name = "rg-production"
+
+}
+
+Problems:
+❌ Fixed value
+❌ Not reusable
+❌ Environment duplication required
+❌ Difficult maintenance
+
+✅ VARIABLES
+
+resource "azurerm_resource_group" "rg" {
+
+    name = var.rg_name
+
+}
+
+Advantages:
+✔ Dynamic values
+✔ Reusable code
+✔ Better scalability
+✔ Easier maintenance
+✔ Cleaner automation
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 VARIABLE TYPES
+═══════════════════════════════════════════════════════════════════════
+
+1️⃣ STRING
+Used for text values.
+
+variable "rg_name" {
+
+    type = string
+
+}
+
+2️⃣ NUMBER
+Used for numeric values.
+
+variable "vm_count" {
+
+    type = number
+
+}
+
+3️⃣ BOOL
+Used for true/false values.
+
+variable "enable_backup" {
+
+    type = bool
+
+}
+
+4️⃣ LIST
+Stores multiple values.
+
+variable "locations" {
+
+    type = list(string)
+
+}
+
+5️⃣ MAP
+Stores key-value pairs.
+
+variable "tags" {
+
+    type = map(string)
+
+}
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 VARIABLE BLOCK STRUCTURE
+═══════════════════════════════════════════════════════════════════════
+
+Basic Syntax:
+
+variable "variable_name" {
+
+    type        = string
+    default     = "value"
+    description = "variable description"
+
+}
+
+Components:
+✔ variable      → Terraform keyword
+✔ variable_name → Actual variable identifier
+✔ type          → Defines datatype
+✔ default       → Fallback value
+✔ description   → Variable explanation
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 COMMON VARIABLE ATTRIBUTES
+═══════════════════════════════════════════════════════════════════════
+
+1️⃣ type
+Defines datatype.
+
+2️⃣ default
+Provides default value.
+
+3️⃣ description
+Explains variable purpose.
+
+4️⃣ sensitive
+Hides sensitive values.
+
+Example:
+
+variable "password" {
+
+    sensitive = true
+
+}
+
+5️⃣ validation
+Applies custom rules.
+
+Example:
+
+validation {
+
+    condition     = length(var.rg_name) > 3
+    error_message = "Name too short"
+
+}
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 VARIABLE VALUE SOURCES
+═══════════════════════════════════════════════════════════════════════
+
+Terraform receives values from:
+
+✔ CLI
+✔ terraform.tfvars
+✔ custom .tfvars files
+✔ Environment Variables
+✔ Default Values
+✔ Terraform Cloud Variables
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 VARIABLE PRIORITY ORDER
+═══════════════════════════════════════════════════════════════════════
+
+Highest Priority
+────────────────
+
+1️⃣ CLI (-var)
+2️⃣ CLI (-var-file)
+3️⃣ terraform.tfvars
+4️⃣ auto.tfvars
+5️⃣ Environment Variables
+6️⃣ Default Values
+
+Lowest Priority
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 VARIABLES IN ENTERPRISE DEVOPS
+═══════════════════════════════════════════════════════════════════════
+
+Variables are heavily used in:
+
+✔ CI/CD pipelines
+✔ Terraform modules
+✔ Multi-environment deployments
+✔ Infrastructure automation
+✔ Reusable templates
+✔ Cloud standardization
+✔ Production infrastructure
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 VARIABLE LIMITATIONS
+═══════════════════════════════════════════════════════════════════════
+
+❌ Variables do not create infrastructure alone
+❌ Variables do not contain execution logic
+❌ Wrong values may break deployments
+❌ Too many variables increase complexity
+❌ Sensitive values require protection
+❌ Poor naming creates confusion
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 COMMON BEST PRACTICES
+═══════════════════════════════════════════════════════════════════════
+
+✔ Use meaningful variable names
+✔ Add descriptions
+✔ Use validation rules
+✔ Protect sensitive variables
+✔ Avoid unnecessary variables
+✔ Follow naming standards
+✔ Separate variables into variables.tf
+✔ Store values in terraform.tfvars
+✔ Avoid hardcoding production values
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 INDUSTRY STANDARD FILES
+═══════════════════════════════════════════════════════════════════════
+
+project/
+│
+├── main.tf
+├── variables.tf
+├── terraform.tfvars
+├── outputs.tf
+└── provider.tf
+
+Responsibilities:
+
+main.tf            → Infrastructure resources
+variables.tf       → Variable declarations
+terraform.tfvars   → Variable values
+outputs.tf         → Displays outputs
+provider.tf        → Provider configuration
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 INTERNAL TERRAFORM UNDERSTANDING
+═══════════════════════════════════════════════════════════════════════
+
+Terraform internally replaces variable references
+with actual values before resource creation.
+
+Example:
+
+name = var.rg_name
+
+Internally becomes:
+
+name = "rg-production"
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 EASY MEMORY TRICK
+═══════════════════════════════════════════════════════════════════════
+
+Variables are reusable containers
+used to store dynamic values.
+
+
+═══════════════════════════════════════════════════════════════════════
+                  🔷 ONE-LINE INTERVIEW ANSWER
+═══════════════════════════════════════════════════════════════════════
+
+Terraform Variables are dynamic placeholders used
+to avoid hardcoding and make infrastructure reusable,
+scalable, maintainable, and environment-independent.
+═══════════════════════════════════════════════════════════════════════
