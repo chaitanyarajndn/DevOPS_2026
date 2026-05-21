@@ -1,0 +1,418 @@
+╔════════════════════════════════════════════════════════════╗
+║              🚀 each.key vs each.value 🚀                ║
+╚════════════════════════════════════════════════════════════╝
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📘 WHEN USING SET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Example:
+for_each = toset(["rg1", "rg2", "rg3"])
+
+Terraform internally stores:
+   rg1
+   rg2
+   rg3
+
+Here:
+   each.value  ✅ AVAILABLE
+   each.key    ✅ ALSO AVAILABLE
+
+🔥 IMPORTANT UNDERSTANDING
+
+In SET:
+   each.key  == each.value
+
+Because SET contains only VALUES.
+
+Example:
+   each.key   = rg1
+   each.value = rg1
+
+So normally people use:
+   ✅ each.value
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📘 WHEN USING MAP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Example:
+for_each = {
+   dev  = "rg-dev"
+   prod = "rg-prod"
+}
+
+Terraform internally stores:
+   dev  ───➜ rg-dev
+   prod ───➜ rg-prod
+
+Now:
+   each.key      = dev
+   each.value    = rg-dev
+
+AND
+
+   each.key      = prod
+   each.value    = rg-prod
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧠 TERRAFORM THINKING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SET Thinking:
+   "I only have VALUES."
+
+MAP Thinking:
+   "I have KEY + VALUE pair."
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 SIMPLE VISUAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SET
+───
+rg1
+rg2
+rg3
+
+each.key   = rg1
+each.value = rg1
+
+
+MAP
+───
+dev  ───➜ rg-dev
+prod ───➜ rg-prod
+
+each.key   = dev
+each.value = rg-dev
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 GOLDEN RULE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SET
+   ➜ each.key == each.value
+
+MAP
+   ➜ each.key != each.value
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ MOST COMMON PRACTICE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Using SET
+   ➜ mostly use each.value
+
+Using MAP
+   ➜ use both each.key and each.value
+
+
+
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              🚀 MULTIPLE for_each WRONG SCENARIOS 🚀                      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📘 SCENARIO 1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+resource "azurerm_resource_group" "rgs" {
+
+  for_each = toset(["rg1", "rg2", "rg3", "rg4"])
+
+  for_each = toset(["westus", "eastus", "centralindia"])
+
+  name     = each.key
+  location = "westeurope"
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📘 SCENARIO 2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+resource "azurerm_resource_group" "rgs" {
+
+  for_each = toset(["rg1", "rg2", "rg3", "rg4"])
+
+  for_each = toset(["westus", "eastus", "centralindia"])
+
+  name     = each.key
+  location = each.key
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ ANSWER = BOTH SCENARIOS ARE WRONG
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Even though `location` changed in Scenario 2...
+
+Terraform STILL rejects BOTH configurations ❌
+
+Because MAIN issue is:
+
+   ❌ Multiple for_each inside ONE resource block
+
+NOT:
+
+   ❌ each.key / each.value usage
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧠 MAIN UNDERSTANDING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`for_each` itself controls COMPLETE iteration.
+
+Meaning:
+
+   One for_each
+          │
+          ▼
+   One Iteration Source
+          │
+          ▼
+   One Resource Creation Flow
+
+Terraform allows only:
+
+   ✅ ONE Loop Controller per resource
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧠 TERRAFORM INTERNAL THINKING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Terraform first reads:
+
+   for_each = toset(["rg1", "rg2", "rg3", "rg4"])
+
+Terraform says:
+
+   "Okay 😎
+    I will create resources using resource names."
+
+Now Terraform suddenly reads ANOTHER:
+
+   for_each = toset(["westus", "eastus", "centralindia"])
+
+Terraform becomes confused 🤯
+
+Terraform asks:
+
+   "Wait...
+    Which loop should control iteration ?"
+
+   ➜ Resource Names Loop ?
+                 OR
+   ➜ Locations Loop ?
+
+Because BOTH loops are trying to become MAIN iteration controller.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 WHY TERRAFORM REJECTS THIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Terraform creates resources like this:
+
+Iteration 1 ───➜ Create Resource
+Iteration 2 ───➜ Create Resource
+Iteration 3 ───➜ Create Resource
+
+But your code gives TWO iteration sources together:
+
+Loop 1:
+   rg1
+   rg2
+   rg3
+   rg4
+
+Loop 2:
+   westus
+   eastus
+   centralindia
+
+Now Terraform cannot decide:
+
+   "Which values should drive iteration ?"
+
+So configuration gets rejected ❌
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📘 REAL LIFE EXAMPLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Suppose Manager says:
+
+   "Create Employee IDs using Employee Names."
+
+Now another Manager says:
+
+   "No...
+    Create Employee IDs using Department Names."
+
+Now employee becomes confused 😵
+
+   ➜ Should I follow Employee Names ?
+   ➜ Or Department Names ?
+
+Exactly same confusion happens inside Terraform.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ SCENARIO 2 EXTRA PROBLEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Scenario 2 has ANOTHER logical issue:
+
+location = each.key
+
+Suppose Terraform somehow accepted this (theoretically 😄)
+
+Then:
+
+   each.key = rg1
+
+So:
+
+   name     = rg1
+   location = rg1
+
+But Azure expects:
+
+   ✅ westus
+   ✅ eastus
+   ✅ centralindia
+
+NOT:
+
+   ❌ rg1
+   ❌ rg2
+   ❌ rg3
+
+So Scenario 2 is logically wrong ALSO.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ POSSIBLE ERROR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Terraform may show:
+
+   ❌ Duplicate argument
+
+Because:
+
+   `for_each` already defined earlier.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ CORRECT APPROACH = USE MAP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Instead of TWO separate loops:
+
+   ❌ Resource Names Loop
+   ❌ Locations Loop
+
+Combine BOTH together using MAP.
+
+Example:
+
+for_each = {
+   rg1 = "westus"
+   rg2 = "eastus"
+   rg3 = "centralindia"
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧠 HOW TERRAFORM UNDERSTANDS MAP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Terraform internally stores:
+
+   rg1 ───➜ westus
+   rg2 ───➜ eastus
+   rg3 ───➜ centralindia
+
+Now Terraform clearly understands:
+
+   Resource Name  ───➜ Resource Location
+
+No confusion 😎
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📘 each.key & each.value
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+each.key
+   ───➜ Resource Name
+
+each.value
+   ───➜ Resource Location
+
+Example:
+
+name     = each.key
+location = each.value
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔄 ITERATION FLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Iteration 1:
+   each.key = rg1          each.value = westus
+   ➜ Resource Created → Name = rg1      Location = westus
+
+Iteration 2:
+   each.key = rg2          each.value = eastus
+   ➜ Resource Created → Name = rg2      Location = eastus
+
+Iteration 3:
+   each.key = rg3          each.value = centralindia
+   ➜ Resource Created → Name = rg3      Location = centralindia
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 FLOWCHART : WHY BOTH SCENARIOS FAIL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Terraform Starts
+        │
+        ▼
+Reads First for_each
+        │
+        ▼
+Iteration Source Found ✅
+        │
+        ▼
+Reads Second for_each
+        │
+        ▼
+Another Iteration Source Found ❌
+        │
+        ▼
+Terraform Gets Confused
+        │
+        ▼
+"Which Loop Should I Use?"
+        │
+        ▼
+Configuration Rejected ❌
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 FLOWCHART : CORRECT APPROACH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Resource Name + Location
+            │
+            ▼
+Combine Using MAP
+            │
+            ▼
+Single Iteration Source Created
+            │
+            ▼
+Terraform Understands Clearly
+            │
+            ▼
+Safe Resource Creation ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 GOLDEN INTERVIEW LINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ONE resource block can have ONLY:
+
+   ✅ ONE count
+                 OR
+   ✅ ONE for_each
+
+Because Terraform allows only ONE iteration controller per resource.
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           ✅ NOTES COMPLETED ✅                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+╔════════════════════════════════════════════════════════════╗
+║                    ✅ NOTES COMPLETED ✅                  ║
+╚════════════════════════════════════════════════════════════╝
