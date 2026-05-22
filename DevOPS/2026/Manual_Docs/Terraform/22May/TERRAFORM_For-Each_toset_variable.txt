@@ -1,0 +1,445 @@
+
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                               COMPLETE SCENARIO OVERVIEW                                         ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+📂 PROJECT STRUCTURE
+───────────────────
+
+FOREACH_MAP-09-05-2026/
+│
+├── .terraform/
+├── .terraform.lock.hcl
+├── main.tf
+├── provider.tf
+└── terraform.tfvars
+
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📄 FILE : terraform.tfvars
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+rg_names = ["rg1", "rg2", "rg3", "rg4"]
+
+
+📌 Purpose:
+   Store Resource Group names inside VARIABLE VALUE file.
+
+📌 Data Type:
+   LIST
+
+📌 Meaning:
+   Terraform will receive 4 Resource Group names dynamically.
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📄 FILE : main.tf
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+variable "rg_names" {}
+
+resource "azurerm_resource_group" "rgs" {
+
+   for_each = toset(var.rg_names)
+
+   name     = each.key
+   location = "westeurope"
+}
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📌 WHAT THIS CODE IS TRYING TO DO ?
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+Terraform wants to create:
+
+   rg1
+   rg2
+   rg3
+   rg4
+
+inside Azure automatically using LOOPING.
+
+Instead of manually writing:
+
+   resource "rg1" {}
+   resource "rg2" {}
+   resource "rg3" {}
+   resource "rg4" {}
+
+Terraform uses:
+   ✅ Variable
+   ✅ List
+   ✅ toset()
+   ✅ for_each
+
+to create everything dynamically.
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📌 COMPLETE EXECUTION FLOW
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+terraform.tfvars
+      ↓
+rg_names = ["rg1","rg2","rg3","rg4"]
+      ↓
+Terraform loads variable value
+      ↓
+var.rg_names
+      ↓
+toset(var.rg_names)
+      ↓
+LIST converted into SET
+      ↓
+for_each starts loop
+      ↓
+Terraform creates resources one-by-one
+      ↓
+Azure Resource Groups Created
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📘 NOW STARTING DETAILED NOTES
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                    TERRAFORM  for_each  +  toset(var.rg_names)  EXPLANATION                     ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+📌 OBJECTIVE
+───────────
+Create MULTIPLE Azure Resource Groups dynamically using:
+   ✅ Variable
+   ✅ List
+   ✅ toset()
+   ✅ for_each Loop
+
+Instead of writing:
+   resource "rg1" {}
+   resource "rg2" {}
+   resource "rg3" {}
+   resource "rg4" {}
+
+Terraform automatically creates all resources using LOOPING.
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📂 FILE 1 : terraform.tfvars
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+rg_names = ["rg1", "rg2", "rg3", "rg4"]
+
+📌 Meaning:
+   rg_names variable contains LIST of Resource Group names.
+
+📌 Total items inside list:
+   rg1
+   rg2
+   rg3
+   rg4
+
+📌 Data Type:
+   LIST
+
+📌 Computer Understanding:
+   [
+     "rg1",
+     "rg2",
+     "rg3",
+     "rg4"
+   ]
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📂 FILE 2 : main.tf
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+variable "rg_names" {}
+
+resource "azurerm_resource_group" "rgs" {
+
+   for_each = toset(var.rg_names)
+
+   name     = each.key
+   location = "westeurope"
+}
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+🔍 STEP-BY-STEP EXECUTION FLOW
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+STEP 1 ─ Terraform reads variable
+─────────────────────────────────
+
+var.rg_names
+      ↓
+
+["rg1","rg2","rg3","rg4"]
+
+
+STEP 2 ─ toset() converts LIST → SET
+────────────────────────────────────
+
+toset(var.rg_names)
+
+Before:
+   LIST
+   ["rg1","rg2","rg3","rg4"]
+
+After:
+   SET
+   {"rg1","rg2","rg3","rg4"}
+
+📌 Why conversion required?
+   Because for_each works BEST with:
+      ✅ SET
+      ✅ MAP
+
+
+STEP 3 ─ for_each starts LOOPING
+────────────────────────────────
+
+Terraform now loops through EVERY item one by one.
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+🔁 LOOP EXECUTION BREAKDOWN
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+ITERATION 1
+───────────
+each.key = "rg1"
+
+Terraform creates:
+   azurerm_resource_group.rgs["rg1"]
+
+Result:
+   name = "rg1"
+   location = "westeurope"
+
+
+ITERATION 2
+───────────
+each.key = "rg2"
+
+Terraform creates:
+   azurerm_resource_group.rgs["rg2"]
+
+Result:
+   name = "rg2"
+   location = "westeurope"
+
+
+ITERATION 3
+───────────
+each.key = "rg3"
+
+Terraform creates:
+   azurerm_resource_group.rgs["rg3"]
+
+Result:
+   name = "rg3"
+   location = "westeurope"
+
+
+ITERATION 4
+───────────
+each.key = "rg4"
+
+Terraform creates:
+   azurerm_resource_group.rgs["rg4"]
+
+Result:
+   name = "rg4"
+   location = "westeurope"
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📌 WHAT EXACTLY IS each.key ?
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+each.key
+   ↓
+Current item currently processed inside loop
+
+Loop 1 → rg1
+Loop 2 → rg2
+Loop 3 → rg3
+Loop 4 → rg4
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📌 WHY each.key WORKS HERE ?
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+Because SET contains only UNIQUE VALUES.
+
+Example SET:
+   {"rg1","rg2","rg3"}
+
+Terraform internally treats:
+   KEY   = VALUE
+
+So:
+   each.key   = rg1
+   each.value = rg1
+
+Both same in SET.
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📌 LIST vs SET
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌───────────────┬────────────────────┬────────────────────┐
+│ FEATURE       │ LIST               │ SET                │
+├───────────────┼────────────────────┼────────────────────┤
+│ Order         │ ✅ Maintained      │ ❌ Not Maintained  │
+│ Duplicate     │ ✅ Allowed         │ ❌ Removed         │
+│ Syntax        │ []                 │ toset([])          │
+└───────────────┴────────────────────┴────────────────────┘
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📌 DUPLICATE EXAMPLE
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+Input LIST:
+   ["rg1","rg1","rg2","rg3"]
+
+After toset():
+   {"rg1","rg2","rg3"}
+
+📌 Duplicate automatically removed.
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+🔥 INTERNAL TERRAFORM RESOURCE CREATION
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+Terraform internally creates:
+
+   azurerm_resource_group.rgs["rg1"]
+   azurerm_resource_group.rgs["rg2"]
+   azurerm_resource_group.rgs["rg3"]
+   azurerm_resource_group.rgs["rg4"]
+
+📌 Resource Address Format:
+   resource_type.resource_name["key"]
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+📊 COMPLETE FLOWCHART
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+terraform.tfvars
+      ↓
+rg_names = ["rg1","rg2","rg3","rg4"]
+      ↓
+var.rg_names
+      ↓
+toset(var.rg_names)
+      ↓
+LIST → SET Conversion
+      ↓
+for_each starts loop
+      ↓
+┌─────────────────────────────┐
+│ each.key = "rg1"            │ → Create RG1
+├─────────────────────────────┤
+│ each.key = "rg2"            │ → Create RG2
+├─────────────────────────────┤
+│ each.key = "rg3"            │ → Create RG3
+├─────────────────────────────┤
+│ each.key = "rg4"            │ → Create RG4
+└─────────────────────────────┘
+      ↓
+4 Azure Resource Groups Created
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+🧠 REAL LIFE ANALOGY
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+Imagine you give worker a list:
+
+   Milk
+   Bread
+   Butter
+   Eggs
+
+Instead of saying:
+   Bring Milk
+   Bring Bread
+   Bring Butter
+   Bring Eggs
+
+You simply say:
+   "Loop through this list and bring everything."
+
+📌 That is EXACTLY what for_each does.
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+🔥 WHY THIS APPROACH IS POWERFUL ?
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+WITHOUT for_each
+────────────────
+resource "rg1" {}
+resource "rg2" {}
+resource "rg3" {}
+resource "rg4" {}
+
+❌ Repeated code
+❌ Hard maintenance
+❌ Bad scalability
+
+
+WITH for_each
+─────────────
+resource "rgs" {
+   for_each = ...
+}
+
+✅ Single clean block
+✅ Dynamic creation
+✅ Easy maintenance
+✅ Highly scalable
+✅ Production standard approach
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+🎯 FINAL UNDERSTANDING
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+Variable gives LIST
+        ↓
+toset() converts LIST → SET
+        ↓
+for_each loops through every item
+        ↓
+each.key picks current item
+        ↓
+Terraform creates resource automatically
+        ↓
+Multiple Azure Resource Groups created dynamically
+
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+✅ FINAL OUTPUT
+══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+rg1
+rg2
+rg3
+rg4
+
+Location:
+   westeurope
+
+
+

@@ -1,0 +1,216 @@
+════════════════════════════════ Terraform for_each with MAP ════════════════════════════════
+
+                                          📄 main.tf
+─────────────────────────────────────────────────────────────────────────────────────────────
+      variable "rgs" {}
+
+      resource "azurerm_resource_group" "rgs" {
+
+            for_each = var.rgs
+
+            name     = each.key
+            location = each.value
+      }
+
+══════════════════════════════════════════════════════════════════════════════════════════════
+
+                                       📄 terraform.tfvars
+─────────────────────────────────────────────────────────────────────────────────────────────
+      rgs = {
+            rg1 = "westus"
+            rg2 = "eastus"
+            rg3 = "centralindia"
+            rg4 = "uaecentral"
+            rg5 = "switzerlandwest"
+            rg6 = "australiacentral"
+            rg7 = "belgiumcentral"
+      }
+
+═══════════════════════════════════════ Concept Understanding ═══════════════════════════════
+
+      Here Terraform is using:
+
+            ✔ for_each
+            ✔ with MAP
+            ✔ to create multiple Resource Groups dynamically
+
+      Instead of manually creating:
+
+            resource_group rg1
+            resource_group rg2
+            resource_group rg3
+
+      Terraform automatically loops through all map items and creates resources.
+
+══════════════════════════════════════ Understanding MAP Structure ═══════════════════════════
+
+      MAP works in:
+
+            key = value
+
+      format.
+
+      Example:
+
+            rg1 = "westus"
+
+      Here:
+
+            LEFT side   → key
+            RIGHT side  → value
+
+      So internally Terraform understands:
+
+            key   = rg1
+            value = westus
+
+══════════════════════════════════════ Understanding each.key ═══════════════════════════════
+
+      Code:
+
+            name = each.key
+
+      Means Terraform takes LEFT side values from map.
+
+      Example values:
+
+            rg1
+            rg2
+            rg3
+
+      These become Resource Group Names.
+
+─────────────────────────────────────────────────────────────────────────────────────────────
+      Example:
+
+            rg1 = "westus"
+            each.key = rg1
+            Final Resource Group Name = rg1
+
+════════════════════════════════════ Understanding each.value ═══════════════════════════════
+
+      Code:
+
+            location = each.value
+
+      Means Terraform takes RIGHT side values from map.
+
+      Example values:
+
+            westus
+            eastus
+            centralindia
+
+      These become Azure Locations.
+
+─────────────────────────────────────────────────────────────────────────────────────────────
+      Example:
+
+            rg1 = "westus"
+            each.value = westus
+            Final Location = westus
+
+════════════════════════════════════ Terraform Internal Working ═════════════════════════════
+
+      Iteration 1
+      ───────────
+            each.key   = rg1
+            each.value = westus
+
+            Creates:
+
+                  Resource Group → rg1
+                  Location       → westus
+
+─────────────────────────────────────────────────────────────────────────────────────────────
+
+      Iteration 2
+      ───────────
+            each.key   = rg2
+            each.value = eastus
+
+            Creates:
+
+                  Resource Group → rg2
+                  Location       → eastus
+
+─────────────────────────────────────────────────────────────────────────────────────────────
+
+      Iteration 3
+      ───────────
+            each.key   = rg3
+            each.value = centralindia
+
+            Creates:
+
+                  Resource Group → rg3
+                  Location       → centralindia
+
+─────────────────────────────────────────────────────────────────────────────────────────────
+      Terraform continues same loop for all remaining map items.
+
+═══════════════════════════════════════════ Flowchart ═══════════════════════════════════════
+
+                                   terraform.tfvars
+                                            │
+                                            ▼
+                                      Map Variable
+                                         (rgs)
+                                            │
+                                            ▼
+                                  for_each = var.rgs
+                                            │
+                                            ▼
+                                Terraform starts LOOP
+                                            │
+                    ┌───────────────────────┴───────────────────────┐
+                    │                                               │
+                    ▼                                               ▼
+              each.key                                      each.value
+           Resource Name                                   Resource Location
+                    │                                               │
+                    └───────────────────────┬───────────────────────┘
+                                            │
+                                            ▼
+                           Multiple Resource Groups Created
+
+══════════════════════════════════════ Final Resources Created ══════════════════════════════
+
+            rg1  → westus
+            rg2  → eastus
+            rg3  → centralindia
+            rg4  → uaecentral
+            rg5  → switzerlandwest
+            rg6  → australiacentral
+            rg7  → belgiumcentral
+
+═══════════════════════════════════════ Why MAP is Powerful? ═══════════════════════════════
+
+      ✔ Different resource names possible
+      ✔ Different locations possible
+      ✔ Less repetitive code
+      ✔ Easier automation
+      ✔ Easy scaling
+      ✔ Dynamic infrastructure creation
+      ✔ Cleaner Terraform configuration
+
+═══════════════════════════════════════ MOST IMPORTANT POINT ════════════════════════════════
+
+      In Terraform for_each with MAP:
+
+            LEFT side   → each.key
+            RIGHT side  → each.value
+
+─────────────────────────────────────────────────────────────────────────────────────────────
+      Example:
+
+            rg1 = "westus"
+
+      Terraform understands:
+
+            each.key   = rg1
+            each.value = westus
+
+─────────────────────────────────────────────────────────────────────────────────────────────
+      This is the CORE CONCEPT of Terraform for_each with MAP.
+══════════════════════════════════════════════════════════════════════════════════════════════
