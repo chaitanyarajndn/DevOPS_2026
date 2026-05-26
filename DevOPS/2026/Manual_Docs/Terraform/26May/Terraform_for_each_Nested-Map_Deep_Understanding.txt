@@ -1,0 +1,160 @@
+									Terraform for_each + Nested Map Notes
+				═══════════════════════════════════════════════════════════════════════════
+											  MAIN RULE 🔥
+									LEFT SIDE  = each.key
+									RIGHT SIDE = each.value
+				═══════════════════════════════════════════════════════════════════════════
+									SCENARIO 1 → "RG1" ON KEY SIDE
+				═══════════════════════════════════════════════════════════════════════════
+				terraform.tfvars
+				───────────────────────────────────────────────────────────────────────────
+				strac = {
+				  RG1 = {
+					name = "testdevabc"
+				  }
+				}
+				Understanding:
+				──────────────
+				KEY   = RG1
+				VALUE = {
+						  name = "testdevabc"
+						}
+				Loop:
+				─────
+				for_each = var.strac
+				Terraform internally creates:
+				─────────────────────────────
+				each.key   = "RG1"
+				each.value = {
+							   name = "testdevabc"
+							 }
+				Therefore:
+				──────────
+				RGA[each.key]
+				becomes:
+				RGA["RG1"]
+				VALID ✅
+				═══════════════════════════════════════════════════════════════════════════
+												FLOW
+				═══════════════════════════════════════════════════════════════════════════
+									strac
+									  │
+									  ▼
+								 RG1 = { }
+									  │
+									  ▼
+							   each.key = RG1
+									  │
+									  ▼
+								 RGA["RG1"]
+									  │
+									  ▼
+							 Gets Resource Group
+				═══════════════════════════════════════════════════════════════════════════
+										BULLET POINTS 🔥
+				═══════════════════════════════════════════════════════════════════════════
+				● RG1 is written on LEFT SIDE of map, therefore it becomes map KEY.
+				● for_each = var.strac means Terraform loops through variable "strac".
+				● each.key stores current map key during loop iteration.
+				● each.value stores complete object present on RIGHT SIDE.
+				● RGA[each.key] means Terraform searches RG resource using map key.
+				● each.key becomes "RG1", therefore Terraform creates RGA["RG1"].
+				● Since RG resource map contains RG1 key, lookup becomes VALID.
+				● This method is mostly used for simple 1:1 automatic mapping.
+				═══════════════════════════════════════════════════════════════════════════
+								   SCENARIO 2 → "RG1" ON VALUE SIDE
+				═══════════════════════════════════════════════════════════════════════════
+				terraform.tfvars
+				───────────────────────────────────────────────────────────────────────────
+				strac = {
+				  sa1 = {
+					resource_group_name = "RG1"
+				  }
+				}
+				Understanding:
+				──────────────
+				KEY   = sa1
+				VALUE = {
+						  resource_group_name = "RG1"
+						}
+				Loop:
+				─────
+				for_each = var.strac
+				Terraform internally creates:
+				─────────────────────────────
+				each.key = "sa1"
+				each.value = {
+							   resource_group_name = "RG1"
+							 }
+				Wrong:
+				──────
+				RGA[each.key]
+				becomes:
+				RGA["sa1"]
+				INVALID ❌
+				Correct:
+				────────
+				RGA[each.value.resource_group_name]
+				becomes:
+				RGA["RG1"]
+				VALID ✅
+				═══════════════════════════════════════════════════════════════════════════
+												FLOW
+				═══════════════════════════════════════════════════════════════════════════
+							 sa1 = {
+									 resource_group_name = "RG1"
+								   }
+									  │
+									  ▼
+							   each.key = sa1
+									  │
+									  ▼
+					 each.value.resource_group_name
+									  │
+									  ▼
+									 RG1
+									  │
+									  ▼
+								 RGA["RG1"]
+				═══════════════════════════════════════════════════════════════════════════
+										BULLET POINTS 🔥
+				═══════════════════════════════════════════════════════════════════════════
+				● sa1 is written on LEFT SIDE of map, therefore sa1 becomes map KEY.
+				● RG1 is stored INSIDE object value using property resource_group_name.
+				● each.key now becomes sa1 because current loop key is sa1.
+				● each.value becomes complete object present on RIGHT SIDE.
+				● each.value.resource_group_name reads RG1 from inside object.
+				● RGA[each.key] fails because RG resource map does not contain sa1 key.
+				● RGA[each.value.resource_group_name] works because it becomes RGA["RG1"].
+				● This method is flexible because multiple resources can use same RG.
+				═══════════════════════════════════════════════════════════════════════════
+									 EASY TECHNICAL BULLET POINTS 🔥
+				═══════════════════════════════════════════════════════════════════════════
+				● var.strac
+				  → "var" means Terraform variable reference system.
+				● for_each
+				  → Creates loop for every map item automatically.
+				● each.key
+				  → Always points to LEFT SIDE map key.
+				● each.value
+				  → Always points to RIGHT SIDE map value/object.
+				● Nested Map
+				  → Map containing another object/map inside it.
+				● RGA["RG1"]
+				  → Resource instance lookup using map key indexing.
+				● .resource_group_name
+				  → Object property access inside nested object.
+				● Resource Indexing
+				  → Terraform locating resource using key reference.
+				═══════════════════════════════════════════════════════════════════════════
+										ULTIMATE MEMORY TRICK 🔥
+				═══════════════════════════════════════════════════════════════════════════
+									MAP = {
+									   LEFT_SIDE = RIGHT_SIDE
+									}
+									Terraform Formula:
+									LEFT SIDE  → each.key
+									RIGHT SIDE → each.value
+									
+									
+									

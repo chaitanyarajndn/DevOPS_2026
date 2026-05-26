@@ -1,580 +1,580 @@
-╔══════════════════════════════════════════════════════════════╗
-║            🚀 TERRAFORM ForEach_with_List_Set 🚀              ║
-╚══════════════════════════════════════════════════════════════╝
+							╔══════════════════════════════════════════════════════════════╗
+							║            🚀 TERRAFORM ForEach_with_List_Set 🚀              ║
+							╚══════════════════════════════════════════════════════════════╝
 
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔥 INTRODUCTION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🔥 INTRODUCTION
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-➤ `for_each` is used to create multiple resources automatically.
-➤ Terraform repeats same block again and again using Iteration.
-➤ `for_each` mainly works with Map and Set of Strings.
-➤ Terraform needs UNIQUE VALUES for safe tracking.
-➤ Duplicate values may confuse Terraform internally.
+							➤ `for_each` is used to create multiple resources automatically.
+							➤ Terraform repeats same block again and again using Iteration.
+							➤ `for_each` mainly works with Map and Set of Strings.
+							➤ Terraform needs UNIQUE VALUES for safe tracking.
+							➤ Duplicate values may confuse Terraform internally.
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📘 WHAT IS ITERATION ?
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							📘 WHAT IS ITERATION ?
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-➤ Iteration means repeating same task multiple times.
-➤ Terraform performs same operation for different values.
-➤ One value is picked at a time during iteration.
-➤ Iteration reduces manual repetitive coding.
-➤ `for_each` is Terraform’s iteration mechanism.
+							➤ Iteration means repeating same task multiple times.
+							➤ Terraform performs same operation for different values.
+							➤ One value is picked at a time during iteration.
+							➤ Iteration reduces manual repetitive coding.
+							➤ `for_each` is Terraform’s iteration mechanism.
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚡ CHARACTERISTICS OF ITERATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							⚡ CHARACTERISTICS OF ITERATION
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-➤ Same task repeats multiple times.
-➤ Current value changes every iteration.
-➤ Makes Terraform code shorter and cleaner.
-➤ Helps automate infrastructure creation.
-➤ Reduces duplicate coding effort.
+							➤ Same task repeats multiple times.
+							➤ Current value changes every iteration.
+							➤ Makes Terraform code shorter and cleaner.
+							➤ Helps automate infrastructure creation.
+							➤ Reduces duplicate coding effort.
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔥 WHAT IS `for_each` ?
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🔥 WHAT IS `for_each` ?
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-➤ `for_each` repeats resource block for every item.
-➤ Separate resource gets created for every value.
-➤ `each.value` stores current item during iteration.
-➤ `each.key` mainly works with Map.
-➤ `for_each` works using UNIQUE identity tracking.
+							➤ `for_each` repeats resource block for every item.
+							➤ Separate resource gets created for every value.
+							➤ `each.value` stores current item during iteration.
+							➤ `each.key` mainly works with Map.
+							➤ `for_each` works using UNIQUE identity tracking.
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📘 WHAT DOES `for_each` ACCEPT ?
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							📘 WHAT DOES `for_each` ACCEPT ?
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ ACCEPTED
+							✅ ACCEPTED
 
-➤ Map
-➤ Set of Strings
+							➤ Map
+							➤ Set of Strings
 
 
-❌ NOT ACCEPTED DIRECTLY
+							❌ NOT ACCEPTED DIRECTLY
 
-➤ List
-➤ Tuple
+							➤ List
+							➤ Tuple
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📘 SCENARIO
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							📘 SCENARIO
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-resource "azurerm_resource_group" "rgs" {
+							resource "azurerm_resource_group" "rgs" {
 
-  for_each = ["rg1", "rg2", "rg3", "rg4", "rg5"]
+							  for_each = ["rg1", "rg2", "rg3", "rg4", "rg5"]
 
-  name     = each.value
-  location = "westeurope"
-}
+							  name     = each.value
+							  location = "westeurope"
+							}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🤔 QUESTION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🤔 QUESTION
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-No duplicate values exist. Will it work ?
+							No duplicate values exist. Will it work ?
 
-❌ ANSWER = NO
+							❌ ANSWER = NO
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 MAIN UNDERSTANDING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🧠 MAIN UNDERSTANDING
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Problem is NOT only duplicate values. Terraform checks BOTH:
+							Problem is NOT only duplicate values. Terraform checks BOTH:
 
-   ✅ Unique Values                    ✅ Correct Data Type
+							   ✅ Unique Values                    ✅ Correct Data Type
 
-Even though values are unique:
+							Even though values are unique:
 
-   ["rg1", "rg2", "rg3"]
+							   ["rg1", "rg2", "rg3"]
 
-it is STILL:
+							it is STILL:
 
-   ❌ LIST                             ❌ NOT SET
+							   ❌ LIST                             ❌ NOT SET
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 TERRAFORM THINKING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🧠 TERRAFORM THINKING
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Terraform says:
+							Terraform says:
 
-   "Values are unique 😎  But datatype is LIST 🤨"
+							   "Values are unique 😎  But datatype is LIST 🤨"
 
-`for_each` accepts only:
+							`for_each` accepts only:
 
-   ✅ Map                              ✅ Set of Strings
+							   ✅ Map                              ✅ Set of Strings
 
-   ❌ NOT List
+							   ❌ NOT List
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🛒 REAL LIFE EXAMPLE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🛒 REAL LIFE EXAMPLE
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Mom prepares shopping items:
+							Mom prepares shopping items:
 
-   Lemon      Paneer      Snacks      Icecream
+							   Lemon      Paneer      Snacks      Icecream
 
-Son checks carefully 👀
+							Son checks carefully 👀
 
-   "No duplicate items exist."
+							   "No duplicate items exist."
 
-But son still says:
+							But son still says:
 
-   "Convert this into FINAL VERIFIED SET."
+							   "Convert this into FINAL VERIFIED SET."
 
-Because son trusts only:
+							Because son trusts only:
 
-   ✅ UNIQUE VERIFIED COLLECTION
+							   ✅ UNIQUE VERIFIED COLLECTION
 
-Exactly same way Terraform trusts:
+							Exactly same way Terraform trusts:
 
-   ✅ SET                             ❌ NOT LIST
+							   ✅ SET                             ❌ NOT LIST
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-❌ THIS FAILS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							❌ THIS FAILS
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-for_each = ["rg1", "rg2", "rg3"]
+							for_each = ["rg1", "rg2", "rg3"]
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ THIS WORKS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							✅ THIS WORKS
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-for_each = toset(["rg1", "rg2", "rg3"])
+							for_each = toset(["rg1", "rg2", "rg3"])
 
-Because:
+							Because:
 
-   LIST  ─────➜  Converted into SET  ─────➜  Terraform Accepts ✅
+							   LIST  ─────➜  Converted into SET  ─────➜  Terraform Accepts ✅
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 FLOW
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							📊 FLOW
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Unique Values  ───➜  Terraform Checks Datatype  ───➜  LIST Detected ❌
-        │
-        ▼
-Apply toset()  ───➜  SET Generated ✅  ───➜  Terraform Accepts
+							Unique Values  ───➜  Terraform Checks Datatype  ───➜  LIST Detected ❌
+									│
+									▼
+							Apply toset()  ───➜  SET Generated ✅  ───➜  Terraform Accepts
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔥 GOLDEN LINE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🔥 GOLDEN LINE
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Terraform `for_each` needs:
+							Terraform `for_each` needs:
 
-   ✅ Unique Values                ✅ Correct Data Type ( SET / MAP )
+							   ✅ Unique Values                ✅ Correct Data Type ( SET / MAP )
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 WHY TERRAFORM NEEDS UNIQUE VALUES ?
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🧠 WHY TERRAFORM NEEDS UNIQUE VALUES ?
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-➤ Terraform tracks every resource individually.
-➤ Every resource needs unique identity.
-➤ Duplicate values confuse Terraform state tracking.
-➤ Terraform must clearly identify each resource.
-➤ Unique values make updates and deletions safe.
+							➤ Terraform tracks every resource individually.
+							➤ Every resource needs unique identity.
+							➤ Duplicate values confuse Terraform state tracking.
+							➤ Terraform must clearly identify each resource.
+							➤ Unique values make updates and deletions safe.
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📘 WHAT IS UNIQUE VALUE ?
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							📘 WHAT IS UNIQUE VALUE ?
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-➤ Unique means value appears only one time.
-➤ Duplicate means same value repeats multiple times.
-➤ Terraform prefers unique identities for safety.
-➤ Set automatically keeps only unique values.
-➤ Duplicate values are removed inside Set.
+							➤ Unique means value appears only one time.
+							➤ Duplicate means same value repeats multiple times.
+							➤ Terraform prefers unique identities for safety.
+							➤ Set automatically keeps only unique values.
+							➤ Duplicate values are removed inside Set.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🛒 REAL LIFE MARKET EXAMPLE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🛒 REAL LIFE MARKET EXAMPLE
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Mom says ───➜ Bring Lemon       ─────────➜ Son goes to market and brings Lemon ✅
-Mom says ───➜ Bring Paneer      ─────────➜ Son goes to market and brings Paneer ✅
-Mom says ───➜ Bring Mushroom    ─────────➜ Son goes to market and brings Mushroom ✅
-Mom says ───➜ Bring Icecream    ─────────➜ Son goes to market and brings Icecream ✅
-Mom says ───➜ Bring ColdDrink   ─────────➜ Son goes to market and brings ColdDrink ✅
-Mom says ───➜ Bring Snacks      ─────────➜ Son goes to market and brings Snacks ✅
-Mom says ───➜ Bring Sweets      ─────────➜ Son goes to market and brings Sweets ✅
+							Mom says ───➜ Bring Lemon       ─────────➜ Son goes to market and brings Lemon ✅
+							Mom says ───➜ Bring Paneer      ─────────➜ Son goes to market and brings Paneer ✅
+							Mom says ───➜ Bring Mushroom    ─────────➜ Son goes to market and brings Mushroom ✅
+							Mom says ───➜ Bring Icecream    ─────────➜ Son goes to market and brings Icecream ✅
+							Mom says ───➜ Bring ColdDrink   ─────────➜ Son goes to market and brings ColdDrink ✅
+							Mom says ───➜ Bring Snacks      ─────────➜ Son goes to market and brings Snacks ✅
+							Mom says ───➜ Bring Sweets      ─────────➜ Son goes to market and brings Sweets ✅
 
 
-😵 Son gets frustrated:
+							😵 Son gets frustrated:
 
-"Mom... please prepare one proper list.
-I will go to market only once."
+							"Mom... please prepare one proper list.
+							I will go to market only once."
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📘 MOM PREPARES FINAL LIST
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							📘 MOM PREPARES FINAL LIST
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[
-  "lemon",
-  "paneer",
-  "mushroom",
-  "icecream",
-  "cold_drink",
-  "snacks",
-  "sweets",
-  "paneer"
-]
+							[
+							  "lemon",
+							  "paneer",
+							  "mushroom",
+							  "icecream",
+							  "cold_drink",
+							  "snacks",
+							  "sweets",
+							  "paneer"
+							]
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-👀 SON CHECKS THE LIST
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							👀 SON CHECKS THE LIST
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Son notices:
+							Son notices:
 
-   ❌ "Paneer" is written twice
+							   ❌ "Paneer" is written twice
 
 
-Now son thinks:
+							Now son thinks:
 
-   ❌ Duplicate shopping may happen
-   ❌ Extra expense may happen
-   ❌ Confusion may happen
+							   ❌ Duplicate shopping may happen
+							   ❌ Extra expense may happen
+							   ❌ Confusion may happen
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔥 IMPORTANT UNDERSTANDING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🔥 IMPORTANT UNDERSTANDING
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Son wants:
+							Son wants:
 
-   ✅ UNIQUE ITEMS
+							   ✅ UNIQUE ITEMS
 
-Exactly same way Terraform also wants:
+							Exactly same way Terraform also wants:
 
-   ✅ UNIQUE VALUES
+							   ✅ UNIQUE VALUES
 
 
-Because Terraform internally thinks:
+							Because Terraform internally thinks:
 
-   "Every resource should have
-    unique identity for safe tracking."
+							   "Every resource should have
+								unique identity for safe tracking."
 
 
-If duplicate values exist:
+							If duplicate values exist:
 
-   "I may get confused
-    while managing resources."
+							   "I may get confused
+								while managing resources."
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ SOLUTION = SET
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							✅ SOLUTION = SET
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-SET automatically removes duplicate values.
+							SET automatically removes duplicate values.
 
 
-Final shopping items become:
+							Final shopping items become:
 
 
-{
-  "lemon",
-  "paneer",
-  "mushroom",
-  "icecream",
-  "cold_drink",
-  "snacks",
-  "sweets"
-}
+							{
+							  "lemon",
+							  "paneer",
+							  "mushroom",
+							  "icecream",
+							  "cold_drink",
+							  "snacks",
+							  "sweets"
+							}
 
 
-🔥 Now every item is UNIQUE.
+							🔥 Now every item is UNIQUE.
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 SAME TERRAFORM LOGIC
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🧠 SAME TERRAFORM LOGIC
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Duplicate Values
-        │
-        ▼
-Confusion Possible
-        │
-        ▼
-Need Unique Values
-        │
-        ▼
-Use Set
-        │
-        ▼
-Duplicates Removed
-        │
-        ▼
-Safe Processing
+							Duplicate Values
+									│
+									▼
+							Confusion Possible
+									│
+									▼
+							Need Unique Values
+									│
+									▼
+							Use Set
+									│
+									▼
+							Duplicates Removed
+									│
+									▼
+							Safe Processing
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 TERRAFORM INTERNAL BRAIN LOGIC
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🧠 TERRAFORM INTERNAL BRAIN LOGIC
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Terraform internally thinks:
+							Terraform internally thinks:
 
 
-   "I need UNIQUE VALUES
-    for safe resource tracking."
+							   "I need UNIQUE VALUES
+								for safe resource tracking."
 
 
-If duplicates exist:
+							If duplicates exist:
 
 
-   "I may get confused
-    while managing infrastructure."
+							   "I may get confused
+								while managing infrastructure."
 
 
-That is why Terraform mainly prefers:
+							That is why Terraform mainly prefers:
 
-   ✅ Map
-   ✅ Set
+							   ✅ Map
+							   ✅ Set
 
 
-Because both provide UNIQUE IDENTITIES.
+							Because both provide UNIQUE IDENTITIES.
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-❌ WRONG EXAMPLE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							❌ WRONG EXAMPLE
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-resource "azurerm_resource_group" "rgs" {
+							resource "azurerm_resource_group" "rgs" {
 
-  for_each = ["rg1", "rg2", "rg3", "rg2"]
+							  for_each = ["rg1", "rg2", "rg3", "rg2"]
 
-  name     = each.value
-  location = "westeurope"
-}
+							  name     = each.value
+							  location = "westeurope"
+							}
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-❌ WHY THIS IS WRONG ?
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							❌ WHY THIS IS WRONG ?
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-➤ This is a normal List.
-➤ List allows duplicate values.
-➤ `rg2` appears two times.
-➤ Values are NOT unique.
-➤ Terraform tracking becomes unsafe.
+							➤ This is a normal List.
+							➤ List allows duplicate values.
+							➤ `rg2` appears two times.
+							➤ Values are NOT unique.
+							➤ Terraform tracking becomes unsafe.
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 TERRAFORM THINKING ( WRONG CASE )
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🧠 TERRAFORM THINKING ( WRONG CASE )
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Terraform reads:
+							Terraform reads:
 
 
-   rg1
-   rg2
-   rg3
-   rg2
+							   rg1
+							   rg2
+							   rg3
+							   rg2
 
 
-Terraform becomes confused 🤯
+							Terraform becomes confused 🤯
 
 
-   "Which rg2 is original?
-    Which rg2 is duplicate?"
+							   "Which rg2 is original?
+								Which rg2 is duplicate?"
 
 
-❌ Resource tracking breaks.
+							❌ Resource tracking breaks.
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📘 POSSIBLE ERROR
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							📘 POSSIBLE ERROR
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-   ❌ Invalid for_each argument
+							   ❌ Invalid for_each argument
 
-                OR
+											OR
 
-   ❌ for_each supports maps and sets of strings
+							   ❌ for_each supports maps and sets of strings
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ CORRECT EXAMPLE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							✅ CORRECT EXAMPLE
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-resource "azurerm_resource_group" "rgs" {
+							resource "azurerm_resource_group" "rgs" {
 
-  for_each = toset(["rg1", "rg2", "rg3", "rg2"])
+							  for_each = toset(["rg1", "rg2", "rg3", "rg2"])
 
-  name     = each.value
-  location = "westeurope"
-}
+							  name     = each.value
+							  location = "westeurope"
+							}
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ WHY THIS IS CORRECT ?
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							✅ WHY THIS IS CORRECT ?
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-➤ `toset()` converts List → Set.
-➤ Duplicate values get removed automatically.
-➤ Extra `rg2` gets deleted.
-➤ Final values become UNIQUE.
-➤ Terraform can safely track resources.
+							➤ `toset()` converts List → Set.
+							➤ Duplicate values get removed automatically.
+							➤ Extra `rg2` gets deleted.
+							➤ Final values become UNIQUE.
+							➤ Terraform can safely track resources.
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 TERRAFORM THINKING ( CORRECT CASE )
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🧠 TERRAFORM THINKING ( CORRECT CASE )
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Terraform first reads:
+							Terraform first reads:
 
-   ["rg1", "rg2", "rg3", "rg2"]
+							   ["rg1", "rg2", "rg3", "rg2"]
 
-Now `toset()` starts working.
+							Now `toset()` starts working.
 
-Duplicate gets removed:
+							Duplicate gets removed:
 
-   {
-      "rg1",
-      "rg2",
-      "rg3"
-   }
+							   {
+								  "rg1",
+								  "rg2",
+								  "rg3"
+							   }
 
-Terraform says 😎
+							Terraform says 😎
 
-   "Perfect...
-    Now all values are UNIQUE."
+							   "Perfect...
+								Now all values are UNIQUE."
 
-Safe iteration can now begin.
+							Safe iteration can now begin.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔄 ITERATION PROCESS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🔄 ITERATION PROCESS
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🔹 Iteration 1
+							🔹 Iteration 1
 
-   each.value = rg1
+							   each.value = rg1
 
-   ➜ Resource Group Created → rg1
+							   ➜ Resource Group Created → rg1
 
-🔹 Iteration 2
+							🔹 Iteration 2
 
-   each.value = rg2
+							   each.value = rg2
 
-   ➜ Resource Group Created → rg2
+							   ➜ Resource Group Created → rg2
 
-🔹 Iteration 3
+							🔹 Iteration 3
 
-   each.value = rg3
+							   each.value = rg3
 
-   ➜ Resource Group Created → rg3
+							   ➜ Resource Group Created → rg3
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 FLOWCHART
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							📊 FLOWCHART
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Terraform Started
-        │
-        ▼
-Read List Values
-        │
-        ▼
-Check Duplicates
-        │
-        ▼
-Apply toset()
-        │
-        ▼
-Remove Duplicate Values
-        │
-        ▼
-Generate UNIQUE VALUES
-        │
-        ▼
-Start Iteration
-        │
-        ▼
-Pick One Value
-        │
-        ▼
-Create Resource
-        │
-        ▼
-Repeat Again
-        │
-        ▼
-Terraform Completed
+							Terraform Started
+									│
+									▼
+							Read List Values
+									│
+									▼
+							Check Duplicates
+									│
+									▼
+							Apply toset()
+									│
+									▼
+							Remove Duplicate Values
+									│
+									▼
+							Generate UNIQUE VALUES
+									│
+									▼
+							Start Iteration
+									│
+									▼
+							Pick One Value
+									│
+									▼
+							Create Resource
+									│
+									▼
+							Repeat Again
+									│
+									▼
+							Terraform Completed
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📘 LIST vs SET
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							📘 LIST vs SET
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-LIST
-────
+							LIST
+							────
 
-➤ Ordered collection
-➤ Duplicate allowed
-➤ Not safe for for_each
-➤ Tracking issue possible
-➤ Used mainly with indexing
+							➤ Ordered collection
+							➤ Duplicate allowed
+							➤ Not safe for for_each
+							➤ Tracking issue possible
+							➤ Used mainly with indexing
 
 
 
-SET
-───
+							SET
+							───
 
-➤ Unordered collection
-➤ Duplicate NOT allowed
-➤ Keeps only UNIQUE values
-➤ Safe for for_each
-➤ Best for resource tracking
+							➤ Unordered collection
+							➤ Duplicate NOT allowed
+							➤ Keeps only UNIQUE values
+							➤ Safe for for_each
+							➤ Best for resource tracking
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔥 GOLDEN INTERVIEW LINE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							🔥 GOLDEN INTERVIEW LINE
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Terraform `for_each` needs UNIQUE IDENTITIES.
+							Terraform `for_each` needs UNIQUE IDENTITIES.
 
-That is why Terraform mainly works with:
+							That is why Terraform mainly works with:
 
-   ✅ Map
-   ✅ Set
+							   ✅ Map
+							   ✅ Set
 
 
-Because duplicate values can break resource tracking.
+							Because duplicate values can break resource tracking.
 
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📘 FINAL SUMMARY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+							📘 FINAL SUMMARY
+							━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Iteration
-   ↓
-Repeat same task multiple times
+							Iteration
+							   ↓
+							Repeat same task multiple times
 
 
-for_each
-   ↓
-Terraform iteration mechanism
+							for_each
+							   ↓
+							Terraform iteration mechanism
 
 
-toset()
-   ↓
-Converts List → Set
+							toset()
+							   ↓
+							Converts List → Set
 
 
-Set
-   ↓
-Keeps only UNIQUE VALUES
+							Set
+							   ↓
+							Keeps only UNIQUE VALUES
 
 
-Unique Values
-   ↓
-Safe Terraform Resource Tracking
+							Unique Values
+							   ↓
+							Safe Terraform Resource Tracking
 
 
-╔══════════════════════════════════════════════════════════════╗
-║                    ✅ NOTES COMPLETED ✅                    ║
-╚══════════════════════════════════════════════════════════════╝
+							╔══════════════════════════════════════════════════════════════╗
+							║                    ✅ NOTES COMPLETED ✅                    ║
+							╚══════════════════════════════════════════════════════════════╝

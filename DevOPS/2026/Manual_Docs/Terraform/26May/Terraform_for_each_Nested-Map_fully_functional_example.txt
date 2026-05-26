@@ -1,0 +1,205 @@
+							══════════════════════════════════════════════════════════════════════
+							SCENARIO 1 → "RG1/RG2/RG3" ON KEY SIDE
+							══════════════════════════════════════════════════════════════════════
+							MAIN CONCEPT:
+							RG1/RG2/RG3 are MAP KEYS.
+							Therefore:
+							each.key = RG1/RG2/RG3
+							Automatic mapping works using:
+							RGA[each.key]
+							══════════════════════════════════════════════════════════════════════
+							terraform.tfvars
+							══════════════════════════════════════════════════════════════════════
+							rg_name = {
+							  RG1 = {
+								name     = "RGabcx"
+								location = "eastus"
+							  }
+							  RG2 = {
+								name     = "RGabcy"
+								location = "westus"
+							  }
+							  RG3 = {
+								name     = "RGabcz"
+								location = "centralindia"
+							  }
+							}
+							strac = {
+							  RG1 = {
+								name                     = "testdevabc"
+								location                 = "eastus"
+								account_tier             = "Standard"
+								account_replication_type = "LRS"
+							  }
+							  RG2 = {
+								name                     = "testlababc"
+								location                 = "westus"
+								account_tier             = "Standard"
+								account_replication_type = "LRS"
+							  }
+							  RG3 = {
+								name                     = "testprodabc"
+								location                 = "centralindia"
+								account_tier             = "Standard"
+								account_replication_type = "LRS"
+							  }
+							}
+							══════════════════════════════════════════════════════════════════════
+							variable.tf
+							══════════════════════════════════════════════════════════════════════
+							variable "rg_name" {}
+							variable "strac" {}
+							══════════════════════════════════════════════════════════════════════
+							main.tf
+							══════════════════════════════════════════════════════════════════════
+							resource "azurerm_resource_group" "RGA" {
+							  for_each = var.rg_name
+							  name     = each.value.name
+							  location = each.value.location
+							}
+							resource "azurerm_storage_account" "TESTSTG" {
+							  for_each = var.strac
+							  name                     = each.value.name
+							  resource_group_name      = azurerm_resource_group.RGA[each.key].name
+							  location                 = azurerm_resource_group.RGA[each.key].location
+							  account_tier             = each.value.account_tier
+							  account_replication_type = each.value.account_replication_type
+							}
+							══════════════════════════════════════════════════════════════════════
+							FLOW
+							══════════════════════════════════════════════════════════════════════
+							RG1 = { }
+							  │
+							  ▼
+							each.key = RG1
+							  │
+							  ▼
+							RGA["RG1"]
+							  │
+							  ▼
+							Gets Resource Group
+							══════════════════════════════════════════════════════════════════════
+							IMPORTANT POINTS 🔥
+							══════════════════════════════════════════════════════════════════════
+							● RG1/RG2/RG3 are on LEFT SIDE of map.
+							● LEFT SIDE always becomes each.key.
+							● for_each = var.strac means Terraform loops through variable "strac".
+							● each.key becomes RG1/RG2/RG3 during loop iteration.
+							● RGA[each.key] becomes RGA["RG1"].
+							● Automatic mapping works because RG keys and Storage keys match.
+							● Best for simple 1:1 mapping.
+							● No need to manually define resource_group_name.
+							══════════════════════════════════════════════════════════════════════
+							
+							
+							
+							
+							
+							
+							══════════════════════════════════════════════════════════════════════
+							SCENARIO 2 → "RG1/RG2/RG3" ON VALUE SIDE
+							══════════════════════════════════════════════════════════════════════
+							MAIN CONCEPT:
+							RG1/RG2/RG3 are INSIDE OBJECT VALUES.
+							Therefore:
+							each.value.resource_group_name = RG1/RG2/RG3
+							Flexible manual mapping works using:
+							RGA[each.value.resource_group_name]
+							══════════════════════════════════════════════════════════════════════
+							terraform.tfvars
+							══════════════════════════════════════════════════════════════════════
+							rg_name = {
+							  RG1 = {
+								name     = "RGabcx"
+								location = "eastus"
+							  }
+							  RG2 = {
+								name     = "RGabcy"
+								location = "westus"
+							  }
+							  RG3 = {
+								name     = "RGabcz"
+								location = "centralindia"
+							  }
+							}
+							strac = {
+							  sa1 = {
+								name                     = "testdevabc"
+								resource_group_name      = "RG1"
+								location                 = "eastus"
+								account_tier             = "Standard"
+								account_replication_type = "LRS"
+							  }
+							  sa2 = {
+								name                     = "testlababc"
+								resource_group_name      = "RG2"
+								location                 = "westus"
+								account_tier             = "Standard"
+								account_replication_type = "LRS"
+							  }
+							  sa3 = {
+								name                     = "testprodabc"
+								resource_group_name      = "RG3"
+								location                 = "centralindia"
+								account_tier             = "Standard"
+								account_replication_type = "LRS"
+							  }
+							}
+							══════════════════════════════════════════════════════════════════════
+							variable.tf
+							══════════════════════════════════════════════════════════════════════
+							variable "rg_name" {}
+							variable "strac" {}
+							══════════════════════════════════════════════════════════════════════
+							main.tf
+							══════════════════════════════════════════════════════════════════════
+							resource "azurerm_resource_group" "RGA" {
+							  for_each = var.rg_name
+							  name     = each.value.name
+							  location = each.value.location
+							}
+							resource "azurerm_storage_account" "TESTSTG" {
+							  for_each = var.strac
+							  name                     = each.value.name
+							  resource_group_name      = azurerm_resource_group.RGA[each.value.resource_group_name].name
+							  location                 = azurerm_resource_group.RGA[each.value.resource_group_name].location
+							  account_tier             = each.value.account_tier
+							  account_replication_type = each.value.account_replication_type
+							}
+							══════════════════════════════════════════════════════════════════════
+							FLOW
+							══════════════════════════════════════════════════════════════════════
+							sa1 = {
+							  resource_group_name = "RG1"
+							}
+							  │
+							  ▼
+							each.key = sa1
+							  │
+							  ▼
+							each.value.resource_group_name
+							  │
+							  ▼
+							RG1
+							  │
+							  ▼
+							RGA["RG1"]
+							══════════════════════════════════════════════════════════════════════
+							IMPORTANT POINTS 🔥
+							══════════════════════════════════════════════════════════════════════
+							● sa1/sa2/sa3 are on LEFT SIDE of map.
+							● RG1/RG2/RG3 are stored INSIDE object values.
+							● each.key becomes sa1/sa2/sa3.
+							● each.value becomes complete object on RIGHT SIDE.
+							● each.value.resource_group_name reads RG1/RG2/RG3.
+							● RGA[each.value.resource_group_name] becomes RGA["RG1"].
+							● Flexible approach used in real-world projects.
+							● Multiple resources can use same Resource Group.
+							══════════════════════════════════════════════════════════════════════
+							ULTIMATE MEMORY TRICK 🔥
+							══════════════════════════════════════════════════════════════════════
+							MAP = {
+							  LEFT_SIDE = RIGHT_SIDE
+							}
+							LEFT SIDE  → each.key
+							RIGHT SIDE → each.value
