@@ -1,0 +1,447 @@
+
+
+				# IPv4 + CIDR + Bits/Bytes Notes (Easy Language)
+
+				========================================================
+
+				1. COMPUTER UNDERSTANDS ONLY 0 AND 1
+				   ========================================================
+
+				Computer language:
+				0 = OFF
+				1 = ON
+
+				These are called:
+				BIT (Binary Digit)
+
+				1 BIT:
+				Can store only:
+				0 or 1
+
+				Example:
+				Light OFF = 0
+				Light ON  = 1
+
+				---
+
+				8 bits = 1 BYTE
+
+				Example:
+				10101010 = 1 byte
+
+				Why 8 bits important?
+
+				2^8 = 256
+
+				Means:
+				1 byte can create values from:
+				0 → 255
+
+				========================================================
+				2. WHAT IS IPv4?
+				================
+
+				IPv4 = Internet Protocol Version 4
+
+				Example IP:
+				192.168.1.10
+
+				lowest achievable value:
+				0.0.0.0
+				00000000.00000000.00000000.00000000
+				
+				Highest achievable value:
+				255.255.255.255
+				11111111.11111111.11111111.11111111
+				
+				
+				IPv4 has 4 parts:
+				192
+				168
+				1
+				10
+
+				These 4 parts are called:
+				OCTETS
+
+				Why octet?
+				Because each octet = 8 bits
+
+				---
+
+				IPv4 Structure:
+
+				192   .168   .1    .10
+				[8bit].[8bit].[8bit].[8bit]
+
+				Total bits:
+
+				8 + 8 + 8 + 8 = 32 bits
+
+				So:
+				IPv4 = 32 bits
+
+				========================================================
+				3. WHY OCTET VALUES GO FROM 0-255?
+				==================================
+
+				Each octet = 8 bits
+
+				Formula:
+				2^8 = 256
+
+				So possible values:
+				0 → 255
+
+				Example:
+
+				00000000 = 0
+				00000001 = 1
+				11111111 = 255
+
+				That is why:
+				IP addresses never have octet above 255
+
+				Wrong:
+				10.500.1.1 ❌
+
+				Correct:
+				10.255.1.1 ✅
+
+				========================================================
+				4. WHAT IS CIDR NOTATION?
+				=========================
+
+				Example:
+				10.0.0.0/16
+
+				2^(32-16)
+				65,536
+
+				155.20.3.1
+				
+				CIDR notation tells:
+				How many bits are FIXED (locked)
+
+				Format:
+				IP / Number
+
+				Example:
+				10.0.0.0/16
+
+				Meaning:
+				First 16 bits are fixed
+
+				192   .168   .1    .10
+				
+				155.20.3.1
+				[8bit].[8bit].[8bit].[8bit]
+
+				Total bits:
+
+				8 + 8 + 8 + 8 = 32 bits
+
+				---
+
+				Easy Rule:
+
+				Smaller CIDR = Bigger Network
+				Bigger CIDR  = Smaller Network
+
+				Example:
+
+				/8  = Very Big Network
+				/16 = Medium Network
+				/24 = Small Network
+				/32 = Single IP
+
+				========================================================
+				5. CIDR EASY UNDERSTANDING
+				==========================
+
+				Example:
+				10.0.0.0/16
+
+				IPv4 has:
+				4 octets
+				Each octet = 8 bits
+
+				/16 means:
+				16 bits fixed
+
+				So:
+
+				First 8 bits  = fixed
+				Second 8 bits = fixed
+
+				Meaning:
+				10.0 = fixed
+
+				Remaining:
+				0-255
+				0-255
+
+				Range becomes:
+
+				10.0.0.0
+				to
+				10.0.255.255
+
+				========================================================
+				6. EXAMPLE OF /8
+				================
+
+				10.0.0.0/8
+
+				/8 means:
+				Only first octet fixed
+
+				10 = fixed
+
+				Remaining can vary:
+				0-255
+				0-255
+				0-255
+
+				Range:
+
+				10.0.0.0
+				to
+				10.255.255.255
+
+				========================================================
+				7. EXAMPLE OF /18
+				=================
+
+				10.0.0.0/18
+
+				/18 means:
+				18 bits fixed
+
+				Breakdown:
+
+				First octet  = 8 bits fixed
+				Second octet = 8 bits fixed
+				Third octet  = 2 bits fixed
+
+				Total:
+				8 + 8 + 2 = 18
+
+				---
+
+				Third octet has:
+				8 bits total
+
+				But:
+				2 bits already fixed
+
+				Remaining:
+				6 bits free
+
+				Formula:
+				2^6 = 64
+
+				So third octet range:
+				0 → 63
+
+				Final range:
+
+				10.0.0.0
+				to
+				10.0.63.255
+
+				========================================================
+				8. EXAMPLE OF /10
+				=================
+
+				10.0.0.0/10
+
+				/10 means:
+				10 bits fixed
+
+				Breakdown:
+
+				First octet fully fixed = 8 bits
+				Second octet partially fixed = 2 bits
+
+				---
+
+				Second octet:
+				8 bits total
+				2 bits fixed
+				6 bits free
+
+				Formula:
+				2^6 = 64
+
+				Second octet range:
+				0 → 63
+
+				Final range:
+
+				10.0.0.0
+				to
+				10.63.255.255
+
+				========================================================
+				9. TOTAL IPs FORMULA
+				====================
+
+				Formula:
+				2^(32 - CIDR)
+
+				Example:
+
+				/24:
+				2^(32-24)
+				= 2^8
+				= 256 IPs
+
+				/28:
+				2^(32-28)
+				= 2^4
+				= 16 IPs
+
+				/16:
+				2^(32-16)
+				= 2^16
+				= 65536 IPs
+
+				========================================================
+				10. EASY CIDR MEMORY TRICK
+				==========================
+
+				/8  → 1 octet fixed
+				/16 → 2 octets fixed
+				/24 → 3 octets fixed
+				/32 → 4 octets fixed
+
+				Examples:
+
+				/8
+				10.x.x.x
+
+				/16
+				10.0.x.x
+
+				/24
+				10.0.0.x
+
+				/32
+				Single IP only
+
+				========================================================
+				11. NETWORKING MOST IMPORTANT FORMULA
+				=====================================
+
+				2^n
+
+				Every new bit doubles possibilities.
+
+				Examples:
+
+				1 bit  = 2 values
+				2 bits = 4 values
+				3 bits = 8 values
+				4 bits = 16 values
+				8 bits = 256 values
+
+				========================================================
+				12. AZURE NETWORKING CONNECTION
+				===============================
+
+				VNet Example:
+				10.0.0.0/16
+
+				Subnet Examples:
+				10.0.1.0/24
+				10.0.2.0/24
+				10.0.3.0/24
+
+				Meaning:
+				Big network divided into smaller networks.
+
+				========================================================
+				13. SUPER EASY SUMMARY
+				======================
+
+				Bit   = 0 or 1
+				Byte  = 8 bits
+				Octet = 8 bits in IP
+				IPv4  = 32 bits total
+				CIDR  = Number of fixed bits
+
+				Smaller CIDR number:
+				Bigger network
+
+				Bigger CIDR number:
+				Smaller network
+				
+				256 - 0-255
+				
+				
+				32
+				10.0.0.0/17
+				
+				10.0.0.0   ---> 10.0.127.255
+				
+				8-1=7
+				
+				2^7=128
+				
+				17 = 8+8+1+0
+				
+				7BITS = 2^7 = 128
+				
+				155.20.3.1
+				[8bit].[8bit].[8bit].[8bit]
+
+				Total bits:
+
+				8 + 8 + 8 + 8 = 32 bits
+				17 - 15
+				A.B.C.D
+
+				0.0.0.0/32
+
+				0.0.0.0
+				00000000.00000000.00000000.00000000
+				
+				Highest achievable value:
+				255.255.255.255
+				
+				11111111.11111111.11111111.11111111
+				
+				
+				2^(32-8) = 
+				
+				2^7 = 128-1 = 127
+				
+				10.0.0.0/25 
+				
+				8+8+8+1
+				
+				10.0.0.0  ----> 10.0.0.127
+				
+				10.12.0.0/8
+				
+				1 - 1
+				2 - 10
+				3 - 11
+				4 - 100
+				
+				8+8+8+0 = 24
+				
+				10.0.2.0	10.0.1.255			/24
+				
+				2^8 = 256
+				
+				[8bit].[8bit].[8bit].[8bit]
+
+				Total bits:
+
+				8 + 8 + 8 + 8 = 32 bits
+				
+				
+				
+				

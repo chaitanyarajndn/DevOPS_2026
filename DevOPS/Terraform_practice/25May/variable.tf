@@ -1,0 +1,2 @@
+variable "rgn" {}
+variable "strac" {}

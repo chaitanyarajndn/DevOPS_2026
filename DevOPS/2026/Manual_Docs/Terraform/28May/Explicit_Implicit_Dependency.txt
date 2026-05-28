@@ -1,0 +1,247 @@
+                    ===========================================================
+                                   TERRAFORM DEPENDENCY
+                    ===========================================================
+
+                    📌 Dependency Meaning
+                    Which resource should be created first and which after.
+
+                    Example:
+                    Resource Group  ➜  First
+                    Storage Account ➜  After
+
+                    ===========================================================
+                                   YOUR EXAMPLE CODE
+                    ===========================================================
+
+                    resource "azurerm_resource_group" "RGA" {
+                      name     = "sumitrg"
+                      location = "eastus"
+                    }
+
+                    resource "azurerm_storage_account" "STGA" {
+                      name                     = "sumitstg07"
+                      resource_group_name      = "sumitrg"
+                      location                 = "eastus"
+                      account_tier             = "Standard"
+                      account_replication_type = "LRS"
+                    }
+
+                    ===========================================================
+                                   CURRENT STATUS OF THIS CODE
+                    ===========================================================
+
+                    ❌ No Implicit Dependency
+                    ❌ No Explicit Dependency
+
+                    Why ?
+
+                    Because:
+                    resource_group_name = "sumitrg"
+
+                    is only a hardcoded string.
+
+                    Terraform cannot understand that:
+                    "sumitrg" belongs to:
+                    azurerm_resource_group.RGA
+
+                    So Terraform may try parallel creation.
+
+                    ===========================================================
+                                   1️⃣ IMPLICIT DEPENDENCY
+                    ===========================================================
+
+                    📌 Meaning:
+                    Terraform automatically detects dependency using
+                    resource reference.
+
+                    ===========================================================
+                                   HOW TO CREATE IMPLICIT DEPENDENCY
+                    ===========================================================
+
+                    resource "azurerm_storage_account" "STGA" {
+                      name                     = "sumitstg07"
+                      resource_group_name      = azurerm_resource_group.RGA.name
+                      location                 = azurerm_resource_group.RGA.location
+                      account_tier             = "Standard"
+                      account_replication_type = "LRS"
+                    }
+
+                    ===========================================================
+                                   IMPORTANT LINE
+                    ===========================================================
+
+                    resource_group_name =
+                    azurerm_resource_group.RGA.name
+
+                    Terraform sees:
+                    STGA is using value from RGA
+
+                    So Terraform automatically says:
+                    ✔ First create RGA
+                    ✔ Then create STGA
+
+                    ===========================================================
+                                   FLOW
+                    ===========================================================
+
+                                   RGA
+                                    ↓
+                                   STGA
+
+                    ===========================================================
+                                   INTERVIEW TYPE POINTS
+                    ===========================================================
+
+                    ✔ Automatic dependency detection
+                    ✔ Uses resource references
+                    ✔ No depends_on needed
+                    ✔ Cleaner and professional method
+                    ✔ Terraform builds dependency graph automatically
+                    ✔ Recommended in real projects
+                    ✔ Better readability
+                    ✔ Less manual work
+                    ✔ Helps Terraform manage execution order
+                    ✔ Reduces chances of deployment failure
+
+                    ===========================================================
+                                   USED IN WHICH SCENARIO ?
+                    ===========================================================
+
+                    ✔ Resource Group → Storage Account
+                    ✔ VNET → Subnet
+                    ✔ VM → NIC
+                    ✔ NSG → Subnet Association
+                    ✔ Any resource using another resource value
+
+                    ===========================================================
+                                   ADVANTAGES
+                    ===========================================================
+
+                    ✔ Automatic handling
+                    ✔ Cleaner code
+                    ✔ Easier maintenance
+                    ✔ Less human error
+                    ✔ Better dependency tracking
+
+                    ===========================================================
+                                   LIMITATIONS
+                    ===========================================================
+
+                    ✖ Works only with direct references
+                    ✖ Cannot detect hardcoded string relation
+                    ✖ Hidden logical dependency may not be detected
+
+                    ===========================================================
+                                   2️⃣ EXPLICIT DEPENDENCY
+                    ===========================================================
+
+                    📌 Meaning:
+                    You manually tell Terraform which resource should
+                    wait for another resource.
+
+                    Used with:
+                    depends_on
+
+                    ===========================================================
+                                   HOW TO CREATE EXPLICIT DEPENDENCY
+                    ===========================================================
+
+                    resource "azurerm_storage_account" "STGA" {
+                      name                     = "sumitstg07"
+                      resource_group_name      = "sumitrg"
+                      location                 = "eastus"
+                      account_tier             = "Standard"
+                      account_replication_type = "LRS"
+
+                      depends_on = [
+                        azurerm_resource_group.RGA
+                      ]
+                    }
+
+                    ===========================================================
+                                   IMPORTANT PART
+                    ===========================================================
+
+                    depends_on = [
+                      azurerm_resource_group.RGA
+                    ]
+
+                    Terraform directly instructed:
+                    ✔ First create RGA
+                    ✔ Then create STGA
+
+                    ===========================================================
+                                   FLOW
+                    ===========================================================
+
+                               depends_on
+                                    ↓
+                                   RGA
+                                    ↓
+                                   STGA
+
+                    ===========================================================
+                                   INTERVIEW TYPE POINTS
+                    ===========================================================
+
+                    ✔ Manual dependency declaration
+                    ✔ Uses depends_on
+                    ✔ Used when no direct reference exists
+                    ✔ Gives full execution control
+                    ✔ Useful in hidden dependencies
+                    ✔ Terraform waits for dependency completion
+                    ✔ Used in advanced deployment scenarios
+                    ✔ Can be applied on modules/resources
+                    ✔ Prevents timing issues
+                    ✔ Mostly used only when necessary
+
+                    ===========================================================
+                                   USED IN WHICH SCENARIO ?
+                    ===========================================================
+
+                    ✔ Hardcoded values
+                    ✔ Hidden backend dependency
+                    ✔ Role assignment dependency
+                    ✔ Script/provisioner dependency
+                    ✔ Module dependency
+                    ✔ DNS propagation wait scenarios
+
+                    ===========================================================
+                                   ADVANTAGES
+                    ===========================================================
+
+                    ✔ Full manual control
+                    ✔ Handles hidden dependencies
+                    ✔ Prevents resource timing issues
+                    ✔ Useful for complex infrastructure
+
+                    ===========================================================
+                                   LIMITATIONS
+                    ===========================================================
+
+                    ✖ More manual work
+                    ✖ Can make code lengthy
+                    ✖ Overuse slows deployment
+                    ✖ Unnecessary dependency chain possible
+                    ✖ Less clean than implicit dependency
+
+                    ===========================================================
+                                   IMPORTANT DIFFERENCE
+                    ===========================================================
+
+                    ✔ Implicit Dependency
+                    → Automatic
+                    → Uses resource reference
+
+                    ✔ Explicit Dependency
+                    → Manual
+                    → Uses depends_on
+
+                    ===========================================================
+                                   SHORT INTERVIEW ANSWER
+                    ===========================================================
+
+                    Implicit dependency is automatically created through
+                    resource references, while explicit dependency is
+                    manually defined using depends_on.
+                    ===========================================================
