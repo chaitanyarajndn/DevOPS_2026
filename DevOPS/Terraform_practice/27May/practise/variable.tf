@@ -1,0 +1,2 @@
+variable "x" {}
+variable "y" {}
