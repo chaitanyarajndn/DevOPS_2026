@@ -1,0 +1,561 @@
+					============================================================
+					# AZURE LANDING ZONE LEARNING ROADMAP 🚀
+					============================================================
+
+					# PHASE 1 : BASIC AZURE LANDING ZONE ☁️
+
+					GOAL:
+					Understand Azure core services + basic enterprise cloud architecture.
+
+					---
+
+					1. AZURE CORE BASICS
+
+					---
+
+					Learn:
+
+					* Region
+					* Availability Zone
+					* Resource Group
+					* Subscription
+					* Management Group
+					* ARM (Azure Resource Manager)
+					* Tags
+					* Resource Hierarchy
+
+					Practice:
+
+					* Create Resource Groups
+					* Create multiple resources
+					* Understand hierarchy
+
+					Terraform Practice:
+
+					* variables
+					* for_each
+					* maps
+					* outputs
+
+					STATUS FOR YOU:
+					✅ Mostly Completed
+
+					---
+
+					2. TERRAFORM FUNDAMENTALS
+
+					---
+
+					Learn:
+
+					* provider
+					* resource block
+					* variable
+					* tfvars
+					* output
+					* locals
+					* depends_on
+					* lifecycle
+					* data source
+
+					Then Learn:
+
+					* modules
+					* remote backend
+					* state file
+					* state locking
+
+					Practice:
+
+					* RG creation using for_each
+					* Storage Account creation
+					* VNet/Subnet creation
+					* Multi-resource deployment
+
+					---
+
+					3. IAM / ENTRA ID / RBAC 🔐
+
+					---
+
+					Learn:
+
+					* Entra ID basics
+					* Users
+					* Groups
+					* RBAC
+					* Built-in roles
+					* Custom roles
+					* Service Principal
+					* Managed Identity
+					* App Registration
+
+					Important Concepts:
+
+					* Least privilege access
+					* Scope inheritance
+					* Subscription level RBAC
+					* Resource group level RBAC
+
+					Practice:
+
+					* Assign Reader role
+					* Assign Contributor role
+					* Create Service Principal
+
+					---
+
+					4. NETWORKING (MOST IMPORTANT) 🌐
+
+					---
+
+					Landing Zone Heart = Networking
+
+					Basic Networking:
+
+					* VNet
+					* Subnet
+					* NSG
+					* ASG
+					* Public IP
+					* NIC
+					* DNS basics
+
+					Intermediate Networking:
+
+					* Route Table (UDR)
+					* VNet Peering
+					* Hub & Spoke
+					* VPN Gateway
+					* ExpressRoute basics
+
+					Advanced Networking:
+
+					* Private Endpoint
+					* Private DNS
+					* NAT Gateway
+					* Azure Firewall
+					* Bastion
+
+					Practice Project:
+
+					Hub VNet
+					↓
+					2 Spoke VNets
+					↓
+					Subnet segregation
+					↓
+					NSG attached
+					↓
+					Peering configured
+
+					---
+
+					5. GOVERNANCE & COMPLIANCE 📋
+
+					---
+
+					Learn:
+
+					* Azure Policy
+					* Built-in Policy
+					* Custom Policy
+					* Initiatives
+					* Resource Locks
+					* Naming standards
+					* Tagging strategy
+
+					Practice:
+
+					* Restrict regions
+					* Restrict VM size
+					* Force tagging policy
+
+					---
+
+					6. SECURITY FOUNDATION 🛡️
+
+					---
+
+					Learn:
+
+					* NSG
+					* ASG
+					* Azure Firewall
+					* WAF
+					* Bastion
+					* DDoS Protection
+					* Key Vault
+					* Defender for Cloud
+					* Private Endpoint
+					* Sentinel basics
+
+					Practice:
+
+					* Secure VM access
+					* Private Storage Account
+					* WAF enabled App Gateway
+
+					---
+
+					7. COMPUTE SERVICES 🖥️
+
+					---
+
+					Learn:
+
+					* Virtual Machine
+					* VMSS
+					* Availability Set
+					* Availability Zone
+					* App Service
+					* AKS basics
+					* Container basics
+
+					Practice:
+
+					* Deploy VM
+					* Autoscaling
+					* HA deployment
+
+					---
+
+					8. STORAGE & DATABASE 💾
+
+					---
+
+					Storage:
+
+					* Storage Account
+					* Blob Storage
+					* File Share
+					* Queue
+					* Table Storage
+
+					Database:
+
+					* Azure SQL
+					* PostgreSQL
+					* CosmosDB basics
+
+					Important:
+
+					* Private access
+					* Backup
+					* Replication
+
+					---
+
+					9. MONITORING & LOGGING 📊
+
+					---
+
+					Learn:
+
+					* Azure Monitor
+					* Log Analytics Workspace
+					* Application Insights
+					* Alerts
+					* Metrics
+					* Diagnostic Settings
+
+					Practice:
+
+					* VM monitoring
+					* CPU alerts
+					* Centralized logs
+
+					---
+
+					10. BACKUP & DISASTER RECOVERY 🔄
+
+					---
+
+					Learn:
+
+					* Recovery Services Vault
+					* VM Backup
+					* Storage Backup
+					* Azure Site Recovery
+
+					Important:
+
+					* RTO
+					* RPO
+
+					Practice:
+
+					* VM backup restore
+					* Cross-region DR
+
+					---
+
+					11. HIGH AVAILABILITY ⚡
+
+					---
+
+					Learn:
+
+					* Availability Set
+					* Availability Zone
+					* Load Balancer
+					* Application Gateway
+					* Front Door
+					* Traffic Manager
+
+					Goal:
+					No single point of failure.
+
+					---
+
+					12. COST OPTIMIZATION 💰
+
+					---
+
+					Learn:
+
+					* Azure Pricing basics
+					* Budgets
+					* Cost Analysis
+					* Reserved Instances
+					* Auto Scaling
+					* Right Sizing
+
+					Practice:
+
+					* Create budgets
+					* Cost alerts
+
+					---
+
+					13. DOCUMENTATION 📘
+
+					---
+
+					Learn:
+
+					* HLD
+					* LLD
+					* Network Diagram
+					* Firewall Flow
+					* NSG Flow
+					* Runbook
+					* SOP
+					* Operational Readiness
+
+					============================================================
+					BASIC LANDING ZONE COMPLETION ✅
+					===============================
+
+					You should now understand:
+
+					* Identity
+					* Networking
+					* Governance
+					* Security
+					* Monitoring
+					* Backup
+					* High Availability
+					* Cost Management
+
+					# PHASE 2 : ADVANCED AZURE LANDING ZONE 🚀🔥
+
+					GOAL:
+					Enterprise-grade Landing Zone Architecture + Production Design
+
+					---
+
+					1. MANAGEMENT GROUP HIERARCHY
+
+					---
+
+					Learn:
+
+					* Tenant Root Group
+					* Platform MG
+					* Landing Zone MG
+					* Sandbox MG
+					* Production separation
+
+					Practice:
+
+					* Multi-subscription hierarchy
+
+					---
+
+					2. ENTERPRISE HUB & SPOKE DESIGN 🌐
+
+					---
+
+					Learn:
+
+					* Centralized networking
+					* Shared services
+					* Inspection architecture
+					* Transit routing
+					* DNS architecture
+
+					Practice:
+
+					Hub:
+
+					* Firewall
+					* Bastion
+					* VPN
+					* DNS
+
+					Spokes:
+
+					* App workloads
+					* DB workloads
+					* AKS workloads
+
+					---
+
+					3. ADVANCED SECURITY ARCHITECTURE 🔐
+
+					---
+
+					Learn:
+
+					* Zero Trust
+					* Micro Segmentation
+					* Defender Suite
+					* Sentinel SIEM
+					* Conditional Access
+					* PIM
+					* JIT VM Access
+
+					---
+
+					4. ADVANCED GOVERNANCE 📋
+
+					---
+
+					Learn:
+
+					* Policy as Code
+					* Blueprint concepts
+					* CAF (Cloud Adoption Framework)
+					* Enterprise tagging strategy
+					* Compliance automation
+
+					---
+
+					5. LANDING ZONE AUTOMATION ⚙️
+
+					---
+
+					Learn:
+
+					* Terraform Modules
+					* Reusable architecture
+					* CI/CD pipelines
+					* GitHub Actions
+					* Azure DevOps
+					* Remote state management
+
+					Practice:
+
+					* Full Landing Zone deployment via Terraform
+
+					---
+
+					6. ADVANCED NETWORKING 🌍
+
+					---
+
+					Learn:
+
+					* Forced tunneling
+					* Firewall policies
+					* BGP concepts
+					* Hybrid connectivity
+					* ExpressRoute design
+					* DNS forwarding
+					* Cross-region peering
+
+					---
+
+					7. AKS ENTERPRISE ARCHITECTURE ☸️
+
+					---
+
+					Learn:
+
+					* AKS networking
+					* Ingress controller
+					* Private AKS
+					* Node pools
+					* Scaling
+					* Monitoring
+					* Security
+
+					---
+
+					8. MULTI-REGION ARCHITECTURE 🌎
+
+					---
+
+					Learn:
+
+					* Active-Active
+					* Active-Passive
+					* Geo redundancy
+					* Cross-region DR
+
+					Practice:
+
+					* Multi-region deployment
+
+					---
+
+					9. OBSERVABILITY & OPERATIONS 📈
+
+					---
+
+					Learn:
+
+					* Centralized logging
+					* SIEM integration
+					* Alerting strategy
+					* Incident response
+					* Operational excellence
+
+					---
+
+					10. PRODUCTION BEST PRACTICES 🏢
+
+					---
+
+					Learn:
+
+					* Enterprise naming standards
+					* Environment segregation
+					* Dev/Test/Prod isolation
+					* Change management
+					* DR drills
+					* Security audits
+
+					============================================================
+					FINAL TARGET 🎯
+					===============
+
+					You should be able to:
+
+					✔ Design enterprise Landing Zone
+					✔ Deploy infra using Terraform
+					✔ Implement governance
+					✔ Secure workloads
+					✔ Build Hub-Spoke architecture
+					✔ Configure monitoring & DR
+					✔ Optimize cloud cost
+					✔ Handle production-ready Azure environments
+
+					============================================================
+					GOLDEN RULE 💡
+					==============
+
+					Networking + IAM + Governance
+					=
+					Strong Azure Landing Zone Foundation

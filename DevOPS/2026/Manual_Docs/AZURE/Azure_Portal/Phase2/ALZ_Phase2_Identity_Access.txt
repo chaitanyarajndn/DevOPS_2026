@@ -1,0 +1,387 @@
+						=========================================
+						AZURE HIERARCHY - PHASE 2 (IDENTITY + ACCESS)
+						=========================================
+
+						Goal:
+						Understand what to create first in Azure Portal, why it is needed, and how everything connects together.
+
+						Azure Hierarchy
+						---------------
+						Microsoft Account
+							  ↓
+						Tenant (Microsoft Entra ID)
+							  ↓
+						Users
+							  ↓
+						Groups
+							  ↓
+						Subscriptions
+							  ↓
+						RBAC (IAM Roles)
+							  ↓
+						Resource Groups
+							  ↓
+						Resources
+
+						==================================================
+						REAL WORLD SCENARIO
+						==================================================
+
+						Company Name: ABC Technologies
+
+						Environments:
+						- Dev
+						- QA
+						- Prod
+
+						==================================================
+						STEP 1 : CREATE TENANT (FIRST THING)
+						==================================================
+
+						Why?
+						- Tenant is the foundation of Azure.
+						- Users live inside Tenant.
+						- Groups live inside Tenant.
+						- Applications live inside Tenant.
+						- Permissions live inside Tenant.
+						- Without Tenant, nothing can be managed.
+
+						Think:
+
+						Tenant = Company Building
+
+						Inside Building:
+						- Employees
+						- Teams
+						- Security
+						- Applications
+
+						Portal:
+						Microsoft Entra ID
+
+						==================================================
+						STEP 2 : CREATE USERS
+						==================================================
+
+						Portal:
+						Microsoft Entra ID
+						  → Users
+						  → New User
+
+						Examples:
+						- chetan@abc.com
+						- dev1@abc.com
+						- qa1@abc.com
+						- admin@abc.com
+
+						Why?
+						- Real people need Azure login access.
+						- Every person should have their own account.
+						- User accounts are used for authentication.
+
+						Simple Meaning:
+						No User = No Login
+
+						==================================================
+						STEP 3 : CREATE GROUPS
+						==================================================
+
+						Portal:
+						Microsoft Entra ID
+						  → Groups
+						  → New Group
+
+						Examples:
+						- DEV-Team
+						- QA-Team
+						- PROD-Team
+
+						Why?
+						- Easier permission management.
+						- Avoid assigning permissions to every user individually.
+						- Permissions are assigned to Groups, not Users.
+
+						Bad Practice:
+						User1 → Permission
+						User2 → Permission
+						User3 → Permission
+						User4 → Permission
+
+						Good Practice:
+						DEV-Team
+						 ├─ User1
+						 ├─ User2
+						 ├─ User3
+						 └─ User4
+
+						Assign permission once to DEV-Team.
+
+						==================================================
+						STEP 4 : CREATE SUBSCRIPTIONS
+						==================================================
+
+						Examples:
+						- DEV Subscription
+						- QA Subscription
+						- PROD Subscription
+
+						Structure:
+
+						Tenant
+						│
+						├─ DEV Subscription
+						├─ QA Subscription
+						└─ PROD Subscription
+
+						Why?
+						- Separate billing.
+						- Separate resources.
+						- Separate permissions.
+						- Better security.
+						- Better environment isolation.
+
+						Example:
+
+						Developer deletes VM in DEV.
+
+						Result:
+						PROD remains safe.
+
+						==================================================
+						STEP 5 : ASSIGN RBAC ROLES (IAM)
+						==================================================
+
+						Portal:
+						Subscription
+						  → Access Control (IAM)
+						  → Add Role Assignment
+
+						Common Roles:
+						- Owner
+						- Contributor
+						- Reader
+
+						Role Details:
+
+						Owner
+						- Full Control
+						- Can create resources
+						- Can delete resources
+						- Can assign permissions
+
+						Contributor
+						- Can create resources
+						- Can modify resources
+						- Can delete resources
+						- Cannot assign permissions
+
+						Reader
+						- View only
+						- Cannot modify anything
+
+						Example:
+
+						DEV-Team
+						   ↓
+						Contributor
+						   ↓
+						DEV Subscription
+
+						Meaning:
+						- Create VM
+						- Create VNet
+						- Create Storage
+						- Manage Resources
+
+						QA-Team
+						   ↓
+						Contributor
+						   ↓
+						QA Subscription
+
+						PROD-Team
+						   ↓
+						Reader
+						   ↓
+						PROD Subscription
+
+						Reason:
+						Production should be protected.
+
+						==================================================
+						STEP 6 : CREATE RESOURCE GROUPS
+						==================================================
+
+						DEV Subscription:
+
+						RG-App-Dev
+						RG-Network-Dev
+
+						QA Subscription:
+
+						RG-App-QA
+						RG-Network-QA
+
+						PROD Subscription:
+
+						RG-App-Prod
+						RG-Network-Prod
+
+						Why?
+						- Resource organization.
+						- Logical grouping.
+						- Easier management.
+						- Easier deletion.
+						- Easier permission assignment.
+
+						Think:
+
+						Resource Group = Folder
+
+						Example:
+
+						RG-App-Dev
+						│
+						├─ VM
+						├─ Storage Account
+						├─ App Service
+						└─ Key Vault
+
+						Everything related to the application stays together.
+
+						==================================================
+						STEP 7 : DEPLOY RESOURCES
+						==================================================
+
+						Now create:
+
+						- Virtual Machines
+						- VNets
+						- Subnets
+						- Storage Accounts
+						- Load Balancers
+						- Key Vaults
+						- App Services
+
+						This is where actual workloads run.
+
+						==================================================
+						FULL PRACTICAL FLOW
+						==================================================
+
+						1. Create Tenant
+								↓
+						2. Create Users
+								↓
+						3. Create Groups
+								↓
+						4. Create Subscriptions
+								↓
+						5. Assign RBAC Roles (IAM)
+								↓
+						6. Create Resource Groups
+								↓
+						7. Deploy Resources
+
+						==================================================
+						MEMORY TRICK
+						==================================================
+
+						WHO?
+						 ↓
+						Users
+
+						TEAM?
+						 ↓
+						Groups
+
+						WHERE?
+						 ↓
+						Subscription
+
+						WHAT ACCESS?
+						 ↓
+						RBAC / IAM
+
+						WHICH FOLDER?
+						 ↓
+						Resource Group
+
+						WHAT TO BUILD?
+						 ↓
+						Resources
+
+						==================================================
+						PORTAL PRACTICE CHECKLIST
+						==================================================
+
+						Explore:
+						Microsoft Entra ID
+						├─ Users
+						├─ Groups
+						└─ Roles
+
+						Then Explore:
+						Subscriptions
+						└─ Access Control (IAM)
+
+						Then Observe:
+						User
+						 ↓
+						Group
+						 ↓
+						Role
+						 ↓
+						Subscription
+						 ↓
+						Resource Group
+						 ↓
+						Resource
+
+						==================================================
+						FINAL UNDERSTANDING
+						==================================================
+
+						Tenant
+						 └─ Holds Identity
+
+						Users
+						 └─ Login Accounts
+
+						Groups
+						 └─ Team Management
+
+						Subscriptions
+						 └─ Billing + Environment Separation
+
+						RBAC / IAM
+						 └─ Permissions
+
+						Resource Groups
+						 └─ Resource Organization
+
+						Resources
+						 └─ Actual Azure Services
+
+						FINAL FLOW:
+
+						Tenant
+						 ↓
+						Users
+						 ↓
+						Groups
+						 ↓
+						Subscriptions
+						 ↓
+						RBAC
+						 ↓
+						Resource Groups
+						 ↓
+						Resources
+
+						Once this is clear, next topics become much easier:
+						- Management Groups
+						- Azure Policy
+						- Governance
+						- Azure Landing Zone
+						- Enterprise Scale Architecture
