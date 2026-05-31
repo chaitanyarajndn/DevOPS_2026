@@ -1,0 +1,495 @@
+						==================== AZURE VIRTUAL NETWORK (VNET) ====================
+
+						⚙️ Core Working
+
+						Azure networking is built on a layered communication model where traffic flows through network identities, security controls, routing decisions, and destination workloads.
+
+						Communication is not established directly between virtual machines. Multiple networking components work together before a packet reaches its destination.
+
+						------------------------------------------------------------
+
+						Core Networking Components
+
+						Virtual Machine (VM)
+						A Virtual Machine is a server running inside Azure.
+
+						Examples:
+						• Frontend Server
+						• Backend Server
+						• Database Server
+
+						The VM performs the actual workload such as serving web pages, processing business logic, or storing data.
+
+						However, a VM cannot communicate by itself.
+
+						A network identity is required.
+
+						------------------------------------------------------------
+
+						Network Interface Card (NIC)
+						A NIC provides network connectivity to a Virtual Machine.
+
+						It acts as the networking layer between the VM and the Azure network.
+
+						Responsibilities:
+						• Receives IP Configuration
+						• Sends Traffic
+						• Receives Traffic
+						• Connects VM to a Subnet
+						• Associates Public IP Addresses
+						• Enforces Network-Level Policies
+
+						A NIC can be associated with:
+
+						• Private IP Address (Required)
+						• Public IP Address (Optional)
+
+						Example:
+
+						Frontend VM
+							 │
+							 ▼
+						NIC
+						 ├─ Private IP : 10.0.1.4
+						 └─ Public IP  : 20.55.100.10
+
+						Without a NIC:
+						❌ No network communication
+
+						A VM may exist as a compute resource, but it cannot participate in network communication.
+
+						------------------------------------------------------------
+
+						Private IP Address
+						Every NIC receives a private IP address from its assigned subnet.
+
+						Examples:
+						• Frontend VM = 10.0.1.4
+						• Backend VM = 10.0.2.4
+						• Database VM = 10.0.3.4
+
+						Azure uses these addresses to identify workloads and deliver traffic to the correct destination.
+
+						Private IP addresses enable communication within the Azure network without exposing workloads directly to the internet.
+
+						------------------------------------------------------------
+
+						Public IP Address
+						A Public IP Address enables communication between Azure resources and external networks such as the Internet.
+
+						Example:
+
+						Internet User
+							  │
+							  ▼
+						20.55.100.10
+							  │
+							  ▼
+						NIC
+							  │
+							  ▼
+						Frontend VM
+
+						Public IPs are typically assigned to internet-facing workloads.
+
+						In enterprise environments, Public IPs are usually attached to:
+
+						• Application Gateway
+						• Load Balancer
+						• Azure Firewall
+						• Bastion Host
+
+						rather than directly to virtual machines.
+
+						------------------------------------------------------------
+
+						Virtual Network (VNet)
+						A VNet provides the foundational communication boundary for Azure workloads.
+
+						It owns the overall address space and acts as the parent network for connected resources.
+
+						Responsibilities:
+						• Network Isolation
+						• Address Space Management
+						• Resource Connectivity
+						• Routing Foundation
+
+						Network Isolation
+
+						Organizations rarely deploy all workloads into a single unrestricted network.
+
+						Typical environments include:
+
+						• Development
+						• Testing
+						• Production
+						• Lab
+
+						Without isolation:
+
+						❌ Unnecessary communication
+						❌ Increased attack surface
+						❌ Security risks
+						❌ Difficult governance
+
+						Example:
+
+						DEV VNet
+						10.10.0.0/16
+
+						TEST VNet
+						10.20.0.0/16
+
+						PROD VNet
+						10.30.0.0/16
+
+						LAB VNet
+						10.40.0.0/16
+
+						By default:
+
+						DEV VNet  ─────X─────> PROD VNet
+
+						TEST VNet ─────X─────> PROD VNet
+
+						LAB VNet  ─────X─────> PROD VNet
+
+						Communication is not allowed unless connectivity is explicitly configured.
+
+						This isolation enables organizations to enforce security, governance, and environment separation.
+
+						All communication between workloads ultimately occurs within or through a VNet.
+
+						------------------------------------------------------------
+
+						Subnet
+						A subnet is a logical network segment created inside a VNet.
+
+						Instead of placing all workloads into a single network segment, organizations separate workloads into dedicated subnets.
+
+						Examples:
+						• Frontend Subnet
+						• Backend Subnet
+						• Database Subnet
+
+						Benefits:
+						• Improved Security
+						• Better Segmentation
+						• Easier Traffic Control
+						• Simplified Management
+
+						Subnets create structure within the overall network architecture.
+
+						------------------------------------------------------------
+
+						Network Security Group (NSG)
+						An NSG acts as a traffic filtering layer.
+
+						It evaluates network traffic using rule-based access controls.
+
+						Examples:
+
+						Frontend → Backend      ✔ Allow
+
+						Backend → Database      ✔ Allow
+
+						Frontend → Database     ❌ Deny
+
+						Even when a route exists, communication is not allowed unless NSG rules permit the traffic.
+
+						NSGs provide the first layer of network security within a VNet.
+
+						------------------------------------------------------------
+
+						Azure Routing
+						Routing determines how traffic reaches its destination.
+
+						When a packet is generated, Azure evaluates the destination IP address and determines the appropriate path.
+
+						Example:
+
+						Destination IP:
+						10.0.2.4
+
+						Azure identifies:
+
+						10.0.2.4 belongs to Backend Subnet
+
+						Traffic is forwarded accordingly.
+
+						Routing controls packet movement across the network.
+
+						------------------------------------------------------------
+
+						Reference Architecture
+
+						VNet
+						10.0.0.0/16
+
+						├─ Frontend Subnet
+						│  10.0.1.0/24
+						│
+						│  NSG
+						│
+						│  Frontend VM
+						│  10.0.1.4
+						│
+						├─ Backend Subnet
+						│  10.0.2.0/24
+						│
+						│  NSG
+						│
+						│  Backend VM
+						│  10.0.2.4
+						│
+						└─ Database Subnet
+						   10.0.3.0/24
+
+						   NSG
+
+						   Database VM
+						   10.0.3.4
+
+						------------------------------------------------------------
+
+						Relationship Between Components
+
+						VNet
+						 │
+						 ├─ Subnet
+						 │     │
+						 │     ├─ NSG
+						 │     │
+						 │     └─ NIC
+						 │            │
+						 │            ├─ Private IP
+						 │            ├─ Public IP (Optional)
+						 │            └─ VM
+						 │
+						 ├─ Subnet
+						 │     │
+						 │     ├─ NSG
+						 │     │
+						 │     └─ NIC
+						 │            │
+						 │            ├─ Private IP
+						 │            ├─ Public IP (Optional)
+						 │            └─ VM
+						 │
+						 └─ Subnet
+							   │
+							   ├─ NSG
+							   │
+							   └─ NIC
+									  │
+									  ├─ Private IP
+									  ├─ Public IP (Optional)
+									  └─ VM
+
+						------------------------------------------------------------
+
+						Application Traffic Flow
+
+						User
+						 │
+						 ▼
+						Frontend VM
+						10.0.1.4
+
+						The Frontend VM needs application data from the Backend VM.
+
+						Destination:
+						10.0.2.4
+
+						Traffic Flow:
+
+						Frontend VM
+							  │
+							  ▼
+						Frontend NIC
+							  │
+							  ▼
+						Frontend NSG Evaluation
+							  │
+							  ▼
+						Frontend Subnet
+							  │
+							  ▼
+						Azure Routing Layer
+							  │
+							  ▼
+						Backend Subnet
+							  │
+							  ▼
+						Backend NSG Evaluation
+							  │
+							  ▼
+						Backend NIC
+							  │
+							  ▼
+						Backend VM
+						10.0.2.4
+
+						------------------------------------------------------------
+
+						Database Communication Flow
+
+						The Backend VM now requires data from the Database VM.
+
+						Destination:
+						10.0.3.4
+
+						Traffic Flow:
+
+						Backend VM
+							  │
+							  ▼
+						Backend NIC
+							  │
+							  ▼
+						Backend NSG Evaluation
+							  │
+							  ▼
+						Backend Subnet
+							  │
+							  ▼
+						Azure Routing Layer
+							  │
+							  ▼
+						Database Subnet
+							  │
+							  ▼
+						Database NSG Evaluation
+							  │
+							  ▼
+						Database NIC
+							  │
+							  ▼
+						Database VM
+						10.0.3.4
+
+						------------------------------------------------------------
+
+						Traffic Decision Logic
+
+						Routing Determines:
+						WHERE traffic should go.
+
+						NSG Determines:
+						WHETHER traffic is allowed.
+
+						Examples:
+
+						Routing Exists + NSG Allow
+						= Traffic Delivered
+
+						Routing Exists + NSG Deny
+						= Traffic Blocked
+
+						No Route Available
+						= Traffic Dropped
+
+						------------------------------------------------------------
+
+						🧠 Engineering Thought Process
+
+						Junior engineers focus on workloads.
+
+						Architects focus on communication patterns.
+
+						Communication Matrix
+
+						Frontend VM
+							  │
+							  ▼
+						Backend VM
+
+						Backend VM
+							  │
+							  ▼
+						Database VM
+
+						Frontend VM
+							  │
+							  X
+							  ▼
+						Database VM
+
+						This communication matrix drives:
+
+						• VNet Design
+						• Address Planning
+						• Network Isolation Strategy
+						• Subnet Design
+						• NSG Strategy
+						• Firewall Placement
+						• Route Design
+
+						Before deploying workloads, architects first determine:
+
+						• Who needs to communicate?
+						• Who should never communicate?
+						• Where should traffic be inspected?
+						• Where should security boundaries exist?
+						• What level of isolation is required?
+						• How will the network scale in the future?
+
+						------------------------------------------------------------
+
+						Most Important Understanding
+
+						Virtual machines never communicate directly.
+
+						Communication always follows:
+
+						VM
+						 ↓
+						NIC
+						 ↓
+						NSG Evaluation
+						 ↓
+						Subnet
+						 ↓
+						Routing
+						 ↓
+						Subnet
+						 ↓
+						NSG Evaluation
+						 ↓
+						NIC
+						 ↓
+						VM
+
+						This communication model forms the foundation of Azure Networking.
+
+						Every advanced networking service such as:
+
+						• VNet Peering
+						• VPN Gateway
+						• ExpressRoute
+						• Azure Firewall
+						• Hub-Spoke Architecture
+						• Private Endpoint
+
+						ultimately builds upon this same communication flow.
+						
+						
+						Networking = Connectivity + Security + Isolation
+
+						VNet provides the boundary.
+						Subnets provide segmentation.
+						NSGs provide access control.
+						Routing provides traffic movement.
+						NICs provide workload identity.
+												
+												
+												
+						
+						
+						
+						
+						
+						
+						
+						
+						

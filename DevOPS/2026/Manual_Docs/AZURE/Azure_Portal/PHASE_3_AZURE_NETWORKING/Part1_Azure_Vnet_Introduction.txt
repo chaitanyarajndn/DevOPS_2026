@@ -1,0 +1,206 @@
+
+
+			==================== AZURE VIRTUAL NETWORK (VNET) ====================
+
+			📖 Perspective / Introduction
+
+			Before applications, virtual machines, databases, containers, or cloud services can communicate securely, a controlled communication boundary is required.
+
+			In traditional on-premises datacenters, network engineers create physical networks using switches, routers, cables,hub,  VLANs, and firewalls to establish communication boundaries between systems.
+
+			When organizations move to the cloud, those physical networking components no longer exist under their control. However, the need for network isolation, segmentation, routing, and security remains exactly the same.
+
+			Azure Virtual Network (VNet) provides this foundational networking layer inside Azure.
+
+			Think of a VNet as the private network boundary where cloud resources live, communicate, and exchange traffic securely.
+
+			Without VNets:
+
+			• Every workload would exist in a flat environment
+			• Network isolation would be impossible
+			• IP address management would become chaotic
+			• Security controls would be difficult to enforce
+			• Enterprise network segmentation could not be achieved
+
+			A VNet creates a dedicated address space where organizations can design their cloud network architecture just like they design networks inside their physical datacenters.
+
+			------------------------------------------------------------
+
+			Real World Thinking
+
+			Imagine a company has:
+
+			• Web Servers
+			• Application Servers
+			• Databases
+			• Domain Controllers
+			• Monitoring Tools
+
+			Would they place everything in a single unrestricted network?
+
+			No.
+
+			Different workloads require different security boundaries.
+
+			For example:
+
+			Internet
+				│
+				▼
+			Web Tier
+				│
+				▼
+			Application Tier
+				│
+				▼
+			Database Tier
+
+			Each layer requires controlled communication.
+
+			Azure VNet provides the foundation upon which these boundaries are built.
+
+			------------------------------------------------------------
+
+			Cloud Transformation Perspective
+
+			On-Premises World
+
+			Physical Switches
+			Physical Routers
+			Physical VLANs
+			Physical Firewalls
+
+						↓
+
+			Azure Cloud World
+
+			Virtual Network (VNet)
+			Subnets
+			Route Tables
+			NSGs
+			Azure Firewall
+
+			VNet becomes the virtual equivalent of the enterprise network foundation.
+
+			------------------------------------------------------------
+
+			Enterprise Perspective
+
+			Organizations do not deploy resources randomly.
+
+			They first design:
+
+			• IP Address Strategy
+			• Network Segmentation
+			• Security Boundaries
+			• Connectivity Requirements
+			• Hybrid Connectivity
+			• Shared Services Connectivity
+
+			Only after the network foundation is established are workloads deployed.
+
+			For this reason, VNet is usually one of the first resources created in an Azure Landing Zone.
+
+			------------------------------------------------------------
+
+			Architect Perspective
+
+			When architects look at a VNet, they are not thinking:
+
+			"Where should I deploy a VM?"
+
+			Instead they think:
+
+			• How will applications communicate?
+			• How will environments be isolated?
+			• How will future growth be handled?
+			• How will on-premises connectivity work?
+			• How will security controls be enforced?
+			• How will Hub-Spoke architecture be implemented?
+			• How will IP address conflicts be avoided?
+
+			For architects, a VNet is not merely a network.
+
+			It is the foundation upon which the entire cloud platform is built.
+
+			------------------------------------------------------------
+
+			Key Understanding
+
+			A Virtual Network is not created because Azure needs it.
+
+			A Virtual Network is created because enterprises need a secure, manageable, and scalable communication boundary for their workloads.
+
+			Azure simply provides that capability through VNet.
+			
+			
+			
+			
+			Environment Isolation means separating DEV, TEST, and PROD workloads
+			so that unauthorized communication, security risks, and operational
+			impacts are contained within their own boundaries.
+			
+			
+			VNet
+			10.0.0.0/16
+
+			├─ Dev Subnet
+			│  10.0.1.0/24
+			│
+			├─ Test Subnet
+			│  10.0.2.0/24
+			│
+			└─ Prod Subnet
+			   10.0.3.0/24
+			
+			DEV  ─────X─────> PROD
+
+			TEST ─────X─────> PROD
+
+			Only Approved Traffic Allowed
+			
+			
+			
+			Internet
+			│
+			▼
+		Production VNet
+			│
+			├─ Customer Applications
+			├─ Payment Systems
+			└─ Databases
+
+		Development VNet
+			│
+			├─ Developer Testing
+			└─ QA Workloads
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			

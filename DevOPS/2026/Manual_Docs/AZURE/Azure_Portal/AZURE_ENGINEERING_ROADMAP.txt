@@ -1,0 +1,218 @@
+						==================== AZURE ENGINEERING ROADMAP ====================
+
+						PHASE 0 → Cloud Fundamentals
+						----------------------------------------------------
+						Why Cloud?
+						CAPEX vs OPEX
+						IaaS
+						PaaS
+						SaaS
+						Public Cloud
+						Private Cloud
+						Hybrid Cloud
+						Shared Responsibility Model
+						Regions
+						Availability Zones
+
+						Goal:
+						Understand why cloud exists.
+
+						====================================================
+
+						PHASE 1 → Governance Foundation
+						----------------------------------------------------
+						Management Groups
+						Subscriptions
+						Resource Groups
+						Tags
+						Policies
+						RBAC Basics
+
+						Goal:
+						Understand control and governance.
+
+						====================================================
+
+						PHASE 2 → Identity & Hierarchy
+						----------------------------------------------------
+						Microsoft Entra ID
+						Users
+						Groups
+						Service Principals
+						Managed Identities
+						RBAC Deep Dive
+						Inheritance
+						Scope Hierarchy
+
+						Goal:
+						Understand who can do what.
+
+						====================================================
+
+						PHASE 3 → Networking Foundation
+						----------------------------------------------------
+						VNet
+						Subnet
+						NSG
+						ASG
+						Peering
+						Hub-Spoke
+						VPN
+						DNS
+						UDR
+						Private Endpoint
+						Service Endpoint
+
+						Goal:
+						Understand how things communicate.
+
+						====================================================
+
+						PHASE 4 → Compute Layer
+						----------------------------------------------------
+						Virtual Machines
+						VM Scale Sets
+						Availability Sets
+						Availability Zones
+						Azure Bastion
+						Managed Disks
+
+						Goal:
+						Run workloads.
+
+						====================================================
+
+						PHASE 5 → Storage Layer
+						----------------------------------------------------
+						Storage Accounts
+						Blob Storage
+						File Share
+						Queue
+						Table Storage
+						Redundancy Models
+						Replication
+
+						Goal:
+						Store data efficiently.
+
+						====================================================
+
+						PHASE 6 → Platform Services
+						----------------------------------------------------
+						App Service
+						Container Apps
+						AKS
+						Functions
+						Logic Apps
+
+						Goal:
+						Run applications without managing servers.
+
+						====================================================
+
+						PHASE 7 → Security Foundation
+						----------------------------------------------------
+						Defender for Cloud
+						Key Vault
+						NSG
+						Firewall
+						DDoS Protection
+						Conditional Access
+						PIM
+
+						Goal:
+						Protect workloads.
+
+						====================================================
+
+						PHASE 8 → Monitoring & Operations
+						----------------------------------------------------
+						Azure Monitor
+						Log Analytics
+						Application Insights
+						Alerts
+						Workbooks
+
+						Goal:
+						Observe and troubleshoot.
+
+						====================================================
+
+						PHASE 9 → Backup & Disaster Recovery
+						----------------------------------------------------
+						Recovery Services Vault
+						Backup
+						Site Recovery
+						RPO
+						RTO
+
+						Goal:
+						Recover from failures.
+
+						====================================================
+
+						PHASE 10 → Infrastructure as Code
+						----------------------------------------------------
+						ARM
+						Bicep
+						Terraform
+
+						Goal:
+						Automate deployments.
+
+						====================================================
+
+						PHASE 11 → Enterprise Connectivity
+						----------------------------------------------------
+						Hub-Spoke Deep Dive
+						ExpressRoute
+						VPN
+						Private DNS
+						Private Link
+
+						Goal:
+						Hybrid connectivity.
+
+						====================================================
+
+						PHASE 12 → Azure Landing Zone
+						----------------------------------------------------
+						Management Groups
+						Subscriptions
+						Identity
+						Networking
+						Security
+						Operations
+
+						Goal:
+						Build enterprise-ready Azure platform.
+
+						====================================================
+
+						PHASE 13 → Enterprise Architecture
+						----------------------------------------------------
+						CAF
+						Well-Architected Framework
+						Governance Design
+						Network Design
+						Identity Design
+
+						Goal:
+						Think like an Architect.
+
+						====================================================
+
+						PHASE 14 → Real Production Challenges
+						----------------------------------------------------
+						Cost Optimization
+						Security Incidents
+						Migration Strategy
+						Multi-Subscription Design
+						Multi-Region Design
+						DR Design
+						Network Segmentation
+
+						Goal:
+						Think like a Senior Engineer.
+
+						====================================================

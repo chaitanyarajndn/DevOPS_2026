@@ -1,0 +1,147 @@
+								PHASE 3 : AZURE NETWORKING 🌐
+
+								LEVEL 1 : FOUNDATION
+								├─ Virtual Network (VNet)
+								├─ Address Space
+								├─ Subnet
+								├─ IP Addressing
+								├─ Public IP
+								├─ Private IP
+								├─ DNS Basics
+								└─ NIC (Network Interface Card)
+
+								LEVEL 2 : SECURITY
+								├─ Network Security Group (NSG)
+								├─ Application Security Group (ASG)
+								├─ Service Tags
+								├─ Security Rules
+								├─ Flow Evaluation
+								└─ Effective Security Rules
+
+								LEVEL 3 : CONNECTIVITY
+								├─ VNet Peering
+								├─ Global VNet Peering
+								├─ VPN Gateway
+								├─ Site-to-Site VPN
+								├─ Point-to-Site VPN
+								├─ ExpressRoute
+								└─ Gateway Transit
+
+								LEVEL 4 : ADVANCED ROUTING
+								├─ Route Tables
+								├─ UDR (User Defined Routes)
+								├─ System Routes
+								├─ BGP Basics
+								├─ Forced Tunneling
+								└─ Next Hop Concepts
+
+								LEVEL 5 : LANDING ZONE NETWORKING
+								├─ Hub-Spoke Architecture
+								├─ Transit Network
+								├─ Shared Services VNet
+								├─ Connectivity Subscription
+								├─ Network Segmentation
+								├─ East-West Traffic
+								└─ North-South Traffic
+
+								LEVEL 6 : PRIVATE CONNECTIVITY
+								├─ Service Endpoint
+								├─ Private Endpoint
+								├─ Private Link
+								├─ Private DNS Zone
+								├─ DNS Resolution Flow
+								└─ Hybrid DNS
+
+								LEVEL 7 : LOAD BALANCING
+								├─ Azure Load Balancer
+								├─ Application Gateway
+								├─ Web Application Firewall (WAF)
+								├─ Front Door
+								├─ Traffic Manager
+								└─ Load Balancing Decision Matrix
+
+								LEVEL 8 : ENTERPRISE SECURITY
+								├─ Azure Firewall
+								├─ Firewall Policy
+								├─ DDoS Protection
+								├─ NAT Gateway
+								├─ Bastion
+								└─ Network Virtual Appliance (NVA)
+
+								LEVEL 9 : MONITORING & TROUBLESHOOTING
+								├─ Network Watcher
+								├─ NSG Flow Logs
+								├─ Connection Monitor
+								├─ Packet Capture
+								├─ IP Flow Verify
+								└─ Effective Routes
+								
+								
+								
+								STEP-1
+								VNet
+								 ↓
+								Subnet
+								 ↓
+								IP Addressing
+
+								STEP-2
+								Public IP
+								 ↓
+								Private IP
+								 ↓
+								NIC
+
+								STEP-3
+								NSG
+								 ↓
+								ASG
+								 ↓
+								Security Rules
+
+								STEP-4
+								VNet Peering
+								 ↓
+								VPN Gateway
+								 ↓
+								ExpressRoute
+
+								STEP-5
+								Route Tables
+								 ↓
+								UDR
+								 ↓
+								Routing Decisions
+
+								STEP-6
+								Hub-Spoke
+								 ↓
+								Landing Zone Connectivity
+								 ↓
+								Enterprise Design
+
+								STEP-7
+								Private Endpoint
+								 ↓
+								Private DNS
+								 ↓
+								Private Link
+
+								STEP-8
+								Load Balancer
+								 ↓
+								Application Gateway
+								 ↓
+								Front Door
+
+								STEP-9
+								Azure Firewall
+								 ↓
+								NAT Gateway
+								 ↓
+								Bastion
+
+								STEP-10
+								Network Watcher
+								 ↓
+								Troubleshooting
