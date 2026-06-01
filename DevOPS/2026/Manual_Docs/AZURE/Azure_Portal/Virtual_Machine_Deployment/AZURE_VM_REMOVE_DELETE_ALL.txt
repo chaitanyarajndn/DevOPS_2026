@@ -1,0 +1,206 @@
+							=========================================
+							AZURE VM BACKOUT PROCEDURE
+							(PORTAL + AZ CLI)
+							=========================================
+
+							Objective:
+							Completely remove the Virtual Machine and all associated resources created for the lab.
+
+							=========================================
+							OPTION 1: RECOMMENDED METHOD
+							(DELETE RESOURCE GROUP)
+							=========================================
+
+							PORTAL METHOD
+							-----------------------------------------
+
+							Step 1:
+							Navigate to Resource Groups.
+
+							Step 2:
+							Select the Resource Group used for the deployment.
+
+							Step 3:
+							Click Delete Resource Group.
+
+							Step 4:
+							Enter the Resource Group name for confirmation.
+
+							Step 5:
+							Click Delete.
+
+							Result:
+							Azure automatically deletes all resources inside the Resource Group.
+
+							=========================================
+							AZ CLI METHOD
+							=========================================
+
+							Login to Azure:
+
+							az login
+
+							List Resource Groups:
+
+							az group list -o table
+
+							Delete Resource Group:
+
+							az group delete \
+							  --name <resource-group-name> \
+							  --yes \
+							  --no-wait
+
+							Example:
+
+							az group delete \
+							  --name rg-ubuntu-lab \
+							  --yes \
+							  --no-wait
+
+							Verify Deletion Status:
+
+							az group show \
+							  --name <resource-group-name>
+
+							=========================================
+							RESOURCES REMOVED
+							=========================================
+
+							When deleting the Resource Group, Azure removes:
+
+							- Virtual Machine
+							- Network Interface (NIC)
+							- Public IP Address
+							- Virtual Network (VNet)
+							- Subnet
+							- Managed Disks
+							- Network Security Groups (if any)
+							- Any other resources inside the Resource Group
+
+							=========================================
+							OPTION 2: MANUAL RESOURCE DELETION
+							=========================================
+
+							Delete resources in the following order:
+
+							1. Virtual Machine
+							2. Network Interface (NIC)
+							3. Public IP Address
+							4. Subnet
+							5. Virtual Network (VNet)
+							6. Resource Group
+
+							=========================================
+							MANUAL DELETION USING AZ CLI
+							=========================================
+
+							1. Delete Virtual Machine
+
+							az vm delete \
+							  --resource-group <resource-group-name> \
+							  --name <vm-name> \
+							  --yes
+
+							-----------------------------------------
+
+							2. Delete Network Interface
+
+							az network nic delete \
+							  --resource-group <resource-group-name> \
+							  --name <nic-name>
+
+							-----------------------------------------
+
+							3. Delete Public IP
+
+							az network public-ip delete \
+							  --resource-group <resource-group-name> \
+							  --name <public-ip-name>
+
+							-----------------------------------------
+
+							4. Delete Subnet
+
+							az network vnet subnet delete \
+							  --resource-group <resource-group-name> \
+							  --vnet-name <vnet-name> \
+							  --name <subnet-name>
+
+							-----------------------------------------
+
+							5. Delete Virtual Network
+
+							az network vnet delete \
+							  --resource-group <resource-group-name> \
+							  --name <vnet-name>
+
+							-----------------------------------------
+
+							6. Delete Resource Group
+
+							az group delete \
+							  --name <resource-group-name> \
+							  --yes
+
+							=========================================
+							IMPORTANT NOTE ABOUT DISKS
+							=========================================
+
+							When deleting a VM manually, verify that managed disks are also removed.
+
+							List Managed Disks:
+
+							az disk list \
+							  --resource-group <resource-group-name> \
+							  -o table
+
+							Delete Managed Disk:
+
+							az disk delete \
+							  --resource-group <resource-group-name> \
+							  --name <disk-name> \
+							  --yes
+
+							=========================================
+							VERIFICATION
+							=========================================
+
+							List all resources in the Resource Group:
+
+							az resource list \
+							  --resource-group <resource-group-name> \
+							  -o table
+
+							Expected Result:
+
+							No resources should be displayed.
+
+							=========================================
+							INTERVIEW POINT
+							=========================================
+
+							For lab and testing environments, deleting the entire Resource Group is the preferred cleanup approach because Azure automatically removes all dependent resources and minimizes the risk of leaving billable resources behind.
+
+							=========================================
+							LAB BACKOUT SUMMARY
+							=========================================
+
+							Preferred Method:
+
+							Resource Group
+								  ↓
+							Delete Resource Group
+								  ↓
+							Azure Automatically Deletes:
+
+							- VM
+							- NIC
+							- Public IP
+							- VNet
+							- Subnet
+							- Managed Disks
+							- Other Associated Resources
+
+							Fastest, Cleanest, and Most Common Approach.
+							=========================================

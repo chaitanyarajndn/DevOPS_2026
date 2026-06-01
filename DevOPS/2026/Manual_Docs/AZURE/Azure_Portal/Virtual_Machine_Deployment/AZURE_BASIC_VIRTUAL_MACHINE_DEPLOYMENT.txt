@@ -1,0 +1,152 @@
+						=========================================
+						AZURE BASIC VIRTUAL MACHINE DEPLOYMENT
+						=========================================
+
+						Objective:
+						Deploy a basic Ubuntu Virtual Machine in Azure and connect using a Public IP address.
+
+						=========================================
+						REQUIRED RESOURCES
+						=========================================
+
+						1. Resource Group
+						   - Logical container for all Azure resources.
+
+						2. Virtual Network (VNet)
+						   - Provides networking for the VM.
+
+						3. Subnet
+						   - A subnet inside the VNet where the VM will reside.
+
+						4. Public IP Address
+						   - Allows internet access to the VM.
+
+						5. Network Interface (NIC)
+						   - Connects the VM to the network.
+
+						6. Ubuntu Virtual Machine
+						   - The actual Linux server.
+
+						7. Username and Password
+						   - Defined during VM creation for login.
+
+						=========================================
+						DEPLOYMENT FLOW
+						=========================================
+
+						Resource Group
+							  ↓
+						Virtual Network (VNet)
+							  ↓
+						Subnet
+							  ↓
+						Public IP Address
+							  ↓
+						Network Interface (NIC)
+							  ↓
+						Ubuntu Virtual Machine
+
+						=========================================
+						MINIMUM DEPLOYMENT ORDER
+						=========================================
+
+						Step 1: Create Resource Group
+
+						Step 2: Create Virtual Network (VNet)
+
+						Step 3: Create Subnet
+
+						Step 4: Create Public IP Address
+
+						Step 5: Create Network Interface (NIC)
+								- Attach Subnet
+								- Attach Public IP
+
+						Step 6: Create Ubuntu Virtual Machine
+								- Attach NIC
+								- Configure Username
+								- Configure Password
+
+						=========================================
+						NETWORK RELATIONSHIP
+						=========================================
+
+						Ubuntu VM
+							↓
+						Network Interface (NIC)
+							↓
+						Subnet
+							↓
+						Virtual Network (VNet)
+
+						Public IP
+							↓
+						Network Interface (NIC)
+							↓
+						Ubuntu VM
+
+						=========================================
+						LOGIN TO VM
+						=========================================
+
+						After deployment:
+
+						1. Obtain the Public IP Address.
+
+						2. Connect using SSH:
+
+						   ssh <username>@<public-ip>
+
+						Example:
+
+						   ssh azureuser@20.x.x.x
+
+						=========================================
+						OPTIONAL COMPONENTS
+						(Not Required for Basic Lab)
+						=========================================
+
+						- Network Security Group (NSG)
+						- Availability Zone
+						- Availability Set
+						- Azure Bastion
+						- Load Balancer
+						- Managed Identity
+						- Data Disks
+						- Backup
+						- Monitoring
+						- Auto Scaling
+
+						=========================================
+						TERRAFORM DEPENDENCY CHAIN
+						=========================================
+
+						Resource Group
+							  ↓
+						Virtual Network
+							  ↓
+						Subnet
+							  ↓
+						Public IP
+							  ↓
+						Network Interface
+							  ↓
+						Virtual Machine
+
+						=========================================
+						IMPORTANT INTERVIEW POINT
+						=========================================
+
+						A Virtual Machine is not directly connected to a Virtual Network.
+
+						The actual connection path is:
+
+						Virtual Machine
+							  ↓
+						Network Interface (NIC)
+							  ↓
+						Subnet
+							  ↓
+						Virtual Network
+
+						The NIC is the component that enables network connectivity for the VM.

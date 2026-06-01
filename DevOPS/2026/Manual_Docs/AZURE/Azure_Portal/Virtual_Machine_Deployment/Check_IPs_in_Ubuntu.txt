@@ -1,0 +1,49 @@
+			=========================================
+			CHECK PRIVATE AND PUBLIC IP IN UBUNTU
+			=========================================
+
+			1. Show Private IP Address
+
+			Command:
+			hostname -I
+
+			Example Output:
+			10.0.1.4
+
+			-----------------------------------------
+
+			2. Show Detailed Network Information
+
+			Command:
+			ip a
+
+			Example Output:
+			inet 10.0.1.4/24
+
+			-----------------------------------------
+
+			3. Show Public IP Address
+
+			Command:
+			curl ifconfig.me
+
+			OR
+
+			curl ipinfo.io/ip
+
+			Example Output:
+			20.55.100.25
+
+			=========================================
+			MOST COMMON COMMANDS
+			=========================================
+
+			Private IP:
+			hostname -I
+
+			Public IP:
+			curl ifconfig.me
+
+
+
+
