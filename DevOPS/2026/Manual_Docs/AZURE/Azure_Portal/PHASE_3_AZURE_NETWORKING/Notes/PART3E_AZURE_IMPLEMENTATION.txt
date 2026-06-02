@@ -1,0 +1,665 @@
+						============================================================
+						PART-E : AZURE IMPLEMENTATION
+						============================================================
+
+						Enterprise VNet deployment focuses on scalability, security, connectivity and future growth rather than simply creating network resources.
+
+						------------------------------------------------------------
+
+						Enterprise Deployment Flow
+
+						Address Space Planning
+								↓
+						Hub VNet Deployment
+								↓
+						Spoke VNet Deployment
+								↓
+						VNet Peering
+								↓
+						Security Controls
+						(NSG + Route Tables + Firewall)
+								↓
+						VPN / ExpressRoute
+								↓
+						Private Endpoints
+								↓
+						Production Workloads
+
+						------------------------------------------------------------
+
+						Address Space Planning
+
+						• CIDR Planning
+						  IP ranges are planned before deployment to avoid future conflicts.
+
+						Example:
+
+						Hub VNet      : 10.0.0.0/16
+						Prod VNet     : 10.1.0.0/16
+						Dev VNet      : 10.2.0.0/16
+						Data VNet     : 10.3.0.0/16
+
+						• Non-Overlapping Networks
+						  VNets expected to communicate should not have overlapping IP ranges.
+
+						📝 Important
+
+						10.0.0.0/16
+						10.1.0.0/16
+						10.2.0.0/16
+						10.3.0.0/16
+
+						These are separate networks and VNet Peering is supported.
+
+						Example of overlapping networks:
+
+						Hub VNet
+						10.0.0.0/16
+
+						Prod VNet
+						10.0.1.0/24
+
+						This is not allowed because 10.0.1.0/24 already exists within 10.0.0.0/16.
+
+						------------------------------------------------------------
+
+						Hub VNet Implementation
+
+						• Purpose
+						  Hosts shared networking, security and connectivity services.
+
+						• Reality Check
+						  Hub is not a special Azure resource. It is a normal VNet used to centralize common services.
+
+						Common Components:
+
+						Azure Firewall
+						DNS
+						VPN Gateway
+						ExpressRoute Gateway
+						Azure Bastion
+						Monitoring Components
+
+						------------------------------------------------------------
+
+						Azure Firewall
+
+						• Purpose
+						  Acts as the central security checkpoint for network traffic.
+
+						• Reality Check
+						  This is an Azure-managed Firewall service, not a VM.
+
+						• Why Required
+						  Enterprises want traffic inspection from a single location rather than managing security rules everywhere.
+
+						• Azure Resource
+						  ✅ Yes
+
+						• Portal Deployment
+						  Create Resource → Azure Firewall
+
+						• Terraform Resource
+						  resource "azurerm_firewall"
+
+						• Location
+						  Usually deployed inside the Hub VNet.
+
+						• Requirement
+						  Requires AzureFirewallSubnet.
+
+						• Public IP
+						  ✅ Typically Yes
+
+						• Traffic Flow
+
+						Internet
+							↓
+						Azure Firewall
+							↓
+						Azure Workloads
+
+						------------------------------------------------------------
+
+						DNS
+
+						• Purpose
+						  Converts hostnames into IP addresses.
+
+						• Reality Check
+						  Applications use names while networks communicate using IP addresses.
+
+						• Why Required
+						  Nobody wants to remember IP addresses for hundreds of servers and applications.
+
+						• Azure Resource
+						  ✅ Yes
+
+						• Portal Deployment
+						  Create Resource → DNS Zone / Private DNS Zone
+
+						• Terraform Resource
+						  resource "azurerm_private_dns_zone"
+
+						• Public IP
+						  ❌ No
+
+						Example
+
+						app.company.com
+								↓
+						10.1.1.10
+
+						------------------------------------------------------------
+
+						VPN Gateway
+
+						• Purpose
+						  Provides secure Azure ↔ On-Prem connectivity.
+
+						• Reality Check
+						  Creates an encrypted tunnel over the public internet.
+
+						• Why Required
+						  Allows Azure resources to communicate securely with existing corporate networks.
+
+						• Azure Resource
+						  ✅ Yes
+
+						• Portal Deployment
+						  Create Resource → Virtual Network Gateway
+
+						• Terraform Resource
+						  resource "azurerm_virtual_network_gateway"
+
+						• Location
+						  Deployed inside a VNet.
+
+						• Requirement
+						  Requires GatewaySubnet.
+
+						• Public IP
+						  ✅ Yes
+
+						• Traffic Flow
+
+						Office Network
+							  ↓
+						Internet
+							  ↓
+						VPN Gateway
+							  ↓
+						Azure VNet
+
+						------------------------------------------------------------
+
+						ExpressRoute Gateway
+
+						• Purpose
+						  Provides private Azure ↔ On-Prem connectivity.
+
+						• Reality Check
+						  Uses a dedicated enterprise circuit instead of the internet.
+
+						• Why Required
+						  Used when organizations require predictable performance and higher security.
+
+						• Azure Resource
+						  ✅ Yes
+
+						• Portal Deployment
+						  Create Resource → ExpressRoute Gateway
+
+						• Terraform Resource
+						  resource "azurerm_virtual_network_gateway"
+
+						• Requirement
+						  Requires GatewaySubnet.
+
+						• Public IP
+						  ❌ Not Required For Customer Traffic
+
+						• Traffic Flow
+
+						Data Center
+							  ↓
+						Private Circuit
+							  ↓
+						ExpressRoute Gateway
+							  ↓
+						Azure VNet
+
+						------------------------------------------------------------
+
+						Azure Bastion
+
+						• Purpose
+						  Provides secure VM access without exposing Public IPs.
+
+						• Reality Check
+						  Think of it as a managed jump server.
+
+						• Why Required
+						  Eliminates the need to expose RDP or SSH directly to the internet.
+
+						• Azure Resource
+						  ✅ Yes
+
+						• Portal Deployment
+						  Create Resource → Azure Bastion
+
+						• Terraform Resource
+						  resource "azurerm_bastion_host"
+
+						• Requirement
+						  Requires AzureBastionSubnet.
+
+						• Public IP
+						  ✅ Yes
+
+						• Traffic Flow
+
+						Admin
+						   ↓
+						Azure Portal
+						   ↓
+						Bastion
+						   ↓
+						VM
+
+						------------------------------------------------------------
+
+						Monitoring Components
+
+						• Purpose
+						  Collect logs, metrics and alerts.
+
+						• Why Required
+						  Engineers need visibility into the health and performance of the environment.
+
+						• Common Services
+
+						Azure Monitor
+						Log Analytics Workspace
+						Application Insights
+
+						• Azure Resource
+						  ✅ Yes
+
+						• Public IP
+						  ❌ No
+
+						------------------------------------------------------------
+
+						Spoke VNet Implementation
+
+						• Purpose
+						  Hosts business applications and workloads.
+
+						• Reality Check
+						  A Spoke is simply another VNet dedicated to a specific workload or environment.
+
+						Examples:
+
+						Prod VNet
+						Dev VNet
+						Data VNet
+						Shared Services VNet
+
+						📝 Note
+
+						Spoke = Separate VNet
+
+						Subnet = Network segment inside a VNet
+
+						A single Spoke VNet can contain multiple Subnets.
+
+						------------------------------------------------------------
+
+						VNet Peering
+
+						• Purpose
+						  Connects two VNets privately.
+
+						• Reality Check
+						  Without Peering, two VNets behave like completely separate networks.
+
+						• Why Required
+						  Workloads in Spoke VNets often need access to Hub services such as Firewall, DNS and Bastion.
+
+						• Azure Resource
+						  ❌ No Dedicated Resource
+
+						• Portal Deployment
+						  VNet → Peerings
+
+						• Terraform Resource
+						  resource "azurerm_virtual_network_peering"
+
+						• Public IP
+						  ❌ No
+
+						• Requirement
+						  Address spaces must not overlap.
+
+						Example
+
+						Hub VNet
+						10.0.0.0/16
+
+						Prod VNet
+						10.1.0.0/16
+
+						Without Peering
+
+						❌ No Communication
+
+						With Peering
+
+						✅ Communication Allowed
+
+						• Traffic Flow
+
+						Prod VM
+							↓
+						VNet Peering
+							↓
+						Hub Firewall
+
+						------------------------------------------------------------
+
+						NSG (Network Security Group)
+
+						• Purpose
+						  Controls which traffic is allowed or denied.
+
+						• Reality Check
+						  Think of it as a security rule book rather than a firewall appliance.
+
+						• Why Required
+						  Even if a VM exists inside a VNet, not every user or application should be allowed to access it.
+
+						• Azure Resource
+						  ✅ Yes
+
+						• Portal Deployment
+						  Create Resource → Network Security Group
+
+						• Terraform Resource
+						  resource "azurerm_network_security_group"
+
+						• Location
+						  Attached to Subnets or NICs.
+
+						• Public IP
+						  ❌ No
+
+						Example
+
+						Allow:
+						Internet → Web Server → Port 443
+
+						Block:
+						Internet → Web Server → Port 3389
+
+						• Traffic Flow
+
+						Request
+							↓
+						NSG Rules
+							↓
+						Allow / Deny
+
+						• Think Of It As
+
+						Security Guard At The Building Entrance
+
+						------------------------------------------------------------
+
+						Route Table (UDR)
+
+						• Purpose
+						  Controls which path traffic should follow.
+
+						• Reality Check
+						  Azure already provides default routes. Route Tables are used when architects need custom traffic paths.
+
+						• Why Required
+						  Enterprises often want all traffic inspected before it leaves the environment.
+
+						• Azure Resource
+						  ✅ Yes
+
+						• Portal Deployment
+						  Create Resource → Route Table
+
+						• Terraform Resource
+						  resource "azurerm_route_table"
+
+						• Location
+						  Associated with Subnets.
+
+						• Public IP
+						  ❌ No
+
+						Example
+
+						Without Route Table
+
+						VM
+						 ↓
+						Internet
+
+						With Route Table
+
+						VM
+						 ↓
+						Firewall
+						 ↓
+						Internet
+
+						• Traffic Flow
+
+						VM
+						 ↓
+						Route Table Decision
+						 ↓
+						Next Hop Selected
+
+						• Think Of It As
+
+						GPS For Network Traffic
+
+						------------------------------------------------------------
+
+						Private Endpoint
+
+						• Purpose
+						  Provides private connectivity to Azure services.
+
+						• Reality Check
+						  Azure services normally expose public endpoints.
+
+						• Why Required
+						  Enterprises want Storage, SQL and Key Vault access without exposing traffic to the public internet.
+
+						• Azure Resource
+						  ✅ Yes
+
+						• Portal Deployment
+						  Resource → Networking → Private Endpoint
+
+						• Terraform Resource
+						  resource "azurerm_private_endpoint"
+
+						• Public IP
+						  ❌ No
+
+						Without Private Endpoint
+
+						VM
+						 ↓
+						Public Endpoint
+						 ↓
+						Storage Account
+
+						With Private Endpoint
+
+						VM
+						 ↓
+						Private IP
+						 ↓
+						Storage Account
+
+						• Think Of It As
+
+						Private Door To Azure Services
+
+						------------------------------------------------------------
+
+						🌐 LANDING ZONE RELEVANCE
+
+						• Networking Foundation
+						  VNet forms the networking backbone of the Landing Zone.
+
+						• Hub-Spoke Architecture
+						  Provides centralized networking and security management.
+
+						• Security Integration
+						  Supports Firewall, NSGs, Route Tables and Private Endpoints.
+
+						• Hybrid Integration
+						  Enables VPN and ExpressRoute connectivity.
+
+						• Shared Services
+						  Centralizes common services inside the Hub VNet.
+
+						------------------------------------------------------------
+
+						💥 PRODUCTION SCENARIO
+
+						Example: Enterprise Banking Environment
+
+						Hub VNet
+						 ├─ Azure Firewall
+						 ├─ Bastion
+						 ├─ VPN Gateway
+						 ├─ ExpressRoute Gateway
+						 └─ DNS
+
+								│
+								│
+						   VNet Peering
+								│
+
+						 ├─ Prod Spoke VNet
+						 ├─ Dev Spoke VNet
+						 ├─ Data Spoke VNet
+
+						------------------------------------------------
+
+						Customer Traffic
+
+						Customer
+							↓
+						Application
+							↓
+						NSG Validation
+							↓
+						Database
+
+						------------------------------------------------
+
+						Admin Access
+
+						Admin
+							↓
+						Azure Bastion
+							↓
+						VM
+
+						------------------------------------------------
+
+						Storage Access
+
+						Application
+							↓
+						Private Endpoint
+							↓
+						Storage Account
+
+						------------------------------------------------------------
+
+						Key Implementation Principle
+
+						"Plan IPs first, deploy networking second, connect workloads third and enforce security throughout the architecture."
+
+						============================================================
+						
+						Production Scenario
+
+						Company:
+
+						ABC Bank
+
+						------------------------------------------------
+
+						Hub VNet
+
+						Hosts:
+
+						Azure Firewall
+						VPN Gateway
+						ExpressRoute
+						DNS
+						Bastion
+
+						------------------------------------------------
+
+						Prod Spoke
+
+						Hosts:
+
+						Internet Banking Application
+
+						------------------------------------------------
+
+						Data Spoke
+
+						Hosts:
+
+						PostgreSQL Database
+
+						------------------------------------------------
+
+						Traffic Flow
+
+						Customer
+							↓
+						Application
+							↓
+						NSG Validation
+							↓
+						Database
+
+						------------------------------------------------
+
+						Admin Flow
+
+						Admin
+							↓
+						Bastion
+							↓
+						VM
+
+						------------------------------------------------
+
+						Storage Access
+
+						Application
+							↓
+						Private Endpoint
+							↓
+						Storage Account					
+						
+						
