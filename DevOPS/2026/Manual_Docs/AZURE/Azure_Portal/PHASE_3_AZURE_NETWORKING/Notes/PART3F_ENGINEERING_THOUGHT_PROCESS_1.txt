@@ -1,0 +1,448 @@
+			PHASE 3 : CORE NETWORKING
+
+			PART-F : ENGINEERING THOUGHT PROCESS
+
+			============================================================
+			ENTERPRISE NETWORK DESIGN THINKING
+			============================================================
+
+			SCENARIO : SBC TECHNOLOGY (LARGE ENTERPRISE)
+
+			Business Requirements
+
+			• 25,000+ Employees
+			Large global workforce requiring secure and scalable connectivity.
+
+			• Multiple Azure Regions
+			Applications and services are distributed across different geographic locations.
+
+			• Hybrid Connectivity
+			Azure must communicate with on-premises data centers.
+
+			• Enterprise Security
+			Traffic must be inspected, controlled and monitored centrally.
+
+			• Governance Requirements
+			All environments must follow organizational standards and policies.
+
+			• Future Growth
+			The design should support new regions, VNets and acquisitions.
+
+			============================================================
+			1. GLOBAL IP PLANNING
+			============================================================
+
+			• Corporate Address Space
+			Reserve a large private IP range for long-term growth.
+
+			Where?
+			At enterprise level before any Azure deployment begins.
+
+			Why?
+			Prevents IP conflicts and supports future expansion.
+
+			Example
+
+			10.0.0.0/8
+
+			India       10.10.0.0/16
+			US          10.20.0.0/16
+			UK          10.30.0.0/16
+			Singapore   10.40.0.0/16
+
+			============================================================
+			2. HUB-SPOKE ARCHITECTURE
+			============================================================
+
+			• Hub VNet
+			Acts as the central networking and security layer for all workloads.
+
+			Where?
+			Dedicated Hub VNet.
+
+			Why?
+			Avoids duplicating shared services across multiple VNets.
+
+			Hosts
+
+			Azure Firewall
+			VPN Gateway
+			ExpressRoute Gateway
+			Private DNS
+			Azure Bastion
+			Monitoring Services
+
+			Example
+
+			Hub VNet
+			10.10.0.0/20
+
+			------------------------------------------------------------
+
+			• Production VNet
+			Hosts business-critical applications and databases.
+
+			Where?
+			Dedicated Production Spoke.
+
+			Why?
+			Keeps production isolated from non-production environments.
+
+			Example
+
+			10.10.16.0/20
+
+			------------------------------------------------------------
+
+			• Development VNet
+			Hosts developer workloads and testing resources.
+
+			Where?
+			Dedicated Development Spoke.
+
+			Why?
+			Prevents development activities from affecting production systems.
+
+			Example
+
+			10.10.32.0/20
+
+			------------------------------------------------------------
+
+			• QA VNet
+			Hosts testing, validation and UAT workloads.
+
+			Where?
+			Dedicated QA Spoke.
+
+			Why?
+			Provides controlled testing environments.
+
+			Example
+
+			10.10.48.0/20
+
+			------------------------------------------------------------
+
+			• Shared Services VNet
+			Hosts reusable enterprise services.
+
+			Where?
+			Dedicated Shared Services Spoke.
+
+			Why?
+			Allows multiple teams and environments to use common services.
+
+			Example
+
+			10.10.64.0/20
+
+			============================================================
+			3. NSG (NETWORK SECURITY GROUP)
+			============================================================
+
+			• NSG
+			Controls inbound and outbound traffic using allow and deny rules.
+
+			Where?
+			Applied to Subnets or Network Interfaces (NICs).
+
+			How?
+			Rules are created based on source, destination, port and protocol.
+
+			Why?
+			Enforces least-privilege access and reduces attack surface.
+
+			Example
+
+			Internet → Database = Deny
+
+			Web Tier → App Tier = Allow
+
+			App Tier → Database = Allow
+
+			============================================================
+			4. AZURE FIREWALL
+			============================================================
+
+			• Azure Firewall
+			Provides centralized Layer 3 to Layer 7 traffic inspection.
+
+			Where?
+			Placed inside the Hub VNet.
+
+			How?
+			All required traffic is routed through the Firewall using routing policies.
+
+			Why?
+			Provides a single security inspection point for the enterprise.
+
+			Functions
+
+			URL Filtering
+			Threat Protection
+			Application Rules
+			Network Rules
+
+			============================================================
+			5. VPN GATEWAY
+			============================================================
+
+			• VPN Gateway
+			Provides encrypted connectivity between Azure and on-premises networks.
+
+			Where?
+			Placed inside the Hub VNet.
+
+			How?
+			Uses Site-to-Site or Point-to-Site VPN tunnels.
+
+			Why?
+			Allows secure communication without exposing internal resources.
+
+			Traffic Flow
+
+			On-Prem
+			↓
+			VPN Gateway
+			↓
+			Hub VNet
+			↓
+			Spokes
+
+			============================================================
+			6. EXPRESSROUTE GATEWAY
+			============================================================
+
+			• ExpressRoute Gateway
+			Provides dedicated private connectivity to Azure.
+
+			Where?
+			Placed inside the Hub VNet.
+
+			How?
+			Connects Azure to enterprise WAN or service provider circuits.
+
+			Why?
+			Offers predictable performance and lower latency than internet-based VPNs.
+
+			Traffic Flow
+
+			Corporate Network
+			↓
+			ExpressRoute
+			↓
+			Hub VNet
+			↓
+			Spokes
+
+			============================================================
+			7. PRIVATE ENDPOINT
+			============================================================
+
+			• Private Endpoint
+			Provides private access to Azure PaaS services.
+
+			Where?
+			Inside workload VNets such as Production or Shared Services.
+
+			How?
+			Assigns a private IP address to the Azure service.
+
+			Why?
+			Eliminates public internet exposure.
+
+			Examples
+
+			Storage Account
+
+			SQL Database
+
+			Key Vault
+
+			============================================================
+			8. PRIVATE DNS
+			============================================================
+
+			• Private DNS
+			Provides name resolution for Private Endpoints.
+
+			Where?
+			Typically centralized in the Hub VNet.
+
+			How?
+			Linked to multiple VNets for shared name resolution.
+
+			Why?
+			Allows workloads to reach services using private names instead of public endpoints.
+
+			Example
+
+			storage.company.local
+
+			sql.company.local
+
+			============================================================
+			9. AZURE BASTION
+			============================================================
+
+			• Azure Bastion
+			Provides secure RDP and SSH access to virtual machines.
+
+			Where?
+			Placed inside the Hub VNet.
+
+			How?
+			Administrators connect through the Azure Portal.
+
+			Why?
+			Removes the need for Public IP addresses on VMs.
+
+			============================================================
+			10. MONITORING & LOGGING
+			============================================================
+
+			• Azure Monitor
+			Collects metrics and performance information.
+
+			Where?
+			Centralized monitoring platform.
+
+			Why?
+			Provides operational visibility across environments.
+
+			------------------------------------------------------------
+
+			• Log Analytics
+			Stores and analyzes logs from Azure resources.
+
+			Where?
+			Centralized workspace.
+
+			Why?
+			Supports troubleshooting and operational analysis.
+
+			------------------------------------------------------------
+
+			• Network Watcher
+			Provides network diagnostics and connectivity testing.
+
+			Where?
+			Across Azure networking resources.
+
+			Why?
+			Helps identify routing and connectivity issues.
+
+			------------------------------------------------------------
+
+			• Microsoft Sentinel
+			Provides centralized security monitoring and threat detection.
+
+			Where?
+			Integrated with Log Analytics.
+
+			Why?
+			Supports enterprise security operations.
+
+			============================================================
+			11. TRAFFIC FLOW DESIGN
+			============================================================
+
+			• Internet Traffic Flow
+
+			Internet
+			↓
+			Azure Firewall
+			↓
+			Application
+			↓
+			Database
+
+			Why?
+			Ensures traffic inspection before reaching workloads.
+
+			------------------------------------------------------------
+
+			• Hybrid Traffic Flow
+
+			On-Prem
+			↓
+			VPN / ExpressRoute
+			↓
+			Hub VNet
+			↓
+			Spokes
+
+			Why?
+			Provides secure enterprise connectivity between Azure and data centers.
+
+			============================================================
+			12. LANDING ZONE ALIGNMENT
+			============================================================
+
+			• Connectivity Subscription
+			Hosts Hub networking and shared connectivity services.
+
+			Why?
+			Provides centralized network management.
+
+			------------------------------------------------------------
+
+			• Management Groups
+			Organize subscriptions using enterprise hierarchy.
+
+			Why?
+			Simplifies governance at scale.
+
+			------------------------------------------------------------
+
+			• Azure Policy
+			Enforces organizational standards automatically.
+
+			Why?
+			Maintains compliance and consistency.
+
+			------------------------------------------------------------
+
+			• RBAC
+			Controls who can perform actions in Azure.
+
+			Why?
+			Implements least-privilege access.
+
+			============================================================
+			13. FUTURE EXPANSION PLANNING
+			============================================================
+
+			• Future Regions
+			Reserve IP space for geographic expansion.
+
+			• Future VNets
+			Reserve address ranges for new business units.
+
+			• Acquisitions
+			Prepare for future company mergers.
+
+			• Additional Connectivity
+			Support future VPN and ExpressRoute requirements.
+
+			Why?
+			Growth should not require network redesign.
+
+			============================================================
+			ARCHITECT GOLDEN RULE
+			============================================================
+
+			Design Once. Scale Many Times.
+
+			============================================================
+			NETWORKING ARCHITECT RULE
+			============================================================
+
+			For every networking component ask:
+
+			1. Why is it required?
+
+			2. Where should it be placed?
+
+			3. What business problem does it solve?
