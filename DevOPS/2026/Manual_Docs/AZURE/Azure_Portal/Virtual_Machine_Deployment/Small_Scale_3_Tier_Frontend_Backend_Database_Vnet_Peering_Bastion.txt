@@ -1,0 +1,445 @@
+					================================================================================
+					AZURE TERRAFORM LAB - 01
+					========================
+
+					## PROJECT GOAL
+
+					Build a small real-world Azure Infrastructure using Terraform while learning:
+
+Terraform Code Generation : NOT ALLOWED YET
+
+Current Phase:
+
+✓ Requirement Review
+✓ LLD Review
+✓ Network Design
+✓ Bastion Design
+✓ Security Design
+✓ Terraform Strategy Review
+
+Pending:
+
+* Nested Maps Design
+* variables.tf Design
+* terraform.tfvars Design
+* for_each Design
+* Terraform Code
+
+================================================================================
+PROJECT GOAL
+============
+
+Build a small Azure Infrastructure using Terraform while learning:
+
+* Resource References
+* Variables
+* Nested Maps
+* for_each
+* Azure Bastion
+* VNet Peering
+* Linux VM
+* Windows 11 Pro VM
+* NSG
+* NIC
+* Public IP
+* Private IP
+
+================================================================================
+RESOURCE GROUP
+==============
+
+RG-TF-LAB-01
+
+================================================================================
+MANAGEMENT NETWORK
+==================
+
+VNET-MGMT
+
+Address Space:
+
+10.100.0.0/24
+
+Purpose:
+
+Management Network
+
+Subnet:
+
+AzureBastionSubnet
+
+10.100.0.0/26
+
+Resources:
+
+* Azure Bastion
+* Bastion Public IP
+
+================================================================================
+APPLICATION NETWORK
+===================
+
+VNET-APP
+
+Address Space:
+
+10.100.1.0/24
+
+Purpose:
+
+Application Network
+
+Frontend Subnet
+
+10.100.1.0/26
+
+Backend Subnet
+
+10.100.1.64/26
+
+Database Subnet
+
+10.100.1.128/26
+
+Reserved Future Subnet
+
+10.100.1.192/26
+
+================================================================================
+VNET PEERING
+============
+
+VNET-MGMT  <-------------------->  VNET-APP
+
+Type:
+
+Bidirectional Peering
+
+Purpose:
+
+Allow Azure Bastion in VNET-MGMT
+to securely access resources inside
+VNET-APP.
+
+================================================================================
+VIRTUAL MACHINES
+================
+
+FRONTEND-VM
+
+OS           : Ubuntu
+Subnet       : Frontend
+Public IP    : YES
+Private IP   : YES
+Access       : Direct SSH
+Role         : NGINX Web Server
+
+Purpose:
+
+* Learn Linux Administration
+* Learn NGINX
+* Learn Public IP Access
+* Test Web Hosting
+
+---
+
+BACKEND-VM
+
+OS           : Windows 11 Pro
+Subnet       : Backend
+Public IP    : NO
+Private IP   : YES
+Access       : Azure Bastion (RDP)
+Role         : IIS Server
+
+Purpose:
+
+* Learn Azure Bastion
+* Learn RDP via Bastion
+* Learn IIS Installation
+* Learn Internal Web Access
+
+---
+
+DATABASE-VM
+
+OS           : Ubuntu
+Subnet       : Database
+Public IP    : NO
+Private IP   : YES
+Access       : Azure Bastion (SSH)
+Role         : MySQL Server
+
+Purpose:
+
+* Learn Bastion SSH
+* Learn Private VM Access
+* Learn Database Hosting
+
+================================================================================
+NETWORK ARCHITECTURE
+====================
+
+```
+                           INTERNET
+                               |
+                               |
+                       Frontend Public IP
+                               |
+                               |
+                          FRONTEND-VM
+                             Ubuntu
+                             NGINX
+
+
+                                  VNET-APP
+                               10.100.1.0/24
+
+
+    -------------------------------------------------------------
+    |                           |                              |
+    |                           |                              |
+    |                           |                              |
+```
+
+FRONTEND-VM                BACKEND-VM                   DATABASE-VM
+Ubuntu                 Windows 11 Pro                 Ubuntu
+NGINX                       IIS                       MySQL
+
+```
+Public IP                   No PIP                     No PIP
+Private IP                Private IP                 Private IP
+
+
+                               ^
+                               |
+                               |
+                         VNet Peering
+                               |
+                               |
+                          VNET-MGMT
+                         10.100.0.0/24
+                               |
+                               |
+                         Azure Bastion
+                               |
+                               |
+                       Bastion Public IP
+                               |
+                               |
+                            ADMIN
+```
+
+================================================================================
+BASTION ACCESS FLOW
+===================
+
+ADMIN USER
+|
+|
+Azure Portal
+|
+|
+Azure Bastion
+|
+|
+AzureBastionSubnet
+|
+|
+VNET-MGMT
+|
+VNet Peering
+|
+VNET-APP
+|
++-------------------+
+|                   |
+|                   |
+v                   v
+
+BACKEND-VM         DATABASE-VM
+
+RDP (3389)         SSH (22)
+
+================================================================================
+INTERNAL CONNECTIVITY TEST
+==========================
+
+Test 1
+
+Backend-VM
+|
+| HTTP (80)
+v
+Frontend-VM
+
+Example:
+
+http://FRONTEND_PRIVATE_IP
+
+Expected Result:
+
+NGINX Default Page Opens
+
+Purpose:
+
+* Validate Azure Bastion Access
+* Validate RDP Connectivity
+* Validate VNet Peering
+* Validate Private IP Communication
+* Validate NSG Rules
+* Validate NGINX Service
+
+================================================================================
+SECURITY DESIGN
+===============
+
+FRONTEND-VM
+
+Inbound Rules:
+
+22    SSH
+80    HTTP
+443   HTTPS
+
+Source:
+
+Internet
+
+---
+
+BACKEND-VM
+
+Inbound Rules:
+
+3389   RDP
+
+Source:
+
+Azure Bastion Only
+
+No Public IP
+
+---
+
+DATABASE-VM
+
+Inbound Rules:
+
+22   SSH
+
+Source:
+
+Azure Bastion Only
+
+No Public IP
+
+================================================================================
+RESOURCE DEPENDENCY FLOW
+========================
+
+Resource Group
+|
+v
+
+VNET-MGMT
+VNET-APP
+|
+v
+
+Subnets
+|
+v
+
+Public IPs
+|
+v
+
+NSGs
+|
+v
+
+NICs
+|
+v
+
+Azure Bastion
+|
+v
+
+VNet Peerings
+|
+v
+
+Virtual Machines
+
+================================================================================
+TERRAFORM IMPLEMENTATION STRATEGY
+=================================
+
+Deployment Order
+
+1. Resource Group
+
+2. VNets
+
+3. Subnets
+
+4. Public IPs
+
+5. NSGs
+
+6. NICs
+
+7. Azure Bastion
+
+8. VNet Peering
+
+9. Virtual Machines
+
+10. NGINX / IIS / MySQL Configuration
+
+================================================================================
+NEXT PHASE (AFTER APPROVAL ONLY)
+================================
+
+1. Nested Maps Design
+
+2. variables.tf Design
+
+3. terraform.tfvars Design
+
+4. for_each Design
+
+5. Resource Reference Design
+
+6. Terraform Code Development
+
+NO TERRAFORM CODE SHOULD BE WRITTEN
+UNTIL EXPLICIT APPROVAL IS PROVIDED.
+====================================
+
+					================================================================================
+
+					================================================================================
+					PENDING APPROVAL
+					================
+
+					Terraform Code Generation : NOT STARTED
+
+					Waiting For:
+
+					* LLD Approval
+					* Network Approval
+					* Security Approval
+					* Bastion Design Approval
+					* Terraform Strategy Approval
+
+					Only after approval:
+
+					* Nested Maps Design
+					* variables.tf Design
+					* terraform.tfvars Design
+					* for_each Design
+					* Terraform Code
+					  ================================================================================

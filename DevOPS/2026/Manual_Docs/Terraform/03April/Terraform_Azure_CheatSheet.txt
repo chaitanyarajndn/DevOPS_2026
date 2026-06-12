@@ -139,3 +139,275 @@ Troubleshooting Notes
 - Common errors: provider mismatch, syntax errors, authentication issues.
 - Always run terraform plan before apply.
 - Use terraform destroy cautiously; confirm environment before execution.
+
+
+
+=========================================================
+TERRAFORM CHEAT SHEET (NOTEPAD++ STYLE)
+=========================================================
+
+terraform version
+Meaning : Show installed Terraform version.
+
+---------------------------------------------------------
+
+terraform -help
+Meaning : Show all available Terraform commands.
+
+---------------------------------------------------------
+
+terraform init
+Meaning : Download providers and initialize Terraform project.
+
+---------------------------------------------------------
+
+terraform init -upgrade
+Meaning : Upgrade provider plugins to latest allowed version.
+
+---------------------------------------------------------
+
+terraform init -reconfigure
+Meaning : Reconfigure backend/provider settings.
+
+---------------------------------------------------------
+
+terraform fmt
+Meaning : Automatically format Terraform code.
+
+---------------------------------------------------------
+
+terraform fmt -recursive
+Meaning : Format Terraform files in all subfolders.
+
+---------------------------------------------------------
+
+terraform validate
+Meaning : Check Terraform syntax and configuration validity.
+
+---------------------------------------------------------
+
+terraform plan
+Meaning : Preview what Terraform will create, modify, or delete.
+
+---------------------------------------------------------
+
+terraform plan -out=tfplan
+Meaning : Save execution plan into a file.
+
+---------------------------------------------------------
+
+terraform apply
+Meaning : Create or update infrastructure.
+
+---------------------------------------------------------
+
+terraform apply -auto-approve
+Meaning : Apply changes without confirmation prompt.
+
+---------------------------------------------------------
+
+terraform apply tfplan
+Meaning : Apply previously saved execution plan.
+
+---------------------------------------------------------
+
+terraform destroy
+Meaning : Delete all Terraform-managed resources.
+
+---------------------------------------------------------
+
+terraform destroy -auto-approve
+Meaning : Delete all resources without confirmation.
+
+---------------------------------------------------------
+
+terraform state list
+Meaning : Show all resources tracked in Terraform state.
+
+---------------------------------------------------------
+
+terraform state show <resource>
+Meaning : Display detailed information of a resource.
+
+Example:
+terraform state show azurerm_virtual_network.VN
+
+---------------------------------------------------------
+
+terraform state rm <resource>
+Meaning : Remove resource from state without deleting it.
+
+Example:
+terraform state rm azurerm_virtual_network.VN
+
+---------------------------------------------------------
+
+terraform state mv <old> <new>
+Meaning : Rename or move resource in Terraform state.
+
+---------------------------------------------------------
+
+terraform state pull
+Meaning : Download current state file from backend.
+
+---------------------------------------------------------
+
+terraform state push terraform.tfstate
+Meaning : Upload local state file to backend.
+
+---------------------------------------------------------
+
+terraform output
+Meaning : Display all Terraform outputs.
+
+---------------------------------------------------------
+
+terraform output <output_name>
+Meaning : Display specific output value.
+
+Example:
+terraform output public_ip
+
+---------------------------------------------------------
+
+terraform output -json
+Meaning : Show outputs in JSON format.
+
+---------------------------------------------------------
+
+terraform console
+Meaning : Open interactive Terraform console.
+
+---------------------------------------------------------
+
+terraform workspace show
+Meaning : Display current workspace.
+
+---------------------------------------------------------
+
+terraform workspace list
+Meaning : List all workspaces.
+
+---------------------------------------------------------
+
+terraform workspace new dev
+Meaning : Create a new workspace.
+
+---------------------------------------------------------
+
+terraform workspace select dev
+Meaning : Switch to another workspace.
+
+---------------------------------------------------------
+
+terraform workspace delete dev
+Meaning : Delete a workspace.
+
+---------------------------------------------------------
+
+terraform providers
+Meaning : Show providers used by Terraform configuration.
+
+---------------------------------------------------------
+
+terraform providers lock
+Meaning : Generate provider lock file.
+
+---------------------------------------------------------
+
+terraform graph
+Meaning : Generate resource dependency graph.
+
+---------------------------------------------------------
+
+terraform graph > graph.dot
+Meaning : Export dependency graph to DOT file.
+
+---------------------------------------------------------
+
+terraform refresh
+Meaning : Refresh Terraform state from real infrastructure.
+
+---------------------------------------------------------
+
+terraform import <resource> <resource-id>
+Meaning : Import existing infrastructure into Terraform state.
+
+Example:
+terraform import azurerm_resource_group.RG <resource-id>
+
+---------------------------------------------------------
+
+terraform taint <resource>
+Meaning : Mark resource for recreation during next apply.
+
+Example:
+terraform taint azurerm_linux_virtual_machine.VM
+
+---------------------------------------------------------
+
+terraform untaint <resource>
+Meaning : Remove taint from resource.
+
+---------------------------------------------------------
+
+terraform force-unlock <LOCK_ID>
+Meaning : Remove stuck Terraform state lock.
+
+---------------------------------------------------------
+
+terraform show
+Meaning : Display current state information.
+
+---------------------------------------------------------
+
+terraform show tfplan
+Meaning : Display contents of saved execution plan.
+
+---------------------------------------------------------
+
+terraform login
+Meaning : Authenticate Terraform CLI with Terraform Cloud.
+
+---------------------------------------------------------
+
+terraform logout
+Meaning : Remove Terraform Cloud credentials.
+
+=========================================================
+DAILY TERRAFORM WORKFLOW
+=========================================================
+
+terraform init
+Meaning : Initialize project.
+
+terraform fmt
+Meaning : Format code.
+
+terraform validate
+Meaning : Validate configuration.
+
+terraform plan
+Meaning : Preview changes.
+
+terraform apply
+Meaning : Deploy resources.
+
+terraform destroy -auto-approve
+Meaning : Remove all resources.
+
+=========================================================
+MOST IMPORTANT FOR AZURE TERRAFORM
+=========================================================
+
+terraform init
+terraform fmt
+terraform validate
+terraform plan
+terraform apply
+terraform state list
+terraform state show
+terraform output
+terraform destroy -auto-approve
+
+=========================================================

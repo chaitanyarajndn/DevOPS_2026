@@ -1,0 +1,523 @@
+						====================================================
+						AZURE TERRAFORM - BASIC LINUX VM REQUIREMENTS
+						====================================================
+						
+						====================================================
+						VARIABLES.TF
+						====================================================
+
+						variable "rg" {}
+						variable "vn" {}
+						variable "sbn" {}
+						variable "vm" {}
+						variable "lc" {}
+						variable "pip" {}
+						variable "nsg" {}
+						variable "vn_add" {}
+						variable "sbn_add" {}
+						variable "nsr" {}
+						variable "nic" {}
+
+						Explanation:
+
+						- Variables make the code reusable.
+						- Instead of hardcoding values, Terraform reads them from terraform.tfvars.
+						- Same code can be used for Dev, Test, QA, and Production environments.
+
+						Example:
+
+						name = var.rg
+
+						Terraform will look for the value of "rg" and replace it during execution.
+
+						----------------------------------------------------
+
+
+						====================================================
+						11. TERRAFORM.TFVARS
+						====================================================
+
+						rg      = "RG-LINUX-VM"
+						lc      = "Central India"
+
+						vn      = "VNET-LINUX"
+						vn_add  = "10.200.0.0/24"
+
+						sbn     = "SUBNET-LINUX"
+						sbn_add = "10.200.0.0/26"
+
+						pip     = "PIP-LINUX"
+
+						nsg     = "NSG-LINUX"
+						nsr     = "ALLOW-SSH"
+
+						nic     = "NIC-LINUX"
+
+						vm      = "LINUX-VM"
+
+						Explanation:
+
+						Terraform automatically reads values from terraform.tfvars.
+
+						Example:
+
+						variable "rg" {}
+
+						and
+
+						rg = "RG-LINUX-VM"
+
+						Result:
+
+						name = var.rg
+
+						becomes
+
+						name = "RG-LINUX-VM"
+
+						during terraform plan/apply.
+
+						----------------------------------------------------
+
+
+						====================================================
+						VARIABLE FLOW
+						====================================================
+
+						terraform.tfvars
+							   |
+							   v
+						variables.tf
+							   |
+							   v
+						main.tf
+
+						Example:
+
+						terraform.tfvars
+
+						rg = "RG-LINUX-VM"
+
+							   |
+							   v
+
+						variables.tf
+
+						variable "rg" {}
+
+							   |
+							   v
+
+						main.tf
+
+						name = var.rg
+
+							   |
+							   v
+
+						Final Value
+
+						name = "RG-LINUX-VM"
+
+
+						====================================================
+						FULL EXECUTION FLOW
+						====================================================
+
+						terraform.tfvars
+							   |
+							   v
+						variables.tf
+							   |
+							   v
+						Resource Group
+							   |
+							   v
+						Virtual Network
+							   |
+							   v
+						Subnet
+							   |
+							   +---------------------+
+							   |                     |
+							   v                     v
+						NSG                  Public IP
+							   |                     |
+							   v                     |
+						NSG Rule              +------+
+							   |              |
+							   +--------------+
+									  |
+									  v
+									 NIC
+									  |
+									  v
+								 Linux VM
+						
+						
+						
+						
+						====================================================
+						1. RESOURCE GROUP (RG)
+						====================================================
+
+						resource "azurerm_resource_group" "RG" {
+						  name     = var.rg
+						  location = var.lc
+						}
+
+						Explanation:
+
+						- Creates a Resource Group in Azure.
+						- All other resources will be deployed inside this Resource Group.
+						- name     = Resource Group Name
+						- location = Azure Region
+
+						----------------------------------------------------
+
+
+						====================================================
+						2. VIRTUAL NETWORK (VNET)
+						====================================================
+
+						resource "azurerm_virtual_network" "VN" {
+						  name                = var.vn
+						  location            = azurerm_resource_group.RG.location
+						  resource_group_name = azurerm_resource_group.RG.name
+						  address_space       = [var.vn_add]
+						}
+
+						Explanation:
+
+						- Creates a Virtual Network (VNet).
+						- VNet provides private networking in Azure.
+						- Uses Resource Group name and location from the Resource Group resource.
+
+						Dependency:
+
+						azurerm_virtual_network.VN
+								|
+								+--> azurerm_resource_group.RG
+
+						Meaning:
+
+						resource_group_name = azurerm_resource_group.RG.name
+						location            = azurerm_resource_group.RG.location
+
+						Terraform automatically understands that VNet must be created after Resource Group.
+
+						----------------------------------------------------
+
+
+						====================================================
+						3. SUBNET
+						====================================================
+
+						resource "azurerm_subnet" "SBN" {
+						  name                 = var.sbn
+						  resource_group_name  = azurerm_resource_group.RG.name
+						  virtual_network_name = azurerm_virtual_network.VN.name
+						  address_prefixes     = [var.sbn_add]
+						}
+
+						Explanation:
+
+						- Creates a subnet inside the VNet.
+						- A subnet is a smaller network segment inside a VNet.
+						- Uses VNet name from azurerm_virtual_network.VN.
+
+						Dependency:
+
+						Subnet
+						   |
+						   +--> Resource Group
+						   |
+						   +--> Virtual Network
+
+						Meaning:
+
+						virtual_network_name = azurerm_virtual_network.VN.name
+
+						This line places the subnet inside the VNet.
+
+						----------------------------------------------------
+
+
+						====================================================
+						4. PUBLIC IP
+						====================================================
+
+						resource "azurerm_public_ip" "PIP" {
+						  name                = var.pip
+						  resource_group_name = azurerm_resource_group.RG.name
+						  location            = azurerm_resource_group.RG.location
+						  allocation_method   = "Static"
+						}
+
+						Explanation:
+
+						- Creates a Public IP Address.
+						- Public IP is required when VM needs direct internet access.
+						- Static means the IP address will not change.
+
+						Dependency:
+
+						Public IP
+						   |
+						   +--> Resource Group
+
+						Note:
+
+						Creating a Public IP alone does NOT attach it to the VM.
+
+						Public IP must later be attached to the NIC.
+
+						----------------------------------------------------
+
+
+						====================================================
+						5. NETWORK SECURITY GROUP (NSG)
+						====================================================
+
+						resource "azurerm_network_security_group" "NSG" {
+						  name                = var.nsg
+						  location            = azurerm_resource_group.RG.location
+						  resource_group_name = azurerm_resource_group.RG.name
+						}
+
+						Explanation:
+
+						- Creates an NSG.
+						- NSG acts like a firewall.
+						- By itself, the NSG does nothing.
+						- Rules must be added.
+						- NSG must also be attached to a subnet or NIC.
+
+						Dependency:
+
+						NSG
+						 |
+						 +--> Resource Group
+
+						----------------------------------------------------
+
+
+						====================================================
+						6. NETWORK SECURITY RULE
+						====================================================
+
+						resource "azurerm_network_security_rule" "NSR" {
+						  name                        = var.nsr
+						  priority                    = 100
+						  direction                   = "Inbound"
+						  access                      = "Allow"
+						  protocol                    = "Tcp"
+						  source_port_range           = "*"
+						  destination_port_range      = "22"
+						  source_address_prefix       = "*"
+						  destination_address_prefix  = "*"
+						  resource_group_name         = azurerm_resource_group.RG.name
+						  network_security_group_name = azurerm_network_security_group.NSG.name
+						}
+
+						Explanation:
+
+						- Creates an NSG Rule.
+						- Allows inbound SSH traffic on Port 22.
+						- The rule is added inside the NSG.
+
+						Dependency:
+
+						NSG Rule
+						   |
+						   +--> NSG
+
+						Meaning:
+
+						network_security_group_name = azurerm_network_security_group.NSG.name
+
+						This line adds the rule into the NSG.
+
+						----------------------------------------------------
+
+
+						====================================================
+						7. SUBNET + NSG ASSOCIATION
+						====================================================
+
+						resource "azurerm_subnet_network_security_group_association" "SBN_NSG_ASS" {
+						  subnet_id                 = azurerm_subnet.SBN.id
+						  network_security_group_id = azurerm_network_security_group.NSG.id
+						}
+
+						Explanation:
+
+						- Connects the Subnet and NSG together.
+						- After association, all resources inside the subnet follow NSG rules.
+
+						Dependency:
+
+						Subnet
+						   |
+						   +---- Association ----> NSG
+
+						Meaning:
+
+						subnet_id
+						→ Refers to the subnet.
+
+						network_security_group_id
+						→ Refers to the NSG.
+
+						This resource acts like a link between Subnet and NSG.
+
+						----------------------------------------------------
+
+
+						====================================================
+						8. NETWORK INTERFACE (NIC)
+						====================================================
+
+						resource "azurerm_network_interface" "NIC" {
+						  name                = var.nic
+						  location            = azurerm_resource_group.RG.location
+						  resource_group_name = azurerm_resource_group.RG.name
+
+						  ip_configuration {
+							name                          = "internal"
+							subnet_id                     = azurerm_subnet.SBN.id
+							private_ip_address_allocation = "Dynamic"
+							public_ip_address_id          = azurerm_public_ip.PIP.id
+						  }
+						}
+
+						Explanation:
+
+						- Creates a Network Interface Card (NIC).
+						- VM connects to the network through the NIC.
+
+						Dependency:
+
+						NIC
+						 |
+						 +--> Subnet
+						 |
+						 +--> Public IP
+
+						Meaning:
+
+						subnet_id = azurerm_subnet.SBN.id
+
+						Connects NIC to the subnet.
+
+						private_ip_address_allocation = "Dynamic"
+
+						Assigns a Private IP Address.
+
+						public_ip_address_id = azurerm_public_ip.PIP.id
+
+						Attaches the Public IP to the NIC.
+
+						Flow:
+
+						Public IP
+							|
+							v
+						NIC
+							|
+						Private IP
+							|
+						Subnet
+							|
+						VNet
+
+						Important:
+
+						VM never directly connects to a Public IP.
+
+						Public IP is attached to the NIC.
+						NIC is attached to the VM.
+
+						----------------------------------------------------
+
+
+						====================================================
+						9. LINUX VIRTUAL MACHINE
+						====================================================
+
+						resource "azurerm_linux_virtual_machine" "LINUX-VM" {
+						  name                            = var.vm
+						  resource_group_name             = azurerm_resource_group.RG.name
+						  location                        = azurerm_resource_group.RG.location
+						  size                            = "Standard_D2s_v3"
+						  admin_username                  = "adminuser"
+						  admin_password                  = "Password@123"
+						  disable_password_authentication = false
+
+						  network_interface_ids = [
+							azurerm_network_interface.NIC.id
+						  ]
+
+						  os_disk {
+							caching              = "ReadWrite"
+							storage_account_type = "Standard_LRS"
+						  }
+
+						  source_image_reference {
+							publisher = "Canonical"
+							offer     = "0001-com-ubuntu-server-jammy"
+							sku       = "22_04-lts-gen2"
+							version   = "latest"
+						  }
+						}
+
+						Explanation:
+
+						- Creates an Ubuntu Linux VM.
+						- Uses NIC for network connectivity.
+						- Uses OS Disk for storage.
+						- Uses Canonical Ubuntu image.
+
+						Dependency:
+
+						VM
+						 |
+						 +--> NIC
+						 |
+						 +--> Resource Group
+
+						Meaning:
+
+						network_interface_ids = [
+						  azurerm_network_interface.NIC.id
+						]
+
+						This line attaches the NIC to the VM.
+
+						Since the NIC already contains:
+						- Private IP
+						- Public IP
+						- Subnet Connection
+
+						The VM automatically gets access to all of them.
+
+						Final Flow:
+
+						Resource Group
+							  |
+							  v
+						Virtual Network
+							  |
+							  v
+						Subnet
+							  |
+							  +--------------------+
+							  |                    |
+							  v                    v
+						NSG                  Public IP
+							  |                    |
+							  |                    v
+							  +-------> NIC <------+
+											|
+											v
+									  Linux VM

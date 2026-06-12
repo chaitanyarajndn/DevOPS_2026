@@ -1,0 +1,204 @@
+				=========================================================
+				TERRAFORM COMPLETE FLOW DIAGRAM
+				=========================================================
+
+								 START
+								   │
+								   ▼
+						┌───────────────────┐
+						│ Write .tf Files   │
+						│ main.tf           │
+						│ variables.tf      │
+						│ outputs.tf        │
+						└───────────────────┘
+								   │
+								   ▼
+						┌───────────────────┐
+						│ terraform fmt     │
+						│ Format Code       │
+						└───────────────────┘
+								   │
+								   ▼
+						┌───────────────────┐
+						│ terraform validate│
+						│ Check Syntax      │
+						└───────────────────┘
+								   │
+								   ▼
+						┌───────────────────┐
+						│ terraform init    │
+						│ Download Provider │
+						└───────────────────┘
+								   │
+								   ▼
+						┌───────────────────┐
+						│ terraform plan    │
+						│ Preview Changes   │
+						└───────────────────┘
+								   │
+							Changes OK?
+							 │      │
+							No      Yes
+							 │       │
+							 ▼       ▼
+						 Fix Code  ┌───────────────────┐
+								   │ terraform apply   │
+								   │ Create Resources  │
+								   └───────────────────┘
+											 │
+											 ▼
+								   ┌───────────────────┐
+								   │ Azure Resources   │
+								   │ Created           │
+								   └───────────────────┘
+											 │
+											 ▼
+								   ┌───────────────────┐
+								   │ terraform output  │
+								   │ Show Outputs      │
+								   └───────────────────┘
+											 │
+											 ▼
+								   ┌───────────────────┐
+								   │ Use Resources     │
+								   │ VM / VNet / RG    │
+								   └───────────────────┘
+											 │
+											 ▼
+								  Need Changes Later?
+									  │          │
+									 No          Yes
+									  │            │
+									  ▼            ▼
+								   FINISH   Modify .tf Files
+												  │
+												  ▼
+										terraform plan
+												  │
+												  ▼
+										terraform apply
+												  │
+												  ▼
+											  Updated
+											 Resources
+
+				=========================================================
+				RESOURCE DEPENDENCY FLOW
+				=========================================================
+
+				Resource Group
+					  │
+					  ▼
+				Virtual Network
+					  │
+					  ▼
+				Subnet ( Private IP)
+					  │
+					  ├─────────────► NSG Association
+					  │                     ▲
+					  │                     │
+					  ▼                     │
+				Network Interface           │
+					  ▲                     │
+					  │                     │
+				Public IP              Network Security Group
+					  │
+					  ▼
+				Virtual Machine
+
+				=========================================================
+				TERRAFORM STATE FLOW
+				=========================================================
+
+				terraform init
+						│
+						▼
+				terraform.tfstate Created
+						│
+						▼
+				terraform plan
+						│
+						▼
+				Compare:
+				Code (.tf)
+					  VS
+				State (.tfstate)
+					  VS
+				Azure Resources
+						│
+						▼
+				terraform apply
+						│
+						▼
+				State Updated
+						│
+						▼
+				Azure Updated
+
+				=========================================================
+				DESTROY FLOW
+				=========================================================
+
+				terraform destroy
+						│
+						▼
+				VM Deleted
+						│
+						▼
+				NIC Deleted
+						│
+						▼
+				Public IP Deleted
+						│
+						▼
+				NSG Association Deleted
+						│
+						▼
+				NSG Deleted
+						│
+						▼
+				Subnet Deleted
+						│
+						▼
+				VNet Deleted
+						│
+						▼
+				Resource Group Deleted
+
+				=========================================================
+				REAL WORLD DAILY FLOW
+				=========================================================
+
+				Write Code
+					│
+					▼
+				terraform fmt
+					│
+					▼
+				terraform validate
+					│
+					▼
+				terraform init
+					│
+					▼
+				terraform plan
+					│
+					▼
+				terraform apply
+					│
+					▼
+				Verify in Azure Portal
+					│
+					▼
+				terraform output
+					│
+					▼
+				Use Infrastructure
+					│
+					▼
+				terraform destroy
+					│
+					▼
+				Cleanup Complete
+
+				=========================================================
