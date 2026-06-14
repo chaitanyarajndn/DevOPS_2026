@@ -1,0 +1,356 @@
+								create_3tier_azure_bastion_vnet_peering_terraform_lab_chatgpt
+
+								Current Terraform Azure Lab
+
+								Architecture:
+
+								1 Resource Group (amdrg)
+
+								2 VNets
+								├── VNETMGMT
+								└── VNETAPP
+
+								4 Subnets
+								├── AzureBastionSubnet
+								├── snetfrontend
+								├── snetbackend
+								└── snetdatabase
+
+								3 NSGs
+								├── nsgfrontend
+								├── nsgbackend
+								└── nsgdatabase
+
+
+
+								Azure Bastion deployed in VNETMGMT
+
+								VNET Peering between:
+								VNETMGMT <----> VNETAPP
+
+								FrontendVM  (Ubuntu 22.04 LTS)  -> Public IP + Bastion
+								BackendVM   (Windows 11 Pro)    -> Bastion Only
+								DatabaseVM  (Ubuntu 22.04 LTS)  -> Bastion Only
+
+								Linux Image:
+								publisher = "Canonical"
+								offer = "0001-com-ubuntu-server-jammy"
+								sku = "22_04-lts-gen2"
+								version = "latest"
+
+								Windows Image:
+								publisher = "MicrosoftWindowsDesktop"
+								offer = "windows-11"
+								sku = "win11-25h2-pro"
+								version = "latest"
+
+
+								Current Resources
+
+								amdrg
+								│
+								├── VNETMGMT
+								│   │
+								│   └── AzureBastionSubnet
+								│       │
+								│       └── AzureBastion
+								│           │
+								│           └── BastionPIP
+								│
+								└── VNETAPP
+									│
+									├── snetfrontend
+									│   │
+									│   ├── nsgfrontend
+									│   ├── FrontendNIC
+									│   ├── FrontendPIP
+									│   └── FrontendVM
+									│
+									├── snetbackend
+									│   │
+									│   ├── nsgbackend
+									│   ├── BackendNIC
+									│   └── BackendVM
+									│
+									└── snetdatabase
+										│
+										├── nsgdatabase
+										├── DatabaseNIC
+										└── DatabaseVM
+
+
+
+
+
+								Network Flow
+
+								Internet
+								│
+								├── FrontendPIP
+								│   │
+								│   └── FrontendVM
+								│
+								└── BastionPIP
+									│
+									└── AzureBastion
+										│
+										└── AzureBastionSubnet
+											│
+											└── VNETMGMT
+												│
+												└── VNET Peering
+													│
+													└── VNETAPP
+														│
+														├── FrontendVM
+														├── BackendVM
+														└── DatabaseVM
+
+
+
+
+
+								Terraform Structure
+
+								resource_group.tf
+								└── azurerm_resource_group
+
+								vnet.tf
+								└── azurerm_virtual_network
+									├── VNETMGMT
+									└── VNETAPP
+
+								subnet.tf
+								└── azurerm_subnet
+									├── AzureBastionSubnet
+									├── snetfrontend
+									├── snetbackend
+									└── snetdatabase
+
+								nsg.tf
+								├── azurerm_network_security_group
+								│   ├── nsgfrontend
+								│   ├── nsgbackend
+								│   └── nsgdatabase
+								│
+								├── azurerm_network_security_rule
+								│   ├── frontendssh
+								│   ├── frontendhttp
+								│   └── frontendhttps
+								│
+								└── azurerm_subnet_network_security_group_association
+									├── snetfrontend -> nsgfrontend
+									├── snetbackend -> nsgbackend
+									└── snetdatabase -> nsgdatabase
+
+								Priority / Port
+
+									100 = SSH (22)
+									110 = HTTP (80)
+									120 = HTTPS (443)
+
+									200 = App Port 8080
+
+									300 = MySQL 3306
+
+									400 = SQL Server 1433
+
+								public_ip.tf
+								└── azurerm_public_ip
+									├── FrontendPIP -> FrontendVM
+									└── BastionPIP -> AzureBastion
+
+								bastion.tf
+								└── azurerm_bastion_host
+									└── AzureBastion
+
+								peering.tf
+								└── azurerm_virtual_network_peering
+									├── VNETMGMT -> VNETAPP
+									└── VNETAPP -> VNETMGMT
+
+								nic.tf
+								└── azurerm_network_interface
+									├── FrontendNIC
+									├── BackendNIC
+									└── DatabaseNIC
+
+								linux_vm.tf
+								└── azurerm_linux_virtual_machine
+									├── FrontendVM
+									└── DatabaseVM
+
+								windows_vm.tf
+								└── azurerm_windows_virtual_machine
+									└── BackendVM
+
+
+
+
+
+								Terraform Variable Structure
+
+								resource_group.auto.tfvars
+								└── rg
+
+								network.auto.tfvars
+								├── vn
+								├── sbn
+								└── peer
+
+								security.auto.tfvars
+								├── nsg
+								├── nsr
+								└── nsg_as
+
+								connectivity.auto.tfvars
+								├── pip
+								└── bas
+
+								compute.auto.tfvars
+								├── nic
+								├── linx_vm
+								└── win_vm
+
+
+
+
+
+
+								CIDR Layout
+
+								mgmtvnet
+								Address Space:
+								10.100.0.0/24
+
+								Subnet:
+								AzureBastionSubnet
+								10.100.0.0/26
+
+								Usable Range:
+								10.100.0.1 - 10.100.0.62
+
+
+								appvnet
+								Address Space:
+								10.100.1.0/24
+
+								Subnets:
+
+								snetfrontend
+								10.100.1.0/26
+
+								Usable Range:
+								10.100.1.1 - 10.100.1.62
+
+
+								snetbackend
+								10.100.1.64/26
+
+								Usable Range:
+								10.100.1.65 - 10.100.1.126
+
+
+								snetdatabase
+								10.100.1.128/26
+
+								Usable Range:
+								10.100.1.129 - 10.100.1.190
+
+
+								Reserved Future Range
+
+								10.100.1.192/26
+
+								Usable Range:
+								10.100.1.193 - 10.100.1.254
+
+								Currently Unused
+
+
+								CIDR Visual
+
+								10.100.0.0/24
+								└── AzureBastionSubnet
+									└── 10.100.0.0/26
+
+								10.100.1.0/24
+								├── snetfrontend
+								│   └── 10.100.1.0/26
+								│
+								├── snetbackend
+								│   └── 10.100.1.64/26
+								│
+								├── snetdatabase
+								│   └── 10.100.1.128/26
+								│
+								└── Reserved
+									└── 10.100.1.192/26
+
+
+
+
+
+
+
+
+								Important Notes
+
+								Terraform automatically loads *.auto.tfvars files.
+								Terraform does not care about file order.
+								Terraform implicit dependency works across multiple .tf files.
+								Terraform implicit dependency works across multiple .auto.tfvars files.
+								Dependency is created through resource references.
+								Azure Bastion requires its own Public IP.
+								BastionPIP is attached to Azure Bastion.
+								Users cannot SSH/RDP directly to BastionPIP.
+								Azure Bastion accesses BackendVM and DatabaseVM using Private IPs.
+								FrontendVM can be accessed through Public IP and Azure Bastion.
+								
+								
+								Important Instructions:
+								
+								Do not suggest Terraform Modules.
+								Do not suggest alternative architectures unless explicitly asked.
+								Do not add extra Azure services on your own.
+								Do not redesign the lab.
+								Do not jump ahead to advanced topics.
+								Follow the existing architecture only.
+								Focus only on the current task being discussed.
+								Give direct answers instead of multiple options unless requested.
+								Explain only what is asked.
+								Do not add best practices unless specifically requested.
+								Do not generate code without permission.
+								First discuss the design, then generate Terraform code only after approval.
+								Do not add personal preferences or extra ideas.
+								Keep responses focused on the current implementation.
+
+
+								Next Step
+
+								Continue from current Terraform Azure Lab state.
+								Split resources into dedicated .tf files.
+								Split variables into dedicated .auto.tfvars files.
+
+								resource_group.tf
+								vnet.tf
+								subnet.tf
+								nsg.tf
+								public_ip.tf
+								bastion.tf
+								peering.tf
+								nic.tf
+								linux_vm.tf
+								windows_vm.tf
+
+								resource_group.auto.tfvars
+								network.auto.tfvars
+								security.auto.tfvars
+								connectivity.auto.tfvars
+								compute.auto.tfvars
+
+								Review Terraform code if required.
+								Run terraform validate.
+								Run terraform plan.
+								Fix remaining errors if any.
+								Continue Terraform learning professionally without modules.

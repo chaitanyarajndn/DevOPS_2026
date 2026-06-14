@@ -1,0 +1,12 @@
+variable "rg" {}
+variable "vn" {}
+variable "sbn" {}
+variable "nsg" {}
+variable "ni" {}
+variable "bas" {}
+variable "nsgas" {}
+variable "peer" {}
+variable "pip" {}
+variable "linxvm" {}
+variable "winvm" {}
+variable "nsr" {}

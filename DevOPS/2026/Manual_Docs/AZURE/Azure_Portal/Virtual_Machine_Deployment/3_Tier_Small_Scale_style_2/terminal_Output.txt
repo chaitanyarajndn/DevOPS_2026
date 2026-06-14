@@ -1,0 +1,696 @@
+
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform\13june> 
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform\13june> terraform apply -auto-approve  
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # azurerm_bastion_host.BAS["basa"] will be created
+  + resource "azurerm_bastion_host" "BAS" {
+      + copy_paste_enabled        = true
+      + dns_name                  = (known after apply)
+      + file_copy_enabled         = false
+      + id                        = (known after apply)
+      + ip_connect_enabled        = false
+      + kerberos_enabled          = false
+      + location                  = "centralindia"
+      + name                      = "AZBastion"
+      + private_only_enabled      = (known after apply)
+      + resource_group_name       = "amdrg"
+      + scale_units               = 2
+      + session_recording_enabled = false
+      + shareable_link_enabled    = false
+      + sku                       = "Basic"
+      + tunneling_enabled         = false
+
+      + ip_configuration {
+          + name                 = "private-connection"
+          + public_ip_address_id = (known after apply)
+          + subnet_id            = (known after apply)
+        }
+    }
+
+  # azurerm_linux_virtual_machine.example["linxvma"] will be created
+  + resource "azurerm_linux_virtual_machine" "example" {
+      + admin_password                                         = (sensitive value)
+      + admin_username                                         = "frontendadmin"
+      + allow_extension_operations                             = (known after apply)
+      + bypass_platform_safety_checks_on_user_schedule_enabled = false
+      + computer_name                                          = (known after apply)
+      + disable_password_authentication                        = false
+      + disk_controller_type                                   = (known after apply)
+      + extensions_time_budget                                 = "PT1H30M"
+      + id                                                     = (known after apply)
+      + location                                               = "centralindia"
+      + max_bid_price                                          = -1
+      + name                                                   = "FrontendVM"
+      + network_interface_ids                                  = (known after apply)
+      + os_managed_disk_id                                     = (known after apply)
+      + patch_assessment_mode                                  = (known after apply)
+      + patch_mode                                             = (known after apply)
+      + platform_fault_domain                                  = -1
+      + priority                                               = "Regular"
+      + private_ip_address                                     = (known after apply)
+      + private_ip_addresses                                   = (known after apply)
+      + provision_vm_agent                                     = (known after apply)
+      + public_ip_address                                      = (known after apply)
+      + public_ip_addresses                                    = (known after apply)
+      + resource_group_name                                    = "amdrg"
+      + size                                                   = "Standard_D2s_v3"
+      + virtual_machine_id                                     = (known after apply)
+      + vm_agent_platform_updates_enabled                      = (known after apply)
+
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = (known after apply)
+          + id                        = (known after apply)
+          + name                      = (known after apply)
+          + storage_account_type      = "Standard_LRS"
+          + write_accelerator_enabled = false
+        }
+
+      + source_image_reference {
+          + offer     = "0001-com-ubuntu-server-jammy"
+          + publisher = "Canonical"
+          + sku       = "22_04-lts-gen2"
+          + version   = "latest"
+        }
+
+      + termination_notification (known after apply)
+    }
+
+  # azurerm_linux_virtual_machine.example["linxvmb"] will be created
+  + resource "azurerm_linux_virtual_machine" "example" {
+      + admin_password                                         = (sensitive value)
+      + admin_username                                         = "databaseadmin"
+      + allow_extension_operations                             = (known after apply)
+      + bypass_platform_safety_checks_on_user_schedule_enabled = false
+      + computer_name                                          = (known after apply)
+      + disable_password_authentication                        = false
+      + disk_controller_type                                   = (known after apply)
+      + extensions_time_budget                                 = "PT1H30M"
+      + id                                                     = (known after apply)
+      + location                                               = "centralindia"
+      + max_bid_price                                          = -1
+      + name                                                   = "DatabaseVM"
+      + network_interface_ids                                  = (known after apply)
+      + os_managed_disk_id                                     = (known after apply)
+      + patch_assessment_mode                                  = (known after apply)
+      + patch_mode                                             = (known after apply)
+      + platform_fault_domain                                  = -1
+      + priority                                               = "Regular"
+      + private_ip_address                                     = (known after apply)
+      + private_ip_addresses                                   = (known after apply)
+      + provision_vm_agent                                     = (known after apply)
+      + public_ip_address                                      = (known after apply)
+      + public_ip_addresses                                    = (known after apply)
+      + resource_group_name                                    = "amdrg"
+      + size                                                   = "Standard_D2s_v3"
+      + virtual_machine_id                                     = (known after apply)
+      + vm_agent_platform_updates_enabled                      = (known after apply)
+
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = (known after apply)
+          + id                        = (known after apply)
+          + name                      = (known after apply)
+          + storage_account_type      = "Standard_LRS"
+          + write_accelerator_enabled = false
+        }
+
+      + source_image_reference {
+          + offer     = "0001-com-ubuntu-server-jammy"
+          + publisher = "Canonical"
+          + sku       = "22_04-lts-gen2"
+          + version   = "latest"
+        }
+
+      + termination_notification (known after apply)
+    }
+
+  # azurerm_network_interface.NI["nia"] will be created
+  + resource "azurerm_network_interface" "NI" {
+      + accelerated_networking_enabled = false
+      + applied_dns_servers            = (known after apply)
+      + id                             = (known after apply)
+      + internal_domain_name_suffix    = (known after apply)
+      + ip_forwarding_enabled          = false
+      + location                       = "centralindia"
+      + mac_address                    = (known after apply)
+      + name                           = "frontendNI"
+      + private_ip_address             = (known after apply)
+      + private_ip_addresses           = (known after apply)
+      + resource_group_name            = "amdrg"
+      + virtual_machine_id             = (known after apply)
+
+      + ip_configuration {
+          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
+          + name                                               = "frontendinternal"
+          + primary                                            = (known after apply)
+          + private_ip_address                                 = (known after apply)
+          + private_ip_address_allocation                      = "Dynamic"
+          + private_ip_address_version                         = "IPv4"
+          + public_ip_address_id                               = (known after apply)
+          + subnet_id                                          = (known after apply)
+        }
+    }
+
+  # azurerm_network_interface.NI["nib"] will be created
+  + resource "azurerm_network_interface" "NI" {
+      + accelerated_networking_enabled = false
+      + applied_dns_servers            = (known after apply)
+      + id                             = (known after apply)
+      + internal_domain_name_suffix    = (known after apply)
+      + ip_forwarding_enabled          = false
+      + location                       = "centralindia"
+      + mac_address                    = (known after apply)
+      + name                           = "backendNI"
+      + private_ip_address             = (known after apply)
+      + private_ip_addresses           = (known after apply)
+      + resource_group_name            = "amdrg"
+      + virtual_machine_id             = (known after apply)
+
+      + ip_configuration {
+          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
+          + name                                               = "backendinternal"
+          + primary                                            = (known after apply)
+          + private_ip_address                                 = (known after apply)
+          + private_ip_address_allocation                      = "Dynamic"
+          + private_ip_address_version                         = "IPv4"
+          + subnet_id                                          = (known after apply)
+        }
+    }
+
+  # azurerm_network_interface.NI["nic"] will be created
+  + resource "azurerm_network_interface" "NI" {
+      + accelerated_networking_enabled = false
+      + applied_dns_servers            = (known after apply)
+      + id                             = (known after apply)
+      + internal_domain_name_suffix    = (known after apply)
+      + ip_forwarding_enabled          = false
+      + location                       = "centralindia"
+      + mac_address                    = (known after apply)
+      + name                           = "databaseNI"
+      + private_ip_address             = (known after apply)
+      + private_ip_addresses           = (known after apply)
+      + resource_group_name            = "amdrg"
+      + virtual_machine_id             = (known after apply)
+
+      + ip_configuration {
+          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
+          + name                                               = "databaseinternal"
+          + primary                                            = (known after apply)
+          + private_ip_address                                 = (known after apply)
+          + private_ip_address_allocation                      = "Dynamic"
+          + private_ip_address_version                         = "IPv4"
+          + subnet_id                                          = (known after apply)
+        }
+    }
+
+  # azurerm_network_security_group.NSG["nsga"] will be created
+  + resource "azurerm_network_security_group" "NSG" {
+      + id                  = (known after apply)
+      + location            = "centralindia"
+      + name                = "nsgfrontend"
+      + resource_group_name = "amdrg"
+      + security_rule       = (known after apply)
+    }
+
+  # azurerm_network_security_group.NSG["nsgb"] will be created
+  + resource "azurerm_network_security_group" "NSG" {
+      + id                  = (known after apply)
+      + location            = "centralindia"
+      + name                = "nsgbackend"
+      + resource_group_name = "amdrg"
+      + security_rule       = (known after apply)
+    }
+
+  # azurerm_network_security_group.NSG["nsgc"] will be created
+  + resource "azurerm_network_security_group" "NSG" {
+      + id                  = (known after apply)
+      + location            = "centralindia"
+      + name                = "nsgdatabase"
+      + resource_group_name = "amdrg"
+      + security_rule       = (known after apply)
+    }
+
+  # azurerm_network_security_rule.NSR["nsra"] will be created
+  + resource "azurerm_network_security_rule" "NSR" {
+      + access                      = "Allow"
+      + destination_address_prefix  = "*"
+      + destination_port_range      = "22"
+      + direction                   = "Outbound"
+      + id                          = (known after apply)
+      + name                        = "frontendssh"
+      + network_security_group_name = "nsgfrontend"
+      + priority                    = 100
+      + protocol                    = "Tcp"
+      + resource_group_name         = "amdrg"
+      + source_address_prefix       = "*"
+      + source_port_range           = "*"
+    }
+
+  # azurerm_network_security_rule.NSR["nsrb"] will be created
+  + resource "azurerm_network_security_rule" "NSR" {
+      + access                      = "Allow"
+      + destination_address_prefix  = "*"
+      + destination_port_range      = "80"
+      + direction                   = "Outbound"
+      + id                          = (known after apply)
+      + name                        = "frontendhttp"
+      + network_security_group_name = "nsgfrontend"
+      + priority                    = 110
+      + protocol                    = "Tcp"
+      + resource_group_name         = "amdrg"
+      + source_address_prefix       = "*"
+      + source_port_range           = "*"
+    }
+
+  # azurerm_network_security_rule.NSR["nsrc"] will be created
+  + resource "azurerm_network_security_rule" "NSR" {
+      + access                      = "Allow"
+      + destination_address_prefix  = "*"
+      + destination_port_range      = "443"
+      + direction                   = "Outbound"
+      + id                          = (known after apply)
+      + name                        = "frontendhttps"
+      + network_security_group_name = "nsgfrontend"
+      + priority                    = 120
+      + protocol                    = "Tcp"
+      + resource_group_name         = "amdrg"
+      + source_address_prefix       = "*"
+      + source_port_range           = "*"
+    }
+
+  # azurerm_public_ip.PIP["pipa"] will be created
+  + resource "azurerm_public_ip" "PIP" {
+      + allocation_method       = "Static"
+      + ddos_protection_mode    = "VirtualNetworkInherited"
+      + fqdn                    = (known after apply)
+      + id                      = (known after apply)
+      + idle_timeout_in_minutes = 4
+      + ip_address              = (known after apply)
+      + ip_version              = "IPv4"
+      + location                = "centralindia"
+      + name                    = "bastionip"
+      + resource_group_name     = "amdrg"
+      + sku                     = "Standard"
+      + sku_tier                = "Regional"
+    }
+
+  # azurerm_public_ip.PIP["pipb"] will be created
+  + resource "azurerm_public_ip" "PIP" {
+      + allocation_method       = "Static"
+      + ddos_protection_mode    = "VirtualNetworkInherited"
+      + fqdn                    = (known after apply)
+      + id                      = (known after apply)
+      + idle_timeout_in_minutes = 4
+      + ip_address              = (known after apply)
+      + ip_version              = "IPv4"
+      + location                = "centralindia"
+      + name                    = "frontendip"
+      + resource_group_name     = "amdrg"
+      + sku                     = "Standard"
+      + sku_tier                = "Regional"
+    }
+
+  # azurerm_resource_group.RG["rga"] will be created
+  + resource "azurerm_resource_group" "RG" {
+      + id       = (known after apply)
+      + location = "centralindia"
+      + name     = "amdrg"
+    }
+
+  # azurerm_subnet.SBN["sbna"] will be created
+  + resource "azurerm_subnet" "SBN" {
+      + address_prefixes                              = [
+          + "10.100.0.0/26",
+        ]
+      + default_outbound_access_enabled               = true
+      + id                                            = (known after apply)
+      + name                                          = "AzureBastionSubnet"
+      + private_endpoint_network_policies             = "Disabled"
+      + private_link_service_network_policies_enabled = true
+      + resource_group_name                           = "amdrg"
+      + virtual_network_name                          = "mgmtvnet"
+    }
+
+  # azurerm_subnet.SBN["sbnb"] will be created
+  + resource "azurerm_subnet" "SBN" {
+      + address_prefixes                              = [
+          + "10.100.1.0/26",
+        ]
+      + default_outbound_access_enabled               = true
+      + id                                            = (known after apply)
+      + name                                          = "snetfrontend"
+      + private_endpoint_network_policies             = "Disabled"
+      + private_link_service_network_policies_enabled = true
+      + resource_group_name                           = "amdrg"
+      + virtual_network_name                          = "appvnet"
+    }
+
+  # azurerm_subnet.SBN["sbnc"] will be created
+  + resource "azurerm_subnet" "SBN" {
+      + address_prefixes                              = [
+          + "10.100.1.64/26",
+        ]
+      + default_outbound_access_enabled               = true
+      + id                                            = (known after apply)
+      + name                                          = "snetbackend"
+      + private_endpoint_network_policies             = "Disabled"
+      + private_link_service_network_policies_enabled = true
+      + resource_group_name                           = "amdrg"
+      + virtual_network_name                          = "appvnet"
+    }
+
+  # azurerm_subnet.SBN["sbnd"] will be created
+  + resource "azurerm_subnet" "SBN" {
+      + address_prefixes                              = [
+          + "10.100.1.128/26",
+        ]
+      + default_outbound_access_enabled               = true
+      + id                                            = (known after apply)
+      + name                                          = "snetdatabase"
+      + private_endpoint_network_policies             = "Disabled"
+      + private_link_service_network_policies_enabled = true
+      + resource_group_name                           = "amdrg"
+      + virtual_network_name                          = "appvnet"
+    }
+
+  # azurerm_subnet_network_security_group_association.NSGAS["nsgas1"] will be created
+  + resource "azurerm_subnet_network_security_group_association" "NSGAS" {
+      + id                        = (known after apply)
+      + network_security_group_id = (known after apply)
+      + subnet_id                 = (known after apply)
+    }
+
+  # azurerm_subnet_network_security_group_association.NSGAS["nsgas2"] will be created
+  + resource "azurerm_subnet_network_security_group_association" "NSGAS" {
+      + id                        = (known after apply)
+      + network_security_group_id = (known after apply)
+      + subnet_id                 = (known after apply)
+    }
+
+  # azurerm_subnet_network_security_group_association.NSGAS["nsgas3"] will be created
+  + resource "azurerm_subnet_network_security_group_association" "NSGAS" {
+      + id                        = (known after apply)
+      + network_security_group_id = (known after apply)
+      + subnet_id                 = (known after apply)
+    }
+
+  # azurerm_virtual_network.VN["vna"] will be created
+  + resource "azurerm_virtual_network" "VN" {
+      + address_space                  = [
+          + "10.100.0.0/24",
+        ]
+      + dns_servers                    = (known after apply)
+      + guid                           = (known after apply)
+      + id                             = (known after apply)
+      + location                       = "centralindia"
+      + name                           = "mgmtvnet"
+      + private_endpoint_vnet_policies = "Disabled"
+      + resource_group_name            = "amdrg"
+      + subnet                         = (known after apply)
+    }
+
+  # azurerm_virtual_network.VN["vnb"] will be created
+  + resource "azurerm_virtual_network" "VN" {
+      + address_space                  = [
+          + "10.100.1.0/24",
+        ]
+      + dns_servers                    = (known after apply)
+      + guid                           = (known after apply)
+      + id                             = (known after apply)
+      + location                       = "centralindia"
+      + name                           = "appvnet"
+      + private_endpoint_vnet_policies = "Disabled"
+      + resource_group_name            = "amdrg"
+      + subnet                         = (known after apply)
+    }
+
+  # azurerm_virtual_network_peering.PEER["peera"] will be created
+  + resource "azurerm_virtual_network_peering" "PEER" {
+      + allow_forwarded_traffic                = false
+      + allow_gateway_transit                  = false
+      + allow_virtual_network_access           = true
+      + id                                     = (known after apply)
+      + name                                   = "mgmt-to-app"
+      + peer_complete_virtual_networks_enabled = true
+      + remote_virtual_network_id              = (known after apply)
+      + resource_group_name                    = "amdrg"
+      + use_remote_gateways                    = false
+      + virtual_network_name                   = "mgmtvnet"
+    }
+
+  # azurerm_virtual_network_peering.PEER["peerb"] will be created
+  + resource "azurerm_virtual_network_peering" "PEER" {
+      + allow_forwarded_traffic                = false
+      + allow_gateway_transit                  = false
+      + allow_virtual_network_access           = true
+      + id                                     = (known after apply)
+      + name                                   = "app-to-mgmt"
+      + peer_complete_virtual_networks_enabled = true
+      + remote_virtual_network_id              = (known after apply)
+      + resource_group_name                    = "amdrg"
+      + use_remote_gateways                    = false
+      + virtual_network_name                   = "appvnet"
+    }
+
+  # azurerm_windows_virtual_machine.example["winvma"] will be created
+  + resource "azurerm_windows_virtual_machine" "example" {
+      + admin_password                                         = (sensitive value)
+      + admin_username                                         = "backendadmin"
+      + allow_extension_operations                             = (known after apply)
+      + automatic_updates_enabled                              = (known after apply)
+      + bypass_platform_safety_checks_on_user_schedule_enabled = false
+      + computer_name                                          = (known after apply)
+      + disk_controller_type                                   = (known after apply)
+      + enable_automatic_updates                               = (known after apply)
+      + extensions_time_budget                                 = "PT1H30M"
+      + hotpatching_enabled                                    = (known after apply)
+      + id                                                     = (known after apply)
+      + location                                               = "centralindia"
+      + max_bid_price                                          = -1
+      + name                                                   = "BackendVM"
+      + network_interface_ids                                  = (known after apply)
+      + os_managed_disk_id                                     = (known after apply)
+      + patch_assessment_mode                                  = (known after apply)
+      + patch_mode                                             = (known after apply)
+      + platform_fault_domain                                  = -1
+      + priority                                               = "Regular"
+      + private_ip_address                                     = (known after apply)
+      + private_ip_addresses                                   = (known after apply)
+      + provision_vm_agent                                     = (known after apply)
+      + public_ip_address                                      = (known after apply)
+      + public_ip_addresses                                    = (known after apply)
+      + resource_group_name                                    = "amdrg"
+      + size                                                   = "Standard_D2s_v3"
+      + virtual_machine_id                                     = (known after apply)
+      + vm_agent_platform_updates_enabled                      = (known after apply)
+
+      + os_disk {
+          + caching                   = "ReadWrite"
+          + disk_size_gb              = (known after apply)
+          + id                        = (known after apply)
+          + name                      = (known after apply)
+          + storage_account_type      = "Standard_LRS"
+          + write_accelerator_enabled = false
+        }
+
+      + source_image_reference {
+          + offer     = "windows-11"
+          + publisher = "MicrosoftWindowsDesktop"
+          + sku       = "win11-25h2-pro"
+          + version   = "latest"
+        }
+
+      + termination_notification (known after apply)
+    }
+
+Plan: 27 to add, 0 to change, 0 to destroy.
+azurerm_resource_group.RG["rga"]: Creating...
+azurerm_resource_group.RG["rga"]: Still creating... [00m10s elapsed]
+azurerm_resource_group.RG["rga"]: Still creating... [00m20s elapsed]
+azurerm_resource_group.RG["rga"]: Creation complete after 28s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg]
+azurerm_network_security_group.NSG["nsgc"]: Creating...
+azurerm_network_security_group.NSG["nsga"]: Creating...
+azurerm_public_ip.PIP["pipb"]: Creating...
+azurerm_network_security_group.NSG["nsgb"]: Creating...
+azurerm_virtual_network.VN["vna"]: Creating...
+azurerm_virtual_network.VN["vnb"]: Creating...
+azurerm_public_ip.PIP["pipa"]: Creating...
+azurerm_network_security_group.NSG["nsga"]: Creation complete after 4s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/networkSecurityGroups/nsgfrontend]
+azurerm_public_ip.PIP["pipb"]: Creation complete after 5s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/publicIPAddresses/frontendip]
+azurerm_network_security_group.NSG["nsgb"]: Creation complete after 5s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/networkSecurityGroups/nsgbackend]
+azurerm_network_security_group.NSG["nsgc"]: Creation complete after 5s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/networkSecurityGroups/nsgdatabase]
+azurerm_network_security_rule.NSR["nsrc"]: Creating...
+azurerm_network_security_rule.NSR["nsra"]: Creating...
+azurerm_network_security_rule.NSR["nsrb"]: Creating...
+azurerm_public_ip.PIP["pipa"]: Creation complete after 6s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/publicIPAddresses/bastionip]
+azurerm_virtual_network.VN["vna"]: Creation complete after 7s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/virtualNetworks/mgmtvnet]
+azurerm_virtual_network.VN["vnb"]: Creation complete after 7s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/virtualNetworks/appvnet]
+azurerm_virtual_network_peering.PEER["peera"]: Creating...
+azurerm_virtual_network_peering.PEER["peerb"]: Creating...
+azurerm_subnet.SBN["sbnd"]: Creating...
+azurerm_subnet.SBN["sbnb"]: Creating...
+azurerm_subnet.SBN["sbnc"]: Creating...
+azurerm_subnet.SBN["sbna"]: Creating...
+azurerm_network_security_rule.NSR["nsrb"]: Creation complete after 4s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/networkSecurityGroups/nsgfrontend/securityRules/frontendhttp]
+azurerm_network_security_rule.NSR["nsra"]: Creation complete after 5s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/networkSecurityGroups/nsgfrontend/securityRules/frontendssh]
+azurerm_subnet.SBN["sbnd"]: Creation complete after 7s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/virtualNetworks/appvnet/subnets/snetdatabase]
+azurerm_subnet.SBN["sbna"]: Creation complete after 8s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/virtualNetworks/mgmtvnet/subnets/AzureBastionSubnet]
+azurerm_network_security_rule.NSR["nsrc"]: Still creating... [00m10s elapsed]
+azurerm_virtual_network_peering.PEER["peera"]: Still creating... [00m10s elapsed]
+azurerm_virtual_network_peering.PEER["peerb"]: Still creating... [00m10s elapsed]
+azurerm_subnet.SBN["sbnb"]: Still creating... [00m10s elapsed]
+azurerm_subnet.SBN["sbnc"]: Still creating... [00m10s elapsed]
+azurerm_subnet.SBN["sbnb"]: Creation complete after 13s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/virtualNetworks/appvnet/subnets/snetfrontend]
+azurerm_network_security_rule.NSR["nsrc"]: Creation complete after 16s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/networkSecurityGroups/nsgfrontend/securityRules/frontendhttps]
+azurerm_subnet.SBN["sbnc"]: Creation complete after 20s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/virtualNetworks/appvnet/subnets/snetbackend]
+azurerm_subnet_network_security_group_association.NSGAS["nsgas2"]: Creating...
+azurerm_subnet_network_security_group_association.NSGAS["nsgas1"]: Creating...
+azurerm_network_interface.NI["nic"]: Creating...
+azurerm_subnet_network_security_group_association.NSGAS["nsgas3"]: Creating...
+azurerm_bastion_host.BAS["basa"]: Creating...
+azurerm_network_interface.NI["nib"]: Creating...
+azurerm_network_interface.NI["nia"]: Creating...
+azurerm_virtual_network_peering.PEER["peera"]: Still creating... [00m20s elapsed]
+azurerm_virtual_network_peering.PEER["peerb"]: Still creating... [00m20s elapsed]
+azurerm_subnet_network_security_group_association.NSGAS["nsgas2"]: Creation complete after 7s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/virtualNetworks/appvnet/subnets/snetbackend]
+azurerm_virtual_network_peering.PEER["peera"]: Creation complete after 28s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/virtualNetworks/mgmtvnet/virtualNetworkPeerings/mgmt-to-app]
+azurerm_subnet_network_security_group_association.NSGAS["nsgas1"]: Still creating... [00m10s elapsed]
+azurerm_network_interface.NI["nib"]: Still creating... [00m10s elapsed]
+azurerm_subnet_network_security_group_association.NSGAS["nsgas3"]: Still creating... [00m10s elapsed]
+azurerm_network_interface.NI["nia"]: Still creating... [00m10s elapsed]
+azurerm_network_interface.NI["nic"]: Still creating... [00m10s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [00m10s elapsed]
+azurerm_virtual_network_peering.PEER["peerb"]: Still creating... [00m30s elapsed]
+azurerm_subnet_network_security_group_association.NSGAS["nsgas1"]: Creation complete after 14s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/virtualNetworks/appvnet/subnets/snetfrontend]
+azurerm_network_interface.NI["nic"]: Still creating... [00m20s elapsed]
+azurerm_network_interface.NI["nia"]: Still creating... [00m20s elapsed]
+azurerm_network_interface.NI["nib"]: Still creating... [00m20s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [00m20s elapsed]
+azurerm_subnet_network_security_group_association.NSGAS["nsgas3"]: Still creating... [00m20s elapsed]
+azurerm_virtual_network_peering.PEER["peerb"]: Still creating... [00m40s elapsed]
+azurerm_subnet_network_security_group_association.NSGAS["nsgas3"]: Creation complete after 21s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/virtualNetworks/appvnet/subnets/snetdatabase]
+azurerm_network_interface.NI["nia"]: Creation complete after 25s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/networkInterfaces/frontendNI]
+azurerm_network_interface.NI["nib"]: Still creating... [00m30s elapsed]
+azurerm_network_interface.NI["nic"]: Still creating... [00m30s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [00m30s elapsed]
+azurerm_virtual_network_peering.PEER["peerb"]: Still creating... [00m50s elapsed]
+azurerm_virtual_network_peering.PEER["peerb"]: Creation complete after 55s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/virtualNetworks/appvnet/virtualNetworkPeerings/app-to-mgmt]
+azurerm_network_interface.NI["nic"]: Creation complete after 37s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/networkInterfaces/databaseNI]
+azurerm_network_interface.NI["nib"]: Still creating... [00m40s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [00m40s elapsed]
+azurerm_network_interface.NI["nib"]: Creation complete after 48s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/networkInterfaces/backendNI]
+azurerm_linux_virtual_machine.example["linxvmb"]: Creating...
+azurerm_linux_virtual_machine.example["linxvma"]: Creating...
+azurerm_windows_virtual_machine.example["winvma"]: Creating...
+azurerm_bastion_host.BAS["basa"]: Still creating... [00m50s elapsed]
+azurerm_linux_virtual_machine.example["linxvma"]: Still creating... [00m10s elapsed]
+azurerm_linux_virtual_machine.example["linxvmb"]: Still creating... [00m10s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [00m10s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [01m00s elapsed]
+azurerm_linux_virtual_machine.example["linxvmb"]: Creation complete after 19s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Compute/virtualMachines/DatabaseVM]
+azurerm_linux_virtual_machine.example["linxvma"]: Still creating... [00m20s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [00m20s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [01m10s elapsed]
+azurerm_linux_virtual_machine.example["linxvma"]: Still creating... [00m30s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [00m30s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [01m20s elapsed]
+azurerm_linux_virtual_machine.example["linxvma"]: Still creating... [00m40s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [00m40s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [01m30s elapsed]
+azurerm_linux_virtual_machine.example["linxvma"]: Creation complete after 50s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Compute/virtualMachines/FrontendVM]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [00m50s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [01m40s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [01m00s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [01m50s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [01m10s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [02m00s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [01m20s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [02m10s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [01m30s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [02m20s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [01m40s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [02m30s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [01m50s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [02m40s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Still creating... [02m00s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [02m50s elapsed]
+azurerm_windows_virtual_machine.example["winvma"]: Creation complete after 2m6s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Compute/virtualMachines/BackendVM]
+azurerm_bastion_host.BAS["basa"]: Still creating... [03m00s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [03m10s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [03m20s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [03m30s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [03m40s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [03m50s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [04m00s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [04m10s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [04m20s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [04m30s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [04m40s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [04m50s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [05m00s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [05m10s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [05m20s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [05m30s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [05m40s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [05m50s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [06m00s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [06m10s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [06m20s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [06m30s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [06m40s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [06m50s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [07m00s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [07m10s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [07m20s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [07m30s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [07m40s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [07m50s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [08m00s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [08m10s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [08m20s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [08m30s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [08m40s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [08m50s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [09m00s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [09m10s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [09m20s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [09m30s elapsed]
+azurerm_bastion_host.BAS["basa"]: Still creating... [09m40s elapsed]
+azurerm_bastion_host.BAS["basa"]: Creation complete after 9m49s [id=/subscriptions/474ceedb-501c-4a8d-ad0f-9e3a0bfe2455/resourceGroups/amdrg/providers/Microsoft.Network/bastionHosts/AZBastion]
+
+Apply complete! Resources: 27 added, 0 changed, 0 destroyed.
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform\13june> terraform state list
+azurerm_bastion_host.BAS["basa"]
+azurerm_linux_virtual_machine.example["linxvma"]
+azurerm_linux_virtual_machine.example["linxvmb"]
+azurerm_network_interface.NI["nia"]
+azurerm_network_interface.NI["nib"]
+azurerm_network_interface.NI["nic"]
+azurerm_network_security_group.NSG["nsga"]
+azurerm_network_security_group.NSG["nsgb"]
+azurerm_network_security_group.NSG["nsgc"]
+azurerm_network_security_rule.NSR["nsra"]
+azurerm_network_security_rule.NSR["nsrb"]
+azurerm_network_security_rule.NSR["nsrc"]
+azurerm_public_ip.PIP["pipa"]
+azurerm_public_ip.PIP["pipb"]
+azurerm_resource_group.RG["rga"]
+azurerm_subnet.SBN["sbna"]
+azurerm_subnet.SBN["sbnb"]
+azurerm_subnet.SBN["sbnc"]
+azurerm_subnet.SBN["sbnd"]
+azurerm_subnet_network_security_group_association.NSGAS["nsgas1"]
+azurerm_subnet_network_security_group_association.NSGAS["nsgas2"]
+azurerm_subnet_network_security_group_association.NSGAS["nsgas3"]
+azurerm_virtual_network.VN["vna"]
+azurerm_virtual_network.VN["vnb"]
+azurerm_virtual_network_peering.PEER["peera"]
+azurerm_virtual_network_peering.PEER["peerb"]
+azurerm_windows_virtual_machine.example["winvma"]
+PS C:\Users\chait\OneDrive\Documents\Devops\terraform\13june> 

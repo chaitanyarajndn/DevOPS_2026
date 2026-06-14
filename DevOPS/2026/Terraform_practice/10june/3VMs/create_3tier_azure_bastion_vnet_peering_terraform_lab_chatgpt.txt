@@ -1,0 +1,185 @@
+					create_3tier_azure_bastion_vnet_peering_terraform_lab_chatgpt
+
+					Current Terraform Azure Lab
+
+					Architecture:
+
+					* 1 Resource Group (intelrg)
+					* 2 VNets (VNETMGMT, VNETAPP)
+					* 4 Subnets (AzureBastionSubnet, snetfrontend, snetbackend, snetdatabase)
+					* 3 NSGs (nsgfrontend, nsgbackend, nsgdatabase)
+					* NSG associated at subnet level
+					* Azure Bastion deployed in VNETMGMT
+					* VNET Peering between VNETMGMT and VNETAPP
+					* Frontend VM (Ubuntu 22.04 LTS) with Public IP
+					* Backend VM (Windows 11 Pro) without Public IP
+					* Database VM (Ubuntu 22.04 LTS) without Public IP
+					* Azure Bastion used to access Backend and Database VMs
+					* Terraform code written using for_each and map-based tfvars
+					* Resource references handled using map keys (rga, vna, sbna, nica etc.)
+					* Optional Public IP reference handled using conditional expression:
+					  public_ip_address_id = each.value.public_ip_address_id != null ? azurerm_public_ip.PIP[each.value.public_ip_address_id].id : null
+
+					Current Resources:
+
+					Resource Group : intelrg
+
+					VNETMGMT
+					└── AzureBastionSubnet
+					└── AzureBastion
+					└── BastionPIP
+
+					VNETAPP
+					├── snetfrontend
+					│   ├── nsgfrontend
+					│   ├── FrontendNIC
+					│   ├── FrontendPIP
+					│   └── FrontendVM (Ubuntu 22.04 LTS)
+					│
+					├── snetbackend
+					│   ├── nsgbackend
+					│   ├── BackendNIC
+					│   └── BackendVM (Windows 11 Pro)
+					│
+					└── snetdatabase
+					├── nsgdatabase
+					├── DatabaseNIC
+					└── DatabaseVM (Ubuntu 22.04 LTS)
+
+					Linux Image:
+					publisher = "Canonical"
+					offer     = "0001-com-ubuntu-server-jammy"
+					sku       = "22_04-lts-gen2"
+					version   = "latest"
+
+					Windows Image:
+					publisher = "MicrosoftWindowsDesktop"
+					offer     = "windows-11"
+					sku       = "win11-25h2-pro"
+					version   = "latest"
+
+					VNET Peering:
+					VNETMGMT <----> VNETAPP
+
+					Access Method:
+					FrontendVM  -> Public IP + Azure Bastion
+					BackendVM   -> Azure Bastion Only
+					DatabaseVM  -> Azure Bastion Only
+
+					CIDR Layout
+
+					mgmtvnet
+					Address Space:
+					10.100.0.0/24
+
+					Subnet:
+					AzureBastionSubnet
+					10.100.0.0/26
+
+					Usable Range:
+					10.100.0.1 - 10.100.0.62
+
+
+					appvnet
+					Address Space:
+					10.100.1.0/24
+
+					Subnets:
+
+					snetfrontend
+					10.100.1.0/26
+
+					Usable Range:
+					10.100.1.1 - 10.100.1.62
+
+
+					snetbackend
+					10.100.1.64/26
+
+					Usable Range:
+					10.100.1.65 - 10.100.1.126
+
+
+					snetdatabase
+					10.100.1.128/26
+
+					Usable Range:
+					10.100.1.129 - 10.100.1.190
+
+
+					Reserved Future Range
+
+					10.100.1.192/26
+
+					Usable Range:
+					10.100.1.193 - 10.100.1.254
+
+					Currently Unused
+
+
+					CIDR Visual
+
+					10.100.0.0/24
+					└── AzureBastionSubnet
+						└── 10.100.0.0/26
+
+					10.100.1.0/24
+					├── snetfrontend
+					│   └── 10.100.1.0/26
+					│
+					├── snetbackend
+					│   └── 10.100.1.64/26
+					│
+					├── snetdatabase
+					│   └── 10.100.1.128/26
+					│
+					└── Reserved
+						└── 10.100.1.192/26
+
+
+
+
+					Terraform Structure (Planned):
+					provider.tf
+					variables.tf
+					terraform.tfvars
+					resource_group.tf
+					vnet.tf
+					subnet.tf
+					nsg.tf
+					public_ip.tf
+					bastion.tf
+					peering.tf
+					nic.tf
+					linux_vm.tf
+					windows_vm.tf
+					outputs.tf
+
+					Important Note:
+					Terraform implicit dependency works across multiple .tf files.
+					Terraform does not care about file order.
+					Dependency is created through resource references, not file names.
+
+					Important Instructions:
+
+					* Do not suggest Terraform Modules.
+					* Do not suggest alternative architectures unless explicitly asked.
+					* Do not add extra Azure services on your own.
+					* Do not redesign the lab.
+					* Do not jump ahead to advanced topics.
+					* Follow the existing architecture only.
+					* Focus only on the current task being discussed.
+					* Give direct answers instead of multiple options unless requested.
+					* Explain only what is asked.
+					* Do not add best practices unless specifically requested.
+					* Do not generate code without permission.
+					* First discuss the design, then generate Terraform code only after approval.
+
+					Next Step:
+
+					* Continue from current Terraform Azure Lab state.
+					* Review Terraform code if required.
+					* Run terraform validate.
+					* Run terraform plan.
+					* Fix remaining errors if any.
+					* Continue Terraform learning professionally without modules.
