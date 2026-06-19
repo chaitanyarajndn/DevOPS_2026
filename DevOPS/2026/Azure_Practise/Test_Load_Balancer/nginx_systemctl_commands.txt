@@ -1,0 +1,59 @@
+NGINX BASIC SYSTEMCTL COMMANDS
+==============================
+
+1. Nginx start karna
+--------------------
+sudo systemctl start nginx
+
+
+2. Nginx stop karna
+-------------------
+sudo systemctl stop nginx
+
+
+3. Nginx restart karna
+----------------------
+sudo systemctl restart nginx
+
+
+4. Nginx reload karna
+---------------------
+sudo systemctl reload nginx
+
+Note:
+Reload config ko dobara load karta hai bina full restart ke.
+
+
+5. VM boot hone par nginx auto-start enable karna
+-------------------------------------------------
+sudo systemctl enable nginx
+
+
+6. VM boot hone par nginx auto-start disable karna
+--------------------------------------------------
+sudo systemctl disable nginx
+
+
+7. Nginx status dekhna
+----------------------
+sudo systemctl status nginx
+
+
+8. Nginx config test karna
+--------------------------
+sudo nginx -t
+
+
+SAFE FLOW AFTER CONFIG CHANGE
+=============================
+
+sudo nginx -t
+sudo systemctl reload nginx
+sudo systemctl status nginx
+
+
+AGAR RELOAD SE KAAM NA HO
+=========================
+
+sudo systemctl restart nginx
+

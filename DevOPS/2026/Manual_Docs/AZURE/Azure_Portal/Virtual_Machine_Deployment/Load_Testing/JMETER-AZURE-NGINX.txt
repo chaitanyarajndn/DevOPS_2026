@@ -1,0 +1,335 @@
+
+
+#####################################################
+# AZURE LOAD TESTING LAB (JMETER + AZURE + NGINX)
+#####################################################
+
+=====================================================
+1. JMETER TARGETS
+=====================================================
+
+Portfolio Site:
+http://20.204.36.226/
+
+50MB Test File:
+http://20.204.36.226/bigfile.bin
+
+=====================================================
+2. BIG FILE CREATION
+=====================================================
+
+# Create 50MB File
+
+sudo fallocate -l 50M /var/www/html/bigfile.bin
+
+# Verify
+
+ls -lh /var/www/html/bigfile.bin
+
+# Test
+
+curl -I http://localhost/bigfile.bin
+
+=====================================================
+3. LINUX VM MONITORING
+=====================================================
+
+#############################
+# CPU & MEMORY
+#############################
+
+top
+
+sudo apt update
+sudo apt install htop -y
+htop
+
+#############################
+# NETWORK
+#############################
+
+sudo apt install iftop -y
+sudo iftop
+
+sudo apt install nload -y
+nload
+
+#############################
+# LOAD AVERAGE
+#############################
+
+uptime
+
+vmstat 1
+
+#############################
+# MEMORY
+#############################
+
+free -h
+
+#############################
+# DISK
+#############################
+
+df -h
+
+#############################
+# TOP CPU PROCESSES
+#############################
+
+ps aux --sort=-%cpu | head
+
+#############################
+# TOP MEMORY PROCESSES
+#############################
+
+ps aux --sort=-%mem | head
+
+#############################
+# NGINX STATUS
+#############################
+
+sudo systemctl status nginx
+
+#############################
+# LIVE ACCESS LOGS
+#############################
+
+sudo tail -f /var/log/nginx/access.log
+
+#############################
+# LIVE ERROR LOGS
+#############################
+
+sudo tail -f /var/log/nginx/error.log
+
+#############################
+# OPEN PORTS
+#############################
+
+sudo ss -tulnp
+
+=====================================================
+4. AZURE PORTAL MONITORING
+=====================================================
+
+Azure Portal
+  ↓
+Virtual Machines
+  ↓
+linuxvm
+  ↓
+Monitoring
+  ↓
+Metrics
+
+#####################################################
+# METRIC 1 : CPU
+#####################################################
+
+Percentage CPU
+
+Expected:
+
+0-20%   = Idle
+20-50%  = Normal
+50-80%  = Heavy
+80-100% = Stress
+
+#####################################################
+# METRIC 2 : NETWORK OUT
+#####################################################
+
+Network Out Total
+
+IMPORTANT
+
+50MB file test me sabse zyada ye graph move karega.
+
+Observe:
+
+KB/s
+MB/s
+Traffic Spikes
+
+#####################################################
+# METRIC 3 : NETWORK IN
+#####################################################
+
+Network In Total
+
+Incoming Requests
+
+#####################################################
+# METRIC 4 : DISK READ
+#####################################################
+
+Disk Read Bytes/Sec
+
+50MB file serving me increase hoga.
+
+#####################################################
+# METRIC 5 : DISK WRITE
+#####################################################
+
+Disk Write Bytes/Sec
+
+Normally low rahega.
+
+#####################################################
+# METRIC 6 : PACKETS
+#####################################################
+
+Network In Packets
+Network Out Packets
+
+Useful for request count estimation.
+
+=====================================================
+5. AZURE INSIGHTS (OPTIONAL)
+=====================================================
+
+Virtual Machine
+ ↓
+Insights
+
+Monitor:
+
+CPU
+Memory
+Processes
+Dependencies
+Connections
+
+=====================================================
+6. JMETER CONFIGURATION
+=====================================================
+
+Thread Group
+
+Users: 200
+Ramp-Up: 20
+Loop Count: 5
+
+-----------------------------------------------------
+
+Users: 500
+Ramp-Up: 30
+Loop Count: 10
+
+-----------------------------------------------------
+
+Users: 1000
+Ramp-Up: 60
+Loop Count: 10
+
+=====================================================
+7. JMETER LISTENERS
+=====================================================
+
+Summary Report
+
+Aggregate Report
+
+View Results Tree
+
+=====================================================
+8. IMPORTANT JMETER METRICS
+=====================================================
+
+Throughput
+
+Requests/sec
+
+Higher = Better
+
+-----------------------------------------------------
+
+Average Response Time
+
+Lower = Better
+
+-----------------------------------------------------
+
+Error %
+
+Target = 0%
+
+=====================================================
+9. LIVE TEST SETUP
+=====================================================
+
+Terminal 1
+
+htop
+
+-----------------------------------------------------
+
+Terminal 2
+
+sudo iftop
+
+-----------------------------------------------------
+
+Terminal 3
+
+sudo tail -f /var/log/nginx/access.log
+
+-----------------------------------------------------
+
+Browser
+
+Azure Portal Metrics
+
+-----------------------------------------------------
+
+Run JMeter
+
+=====================================================
+10. FUTURE LAB
+=====================================================
+
+JMeter
+   ↓
+Load Balancer
+   ↓
+VM1
+VM2
+
+Compare:
+
+CPU
+Throughput
+Latency
+Network Out
+
+=====================================================
+11. SUCCESS CRITERIA
+=====================================================
+
+CPU Increase
+Network Out Spike
+No Errors
+Response Time Stable
+Nginx Access Logs Active
+
+#####################################################
+# END OF LAB NOTES
+#####################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

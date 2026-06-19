@@ -1,0 +1,264 @@
+				=====================================================
+				12. JMETER SETUP (50MB FILE TEST)
+				=====================================================
+
+				Target URL
+
+				http://20.204.36.226/bigfile.bin
+
+				=====================================================
+				STEP 1 : CREATE THREAD GROUP
+				=====================================================
+
+				Test Plan
+				 ↓
+				Add
+				 ↓
+				Threads (Users)
+				 ↓
+				Thread Group
+
+				Settings
+
+				Name:
+				BigFileTest
+
+				Number of Threads (Users):
+				200
+
+				Ramp-Up Period (Seconds):
+				20
+
+				Loop Count:
+				5
+
+				=====================================================
+				STEP 2 : CREATE HTTP REQUEST
+				=====================================================
+
+				Thread Group (BigFileTest)
+				 ↓
+				Add
+				 ↓
+				Sampler
+				 ↓
+				HTTP Request
+
+				Settings
+
+				Name:
+				Download50MB
+
+				Protocol:
+				http
+
+				Server Name or IP:
+				20.204.36.226
+
+				Port Number:
+				80
+
+				Method:
+				GET
+
+				Path:
+				/bigfile.bin
+
+				=====================================================
+				STEP 3 : ADD LISTENERS
+				=====================================================
+
+				Thread Group
+				 ↓
+				Add
+				 ↓
+				Listener
+				 ↓
+				Summary Report
+
+				-----------------------------------------------------
+
+				Thread Group
+				 ↓
+				Add
+				 ↓
+				Listener
+				 ↓
+				Aggregate Report
+
+				-----------------------------------------------------
+
+				Thread Group
+				 ↓
+				Add
+				 ↓
+				Listener
+				 ↓
+				View Results Tree
+
+				NOTE:
+
+				For 1000+ users
+
+				Disable:
+				View Results Tree
+
+				Reason:
+
+				Consumes too much memory
+
+				=====================================================
+				STEP 4 : SAVE TEST PLAN
+				=====================================================
+
+				File
+				 ↓
+				Save Test Plan As
+
+				BigFileTest.jmx
+
+				=====================================================
+				STEP 5 : OPEN AZURE METRICS
+				=====================================================
+
+				Azure Portal
+				 ↓
+				Virtual Machine
+				 ↓
+				linuxvm
+				 ↓
+				Monitoring
+				 ↓
+				Metrics
+
+				Add Metrics
+
+				Percentage CPU
+
+				Network Out Total
+
+				Network In Total
+
+				Disk Read Bytes/Sec
+
+				Time Range
+
+				Last 30 Minutes
+
+				=====================================================
+				STEP 6 : OPEN LINUX MONITORING
+				=====================================================
+
+				SSH Window 1
+
+				htop
+
+				-----------------------------------------------------
+
+				SSH Window 2
+
+				sudo iftop
+
+				-----------------------------------------------------
+
+				SSH Window 3
+
+				sudo tail -f /var/log/nginx/access.log
+
+				=====================================================
+				STEP 7 : START LOAD TEST
+				=====================================================
+
+				Click
+
+				Green Play Button
+
+				Observe
+
+				Azure CPU
+
+				Azure Network Out
+
+				Azure Disk Read
+
+				Linux htop
+
+				Linux iftop
+
+				Nginx Access Logs
+
+				=====================================================
+				EXPECTED RESULTS
+				=====================================================
+
+				Network Out Spike
+
+				CPU Increase
+
+				Thousands of Nginx Requests
+
+				No Errors
+
+				HTTP 200 Responses
+
+				=====================================================
+				ROUND 2
+				=====================================================
+
+				Users:
+				500
+
+				Ramp-Up:
+				30
+
+				Loop Count:
+				10
+
+				=====================================================
+				ROUND 3
+				=====================================================
+
+				Users:
+				1000
+
+				Ramp-Up:
+				60
+
+				Loop Count:
+				10
+
+				Disable:
+
+				View Results Tree
+
+				Before Running
+
+				=====================================================
+				AGGREGATE REPORT
+				=====================================================
+
+				Watch
+
+				Average
+
+				90% Line
+
+				Throughput
+
+				Received KB/sec
+
+				Error %
+
+				=====================================================
+				SUCCESS
+				=====================================================
+
+				CPU Increased
+
+				Network Out Increased
+
+				Error % = 0
+
+				Response Time Stable
+
+				Load Test Successful

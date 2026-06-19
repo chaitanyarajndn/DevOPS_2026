@@ -1,0 +1,470 @@
+				AZURE NETWORKING NOTES
+				(Load_Balancer_Application_Gateway_Front_Door)
+
+				====================================================================
+				0. OSI MODEL FOUNDATION
+				=======================
+
+				## What is OSI Model?
+
+				* OSI (Open Systems Interconnection) is a networking reference model.
+				  It divides communication into 7 layers to make troubleshooting and design easier.
+
+				* Each layer has a specific responsibility.
+				  Data moves through multiple layers before reaching the destination.
+
+				* Azure networking services are often categorized as Layer 4 or Layer 7.
+				  Understanding these layers helps in choosing the correct Azure service.
+
+				* In cloud interviews, Layer 4 and Layer 7 are the most commonly discussed layers.
+				  Most Azure networking services operate at one of these layers.
+
+				## 7 Layers Overview
+
+				* Layer 7 : Application
+				  Handles user-facing protocols like HTTP and HTTPS.
+
+				* Layer 4 : Transport
+				  Handles TCP and UDP communication between systems.
+
+				* Layer 3 : Network
+				  Responsible for routing using IP addresses.
+
+				* Layers 1-2 and 5-6 exist as well.
+				  However, Azure networking discussions mainly focus on Layer 4 and Layer 7.
+
+				## Layer 4 (Transport Layer)
+
+				* Works with TCP and UDP protocols.
+				  It focuses on delivering traffic between endpoints.
+
+				* Uses source and destination ports.
+				  It does not understand website URLs.
+
+				* Makes decisions based on IP addresses and ports.
+				  It cannot inspect application content.
+
+				* Azure Load Balancer operates at Layer 4.
+				  This makes it very fast and efficient.
+
+				## Layer 7 (Application Layer)
+
+				* Understands HTTP and HTTPS traffic.
+				  It can inspect the actual web request.
+
+				* Can read URLs, hostnames, headers and cookies.
+				  This enables intelligent routing decisions.
+
+				* Supports web application features.
+				  Examples include WAF and URL-based routing.
+
+				* Application Gateway and Front Door operate at Layer 7.
+				  They provide advanced traffic management.
+
+				## Layer 4 vs Layer 7
+
+				* Layer 4 sees IP addresses and ports.
+				  Layer 7 sees URLs and application data.
+
+				* Layer 4 is faster.
+				  Layer 7 provides more intelligence and flexibility.
+
+				* Layer 4 is ideal for TCP/UDP workloads.
+				  Layer 7 is ideal for web applications.
+
+				* Layer 4 cannot inspect URLs.
+				  Layer 7 can route based on URLs and hostnames.
+
+				## Interview Points
+
+				* Why is Azure Load Balancer called Layer 4?
+				* Why is Application Gateway called Layer 7?
+				* Difference between Layer 4 and Layer 7?
+				* Which Azure services operate at Layer 7?
+
+				## Common Mistakes
+
+				* Thinking Layer 4 understands URLs.
+				* Assuming Load Balancer can perform WAF functions.
+				* Treating Layer 4 and Layer 7 as the same thing.
+				* Ignoring OSI layers while selecting Azure services.
+
+				====================================================================
+
+				1. AZURE LOAD BALANCER
+				   ====================================================================
+
+				## What is Azure Load Balancer?
+
+				* Azure Load Balancer distributes traffic across multiple backend servers.
+				  This improves availability and performance.
+
+				* It operates at Layer 4.
+				  Decisions are based on IP addresses and ports.
+
+				* It supports TCP and UDP workloads.
+				  Suitable for applications that do not require URL inspection.
+
+				* It helps prevent a single VM from becoming overloaded.
+				  Traffic is shared across multiple servers.
+
+				## Why Do We Need It?
+
+				* Improves application availability.
+				  If one VM fails, traffic can go to another VM.
+
+				* Distributes incoming requests.
+				  This prevents traffic bottlenecks.
+
+				* Supports scaling.
+				  Additional VMs can be added behind the Load Balancer.
+
+				* Provides redundancy.
+				  A failed backend does not necessarily impact users.
+
+				## How Does It Work?
+
+				* Clients send traffic to the frontend IP.
+				  This is the entry point for requests.
+
+				* Health probes continuously check backend VM health.
+				  Unhealthy VMs are removed from rotation.
+
+				* Load balancing rules determine traffic flow.
+				  Requests are distributed to healthy servers.
+
+				* Backend pool contains the VMs.
+				  Traffic is routed to resources in this pool.
+
+				## Types
+
+				Public Load Balancer
+
+				* Exposes services to the internet.
+				  Users access the application through a public IP.
+
+				Internal Load Balancer
+
+				* Used for private traffic only.
+				  Commonly used between internal application tiers.
+
+				## Components
+
+				* Frontend IP
+				  Receives incoming traffic.
+
+				* Backend Pool
+				  Contains target VMs.
+
+				* Health Probe
+				  Checks backend availability.
+
+				* Load Balancing Rule
+				  Defines traffic distribution behavior.
+
+				## Public IP Requirement
+
+				* Public Load Balancer requires a Public IP resource.
+				  Users connect using this public endpoint.
+
+				* Internal Load Balancer does not need a Public IP.
+				  It uses a private IP inside the VNet.
+
+				* Azure Portal can create the Public IP automatically.
+				  The portal handles resource creation for you.
+
+				* Terraform requires explicit configuration.
+				  Public IP resources are usually defined in code.
+
+				## Terraform Resources
+
+				* azurerm_lb
+				  Creates the Load Balancer.
+
+				* azurerm_lb_backend_address_pool
+				  Defines backend targets.
+
+				* azurerm_lb_probe
+				  Creates health checks.
+
+				* azurerm_lb_rule
+				  Defines traffic routing rules.
+
+				## Real Life Use Cases
+
+				* VM Scale Sets
+				  Traffic is distributed across multiple instances.
+
+				* Database clusters
+				  Requests are shared among backend nodes.
+
+				* Internal enterprise applications
+				  Used between private application tiers.
+
+				* TCP based applications
+				  Useful where URL inspection is not required.
+
+				## Interview Points
+
+				* Difference between Public and Internal Load Balancer?
+				* Why is Load Balancer Layer 4?
+				* Can Load Balancer inspect URLs?
+				* Can Internal Load Balancer work without Public IP?
+
+				## Common Traps
+
+				* Load Balancer can inspect URLs. (Wrong)
+				* Load Balancer provides WAF. (Wrong)
+				* Load Balancer understands HTTP headers. (Wrong)
+				* Load Balancer replaces Application Gateway. (Wrong)
+
+				====================================================================
+				2. AZURE APPLICATION GATEWAY
+				============================
+
+				## What is Application Gateway?
+
+				* Application Gateway is a Layer 7 load balancer.
+				  It understands HTTP and HTTPS traffic.
+
+				* It can inspect URLs and web requests.
+				  This enables intelligent routing.
+
+				* It acts as a reverse proxy.
+				  Traffic first reaches the gateway before backend servers.
+
+				* It provides advanced web application features.
+				  Examples include WAF and SSL Offloading.
+
+				## Why Do We Need It?
+
+				* Supports URL-based routing.
+				  Different URLs can go to different backends.
+
+				* Provides Web Application Firewall (WAF).
+				  Protects applications from common attacks.
+
+				* Simplifies SSL certificate management.
+				  SSL can terminate at the gateway.
+
+				* Improves application security.
+				  Backend servers remain hidden from users.
+
+				## How Does It Work?
+
+				* Users connect to Application Gateway.
+				  The gateway receives incoming web traffic.
+
+				* It inspects the HTTP/HTTPS request.
+				  URLs and hostnames can be analyzed.
+
+				* Routing rules determine backend selection.
+				  Requests are forwarded appropriately.
+
+				* Backend pools contain target servers.
+				  Traffic is sent to healthy backends.
+
+				## Features
+
+				* URL-Based Routing
+				  Route traffic based on request paths.
+
+				* Host-Based Routing
+				  Route traffic based on domain names.
+
+				* SSL Offloading
+				  SSL decryption occurs at the gateway.
+
+				* WAF
+				  Protects applications from web attacks.
+
+				## Public IP Requirement
+
+				* Internet-facing deployments typically use a Public IP.
+				  Users connect through the gateway.
+
+				* Internal deployments can use private endpoints.
+				  Useful for internal corporate applications.
+
+				* Azure Portal can create the Public IP automatically.
+				  This simplifies deployment.
+
+				* Terraform typically requires explicit Public IP resources.
+				  The IP is attached during deployment.
+
+				## Terraform Resource
+
+				* azurerm_application_gateway
+				  Creates and manages Application Gateway.
+
+				## Real Life Use Cases
+
+				* Public websites
+				  Route users to different application tiers.
+
+				* API gateways
+				  Manage incoming API traffic.
+
+				* Multi-environment routing
+				  Examples include /app, /dev and /prod.
+
+				* Secure internet-facing applications
+				  WAF protects backend resources.
+
+				## Interview Points
+
+				* Why is Application Gateway Layer 7?
+				* Difference between Load Balancer and Application Gateway?
+				* What is URL-based routing?
+				* What is SSL Offloading?
+
+				## Common Traps
+
+				* Application Gateway is a VPN Gateway. (Wrong)
+				* Application Gateway connects VNets. (Wrong)
+				* Application Gateway is only a Load Balancer. (Wrong)
+				* WAF is available in Load Balancer. (Wrong)
+
+				====================================================================
+				3. AZURE FRONT DOOR
+				===================
+
+				## What is Azure Front Door?
+
+				* Azure Front Door is a global Layer 7 service.
+				  It routes users to the best available region.
+
+				* It sits at Microsoft's global edge network.
+				  Requests are processed close to users.
+
+				* It supports multi-region deployments.
+				  Traffic can be distributed globally.
+
+				* It provides global availability.
+				  Regional failures can be handled automatically.
+
+				## Why Do We Need It?
+
+				* Reduces latency.
+				  Users connect to the nearest healthy region.
+
+				* Provides automatic failover.
+				  Traffic moves if a region becomes unavailable.
+
+				* Improves global user experience.
+				  Applications remain responsive worldwide.
+
+				* Simplifies global traffic management.
+				  A single entry point serves multiple regions.
+
+				## How Does It Work?
+
+				* Users connect to Front Door.
+				  It becomes the global entry point.
+
+				* Health probes monitor backend regions.
+				  Unhealthy regions are removed automatically.
+
+				* Routing logic selects the best backend.
+				  Latency and health are considered.
+
+				* Requests are forwarded to the selected region.
+				  Backend applications process the request.
+
+				## Features
+
+				* Global Routing
+				  Direct traffic across regions.
+
+				* Latency Based Routing
+				  Choose the nearest healthy region.
+
+				* Regional Failover
+				  Redirect traffic during outages.
+
+				* CDN and WAF
+				  Improve performance and security.
+
+				## Public IP Requirement
+
+				* No user-managed Public IP is required.
+				  Microsoft manages the global endpoints.
+
+				* Azure creates and manages the endpoint.
+				  Customers do not provision a Public IP resource.
+
+				* Terraform does not require azurerm_public_ip.
+				  Front Door resources are configured directly.
+
+				* Front Door uses Microsoft global infrastructure.
+				  Endpoint management is abstracted.
+
+				## Terraform Resources
+
+				* azurerm_cdn_frontdoor_profile
+				* azurerm_cdn_frontdoor_endpoint
+				* azurerm_cdn_frontdoor_origin_group
+				* azurerm_cdn_frontdoor_origin
+				* azurerm_cdn_frontdoor_route
+
+				## Real Life Use Cases
+
+				* Global websites
+				  Users access the nearest region.
+
+				* Multi-region applications
+				  Traffic is balanced across geographies.
+
+				* Disaster recovery architectures
+				  Regions can fail without service disruption.
+
+				* Global SaaS platforms
+				  Consistent performance for worldwide users.
+
+				## Interview Points
+
+				* Why use Front Door when App Gateway already exists?
+				* What happens if a region goes down?
+				* What is latency-based routing?
+				* Does Front Door require a Public IP resource?
+
+				## Common Traps
+
+				* Front Door connects VNets. (Wrong)
+				* Front Door replaces VPN Gateway. (Wrong)
+				* Front Door is only a CDN. (Wrong)
+				* Front Door replaces Application Gateway completely. (Wrong)
+
+				====================================================================
+				4. QUICK REVISION
+				=================
+
+				## Load Balancer
+
+				Chooses Server
+
+				## Application Gateway
+
+				Chooses Application
+
+				## Front Door
+
+				Chooses Region
+
+				## Traffic Flow
+
+				User
+				|
+				Front Door
+				|
+				Application Gateway
+				|
+				Load Balancer
+				|
+				Virtual Machine
+
+				## Interview One-Liner
+
+				Front Door selects the best region,
+				Application Gateway selects the application,
+				Load Balancer selects the backend server.

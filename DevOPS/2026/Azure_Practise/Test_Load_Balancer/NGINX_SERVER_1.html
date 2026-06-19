@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DevOps Backend Node</title>
+  <style>
+    :root {
+      --bg: #080d16;
+      --panel: #101826;
+      --panel-soft: #152033;
+      --text: #eef4ff;
+      --muted: #9aa7b7;
+      --line: #263448;
+      --green: #22c55e;
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+        radial-gradient(circle at 12% 12%, rgba(34, 197, 94, 0.15), transparent 32%),
+        radial-gradient(circle at 88% 8%, rgba(56, 189, 248, 0.18), transparent 30%),
+        var(--bg);
+      background-size: 44px 44px, 44px 44px, auto, auto;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 12px 0 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      border-radius: 8px;
+      background: #0f1b2c;
+      color: var(--cyan);
+      font-weight: 900;
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.18);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 58px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .sub {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid rgba(34, 197, 94, 0.48);
+      border-radius: 8px;
+      background: rgba(34, 197, 94, 0.08);
+      color: #bbf7d0;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.12);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 0.82fr;
+      gap: 18px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(16, 24, 38, 0.9);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+    }
+
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      min-height: 48px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(8, 13, 22, 0.75);
+      color: #cbd5e1;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .node-card {
+      padding: 28px;
+      min-height: 356px;
+      display: grid;
+      align-content: center;
+    }
+
+    .node-label {
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .node-name {
+      margin: 12px 0;
+      font-size: clamp(46px, 8vw, 92px);
+      line-height: 0.95;
+      font-weight: 900;
+      color: var(--cyan);
+      text-shadow: 0 0 34px rgba(56, 189, 248, 0.26);
+    }
+
+    .node-info {
+      margin: 0;
+      max-width: 620px;
+      color: #cbd5e1;
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .terminal {
+      margin-top: 22px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #07111f;
+      color: #d1fae5;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .cmd {
+      color: var(--cyan);
+    }
+
+    .ok {
+      color: var(--green);
+    }
+
+    .warn {
+      color: var(--amber);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .metric {
+      min-height: 120px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 12px;
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .bar {
+      height: 8px;
+      margin-top: 16px;
+      border-radius: 8px;
+      background: #263448;
+      overflow: hidden;
+    }
+
+    .bar i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .flow {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      align-items: center;
+      gap: 14px;
+      min-height: 74px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(21, 32, 51, 0.72);
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.08);
+      color: var(--cyan);
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .step p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .badge {
+      padding: 7px 10px;
+      border-radius: 8px;
+      background: rgba(34, 197, 94, 0.1);
+      color: #bbf7d0;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .topology {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      align-content: center;
+      min-height: 358px;
+    }
+
+    .box {
+      min-height: 96px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, rgba(21, 32, 51, 0.96), rgba(16, 24, 38, 0.96));
+    }
+
+    .box.active {
+      border-color: rgba(56, 189, 248, 0.62);
+      box-shadow: inset 0 0 28px rgba(56, 189, 248, 0.1);
+    }
+
+    .box strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .box span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    footer {
+      padding: 22px 0 6px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 860px) {
+      header,
+      .hero,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        display: grid;
+      }
+
+      .metrics,
+      .topology {
+        grid-template-columns: 1fr;
+      }
+
+      .step {
+        grid-template-columns: 48px 1fr;
+      }
+
+      .badge {
+        grid-column: 2;
+        width: fit-content;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">LB</div>
+        <div>
+          <h1>DevOps Backend Node</h1>
+          <p class="sub">Use this page on multiple VMs to verify load balancer traffic routing.</p>
+        </div>
+      </div>
+      <div class="status"><span class="dot"></span> Backend Healthy</div>
+    </header>
+
+    <section class="hero">
+      <div class="panel">
+        <div class="panel-title">
+          <span>Current Backend</span>
+          <span>Nginx :80</span>
+        </div>
+        <div class="node-card">
+          <span class="node-label">Request served by</span>
+          <div class="node-name">VM-01</div>
+          <p class="node-info">
+            This response came from backend node VM-01. Put a different node name on your second VM, then open the load balancer public IP and refresh to check traffic distribution.
+          </p>
+          <div class="terminal">
+            <div><span class="cmd">$</span> curl http://LOAD_BALANCER_PUBLIC_IP</div>
+            <div>status=<span class="ok">200 OK</span></div>
+            <div>server=nginx</div>
+            <div>backend=<span class="ok">VM-01</span></div>
+            <div>health_probe=<span class="ok">passing</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span>Node Signals</span>
+          <span>For Demo</span>
+        </div>
+        <div class="metrics">
+          <div class="metric">
+            <span>Health Probe</span>
+            <strong>200</strong>
+            <div class="bar"><i style="width: 100%"></i></div>
+          </div>
+          <div class="metric">
+            <span>Service</span>
+            <strong>nginx</strong>
+            <div class="bar"><i style="width: 92%"></i></div>
+          </div>
+          <div class="metric">
+            <span>HTTP Port</span>
+            <strong>80</strong>
+            <div class="bar"><i style="width: 80%"></i></div>
+          </div>
+          <div class="metric">
+            <span>Backend</span>
+            <strong>VM-01</strong>
+            <div class="bar"><i style="width: 55%"></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="panel-title">
+          <span>Load Balancer Test Flow</span>
+          <span>Round Robin</span>
+        </div>
+        <div class="flow">
+          <div class="step">
+            <div class="icon">1</div>
+            <div>
+              <h3>Client Request</h3>
+              <p>Browser or JMeter sends traffic to load balancer public IP.</p>
+            </div>
+            <span class="badge">Start</span>
+          </div>
+          <div class="step">
+            <div class="icon">2</div>
+            <div>
+              <h3>Load Balancer</h3>
+              <p>Frontend rule forwards port 80 traffic to backend pool.</p>
+            </div>
+            <span class="badge">Route</span>
+          </div>
+          <div class="step">
+            <div class="icon">3</div>
+            <div>
+              <h3>Backend VM</h3>
+              <p>One VM serves this HTML page through nginx.</p>
+            </div>
+            <span class="badge">Serve</span>
+          </div>
+          <div class="step">
+            <div class="icon">4</div>
+            <div>
+              <h3>Refresh Test</h3>
+              <p>Refresh page and check whether VM-01 or VM-02 appears.</p>
+            </div>
+            <span class="badge">Verify</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span>Expected Architecture</span>
+          <span>Two VM Setup</span>
+        </div>
+        <div class="topology">
+          <div class="box"><strong>User / JMeter</strong><span>traffic source</span></div>
+          <div class="box active"><strong>Azure LB</strong><span>public IP :80</span></div>
+          <div class="box"><strong>Health Probe</strong><span>HTTP /</span></div>
+          <div class="box active"><strong>VM-01</strong><span>nginx page A</span></div>
+          <div class="box active"><strong>VM-02</strong><span>nginx page B</span></div>
+          <div class="box"><strong>Logs</strong><span>/var/log/nginx</span></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Tip: On your second VM, change every VM-01 text in this file to VM-02 before testing through the load balancer.
+    </footer>
+  </main>
+</body>
+</html>

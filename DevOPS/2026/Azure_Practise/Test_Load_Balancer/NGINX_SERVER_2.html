@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Load Balancer Test Center</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #111827;
+      --panel-2: #162033;
+      --text: #eef2ff;
+      --muted: #9ca3af;
+      --line: #273348;
+      --green: #22c55e;
+      --cyan: #38bdf8;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+      --violet: #a78bfa;
+      --orange: #fb923c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        linear-gradient(rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+        radial-gradient(circle at 20% 10%, rgba(34, 197, 94, 0.14), transparent 28%),
+        radial-gradient(circle at 90% 20%, rgba(167, 139, 250, 0.16), transparent 30%),
+        var(--bg);
+      background-size: 48px 48px, 48px 48px, auto, auto;
+    }
+
+    .shell {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 0 26px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(135deg, #0f172a, #17324a);
+      box-shadow: 0 0 28px rgba(56, 189, 248, 0.18);
+      font-weight: 800;
+      color: var(--cyan);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 54px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      border-radius: 8px;
+      background: rgba(34, 197, 94, 0.08);
+      color: #bbf7d0;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .pulse {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.12);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(17, 24, 39, 0.88);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      min-height: 48px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.86);
+      color: #cbd5e1;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .terminal {
+      padding: 20px;
+      min-height: 388px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 14px;
+      line-height: 1.75;
+      color: #d1fae5;
+    }
+
+    .cmd {
+      color: var(--cyan);
+    }
+
+    .ok {
+      color: var(--green);
+    }
+
+    .warn {
+      color: var(--yellow);
+    }
+
+    .dim {
+      color: #64748b;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .metric {
+      min-height: 112px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-2);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 12px;
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .bar {
+      height: 8px;
+      margin-top: 16px;
+      border-radius: 8px;
+      background: #263244;
+      overflow: hidden;
+    }
+
+    .bar i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .pipeline {
+      padding: 18px;
+    }
+
+    .stage {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      align-items: center;
+      gap: 14px;
+      min-height: 70px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stage:last-child {
+      border-bottom: 0;
+    }
+
+    .stage-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(56, 189, 248, 0.08);
+      color: var(--cyan);
+      font-weight: 800;
+    }
+
+    .stage h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .stage p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .badge {
+      padding: 7px 10px;
+      border-radius: 8px;
+      background: rgba(34, 197, 94, 0.1);
+      color: #bbf7d0;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .topology {
+      padding: 20px;
+      min-height: 344px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      align-content: center;
+      position: relative;
+    }
+
+    .node {
+      min-height: 92px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, rgba(31, 41, 55, 0.98), rgba(17, 24, 39, 0.98));
+      position: relative;
+      z-index: 1;
+    }
+
+    .node strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .node span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .node.primary {
+      border-color: rgba(56, 189, 248, 0.55);
+      box-shadow: inset 0 0 24px rgba(56, 189, 248, 0.08);
+    }
+
+    .logs {
+      margin-top: 18px;
+      padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+
+    th {
+      color: #cbd5e1;
+      background: rgba(15, 23, 42, 0.75);
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    td {
+      color: #e5e7eb;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    footer {
+      padding: 22px 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      header,
+      .hero,
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        display: grid;
+      }
+
+      .metrics,
+      .topology {
+        grid-template-columns: 1fr;
+      }
+
+      .stage {
+        grid-template-columns: 42px 1fr;
+      }
+
+      .badge {
+        grid-column: 2;
+        width: fit-content;
+      }
+
+      table {
+        min-width: 680px;
+      }
+
+      .logs {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="brand">
+        <div class="logo">OPS</div>
+        <div>
+          <h1>Load Balancer Test Center</h1>
+          <p class="subtitle">Nginx hosted test page for backend routing, health checks, and traffic distribution</p>
+        </div>
+      </div>
+      <div class="live-pill"><span class="pulse"></span> Load Balancer Online</div>
+    </header>
+
+    <section class="hero">
+      <div class="panel">
+        <div class="panel-head">
+          <span>Load Balancer Probe</span>
+          <span>http://backend-node</span>
+        </div>
+        <div class="terminal">
+          <div><span class="cmd">$</span> curl -I http://load-balancer/</div>
+          <div>HTTP/1.1 200 OK</div>
+          <div>Server: nginx</div>
+          <div>X-Upstream-Node: <span class="ok">backend-01</span></div>
+          <div>X-LB-Policy: round_robin</div>
+          <div><span class="cmd">$</span> health-check --target backend-pool</div>
+          <div>backend-01&nbsp;&nbsp;&nbsp;<span class="ok">healthy</span>&nbsp;&nbsp; response=18ms</div>
+          <div>backend-02&nbsp;&nbsp;&nbsp;<span class="ok">healthy</span>&nbsp;&nbsp; response=21ms</div>
+          <div>backend-03&nbsp;&nbsp;&nbsp;<span class="warn">warming</span>&nbsp;&nbsp; response=47ms</div>
+          <div><span class="cmd">$</span> watch traffic-split</div>
+          <div><span class="dim">routing requests across upstream nodes and tracking failover...</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span>Balancer Signals</span>
+          <span>JMeter Ready</span>
+        </div>
+        <div class="metrics">
+          <div class="metric">
+            <span>Total Requests</span>
+            <strong>248k</strong>
+            <div class="bar"><i style="width: 86%"></i></div>
+          </div>
+          <div class="metric">
+            <span>LB Latency P95</span>
+            <strong>31ms</strong>
+            <div class="bar"><i style="width: 42%"></i></div>
+          </div>
+          <div class="metric">
+            <span>Healthy Nodes</span>
+            <strong>3/3</strong>
+            <div class="bar"><i style="width: 100%"></i></div>
+          </div>
+          <div class="metric">
+            <span>Failover Events</span>
+            <strong>0</strong>
+            <div class="bar"><i style="width: 4%"></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <span>Backend Pool</span>
+          <span>Round Robin</span>
+        </div>
+        <div class="pipeline">
+          <div class="stage">
+            <div class="stage-icon">01</div>
+            <div>
+              <h3>Backend Node 01</h3>
+              <p>Serving HTTP traffic from zone A.</p>
+            </div>
+            <span class="badge">Healthy</span>
+          </div>
+          <div class="stage">
+            <div class="stage-icon">02</div>
+            <div>
+              <h3>Backend Node 02</h3>
+              <p>Serving HTTP traffic from zone B.</p>
+            </div>
+            <span class="badge">Healthy</span>
+          </div>
+          <div class="stage">
+            <div class="stage-icon">03</div>
+            <div>
+              <h3>Backend Node 03</h3>
+              <p>Ready for scale-out and failover testing.</p>
+            </div>
+            <span class="badge">Healthy</span>
+          </div>
+          <div class="stage">
+            <div class="stage-icon">04</div>
+            <div>
+              <h3>Health Probe</h3>
+              <p>Load balancer checks / every few seconds.</p>
+            </div>
+            <span class="badge">200 OK</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span>Traffic Flow</span>
+          <span>Azure Load Balancer</span>
+        </div>
+        <div class="topology">
+          <div class="node"><strong>JMeter</strong><span>virtual users</span></div>
+          <div class="node primary"><strong>Public LB</strong><span>frontend :80</span></div>
+          <div class="node"><strong>Probe</strong><span>health check</span></div>
+          <div class="node primary"><strong>Backend 01</strong><span>nginx :80</span></div>
+          <div class="node primary"><strong>Backend 02</strong><span>nginx :80</span></div>
+          <div class="node primary"><strong>Backend 03</strong><span>nginx :80</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel logs">
+      <div class="panel-head">
+        <span>Load Balancer Events</span>
+        <span>Request Trail</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Service</th>
+            <th>Event</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>10:02:12</td>
+            <td>load-balancer</td>
+            <td>Frontend listener accepted HTTP traffic on port 80</td>
+            <td class="ok">OK</td>
+          </tr>
+          <tr>
+            <td>10:04:31</td>
+            <td>backend-01</td>
+            <td>Request routed successfully by round robin</td>
+            <td class="ok">READY</td>
+          </tr>
+          <tr>
+            <td>10:05:08</td>
+            <td>backend-02</td>
+            <td>Health probe returned 200 OK</td>
+            <td class="ok">OK</td>
+          </tr>
+          <tr>
+            <td>10:06:44</td>
+            <td>backend-03</td>
+            <td>Added to backend pool for scale testing</td>
+            <td class="ok">READY</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer>
+      Hosted by nginx on Linux. Built for load balancer validation, JMeter tests, and backend pool demos.
+    </footer>
+  </main>
+</body>
+</html>

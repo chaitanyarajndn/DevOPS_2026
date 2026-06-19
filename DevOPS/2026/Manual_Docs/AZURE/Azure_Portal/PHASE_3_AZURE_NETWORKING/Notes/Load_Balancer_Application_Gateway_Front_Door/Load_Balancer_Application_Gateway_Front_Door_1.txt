@@ -1,0 +1,182 @@
+			AZURE NETWORKING
+			│
+			├── 0. OSI MODEL FOUNDATION
+			│   │
+			│   ├── What is OSI Model?
+			│   │   ├── Networking reference model with 7 layers.
+			│   │   ├── Standardizes communication between systems.
+			│   │   ├── Helps in troubleshooting network issues.
+			│   │   └── Azure networking concepts are often mapped to OSI layers.
+			│   │
+			│   ├── Layer 4 (Transport Layer)
+			│   │   ├── Works with TCP and UDP protocols.
+			│   │   ├── Uses IP addresses and port numbers.
+			│   │   ├── Cannot inspect URLs or HTTP headers.
+			│   │   └── Azure Load Balancer operates at this layer.
+			│   │
+			│   ├── Layer 7 (Application Layer)
+			│   │   ├── Understands HTTP and HTTPS traffic.
+			│   │   ├── Can inspect URLs and hostnames.
+			│   │   ├── Supports intelligent routing decisions.
+			│   │   └── App Gateway and Front Door operate here.
+			│   │
+			│   ├── Layer 4 vs Layer 7
+			│   │   ├── Layer 4 = IP + Port based decisions.
+			│   │   ├── Layer 7 = URL + Hostname based decisions.
+			│   │   ├── Layer 4 is faster and simpler.
+			│   │   └── Layer 7 is smarter and feature rich.
+			│   │
+			│   ├── Interview Points
+			│   └── Common Mistakes
+			│
+			├── 1. AZURE LOAD BALANCER
+			│   │
+			│   ├── What is Azure Load Balancer?
+			│   │   ├── Layer 4 traffic distribution service.
+			│   │   ├── Balances traffic across multiple VMs.
+			│   │   ├── Improves availability and scalability.
+			│   │   └── Supports TCP and UDP workloads.
+			│   │
+			│   ├── Why Do We Need It?
+			│   │   ├── Prevents a single VM from overload.
+			│   │   ├── Improves fault tolerance.
+			│   │   ├── Supports high availability.
+			│   │   └── Distributes traffic automatically.
+			│   │
+			│   ├── Components
+			│   │   ├── Frontend IP
+			│   │   ├── Backend Pool
+			│   │   ├── Health Probe
+			│   │   └── Load Balancing Rules
+			│   │
+			│   ├── Types
+			│   │   ├── Public Load Balancer
+			│   │   └── Internal Load Balancer
+			│   │
+			│   ├── Public IP Requirement
+			│   │   ├── Public LB requires Public IP.
+			│   │   ├── Internal LB uses private IP.
+			│   │   ├── Azure Portal can create IP automatically.
+			│   │   └── Terraform requires explicit resource definition.
+			│   │
+			│   ├── Terraform Resources
+			│   │   ├── azurerm_lb
+			│   │   ├── azurerm_lb_probe
+			│   │   ├── azurerm_lb_rule
+			│   │   └── azurerm_lb_backend_address_pool
+			│   │
+			│   ├── Real Life Use Cases
+			│   ├── Interview Points
+			│   └── Common Traps
+			│
+			├── 2. AZURE APPLICATION GATEWAY
+			│   │
+			│   ├── What is Application Gateway?
+			│   │   ├── Layer 7 load balancer.
+			│   │   ├── Understands web traffic.
+			│   │   ├── Acts as reverse proxy.
+			│   │   └── Supports WAF and URL routing.
+			│   │
+			│   ├── Why Do We Need It?
+			│   │   ├── Route traffic based on URL paths.
+			│   │   ├── Secure applications using WAF.
+			│   │   ├── Centralized SSL management.
+			│   │   └── Improve web application security.
+			│   │
+			│   ├── Features
+			│   │   ├── URL Based Routing
+			│   │   ├── Host Based Routing
+			│   │   ├── SSL Offloading
+			│   │   └── Web Application Firewall
+			│   │
+			│   ├── Components
+			│   │   ├── Frontend IP
+			│   │   ├── Listener
+			│   │   ├── Backend Pool
+			│   │   ├── Backend Settings
+			│   │   └── Routing Rules
+			│   │
+			│   ├── Public IP Requirement
+			│   │   ├── Usually requires Public IP.
+			│   │   ├── Private deployments are also possible.
+			│   │   ├── Portal can create IP automatically.
+			│   │   └── Terraform usually creates it explicitly.
+			│   │
+			│   ├── Terraform Resource
+			│   │   └── azurerm_application_gateway
+			│   │
+			│   ├── Real Life Use Cases
+			│   ├── Interview Points
+			│   └── Common Traps
+			│
+			├── 3. AZURE FRONT DOOR
+			│   │
+			│   ├── What is Front Door?
+			│   │   ├── Global Layer 7 traffic manager.
+			│   │   ├── Routes users to nearest region.
+			│   │   ├── Provides global availability.
+			│   │   └── Uses Microsoft edge network.
+			│   │
+			│   ├── Why Do We Need It?
+			│   │   ├── Reduce latency.
+			│   │   ├── Enable multi-region deployments.
+			│   │   ├── Automatic failover.
+			│   │   └── Global traffic optimization.
+			│   │
+			│   ├── Features
+			│   │   ├── Global Routing
+			│   │   ├── Health Probes
+			│   │   ├── Regional Failover
+			│   │   ├── CDN
+			│   │   └── WAF
+			│   │
+			│   ├── Components
+			│   │   ├── Profile
+			│   │   ├── Endpoint
+			│   │   ├── Origin Group
+			│   │   ├── Origin
+			│   │   └── Route
+			│   │
+			│   ├── Public IP Requirement
+			│   │   ├── No user-managed Public IP.
+			│   │   ├── Microsoft manages endpoints.
+			│   │   ├── No azurerm_public_ip required.
+			│   │   └── Uses global edge infrastructure.
+			│   │
+			│   ├── Terraform Resources
+			│   │   ├── azurerm_cdn_frontdoor_profile
+			│   │   ├── azurerm_cdn_frontdoor_endpoint
+			│   │   ├── azurerm_cdn_frontdoor_origin_group
+			│   │   ├── azurerm_cdn_frontdoor_origin
+			│   │   └── azurerm_cdn_frontdoor_route
+			│   │
+			│   ├── Real Life Use Cases
+			│   ├── Interview Points
+			│   └── Common Traps
+			│
+			├── 4. COMPARISON
+			│   │
+			│   ├── Load Balancer
+			│   │   └── Chooses Server
+			│   │
+			│   ├── Application Gateway
+			│   │   └── Chooses Application
+			│   │
+			│   └── Front Door
+			│       └── Chooses Region
+			│
+			└── 5. END TO END FLOW
+
+				Users
+				  │
+				  ▼
+			   Front Door
+				  │
+				  ▼
+			Application Gateway
+				  │
+				  ▼
+			 Load Balancer
+				  │
+				  ▼
+				 VM
