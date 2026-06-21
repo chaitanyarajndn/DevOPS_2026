@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Load Balancer Demo — Server 1</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; font-family: system-ui, sans-serif; background: #102a43; color: #fff; }
+    main { width: min(90%, 620px); padding: 48px; text-align: center; border: 1px solid #4aa3df; border-radius: 20px; background: #163b5c; box-shadow: 0 18px 50px #061521; }
+    .badge { display: inline-block; padding: 7px 14px; border-radius: 999px; background: #1e8bc3; font-weight: 700; letter-spacing: .08em; }
+    h1 { margin: 22px 0 8px; font-size: clamp(2rem, 7vw, 4rem); }
+    p { color: #c8e6f7; font-size: 1.1rem; }
+    code { color: #9fe7ff; }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="badge">BACKEND SERVER 1</span>
+    <h1>Hello from Node 1</h1>
+    <p>Welcome to the Load Balancer 1 test.</p>
+    <p>This blue page confirms that your load balancer reached <code>server-1</code>.</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,4978 @@
+================================================================================
+               AZURE STANDARD LOAD BALANCER USING TERRAFORM
+================================================================================
+
+Author        : Chetan's Personal Notes
+Purpose       : Interview + Enterprise + Azure Architecture + Terraform
+Learning Mode : Understand WHY first, then HOW.
+Terraform     : for_each + Nested Maps + Resource References
+
+================================================================================
+PROJECT OVERVIEW
+================================================================================
+
+Project Goal
+------------
+
+Build an enterprise-style Azure infrastructure using Terraform instead of
+creating resources manually from the Azure Portal.
+
+The project focuses on understanding Azure architecture first and then
+implementing the same architecture using Terraform.
+
+Instead of hardcoding every resource, all infrastructure information is stored
+inside terraform.tfvars using nested maps. Terraform reads those values and
+creates Azure resources dynamically using for_each.
+
+--------------------------------------------------------------------------------
+
+Project Components
+------------------
+
+• 1 Resource Group
+
+• 2 Virtual Networks
+  - Management VNet
+  - Application VNet
+
+• 3 Subnets
+  - Azure Bastion Subnet
+  - Linux VM1 Subnet
+  - Linux VM2 Subnet
+
+• Network Security Groups
+
+• Public IPs
+
+• Azure Bastion
+
+• VNet Peering
+
+• Network Interfaces
+
+• Linux Virtual Machines
+
+• Standard Load Balancer
+
+• Backend Pool
+
+• Health Probe
+
+• Load Balancing Rule
+
+--------------------------------------------------------------------------------
+
+Terraform Design
+----------------
+
+This project does NOT use modules.
+
+The complete infrastructure is created using
+
+• for_each
+
+• Nested Maps
+
+• Resource References
+
+• Dynamic Blocks
+
+The goal is to understand Terraform core concepts before moving towards modules.
+
+--------------------------------------------------------------------------------
+
+Enterprise Thinking
+-------------------
+
+The objective is not only to learn Terraform syntax.
+
+The real objective is to understand
+
+• Why Azure created this resource.
+
+• Why Terraform represents it in this way.
+
+• How different Azure resources are connected together.
+
+Once the architecture is understood, Terraform becomes much easier.
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 1 : RESOURCE GROUP
+================================================================================
+
+Purpose
+-------
+
+A Resource Group is a logical container used to organize Azure resources.
+
+Almost every Azure resource requires an existing Resource Group before it can
+be created.
+
+Think of it as a folder which contains all related cloud resources.
+
+--------------------------------------------------------------------------------
+
+Terraform Code
+--------------
+
+resource "azurerm_resource_group" "RG" {
+
+    for_each = var.rg
+
+    name     = each.value.name
+    location = each.value.location
+}
+
+--------------------------------------------------------------------------------
+
+Explanation
+-----------
+
+• Terraform reads every Resource Group definition from terraform.tfvars using
+  for_each. This allows multiple Resource Groups to be created without writing
+  multiple Terraform resource blocks.
+
+• The Resource Group becomes the first dependency in the infrastructure because
+  almost every Azure resource requires resource_group_name before deployment.
+
+• Instead of hardcoding names like "intelrg", Terraform reads the values from
+  terraform.tfvars. This makes the infrastructure reusable for Dev, QA and
+  Production environments.
+
+• Resource Group location is later reused by other resources using Terraform
+  references. This avoids duplicate values and improves consistency.
+
+--------------------------------------------------------------------------------
+
+Engineering Thinking
+--------------------
+
+Terraform never creates resources randomly.
+
+It first builds a dependency graph.
+
+Since every resource depends on the Resource Group,
+Terraform creates the Resource Group first.
+
+Everything else waits automatically.
+
+This is called Implicit Dependency.
+
+--------------------------------------------------------------------------------
+
+Interview Questions
+-------------------
+
+Q. Why is Resource Group usually the first Terraform resource?
+
+Answer
+
+Because almost every Azure resource requires an existing Resource Group.
+Terraform automatically understands this dependency through references.
+
+------------------------------------------------------------
+
+Q. Can one Resource Group contain multiple Virtual Networks?
+
+Answer
+
+Yes.
+
+A Resource Group is only a logical container.
+It can contain multiple VNets, Virtual Machines,
+Storage Accounts and many other Azure resources.
+
+------------------------------------------------------------
+
+Q. Why shouldn't we hardcode Resource Group names?
+
+Answer
+
+Hardcoding reduces reusability.
+
+Using variables allows the same Terraform code to be deployed into
+Development, QA and Production environments.
+
+--------------------------------------------------------------------------------
+
+Important Tips
+--------------
+
+• Always reference Resource Groups instead of hardcoding names.
+
+• Create Resource Groups before any dependent resources.
+
+• Store names inside terraform.tfvars rather than inside main.tf.
+
+• Keep Resource Group names meaningful and environment friendly.
+
+--------------------------------------------------------------------------------
+
+Common Mistakes
+---------------
+
+• Hardcoding resource_group_name everywhere.
+
+• Creating duplicate Resource Groups for related resources.
+
+• Forgetting to use Terraform references.
+
+================================================================================
+END OF SECTION 01
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 2 : VIRTUAL NETWORK (VNet)
+================================================================================
+
+Architecture Thinking
+---------------------
+
+Before creating any Virtual Machine, Azure needs a private network where
+resources can communicate securely.
+
+Just like a company builds roads before constructing offices, Azure requires
+a Virtual Network before deploying Virtual Machines, Load Balancers or other
+network resources.
+
+Without a Virtual Network, Azure resources cannot communicate privately.
+
+================================================================================
+
+Purpose
+-------
+
+An Azure Virtual Network (VNet) is a logically isolated private network inside
+Microsoft Azure.
+
+It allows Azure resources such as Virtual Machines, Load Balancers, Bastion,
+Application Gateway and other services to communicate securely using private
+IP addresses.
+
+A VNet is one of the most fundamental networking resources in Azure because
+almost every infrastructure component eventually connects to it.
+
+================================================================================
+
+Our Lab Design
+--------------
+
+We created two separate Virtual Networks.
+
+1. VNmgmt
+
+Purpose
+
+Used only for management traffic.
+
+Resources
+
+• Azure Bastion
+
+Reason
+
+Administrators connect to Azure Bastion first and then access Virtual Machines
+privately over SSH.
+
+------------------------------------------------------------
+
+2. VNapp
+
+Purpose
+
+Used for application traffic.
+
+Resources
+
+• Linux VM1
+
+• Linux VM2
+
+Reason
+
+Application servers should remain isolated from management resources.
+
+This is a common enterprise networking practice.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_virtual_network" "VN" {
+
+    for_each = var.vn
+
+    name                = each.value.name
+
+    location            = azurerm_resource_group.RG[each.value.rg_name].location
+
+    resource_group_name = azurerm_resource_group.RG[each.value.rg_name].name
+
+    address_space       = each.value.address_space
+}
+
+================================================================================
+
+Terraform.tfvars Example
+------------------------
+
+vn = {
+
+    vna = {
+
+        name          = "VNmgmt"
+
+        rg_name       = "rga"
+
+        address_space = ["10.57.0.0/20"]
+
+    }
+
+    vnb = {
+
+        name          = "VNapp"
+
+        rg_name       = "rga"
+
+        address_space = ["10.57.16.0/20"]
+
+    }
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• Terraform creates multiple VNets using for_each. Instead of writing two
+  separate resource blocks, every VNet definition is stored inside
+  terraform.tfvars and Terraform loops through them automatically.
+
+• Resource Group information is never hardcoded. Terraform references the
+  Resource Group directly using azurerm_resource_group.RG[]. This creates an
+  implicit dependency and guarantees that the Resource Group is created first.
+
+• Each VNet has its own address space. Azure does not allow overlapping
+  address spaces because routing decisions become impossible.
+
+• The address_space argument accepts a list instead of a single string because
+  Azure supports multiple address spaces inside the same Virtual Network.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Microsoft designed VNets to isolate workloads.
+
+Instead of placing every resource inside one network, enterprises usually
+separate infrastructure into dedicated VNets.
+
+Example
+
+Management VNet
+
+↓
+
+Contains Bastion
+
+------------------------------------------------------------
+
+Application VNet
+
+↓
+
+Contains Web Servers
+
+------------------------------------------------------------
+
+Database VNet
+
+↓
+
+Contains Database Servers
+
+------------------------------------------------------------
+
+Security VNet
+
+↓
+
+Contains Azure Firewall
+
+Each VNet has a specific responsibility.
+
+This improves security, management and scalability.
+
+================================================================================
+
+Our Discussion (Important WHY Questions)
+----------------------------------------
+
+Q. Why did we create two VNets instead of one?
+
+Answer
+
+Because management traffic and application traffic should remain isolated.
+
+Azure Bastion belongs to the management network while application servers
+belong to the application network.
+
+This separation follows enterprise networking principles.
+
+------------------------------------------------------------
+
+Q. Why didn't we deploy Bastion inside the Application VNet?
+
+Answer
+
+Although Azure allows Bastion inside the same VNet, enterprises usually keep
+management services separate from application workloads.
+
+This reduces risk and improves operational security.
+
+------------------------------------------------------------
+
+Q. Can two VNets communicate automatically?
+
+Answer
+
+No.
+
+Every VNet is isolated by default.
+
+To allow communication, VNet Peering, VPN Gateway or ExpressRoute must be
+configured.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. What is an Azure Virtual Network?
+
+Answer
+
+An Azure Virtual Network is a logically isolated private network that enables
+secure communication between Azure resources using private IP addresses.
+
+------------------------------------------------------------
+
+Q. Can multiple VNets exist inside one Resource Group?
+
+Answer
+
+Yes.
+
+A Resource Group is only a logical container and can contain multiple VNets.
+
+------------------------------------------------------------
+
+Q. Can two VNets have the same address space?
+
+Answer
+
+Technically they can if they never communicate.
+
+However, if VNet Peering or VPN connectivity is required, overlapping address
+spaces are not supported.
+
+------------------------------------------------------------
+
+Q. Why is address_space written inside [] ?
+
+Answer
+
+Because Terraform expects a list of CIDR blocks.
+
+Azure allows one VNet to have multiple address spaces.
+
+Example
+
+address_space = [
+
+"10.57.0.0/20",
+
+"10.58.0.0/20"
+
+]
+
+================================================================================
+
+Important Tips
+--------------
+
+• Always plan IP addressing before writing Terraform code.
+
+• Never hardcode Resource Group names inside the VNet resource.
+
+• Avoid overlapping address spaces if future VNet Peering is planned.
+
+• Keep separate VNets for Management, Application and Security workloads in
+  enterprise environments.
+
+• Remember that a VNet only provides the network boundary. Communication
+  between different VNets requires additional networking services.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Creating overlapping address spaces.
+
+• Hardcoding Resource Group names.
+
+• Deploying every workload into a single VNet.
+
+• Forgetting that VNets are isolated by default.
+
+• Assuming VNet Peering happens automatically.
+
+================================================================================
+END OF SECTION 02
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 3 : SUBNET
+================================================================================
+
+Architecture Thinking
+---------------------
+
+A Virtual Network is like an entire company campus.
+
+However, placing every server inside one large network creates security,
+management and performance problems.
+
+To solve this, the Virtual Network is divided into multiple smaller logical
+networks called Subnets.
+
+Each subnet is designed for a specific purpose.
+
+This concept is known as Network Segmentation.
+
+================================================================================
+
+Purpose
+-------
+
+A Subnet is a smaller network created inside a Virtual Network.
+
+Each subnet owns a specific range of IP addresses and provides logical
+separation between workloads.
+
+Azure resources such as Virtual Machines, Azure Bastion, Application Gateway,
+Azure Firewall and Database servers are always deployed inside a subnet.
+
+A subnet cannot exist without a Virtual Network.
+
+================================================================================
+
+Our Lab Design
+--------------
+
+VNet : VNmgmt
+
+Subnet
+
+• AzureBastionSubnet
+
+Purpose
+
+Dedicated subnet for Azure Bastion.
+
+Only Azure Bastion is deployed inside this subnet.
+
+------------------------------------------------------------
+
+VNet : VNapp
+
+Subnet
+
+• linx1sbn
+
+Purpose
+
+Contains Linux VM1.
+
+------------------------------------------------------------
+
+Subnet
+
+• linx2sbn
+
+Purpose
+
+Contains Linux VM2.
+
+================================================================================
+
+IP Address Planning
+-------------------
+
+VNmgmt
+
+Address Space
+
+10.57.0.0/20
+
+↓
+
+AzureBastionSubnet
+
+10.57.0.0/24
+
+------------------------------------------------------------
+
+VNapp
+
+Address Space
+
+10.57.16.0/20
+
+↓
+
+linx1sbn
+
+10.57.16.0/24
+
+↓
+
+linx2sbn
+
+10.57.17.0/24
+
+Each subnet owns its own CIDR block.
+
+Azure automatically allocates private IP addresses from that subnet.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_subnet" "SBN" {
+
+    for_each = var.sbn
+
+    name = each.value.name
+
+    resource_group_name =
+
+    azurerm_resource_group.RG[each.value.rg_name].name
+
+    virtual_network_name =
+
+    azurerm_virtual_network.VN[each.value.vn_name].name
+
+    address_prefixes = each.value.address_prefixes
+
+}
+
+================================================================================
+
+Terraform.tfvars Example
+------------------------
+
+sbn = {
+
+    sbna = {
+
+        name = "AzureBastionSubnet"
+
+        rg_name = "rga"
+
+        vn_name = "vna"
+
+        address_prefixes = [
+
+            "10.57.0.0/24"
+
+        ]
+
+    }
+
+    sbnb = {
+
+        name = "linx1sbn"
+
+        rg_name = "rga"
+
+        vn_name = "vnb"
+
+        address_prefixes = [
+
+            "10.57.16.0/24"
+
+        ]
+
+    }
+
+    sbnc = {
+
+        name = "linx2sbn"
+
+        rg_name = "rga"
+
+        vn_name = "vnb"
+
+        address_prefixes = [
+
+            "10.57.17.0/24"
+
+        ]
+
+    }
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• Every subnet belongs to exactly one Virtual Network. Terraform references
+  the VNet directly using vn_name, creating an implicit dependency.
+
+• address_prefixes is written as a list because Azure allows multiple address
+  prefixes to be assigned to a subnet. Even if only one prefix is used today,
+  Terraform follows the Azure API schema.
+
+• Azure automatically assigns private IP addresses to resources deployed
+  inside a subnet. You never manually choose an IP unless you explicitly
+  configure a static private IP.
+
+• Proper subnet planning reduces future redesign. In enterprise environments,
+  different workloads are separated into dedicated subnets for better security
+  and easier management.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Imagine a company building.
+
+The building is the Virtual Network.
+
+Inside the building there are different departments.
+
+Human Resources
+
+Finance
+
+IT
+
+Security
+
+Each department has its own floor.
+
+Those floors are similar to Azure Subnets.
+
+Everyone belongs to the same building,
+but each department has different security requirements.
+
+Azure networking follows exactly the same principle.
+
+================================================================================
+
+Our Discussion (Important WHY Questions)
+----------------------------------------
+
+Q. Why create multiple subnets instead of one?
+
+Answer
+
+Because different workloads usually require different security policies,
+different routing rules and different management practices.
+
+Separating workloads into dedicated subnets is considered an enterprise
+best practice.
+
+------------------------------------------------------------
+
+Q. Why does Azure Bastion require its own subnet?
+
+Answer
+
+Azure Bastion is a managed service.
+
+Microsoft requires a dedicated subnet named exactly
+AzureBastionSubnet.
+
+Without this reserved subnet, Azure Bastion deployment fails.
+
+------------------------------------------------------------
+
+Q. Can two subnets have overlapping IP ranges?
+
+Answer
+
+No.
+
+Every subnet inside the same Virtual Network must own a unique address range.
+
+Otherwise Azure cannot determine where packets should be routed.
+
+------------------------------------------------------------
+
+Q. Why is address_prefixes inside [] ?
+
+Answer
+
+Terraform follows the Azure API.
+
+Azure expects a list of CIDR prefixes.
+
+Even if only one subnet prefix is configured today,
+the datatype remains list(string).
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. What is a Subnet?
+
+Answer
+
+A subnet is a logical division of a Virtual Network that owns a specific
+range of IP addresses and provides network segmentation.
+
+------------------------------------------------------------
+
+Q. Can a subnet exist without a Virtual Network?
+
+Answer
+
+No.
+
+A subnet is always created inside a Virtual Network.
+
+------------------------------------------------------------
+
+Q. Why do enterprises create multiple subnets?
+
+Answer
+
+To separate workloads, apply different NSGs, routing policies and security
+controls while improving scalability and management.
+
+------------------------------------------------------------
+
+Q. Why must Azure Bastion use AzureBastionSubnet?
+
+Answer
+
+Because Microsoft reserves this subnet name for the Azure Bastion service.
+Terraform code may be correct, but Azure deployment will fail if the subnet
+name is different.
+
+------------------------------------------------------------
+
+Q. Who assigns private IP addresses inside a subnet?
+
+Answer
+
+Azure DHCP automatically assigns private IP addresses unless a static private
+IP is explicitly configured.
+
+================================================================================
+
+Important Tips
+--------------
+
+• Always design IP addressing before writing Terraform.
+
+• Never overlap subnet CIDR ranges.
+
+• Keep one workload per subnet whenever possible.
+
+• AzureBastionSubnet is a reserved subnet name and must not be changed.
+
+• Think about future expansion before deciding subnet sizes.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Creating overlapping subnet address ranges.
+
+• Using an incorrect name instead of AzureBastionSubnet.
+
+• Deploying every resource into one subnet.
+
+• Hardcoding Virtual Network names instead of using Terraform references.
+
+• Forgetting that subnet design affects future NSGs, Route Tables,
+  NAT Gateway and Azure Firewall deployment.
+
+================================================================================
+
+Revision Notes
+--------------
+
+Virtual Network
+
+↓
+
+Contains Subnets
+
+↓
+
+Subnets contain Azure Resources
+
+↓
+
+Each subnet owns a CIDR range
+
+↓
+
+Azure assigns private IP addresses automatically
+
+↓
+
+Security is applied later using NSGs
+
+
+================================================================================
+END OF SECTION 03
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 4 : NETWORK SECURITY GROUP (NSG)
+================================================================================
+
+Architecture Thinking
+---------------------
+
+A Virtual Network allows communication between resources, but by default it
+does not decide WHO can communicate with WHOM.
+
+Azure requires a security layer that controls inbound and outbound traffic.
+
+That security layer is called Network Security Group (NSG).
+
+Think of an NSG as a firewall attached to Azure networking resources.
+
+================================================================================
+
+Purpose
+-------
+
+A Network Security Group (NSG) is a Layer-4 firewall that filters network
+traffic based on source, destination, protocol and port number.
+
+It allows or denies network traffic before it reaches the Azure resource.
+
+An NSG can be associated with
+
+• Subnet
+
+• Network Interface (NIC)
+
+One NSG can also be associated with both a Subnet and a NIC.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_network_security_group" "NSG" {
+
+    for_each = var.nsg
+
+    name                = each.value.name
+
+    location            = azurerm_resource_group.RG[each.value.rg_name].location
+
+    resource_group_name = azurerm_resource_group.RG[each.value.rg_name].name
+
+}
+
+================================================================================
+
+terraform.tfvars Example
+------------------------
+
+nsg = {
+
+    nsga = {
+
+        name = "linx1nsg"
+
+        rg_name = "rga"
+
+    }
+
+    nsgb = {
+
+        name = "linx2nsg"
+
+        rg_name = "rga"
+
+    }
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• An NSG itself does not allow or deny traffic until security rules are added.
+  Think of the NSG as an empty firewall device waiting for firewall rules.
+
+• Terraform creates multiple NSGs using for_each. Every NSG definition comes
+  from terraform.tfvars instead of creating separate Terraform resources.
+
+• Resource Group information is referenced directly from the Resource Group
+  resource. This creates an implicit dependency and prevents hardcoding.
+
+• One NSG can protect multiple Azure resources if the same security policy is
+  required.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Azure separates the Firewall (NSG) from the Firewall Rules.
+
+Why?
+
+Because one firewall device can contain hundreds of rules.
+
+If rules and firewall were combined into one object, future management would
+become difficult.
+
+Microsoft therefore separated
+
+NSG
+
+↓
+
+contains
+
+↓
+
+Security Rules
+
+This design improves scalability and simplifies management.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Why didn't Azure automatically create firewall rules?
+
+Answer
+
+Because every application has different requirements.
+
+A Web Server requires HTTP.
+
+A Database Server requires SQL.
+
+A Domain Controller requires completely different ports.
+
+Therefore Azure allows administrators to define their own security rules.
+
+------------------------------------------------------------
+
+Q. Can one NSG protect multiple resources?
+
+Answer
+
+Yes.
+
+The same NSG can be attached to multiple Subnets,
+multiple NICs or both.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. What is an NSG?
+
+Answer
+
+A Network Security Group is a Layer-4 firewall that controls inbound and
+outbound traffic based on IP addresses, protocols and port numbers.
+
+------------------------------------------------------------
+
+Q. Can one NSG be attached to multiple resources?
+
+Answer
+
+Yes.
+
+One NSG can protect multiple Azure resources by associating it with Subnets,
+NICs or both.
+
+------------------------------------------------------------
+
+Q. Does creating an NSG automatically block traffic?
+
+Answer
+
+No.
+
+Traffic is controlled only after Security Rules are configured.
+
+================================================================================
+
+Important Tips
+--------------
+
+• Always separate firewall rules from application design.
+
+• Reuse NSGs whenever multiple resources require the same policy.
+
+• Never hardcode Resource Group names.
+
+• Follow least privilege by allowing only required ports.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Creating one NSG per VM without any real requirement.
+
+• Allowing unnecessary ports from the Internet.
+
+• Forgetting that an NSG without rules is simply an empty firewall.
+
+
+
+================================================================================
+END OF SECTION 04
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 5 : DYNAMIC SECURITY RULES
+================================================================================
+
+Architecture Thinking
+---------------------
+
+An NSG may contain one rule or hundreds of rules.
+
+Writing every security_rule block manually makes Terraform difficult to
+maintain.
+
+Terraform solves this problem using Dynamic Blocks.
+
+================================================================================
+
+Purpose
+-------
+
+Dynamic Blocks allow Terraform to generate repeated nested blocks
+automatically from terraform.tfvars.
+
+Instead of writing multiple security_rule blocks manually,
+Terraform loops through every rule and creates them automatically.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_network_security_group" "NSG" {
+
+    ...
+
+    dynamic "security_rule" {
+
+        for_each = each.value.security_rules
+
+        content {
+
+            name                       = security_rule.value.srname
+
+            priority                   = security_rule.value.priority
+
+            direction                  = security_rule.value.direction
+
+            access                     = security_rule.value.access
+
+            protocol                   = security_rule.value.protocol
+
+            source_port_range          = security_rule.value.source_port_range
+
+            destination_port_range     = security_rule.value.destination_port_range
+
+            source_address_prefix      = security_rule.value.source_address_prefix
+
+            destination_address_prefix = security_rule.value.destination_address_prefix
+
+        }
+
+    }
+
+}
+
+================================================================================
+
+terraform.tfvars Example
+------------------------
+
+security_rules = [
+
+{
+
+srname = "AllowSSH"
+
+priority = 100
+
+destination_port_range = "22"
+
+},
+
+{
+
+srname = "AllowHTTP"
+
+priority = 110
+
+destination_port_range = "80"
+
+}
+
+]
+
+================================================================================
+
+Explanation
+-----------
+
+• security_rules is a List of Objects.
+
+• Terraform loops through every object and creates one security_rule block.
+
+• Dynamic Blocks reduce duplicate code and improve scalability.
+
+• New rules are added only inside terraform.tfvars.
+No changes are required inside main.tf.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+There are two loops running.
+
+Loop-1
+
+for_each
+
+↓
+
+Creates NSGs
+
+Loop-2
+
+dynamic security_rule
+
+↓
+
+Creates Rules inside every NSG
+
+This is Nested Iteration.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Why use security_rule.value instead of each.value?
+
+Answer
+
+each.value belongs to the outer loop.
+
+security_rule.value belongs to the inner Dynamic Block loop.
+
+Both loops are completely different.
+
+------------------------------------------------------------
+
+Q. Why is security_rules written inside [] ?
+
+Answer
+
+Because multiple rules are stored as a List of Objects.
+
+Terraform reads every object individually.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. What is a Dynamic Block?
+
+Q. Why use Dynamic Blocks?
+
+Q. Difference between each.value and security_rule.value?
+
+Q. Why is security_rules a List instead of a Map?
+
+================================================================================
+
+Important Tips
+--------------
+
+• Dynamic Blocks are used only for repeated Nested Blocks.
+
+• Understand the difference between outer and inner loops.
+
+• Keep Security Rules inside terraform.tfvars.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Using each.value inside the Dynamic Block.
+
+• Forgetting that Dynamic Blocks create Nested Blocks only.
+
+
+================================================================================
+END OF SECTION 05
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 6 : NSG ASSOCIATION
+================================================================================
+
+Architecture Thinking
+---------------------
+
+Creating an NSG does not automatically protect any resource.
+
+Azure requires an Association between the NSG and the resource.
+
+Only after the association is created does Azure start applying firewall rules.
+
+================================================================================
+
+Purpose
+-------
+
+NSG Association connects an existing Network Security Group with either
+
+• Subnet
+
+or
+
+• Network Interface
+
+Without association, NSG rules are never evaluated.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_subnet_network_security_group_association" "NSGSBN" {
+
+    for_each = var.nsgas
+
+    subnet_id =
+
+    azurerm_subnet.SBN[each.value.subnet_id].id
+
+    network_security_group_id =
+
+    azurerm_network_security_group.NSG[each.value.nsg_id].id
+
+}
+
+================================================================================
+
+terraform.tfvars Example
+------------------------
+
+nsgas = {
+
+nsgas1 = {
+
+subnet_id = "sbnb"
+
+nsg_id = "nsga"
+
+}
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• Association links an existing NSG with an existing Subnet.
+
+• Terraform references IDs instead of names because Azure resources are
+uniquely identified by Resource IDs.
+
+• Multiple associations can be created using for_each.
+
+• This resource contains no firewall rules.
+It only creates the relationship.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Firewall
+
+↓
+
+Rules
+
+↓
+
+Association
+
+↓
+
+Traffic Filtering
+
+Azure intentionally separates these responsibilities to improve flexibility.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Can the same NSG be attached to both a Subnet and a NIC?
+
+Answer
+
+Yes.
+
+Azure evaluates both NSGs.
+
+The most restrictive result is applied.
+
+------------------------------------------------------------
+
+Q. Why create Association as a separate resource?
+
+Answer
+
+Because Microsoft separates Security Policy from Resource Attachment.
+
+This allows one NSG to be reused easily.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. Why doesn't creating an NSG automatically protect a subnet?
+
+Q. Can one NSG be attached to both a Subnet and a NIC?
+
+Q. Does Association contain firewall rules?
+
+================================================================================
+
+Important Tips
+--------------
+
+• Always remember that creating an NSG is not enough.
+
+• Association activates the firewall.
+
+• Reuse NSGs whenever possible.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Forgetting to associate the NSG.
+
+• Creating duplicate NSGs unnecessarily.
+
+• Assuming NSG starts working immediately after creation.
+
+================================================================================
+END OF SECTION 06
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 7 : PUBLIC IP
+================================================================================
+
+Architecture Thinking
+---------------------
+
+Every Virtual Machine inside Azure communicates using a Private IP.
+
+However, resources on the Internet cannot reach a Private IP directly.
+
+To make an Azure resource accessible from the Internet, Microsoft provides
+a Public IP resource.
+
+Instead of attaching Public IPs to every Virtual Machine, enterprise
+architectures usually attach Public IPs only where Internet access is required.
+
+Example
+
+Internet
+
+↓
+
+Public IP
+
+↓
+
+Load Balancer
+
+↓
+
+Private Virtual Machines
+
+================================================================================
+
+Purpose
+-------
+
+A Public IP provides Internet connectivity for Azure resources.
+
+Azure Public IP can be attached to resources such as
+
+• Azure Bastion
+
+• Load Balancer
+
+• Virtual Machine NIC
+
+• NAT Gateway
+
+• Azure Firewall
+
+A Public IP is NOT a Virtual Machine resource.
+
+It is an independent Azure resource that can be attached wherever required.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_public_ip" "PIP" {
+
+    for_each = var.pip
+
+    name                = each.value.name
+
+    resource_group_name =
+
+    azurerm_resource_group.RG[each.value.rg_name].name
+
+    location            =
+
+    azurerm_resource_group.RG[each.value.rg_name].location
+
+    sku                 = each.value.sku
+
+    allocation_method   = each.value.allocation_method
+
+}
+
+================================================================================
+
+terraform.tfvars Example
+------------------------
+
+pip = {
+
+    pipa = {
+
+        name = "BastionPIP"
+
+        rg_name = "rga"
+
+        sku = "Standard"
+
+        allocation_method = "Static"
+
+    }
+
+    pipb = {
+
+        name = "LoadBalancerPIP"
+
+        rg_name = "rga"
+
+        sku = "Standard"
+
+        allocation_method = "Static"
+
+    }
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• Public IP is created as an independent Azure resource before being attached
+  to Bastion or Load Balancer.
+
+• Terraform creates multiple Public IPs using for_each, making the code
+  reusable for multiple environments.
+
+• Standard SKU is recommended because Basic SKU has been deprecated and
+  does not support modern Azure networking features.
+
+• Static allocation is preferred for production because the public IP address
+  remains constant throughout the resource lifecycle.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Azure separates Public IP from the Virtual Machine.
+
+Why?
+
+Because one Public IP can later be attached to different Azure services.
+
+Microsoft treats Public IP as a reusable networking resource instead of making
+it part of the Virtual Machine.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Why didn't we attach Public IP to the Linux Virtual Machines?
+
+Answer
+
+Because our Virtual Machines are backend servers.
+
+Only Azure Bastion requires a Public IP for management traffic.
+
+Only the Load Balancer requires a Public IP for application traffic.
+
+Keeping backend VMs private improves security.
+
+------------------------------------------------------------
+
+Q. Why does SKU look optional but practically behaves like required?
+
+Answer
+
+Terraform marks SKU as optional because Azure still accepts a default value.
+
+However, Dynamic allocation is supported only with Basic SKU.
+
+Since Basic SKU has been deprecated, Standard SKU should always be specified.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. Difference between Static and Dynamic Public IP?
+
+Q. Difference between Basic SKU and Standard SKU?
+
+Q. Why should backend Virtual Machines not have Public IPs?
+
+Q. Why is Public IP created as a separate resource?
+
+================================================================================
+
+Important Tips
+--------------
+
+• Always use Standard SKU.
+
+• Prefer Static allocation for production.
+
+• Avoid assigning Public IPs directly to backend servers.
+
+• Use Public IP only where Internet connectivity is required.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Assigning Public IP to every Virtual Machine.
+
+• Using deprecated Basic SKU.
+
+• Assuming Public IP belongs only to Virtual Machines.
+
+
+================================================================================
+END OF SECTION 07
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 8 : AZURE BASTION
+================================================================================
+
+Architecture Thinking
+---------------------
+
+Administrators need secure access to Azure Virtual Machines.
+
+Giving every VM a Public IP creates a major security risk.
+
+Azure Bastion solves this problem.
+
+Instead of exposing Virtual Machines to the Internet, administrators connect
+to Bastion, and Bastion connects privately to the Virtual Machines.
+
+================================================================================
+
+Purpose
+-------
+
+Azure Bastion is a managed Platform as a Service (PaaS) offering that provides
+secure SSH and RDP connectivity to Virtual Machines without requiring Public IPs.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_bastion_host" "BAS" {
+
+    for_each = var.bas
+
+    name                = each.value.name
+
+    location            =
+
+    azurerm_resource_group.RG[each.value.rg_name].location
+
+    resource_group_name =
+
+    azurerm_resource_group.RG[each.value.rg_name].name
+
+    ip_configuration {
+
+        name = each.value.confname
+
+        subnet_id =
+
+        azurerm_subnet.SBN[each.value.subnet_id].id
+
+        public_ip_address_id =
+
+        azurerm_public_ip.PIP[each.value.pip_id].id
+
+    }
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• Azure Bastion must be deployed inside AzureBastionSubnet.
+
+• Bastion requires its own Standard Public IP.
+
+• Bastion connects administrators to Virtual Machines over private networking.
+
+• Bastion itself does NOT provide Internet access to Virtual Machines.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Azure separates
+
+Management Traffic
+
+from
+
+Application Traffic.
+
+SSH and RDP should never use the same path as user traffic.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Can Bastion install Nginx on behalf of a VM?
+
+Answer
+
+No.
+
+Bastion only provides SSH or RDP connectivity.
+
+Internet access from the Virtual Machine is a completely different networking
+problem solved by NAT Gateway or Azure outbound connectivity.
+
+------------------------------------------------------------
+
+Q. Why is AzureBastionSubnet mandatory?
+
+Answer
+
+Microsoft reserves this subnet exclusively for Azure Bastion deployment.
+
+Changing the subnet name causes deployment failure.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. Why use Azure Bastion instead of assigning Public IPs?
+
+Q. Does Azure Bastion provide outbound Internet access?
+
+Q. Why is AzureBastionSubnet mandatory?
+
+================================================================================
+
+Important Tips
+--------------
+
+• Bastion is for management only.
+
+• Bastion is NOT a NAT Gateway.
+
+• Bastion should use Standard Public IP.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Assuming Bastion provides Internet access.
+
+• Creating Bastion in the wrong subnet.
+
+• Giving backend VMs Public IPs unnecessarily.
+
+================================================================================
+END OF SECTION 08
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 9 : VNET PEERING
+================================================================================
+
+Architecture Thinking
+---------------------
+
+By default, every Azure Virtual Network is isolated.
+
+Resources inside one VNet cannot communicate with another VNet automatically.
+
+Azure solves this problem using Virtual Network Peering.
+
+================================================================================
+
+Purpose
+-------
+
+Virtual Network Peering establishes private communication between two VNets
+using the Microsoft backbone network.
+
+Peered VNets communicate using Private IP addresses.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_virtual_network_peering" "PEER" {
+
+    for_each = var.peer
+
+    name = each.value.name
+
+    resource_group_name =
+
+    azurerm_resource_group.RG[each.value.rg_name].name
+
+    virtual_network_name =
+
+    azurerm_virtual_network.VN[each.value.vn_name].name
+
+    remote_virtual_network_id =
+
+    azurerm_virtual_network.VN[each.value.rvn_id].id
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• VNet Peering allows Azure Bastion to reach Virtual Machines located inside
+  another Virtual Network.
+
+• Peering is not automatically bidirectional.
+
+• Two peerings are created.
+
+Management → Application
+
+Application → Management
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Microsoft treats each VNet as an independent network.
+
+Communication is allowed only after an explicit relationship is created.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Why did we create two Peering resources?
+
+Answer
+
+Because VNet Peering is directional.
+
+Creating one peering does not automatically create the reverse connection.
+
+------------------------------------------------------------
+
+Q. Why didn't we configure allow_gateway_transit and other options?
+
+Answer
+
+Those options are required only for advanced networking scenarios such as
+VPN Gateway, ExpressRoute and transit routing.
+
+Our lab focuses only on basic VNet communication.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. What is VNet Peering?
+
+Q. Why are two Peering resources required?
+
+Q. Can peered VNets communicate using Public IP?
+
+================================================================================
+
+Important Tips
+--------------
+
+• Avoid overlapping address spaces.
+
+• Create peering in both directions.
+
+• Use Private IP communication after peering.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Forgetting the reverse peering.
+
+• Using overlapping address spaces.
+
+• Assuming VNets communicate automatically.
+
+
+================================================================================
+END OF SECTION 09
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 10 : NETWORK INTERFACE (NIC)
+================================================================================
+
+Architecture Thinking
+---------------------
+
+A Virtual Machine does not communicate directly with the Virtual Network.
+
+Azure always places a Network Interface (NIC) between the Virtual Machine and
+the Virtual Network.
+
+Think of a NIC as the identity of a Virtual Machine inside the network.
+
+Every network communication such as
+
+• Private IP
+
+• Public IP
+
+• NSG Association
+
+• Backend Pool Membership
+
+belongs to the NIC and NOT to the Virtual Machine.
+
+================================================================================
+
+Purpose
+-------
+
+A Network Interface (NIC) is a virtual network adapter that connects a Virtual
+Machine to an Azure Virtual Network.
+
+Without a NIC, a Virtual Machine cannot communicate with any Azure network.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_network_interface" "NIC" {
+
+    for_each = var.nic
+
+    name = each.value.name
+
+    location =
+
+    azurerm_resource_group.RG[each.value.rg_name].location
+
+    resource_group_name =
+
+    azurerm_resource_group.RG[each.value.rg_name].name
+
+    ip_configuration {
+
+        name = each.value.ip_config_name
+
+        subnet_id =
+
+        azurerm_subnet.SBN[each.value.subnet_id].id
+
+        private_ip_address_allocation = "Dynamic"
+
+    }
+
+}
+
+================================================================================
+
+terraform.tfvars Example
+------------------------
+
+nic = {
+
+    nica = {
+
+        name = "linx1nic"
+
+        rg_name = "rga"
+
+        subnet_id = "sbnb"
+
+        ip_config_name = "Linx1Internal"
+
+    }
+
+    nicb = {
+
+        name = "linx2nic"
+
+        rg_name = "rga"
+
+        subnet_id = "sbnc"
+
+        ip_config_name = "Linx2Internal"
+
+    }
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• Every Virtual Machine requires at least one Network Interface.
+
+• The NIC is connected to a subnet and receives a Private IP address from that
+  subnet automatically.
+
+• Azure stores network-related information such as Private IP, Public IP,
+  NSG association and Backend Pool membership inside the NIC.
+
+• Terraform creates multiple NICs using for_each, allowing infrastructure
+  to scale without duplicating Terraform code.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Microsoft designed Azure networking around the NIC instead of the Virtual
+Machine.
+
+Why?
+
+Because a Virtual Machine may have
+
+One NIC
+
+or
+
+Multiple NICs
+
+The NIC owns all networking properties.
+
+The Virtual Machine simply uses the NIC.
+
+================================================================================
+
+Real Production Scenario
+------------------------
+
+Example
+
+Firewall VM
+
+↓
+
+NIC-1
+
+↓
+
+Internet
+
+------------------------------------------------------------
+
+Firewall VM
+
+↓
+
+NIC-2
+
+↓
+
+Internal Network
+
+The same Virtual Machine communicates with two completely different networks.
+
+This is only possible because Azure networking is NIC-centric.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Why didn't Azure attach networking directly to the Virtual Machine?
+
+Answer
+
+Because networking belongs to the Network Interface.
+
+A Virtual Machine can have multiple NICs.
+
+Each NIC may belong to different subnets or different network paths.
+
+Keeping networking inside the NIC provides flexibility.
+
+------------------------------------------------------------
+
+Q. Why is Private IP configured inside the NIC instead of the VM?
+
+Answer
+
+Because Azure assigns IP addresses to Network Interfaces.
+
+The Virtual Machine communicates using the NIC.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. What is a Network Interface?
+
+Q. Can one Virtual Machine have multiple NICs?
+
+Q. Why is Azure networking NIC-centric?
+
+Q. Which Azure resource owns the Private IP?
+
+================================================================================
+
+Important Tips
+--------------
+
+• Think of the NIC as the network identity of a Virtual Machine.
+
+• Every backend networking configuration belongs to the NIC.
+
+• A Virtual Machine without a NIC cannot communicate.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Assuming networking belongs to the Virtual Machine.
+
+• Forgetting that Private IP belongs to the NIC.
+
+• Forgetting that Backend Pools also use NICs.
+
+
+================================================================================
+END OF SECTION 10
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 11 : NIC NSG ASSOCIATION
+================================================================================
+
+Architecture Thinking
+---------------------
+
+Creating an NSG does not automatically secure a NIC.
+
+Azure requires an explicit association between the NIC and the NSG.
+
+================================================================================
+
+Purpose
+-------
+
+NIC NSG Association connects an existing Network Security Group with a
+Network Interface.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_network_interface_security_group_association" "NICNSGAS" {
+
+    for_each = var.nicas
+
+    network_interface_id =
+
+    azurerm_network_interface.NIC[each.value.nic_id].id
+
+    network_security_group_id =
+
+    azurerm_network_security_group.NSG[each.value.nsg_id].id
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• Association activates the firewall on the NIC.
+
+• Azure evaluates both Subnet NSG and NIC NSG.
+
+• The final traffic decision is based on both rule sets.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Azure allows
+
+Subnet NSG
+
++
+
+NIC NSG
+
+at the same time.
+
+This provides layered security.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Can we use the same NSG on both Subnet and NIC?
+
+Answer
+
+Yes.
+
+Azure supports attaching the same NSG to both.
+
+The effective security rules are evaluated together.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. Can one NSG be attached to both a Subnet and NIC?
+
+Q. Which rules are evaluated first?
+
+================================================================================
+
+Important Tips
+--------------
+
+• Use NIC NSGs only when VM-specific filtering is required.
+
+• Avoid unnecessary duplicate NSGs.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Forgetting to associate the NIC.
+
+• Assuming Subnet NSG alone always provides enough security.
+
+
+================================================================================
+END OF SECTION 11
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 12 : LINUX VIRTUAL MACHINE
+================================================================================
+
+Architecture Thinking
+---------------------
+
+A Virtual Machine represents the compute layer.
+
+Networking is already prepared.
+
+The Virtual Machine simply consumes the existing infrastructure.
+
+================================================================================
+
+Purpose
+-------
+
+Azure Linux Virtual Machine provides compute resources for running Linux-based
+applications.
+
+The VM depends on
+
+• Resource Group
+
+• Network Interface
+
+• Virtual Network
+
+• Subnet
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_linux_virtual_machine" "LINUXVM" {
+
+    for_each = var.linxvm
+
+    name = each.value.name
+
+    resource_group_name =
+
+    azurerm_resource_group.RG[each.value.rg_name].name
+
+    location =
+
+    azurerm_resource_group.RG[each.value.rg_name].location
+
+    size = each.value.size
+
+    admin_username = each.value.admin_username
+
+    admin_password = each.value.admin_password
+
+    disable_password_authentication = false
+
+    network_interface_ids = [
+
+        azurerm_network_interface.NIC[each.value.nic_ids].id
+
+    ]
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• Every VM references an existing NIC instead of creating networking itself.
+
+• network_interface_ids uses a List because Azure supports multiple NICs.
+
+• The VM inherits networking through the attached NIC.
+
+• Terraform automatically waits until the NIC is created before deploying
+  the Virtual Machine.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Compute
+
+↓
+
+Uses
+
+↓
+
+Networking
+
+Networking
+
+↓
+
+Does NOT
+
+↓
+
+Use Compute
+
+This is why Terraform creates the NIC before the Virtual Machine.
+
+================================================================================
+
+Real Production Scenario
+------------------------
+
+Enterprise Firewall
+
+↓
+
+NIC-1
+
+↓
+
+Internet
+
+NIC-2
+
+↓
+
+Internal Network
+
+One VM
+
+Multiple NICs
+
+Multiple Networks
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Why is network_interface_ids written inside [] even when only one NIC is
+used?
+
+Answer
+
+Because Azure supports attaching multiple NICs to a Virtual Machine.
+
+Terraform follows the Azure API schema.
+
+Therefore the datatype is List(string).
+
+------------------------------------------------------------
+
+Q. Why isn't the NIC created automatically with the VM?
+
+Answer
+
+Microsoft treats Compute and Networking as separate services.
+
+This allows the NIC to be reused, replaced or managed independently.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. Why does network_interface_ids use []?
+
+Q. Can a Virtual Machine have multiple NICs?
+
+Q. Why does Terraform create the NIC before the VM?
+
+================================================================================
+
+Important Tips
+--------------
+
+• Always attach an existing NIC.
+
+• Never hardcode NIC IDs.
+
+• Understand the difference between Compute and Networking.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Assuming networking belongs to the VM.
+
+• Forgetting that network_interface_ids expects a List.
+
+================================================================================
+
+Revision Notes
+--------------
+
+VM
+
+↓
+
+Uses NIC
+
+↓
+
+NIC owns
+
+Private IP
+
+NSG
+
+Backend Pool
+
+Public IP
+
+
+================================================================================
+END OF SECTION 12
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 13 : AZURE STANDARD LOAD BALANCER
+================================================================================
+
+Architecture Thinking
+---------------------
+
+Suppose an application has only one Virtual Machine.
+
+Internet
+
+↓
+
+VM1
+
+If VM1 crashes, the application becomes unavailable.
+
+To improve High Availability, enterprises deploy multiple Virtual Machines.
+
+Now another problem appears.
+
+How will users know which Virtual Machine should receive the request?
+
+Microsoft solves this problem using Azure Load Balancer.
+
+================================================================================
+
+Purpose
+-------
+
+Azure Load Balancer distributes incoming network traffic across multiple
+backend servers.
+
+Instead of exposing every Virtual Machine to the Internet,
+clients communicate only with the Load Balancer.
+
+The Load Balancer decides which backend server should receive the request.
+
+================================================================================
+
+Complete Architecture
+---------------------
+
+                     Internet
+
+                         │
+
+                         ▼
+
+                  Public IP
+
+                         │
+
+                         ▼
+
+               Azure Load Balancer
+
+              /                 \
+
+             ▼                   ▼
+
+       Backend Pool
+
+        /             \
+
+       ▼               ▼
+
+     NIC-1           NIC-2
+
+       │               │
+
+       ▼               ▼
+
+     LinuxVM1       LinuxVM2
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_lb" "LINXLB" {
+
+    for_each = var.lb
+
+    name = each.value.name
+
+    location =
+
+    azurerm_resource_group.RG[each.value.rg_name].location
+
+    resource_group_name =
+
+    azurerm_resource_group.RG[each.value.rg_name].name
+
+    sku = "Standard"
+
+    frontend_ip_configuration {
+
+        name = "FrontendIP"
+
+        public_ip_address_id =
+
+        azurerm_public_ip.PIP[each.value.pip_id].id
+
+    }
+
+}
+
+================================================================================
+
+terraform.tfvars Example
+------------------------
+
+lb = {
+
+    lba = {
+
+        name = "LinxLoadBalancer"
+
+        rg_name = "rga"
+
+        pip_id = "pipb"
+
+    }
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• Azure Load Balancer is an independent networking resource.
+
+• The Load Balancer owns the Public IP instead of the Virtual Machines.
+
+• Client requests always arrive at the Load Balancer first.
+
+• Backend Virtual Machines remain private and are never directly exposed to
+  the Internet.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Microsoft intentionally separates
+
+Public IP
+
+↓
+
+Load Balancer
+
+↓
+
+Backend Virtual Machines
+
+This design hides backend servers from the Internet.
+
+Only the Load Balancer is publicly reachable.
+
+================================================================================
+
+Real Production Scenario
+------------------------
+
+Internet
+
+↓
+
+Load Balancer
+
+↓
+
+20 Web Servers
+
+↓
+
+Private Database
+
+Users never know how many Virtual Machines actually exist.
+
+They only know one Public IP.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Why didn't we attach the Public IP directly to the Virtual Machines?
+
+Answer
+
+Because backend Virtual Machines should remain private.
+
+Only the Load Balancer needs Internet access.
+
+This prevents users from bypassing the Load Balancer.
+
+------------------------------------------------------------
+
+Q. Why didn't we configure Public IP inside the NIC?
+
+Answer
+
+If every NIC had its own Public IP,
+
+Users could directly access
+
+VM1
+
+or
+
+VM2
+
+This completely defeats the purpose of having a Load Balancer.
+
+The Load Balancer must become the single entry point.
+
+------------------------------------------------------------
+
+Q. Why Standard SKU?
+
+Answer
+
+Standard SKU supports modern Azure networking features,
+High Availability and Production workloads.
+
+Basic SKU has been deprecated.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. What is Azure Load Balancer?
+
+Q. Why use Standard Load Balancer?
+
+Q. Why should backend VMs not have Public IPs?
+
+Q. Can users directly access backend Virtual Machines?
+
+================================================================================
+
+Important Tips
+--------------
+
+• Always use Standard SKU.
+
+• Keep backend Virtual Machines private.
+
+• Public IP should normally belong to the Load Balancer.
+
+• Never expose backend servers unnecessarily.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Assigning Public IPs to backend Virtual Machines.
+
+• Using Basic SKU.
+
+• Thinking the Load Balancer contains Virtual Machines.
+
+================================================================================
+
+Revision Notes
+--------------
+
+Internet
+
+↓
+
+Public IP
+
+↓
+
+Load Balancer
+
+↓
+
+Backend Pool
+
+↓
+
+NIC
+
+↓
+
+Virtual Machine
+
+================================================================================
+END OF SECTION 13
+================================================================================
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 14 : BACKEND ADDRESS POOL
+================================================================================
+
+Architecture Thinking
+---------------------
+
+Imagine a company has only one Web Server.
+
+Internet
+
+↓
+
+Web Server
+
+Everything works.
+
+Now the company grows.
+
+One server can no longer handle all requests.
+
+The company adds
+
+VM1
+
+VM2
+
+VM3
+
+Now Azure needs a logical collection that represents all backend servers.
+
+Instead of sending traffic directly to individual servers,
+the Load Balancer sends traffic to a Backend Pool.
+
+The Backend Pool represents the group of backend resources.
+
+================================================================================
+
+Purpose
+-------
+
+A Backend Address Pool is a logical collection of backend endpoints that
+receive traffic from the Azure Load Balancer.
+
+The Load Balancer never sends traffic directly to a Virtual Machine.
+
+Instead,
+
+Internet
+
+↓
+
+Load Balancer
+
+↓
+
+Backend Pool
+
+↓
+
+Network Interface
+
+↓
+
+Virtual Machine
+
+================================================================================
+
+Architecture
+------------
+
+                 Internet
+
+                     │
+
+                     ▼
+
+              Azure Load Balancer
+
+                     │
+
+                     ▼
+
+             Backend Address Pool
+
+              /                \
+
+             ▼                  ▼
+
+           NIC1               NIC2
+
+             │                  │
+
+             ▼                  ▼
+
+           VM1                VM2
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_lb_backend_address_pool" "BackendPool" {
+
+    for_each = var.bpool
+
+    loadbalancer_id =
+
+    azurerm_lb.LINXLB[each.value.lb_id].id
+
+    name = each.value.name
+
+}
+
+================================================================================
+
+terraform.tfvars Example
+------------------------
+
+bpool = {
+
+    bpoola = {
+
+        lb_id = "lba"
+
+        name = "BackEndAddressPool"
+
+    }
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• A Backend Pool is only a logical collection.
+
+• Creating the Backend Pool does NOT automatically add any Virtual Machines.
+
+• Initially the Backend Pool is completely empty.
+
+• Backend resources are added later using a separate Association resource.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Microsoft separates
+
+Load Balancer
+
+↓
+
+Backend Pool
+
+↓
+
+Association
+
+Instead of creating one huge resource.
+
+This provides flexibility.
+
+One Backend Pool can contain
+
+2 VMs
+
+5 VMs
+
+20 VMs
+
+100 VMs
+
+without changing the Load Balancer itself.
+
+================================================================================
+
+Real Production Scenario
+------------------------
+
+E-commerce Website
+
+↓
+
+Load Balancer
+
+↓
+
+Backend Pool
+
+↓
+
+20 Web Servers
+
+↓
+
+Database
+
+If another Web Server is added,
+
+only the Backend Pool membership changes.
+
+The Load Balancer configuration remains unchanged.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Why didn't Azure add Virtual Machines directly into the Backend Pool?
+
+Answer
+
+Because Azure networking is NOT Virtual Machine centric.
+
+Azure networking is
+
+NIC Centric.
+
+Every networking feature belongs to the Network Interface.
+
+Examples
+
+Private IP
+
+↓
+
+NIC
+
+Public IP
+
+↓
+
+NIC
+
+NSG
+
+↓
+
+NIC
+
+Backend Pool Membership
+
+↓
+
+NIC
+
+The Virtual Machine simply consumes the Network Interface.
+
+Therefore Azure associates the NIC instead of the Virtual Machine.
+
+------------------------------------------------------------
+
+Q. Why was the Backend Pool empty after creating it?
+
+Answer
+
+Because creating the Backend Pool only creates the container.
+
+Membership is configured later using
+
+azurerm_network_interface_backend_address_pool_association
+
+This separation allows Azure to manage backend members independently.
+
+------------------------------------------------------------
+
+Q. Can one Backend Pool contain multiple Virtual Machines?
+
+Answer
+
+Yes.
+
+In reality,
+
+the Backend Pool contains multiple Network Interfaces.
+
+Each Network Interface belongs to one Virtual Machine.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. What is a Backend Address Pool?
+
+Answer
+
+A Backend Address Pool is a logical collection of backend endpoints that
+receive traffic from an Azure Load Balancer.
+
+------------------------------------------------------------
+
+Q. Does the Backend Pool contain Virtual Machines?
+
+Answer
+
+No.
+
+Azure stores Network Interfaces inside the Backend Pool.
+
+The Virtual Machine communicates through its attached Network Interface.
+
+------------------------------------------------------------
+
+Q. Why is Azure networking NIC-centric?
+
+Answer
+
+Because all networking information belongs to the Network Interface.
+
+A Virtual Machine may have multiple NICs,
+therefore Azure separates Compute from Networking.
+
+------------------------------------------------------------
+
+Q. Why is Backend Pool Association a separate Terraform resource?
+
+Answer
+
+Microsoft separates resource creation from resource membership.
+
+This allows backend members to be added or removed without modifying the
+Load Balancer itself.
+
+================================================================================
+
+Important Tips
+--------------
+
+• Think of a Backend Pool as a logical group instead of a physical resource.
+
+• Never think the Backend Pool stores Virtual Machines.
+
+• Always remember Azure networking belongs to the Network Interface.
+
+• Backend Pool membership is configured later using Association resources.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Assuming Backend Pool contains Virtual Machines.
+
+• Forgetting to create Backend Pool Association.
+
+• Assuming Backend Pool automatically discovers Virtual Machines.
+
+================================================================================
+
+Revision Notes
+--------------
+
+Internet
+
+↓
+
+Load Balancer
+
+↓
+
+Backend Pool
+
+↓
+
+NIC
+
+↓
+
+Virtual Machine
+
+Backend Pool
+
+=
+
+Collection of Backend Network Interfaces
+
+NOT
+
+Collection of Virtual Machines
+
+================================================================================
+END OF SECTION 14
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 15 : HEALTH PROBE
+================================================================================
+
+Architecture Thinking
+---------------------
+
+Suppose a company has two Web Servers.
+
+                 Internet
+
+                     │
+
+                     ▼
+
+             Azure Load Balancer
+
+                /            \
+
+               ▼              ▼
+
+             VM1            VM2
+
+Now imagine VM1 crashes.
+
+How will Azure know that VM1 is no longer working?
+
+Should Azure continue sending user requests to VM1?
+
+No.
+
+Azure continuously checks every backend server using a Health Probe.
+
+Only healthy servers receive traffic.
+
+================================================================================
+
+Purpose
+-------
+
+A Health Probe continuously monitors the health of backend servers.
+
+If a backend server becomes unhealthy,
+Azure automatically removes it from traffic distribution.
+
+Once the server becomes healthy again,
+Azure automatically starts sending traffic back to it.
+
+Health Probe provides automatic failover.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_lb_probe" "HealthProbe" {
+
+    for_each = var.lbprobe
+
+    loadbalancer_id =
+
+    azurerm_lb.LINXLB[each.value.lb_id].id
+
+    name = each.value.name
+
+    protocol = each.value.protocol
+
+    port = each.value.port
+
+    request_path = each.value.path
+
+    interval_in_seconds = each.value.interval
+
+}
+
+================================================================================
+
+terraform.tfvars Example
+------------------------
+
+lbprobe = {
+
+    lbprobe1 = {
+
+        lb_id = "lba"
+
+        name = "HealthProbe"
+
+        protocol = "Http"
+
+        port = 80
+
+        path = "/"
+
+        interval = 5
+
+    }
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• Azure periodically checks every backend server.
+
+• The Health Probe sends an HTTP GET request to the configured path.
+
+• If the server responds successfully, Azure marks it as Healthy.
+
+• If the server does not respond or returns an invalid response,
+  Azure marks it as Unhealthy.
+
+• Traffic is automatically redirected to healthy backend servers.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Health Probe does NOT balance traffic.
+
+Health Probe only answers one question.
+
+"Is this backend server healthy?"
+
+If the answer is YES,
+
+↓
+
+Server stays inside traffic rotation.
+
+If the answer is NO,
+
+↓
+
+Server is temporarily removed.
+
+The Load Balancer Rule later decides where traffic goes.
+
+================================================================================
+
+Real Production Scenario
+------------------------
+
+User opens
+
+www.company.com
+
+↓
+
+Load Balancer receives request
+
+↓
+
+Health Probe checks
+
+VM1
+
+Healthy ✔
+
+VM2
+
+Healthy ✔
+
+↓
+
+Traffic is distributed
+
+------------------------------------------------------------
+
+Now VM1 crashes.
+
+↓
+
+Health Probe detects failure
+
+↓
+
+VM1 removed
+
+↓
+
+All traffic goes to VM2
+
+------------------------------------------------------------
+
+VM1 becomes healthy again.
+
+↓
+
+Health Probe succeeds
+
+↓
+
+VM1 automatically joins the Backend Pool again.
+
+================================================================================
+
+How HTTP Health Probe Works
+---------------------------
+
+Every few seconds Azure sends
+
+HTTP GET /
+
+Example
+
+GET /
+
+Host: <LoadBalancer>
+
+------------------------------------------------------------
+
+Your Nginx server replies
+
+HTTP/1.1 200 OK
+
+------------------------------------------------------------
+
+Azure marks
+
+Healthy
+
+------------------------------------------------------------
+
+If Nginx is stopped
+
+or
+
+Apache crashes
+
+or
+
+Application returns an error
+
+Azure receives
+
+HTTP 500
+
+or
+
+No Response
+
+↓
+
+Server becomes Unhealthy.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Does Azure simply ping the Virtual Machine?
+
+Answer
+
+No.
+
+HTTP Health Probe does much more than Ping.
+
+Azure actually sends an HTTP GET request.
+
+Example
+
+GET /
+
+The web server must respond correctly.
+
+Only then does Azure consider the backend healthy.
+
+------------------------------------------------------------
+
+Q. Can we send our own HTTP request manually?
+
+Answer
+
+Yes.
+
+Example using Linux
+
+curl http://<Server-IP>
+
+Example using PowerShell
+
+Invoke-WebRequest http://<Server-IP>
+
+These commands work similarly to how Azure checks a web server.
+
+------------------------------------------------------------
+
+Q. Why did we use "/" as request_path?
+
+Answer
+
+Because "/" represents the application's home page.
+
+If the home page responds successfully,
+the application is considered healthy.
+
+In production environments,
+organizations often create dedicated health endpoints such as
+
+/health
+
+/status
+
+/ready
+
+instead of checking the home page.
+
+------------------------------------------------------------
+
+Q. Why did we choose 5 seconds?
+
+Answer
+
+Azure checks backend servers every 5 seconds.
+
+Smaller values detect failures faster,
+but increase health check traffic.
+
+Larger values reduce traffic,
+but failover becomes slower.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. What is a Health Probe?
+
+Answer
+
+A Health Probe continuously checks the health of backend servers and removes
+unhealthy servers from the Load Balancer automatically.
+
+------------------------------------------------------------
+
+Q. Does a Health Probe distribute traffic?
+
+Answer
+
+No.
+
+Health Probe only checks server health.
+
+Traffic distribution is performed by the Load Balancing Rule.
+
+------------------------------------------------------------
+
+Q. Difference between ICMP Ping and HTTP Health Probe?
+
+Answer
+
+ICMP only checks network reachability.
+
+HTTP Health Probe checks whether the actual web application is responding.
+
+------------------------------------------------------------
+
+Q. What happens if Nginx is stopped?
+
+Answer
+
+The Health Probe starts failing.
+
+Azure marks the backend as unhealthy and automatically stops sending traffic
+to that server.
+
+================================================================================
+
+Important Tips
+--------------
+
+• Always configure a Health Probe for production Load Balancers.
+
+• Use dedicated health endpoints such as "/health" whenever possible.
+
+• Do not confuse Health Probe with Load Balancing Rules.
+
+• Health Probe only checks health; it never decides traffic routing.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Assuming Azure simply performs a Ping.
+
+• Forgetting to configure request_path for HTTP probes.
+
+• Believing Health Probe distributes traffic.
+
+• Setting extremely small intervals without understanding the impact.
+
+================================================================================
+
+Revision Notes
+--------------
+
+Health Probe
+
+↓
+
+Checks Backend Health
+
+↓
+
+Healthy
+
+↓
+
+Traffic Allowed
+
+------------------------------------------------------------
+
+Unhealthy
+
+↓
+
+Traffic Removed
+
+------------------------------------------------------------
+
+Health Probe
+
+≠
+
+Load Balancing Rule
+
+================================================================================
+END OF SECTION 15
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 16 : LOAD BALANCING RULE
+================================================================================
+
+Architecture Thinking
+---------------------
+
+Creating a Load Balancer, Backend Pool and Health Probe is still not enough.
+
+Azure still does not know
+
+• Which traffic should be accepted?
+
+• Which Frontend Port should be used?
+
+• Which Backend Pool should receive traffic?
+
+• Which Backend Port should receive the request?
+
+• Which Health Probe should verify server health?
+
+Azure needs a traffic policy.
+
+That traffic policy is called the Load Balancing Rule.
+
+================================================================================
+
+Purpose
+-------
+
+A Load Balancing Rule tells Azure how incoming client traffic should be
+processed.
+
+It connects
+
+Frontend IP
+
+↓
+
+Frontend Port
+
+↓
+
+Backend Pool
+
+↓
+
+Backend Port
+
+↓
+
+Health Probe
+
+Without a Load Balancing Rule, the Load Balancer does not know where traffic
+should be forwarded.
+
+================================================================================
+
+Complete Traffic Flow
+---------------------
+
+                Client Browser
+
+                     │
+
+                     ▼
+
+             Public IP Address
+
+                     │
+
+                     ▼
+
+          Frontend IP Configuration
+
+                     │
+
+                     ▼
+
+          Load Balancing Rule
+
+                     │
+
+                     ▼
+
+           Backend Address Pool
+
+              /             \
+
+             ▼               ▼
+
+           NIC1            NIC2
+
+             │               │
+
+             ▼               ▼
+
+          LinuxVM1       LinuxVM2
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_lb_rule" "LBRule" {
+
+    for_each = var.lbrule
+
+    loadbalancer_id =
+
+    azurerm_lb.LINXLB[each.value.lb_id].id
+
+    name = each.value.name
+
+    protocol = each.value.protocol
+
+    frontend_port = each.value.frontend_port
+
+    backend_port = each.value.backend_port
+
+    frontend_ip_configuration_name =
+
+    each.value.frontend_ip_configuration_name
+
+    backend_address_pool_ids = [
+
+        azurerm_lb_backend_address_pool.BackendPool[
+        each.value.backend_pool_id
+        ].id
+
+    ]
+
+    probe_id =
+
+    azurerm_lb_probe.HealthProbe[
+    each.value.probe_id
+    ].id
+
+}
+
+================================================================================
+
+terraform.tfvars Example
+------------------------
+
+lbrule = {
+
+    lbrule1 = {
+
+        lb_id = "lba"
+
+        name = "LBRule"
+
+        protocol = "Tcp"
+
+        frontend_port = 80
+
+        backend_port = 80
+
+        frontend_ip_configuration_name = "FrontendIP"
+
+        backend_pool_id = "bpoola"
+
+        probe_id = "lbprobe1"
+
+    }
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• The Load Balancing Rule acts as the brain of the Load Balancer by defining
+  how incoming traffic should be processed.
+
+• frontend_port represents the port on which the Load Balancer listens for
+  client requests.
+
+• backend_port represents the destination port on the backend servers where
+  traffic will finally be delivered.
+
+• backend_address_pool_ids tells Azure which backend servers are eligible to
+  receive traffic.
+
+• probe_id links the Health Probe with the rule so Azure sends traffic only
+  to healthy backend servers.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Think of the Load Balancing Rule as a Traffic Manager.
+
+It answers five important questions.
+
+Question 1
+
+Where should users connect?
+
+↓
+
+Frontend IP
+
+------------------------------------------------------------
+
+Question 2
+
+Which port should users access?
+
+↓
+
+Frontend Port
+
+------------------------------------------------------------
+
+Question 3
+
+Which backend servers should receive requests?
+
+↓
+
+Backend Pool
+
+------------------------------------------------------------
+
+Question 4
+
+Which application port should receive traffic?
+
+↓
+
+Backend Port
+
+------------------------------------------------------------
+
+Question 5
+
+Which servers are healthy?
+
+↓
+
+Health Probe
+
+Only after answering all five questions can Azure forward traffic.
+
+================================================================================
+
+Real Production Scenario
+------------------------
+
+User opens
+
+https://company.com
+
+↓
+
+Azure receives request on
+
+443
+
+↓
+
+Load Balancer Rule
+
+↓
+
+Backend Pool
+
+↓
+
+Web Server
+
+↓
+
+Application
+
+If the Health Probe reports that one server has failed,
+
+the Load Balancer Rule automatically skips that server and forwards traffic
+only to healthy backend servers.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Does the Load Balancing Rule check whether Frontend Port and Backend Port
+match?
+
+Answer
+
+No.
+
+The Load Balancing Rule does not compare port numbers.
+
+It simply defines
+
+"If traffic arrives on the Frontend Port,
+forward it to the Backend Port."
+
+Example
+
+Frontend Port = 80
+
+↓
+
+Backend Port = 8080
+
+This is completely valid.
+
+Azure performs port forwarding, not port validation.
+
+------------------------------------------------------------
+
+Q. Why did we use TCP instead of HTTP?
+
+Answer
+
+The Load Balancer operates at Layer 4.
+
+It understands TCP and UDP.
+
+It does not inspect HTTP headers or application content.
+
+The HTTP validation is performed separately by the Health Probe.
+
+------------------------------------------------------------
+
+Q. Why is backend_address_pool_ids written inside [] ?
+
+Answer
+
+Because Azure allows a Load Balancing Rule to reference multiple Backend
+Address Pools.
+
+Terraform therefore expects a List of IDs.
+
+Even if only one Backend Pool is used today,
+the datatype remains a list.
+
+------------------------------------------------------------
+
+Q. Why is probe_id NOT inside [] ?
+
+Answer
+
+Because one Load Balancing Rule references only one Health Probe.
+
+Terraform therefore expects a single ID instead of a list.
+
+------------------------------------------------------------
+
+Q. Why did network_interface_ids also use [] even though one NIC was attached?
+
+Answer
+
+Azure supports multiple NICs per Virtual Machine.
+
+Terraform follows the Azure API schema.
+
+The argument therefore expects List(string).
+
+This follows exactly the same design philosophy as backend_address_pool_ids.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. What is a Load Balancing Rule?
+
+Answer
+
+A Load Balancing Rule defines how incoming traffic is forwarded from the
+Frontend IP to backend servers while using a Health Probe to ensure only
+healthy servers receive traffic.
+
+------------------------------------------------------------
+
+Q. Can Frontend Port and Backend Port be different?
+
+Answer
+
+Yes.
+
+Example
+
+Frontend Port = 80
+
+Backend Port = 8080
+
+Azure forwards traffic from one port to another.
+
+------------------------------------------------------------
+
+Q. Does the Load Balancing Rule perform health checks?
+
+Answer
+
+No.
+
+Health checking is performed by the Health Probe.
+
+The Load Balancing Rule only uses the probe result.
+
+------------------------------------------------------------
+
+Q. Why is backend_address_pool_ids a List?
+
+Answer
+
+Because Azure supports multiple Backend Pools.
+
+Terraform therefore expects a list of IDs.
+
+================================================================================
+
+Important Tips
+--------------
+
+• Remember that the Load Balancing Rule controls traffic flow, not server
+  health.
+
+• Health Probe and Load Balancing Rule perform different responsibilities.
+
+• Do not assume Frontend Port and Backend Port must always be the same.
+
+• Read Terraform argument names carefully. If the argument ends with "_ids",
+  Terraform usually expects a list.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Confusing Health Probe with the Load Balancing Rule.
+
+• Assuming Frontend Port and Backend Port must match.
+
+• Forgetting to associate a Backend Pool.
+
+• Thinking the Load Balancer automatically discovers backend servers.
+
+================================================================================
+
+Revision Notes
+--------------
+
+Client
+
+↓
+
+Public IP
+
+↓
+
+Frontend IP Configuration
+
+↓
+
+Load Balancing Rule
+
+↓
+
+Backend Pool
+
+↓
+
+NIC
+
+↓
+
+Virtual Machine
+
+------------------------------------------------------------
+
+Load Balancing Rule
+
+=
+
+Traffic Flow
+
+------------------------------------------------------------
+
+Health Probe
+
+=
+
+Server Health
+
+------------------------------------------------------------
+
+Backend Pool
+
+=
+
+Backend Members
+
+================================================================================
+END OF SECTION 16
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================
+SECTION 17 : NIC BACKEND ADDRESS POOL ASSOCIATION
+================================================================================
+
+Architecture Thinking
+---------------------
+
+Creating a Backend Address Pool does NOT automatically add backend servers.
+
+Initially,
+
+Load Balancer
+
+↓
+
+Backend Pool
+
+↓
+
+Empty
+
+Azure still does not know which backend resources should receive traffic.
+
+Microsoft solves this by introducing a separate Association resource.
+
+This Association connects a Network Interface (NIC) with a Backend Address Pool.
+
+Only after this association is created does the Virtual Machine become part of
+the Load Balancer.
+
+================================================================================
+
+Purpose
+-------
+
+NIC Backend Address Pool Association connects an existing Network Interface
+to an existing Backend Address Pool.
+
+Without this association,
+
+The Backend Pool remains empty,
+
+and
+
+The Load Balancer has no backend servers available to receive traffic.
+
+================================================================================
+
+Terraform Code
+--------------
+
+resource "azurerm_network_interface_backend_address_pool_association" "NICBackendAssc" {
+
+    for_each = var.nibkasc
+
+    network_interface_id =
+
+    azurerm_network_interface.NIC[
+        each.value.nic_id
+    ].id
+
+    ip_configuration_name =
+
+    each.value.ip_conf_name
+
+    backend_address_pool_id =
+
+    azurerm_lb_backend_address_pool.BackendPool[
+        each.value.backend_pool_id
+    ].id
+
+}
+
+================================================================================
+
+terraform.tfvars Example
+------------------------
+
+nibkasc = {
+
+    nibkasc1 = {
+
+        nic_id = "nica"
+
+        ip_conf_name = "Linx1Internal"
+
+        backend_pool_id = "bpoola"
+
+    }
+
+    nibkasc2 = {
+
+        nic_id = "nicb"
+
+        ip_conf_name = "Linx2Internal"
+
+        backend_pool_id = "bpoola"
+
+    }
+
+}
+
+================================================================================
+
+Explanation
+-----------
+
+• This resource creates the relationship between a Network Interface and the
+  Backend Address Pool. It does not create either resource; both must already
+  exist before the association can be made.
+
+• Every backend Virtual Machine joins the Load Balancer through its Network
+  Interface. Azure never associates the Virtual Machine directly.
+
+• The ip_configuration_name identifies which IP configuration of the NIC
+  should become part of the Backend Pool.
+
+• After the association is complete, Azure starts considering that backend
+  server when distributing client requests.
+
+================================================================================
+
+Engineering Thinking
+--------------------
+
+Microsoft intentionally separates
+
+Load Balancer
+
+↓
+
+Backend Pool
+
+↓
+
+Backend Membership
+
+instead of combining everything into one resource.
+
+Why?
+
+Because backend servers may change frequently.
+
+Examples
+
+A new server is added.
+
+↓
+
+Only create one new Association.
+
+------------------------------------------------------------
+
+A server is removed.
+
+↓
+
+Delete only its Association.
+
+------------------------------------------------------------
+
+The Load Balancer configuration never changes.
+
+This design improves scalability and simplifies management.
+
+================================================================================
+
+Real Production Scenario
+------------------------
+
+Imagine an e-commerce website.
+
+Yesterday
+
+Backend Pool
+
+↓
+
+VM1
+
+VM2
+
+------------------------------------------------------------
+
+Today
+
+Traffic increases.
+
+Two new servers are deployed.
+
+VM3
+
+VM4
+
+The Load Balancer itself is not modified.
+
+Only two new Backend Pool Associations are created.
+
+Azure immediately starts sending traffic to the new servers.
+
+================================================================================
+
+Our Discussion (WHY?)
+---------------------
+
+Q. Why didn't Azure automatically add the NIC when the Backend Pool was
+created?
+
+Answer
+
+Because Azure separates resource creation from resource membership.
+
+Creating the Backend Pool only creates an empty logical container.
+
+Backend resources are added later using Association resources.
+
+------------------------------------------------------------
+
+Q. Why is the Network Interface associated instead of the Virtual Machine?
+
+Answer
+
+Azure networking is NIC-centric.
+
+The NIC owns
+
+• Private IP
+
+• Public IP
+
+• NSG Association
+
+• Backend Pool Membership
+
+The Virtual Machine simply uses the Network Interface.
+
+Therefore Azure associates the NIC instead of the VM.
+
+------------------------------------------------------------
+
+Q. Why is ip_configuration_name required?
+
+Answer
+
+A single Network Interface can contain multiple IP Configurations.
+
+Azure must know exactly which IP Configuration should receive Load Balancer
+traffic.
+
+Even though our lab uses one IP Configuration per NIC, Azure supports multiple
+configurations for advanced networking scenarios.
+
+------------------------------------------------------------
+
+Q. Why did we keep different names such as
+
+Linx1Internal
+
+Linx2Internal
+
+instead of using "Internal" everywhere?
+
+Answer
+
+Both approaches are technically correct.
+
+Using unique names improves readability, troubleshooting and future expansion.
+
+In production environments, meaningful names make large infrastructures easier
+to manage.
+
+================================================================================
+
+Interview Questions
+-------------------
+
+Q. What is NIC Backend Address Pool Association?
+
+Answer
+
+It is an Azure resource that connects an existing Network Interface with an
+existing Backend Address Pool so the Load Balancer can forward traffic to that
+backend server.
+
+------------------------------------------------------------
+
+Q. Why is this Association required?
+
+Answer
+
+Because creating a Backend Pool does not automatically add backend members.
+
+Membership is configured separately.
+
+------------------------------------------------------------
+
+Q. Does the Backend Pool contain Virtual Machines?
+
+Answer
+
+No.
+
+The Backend Pool contains Network Interfaces.
+
+The Virtual Machine communicates through its attached NIC.
+
+------------------------------------------------------------
+
+Q. Why is ip_configuration_name required?
+
+Answer
+
+Because one Network Interface may contain multiple IP Configurations.
+
+Azure must know which configuration belongs to the Backend Pool.
+
+================================================================================
+
+Important Tips
+--------------
+
+• Always remember that creating a Backend Pool is only the first step. Backend
+  members become active only after creating Backend Pool Associations.
+
+• Backend Pool Associations are created using Network Interfaces, not Virtual
+  Machines.
+
+• Use meaningful IP Configuration names to simplify troubleshooting and future
+  maintenance.
+
+• This resource is one of the strongest examples showing that Azure networking
+  is NIC-centric rather than VM-centric.
+
+================================================================================
+
+Common Mistakes
+---------------
+
+• Forgetting to create Backend Pool Associations.
+
+• Assuming Backend Pools automatically discover Virtual Machines.
+
+• Thinking Backend Pools store Virtual Machines instead of Network Interfaces.
+
+• Using an incorrect ip_configuration_name that does not exist on the NIC.
+
+================================================================================
+
+Revision Notes
+--------------
+
+Internet
+
+↓
+
+Public IP
+
+↓
+
+Load Balancer
+
+↓
+
+Frontend IP Configuration
+
+↓
+
+Load Balancing Rule
+
+↓
+
+Backend Address Pool
+
+↓
+
+NIC Backend Pool Association
+
+↓
+
+Network Interface
+
+↓
+
+Virtual Machine
+
+------------------------------------------------------------
+
+Load Balancer
+
+↓
+
+Does NOT know Virtual Machines
+
+↓
+
+It knows only Network Interfaces
+
+------------------------------------------------------------
+
+Azure Networking
+
+=
+
+NIC Centric
+
+NOT
+
+VM Centric
+
+================================================================================
+END OF SECTION 17
+================================================================================
+
+
+
