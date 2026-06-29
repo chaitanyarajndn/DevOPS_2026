@@ -1,0 +1,706 @@
+====================================================
+AZURE USER DEFINED ROUTES (UDR)
+====================================================
+
+Learning Goal
+-------------
+After completing this topic, you should be able to:
+
+• Explain what Azure User Defined Routes (UDR) are.
+• Understand why Azure needs custom routing.
+• Create and configure Route Tables.
+• Associate Route Tables with subnets.
+• Understand Next Hop Types.
+• Implement Azure Firewall routing.
+• Understand UDR in Hub & Spoke architecture.
+• Answer interview questions confidently.
+
+====================================================
+Definition (30 sec)
+====================================================
+
+Azure User Defined Route (UDR) is a custom route that allows administrators to override Azure's default System Routes and control how network traffic flows inside an Azure Virtual Network.
+
+====================================================
+Definition (1 min)
+====================================================
+
+Azure automatically creates System Routes for every Virtual Network. These routes work well for normal deployments, but enterprise environments often require traffic to follow a custom path for security, monitoring or compliance.
+
+Azure User Defined Routes (UDRs) allow administrators to create custom routes inside a Route Table and force traffic through Azure Firewall, Network Virtual Appliances (NVAs), VPN Gateway, ExpressRoute Gateway or other destinations instead of following Azure's default routing behavior.
+
+====================================================
+Problem
+====================================================
+
+Imagine an enterprise environment where Azure Firewall is deployed inside a Hub VNet.
+
+By default, Azure System Routes send Internet-bound traffic directly to the Internet.
+
+This means traffic bypasses the Azure Firewall.
+
+As a result:
+
+• No traffic inspection.
+• No centralized security.
+• No logging.
+• Security policies cannot be enforced.
+
+Organizations need complete control over traffic flow.
+
+====================================================
+Solution
+====================================================
+
+Create an Azure Route Table.
+
+Inside the Route Table, create one or more User Defined Routes (UDRs).
+
+Each UDR contains:
+
+• Destination Prefix
+• Next Hop Type
+
+Associate the Route Table with the required subnet.
+
+After association, Azure forwards traffic according to the UDR instead of the default System Route.
+
+====================================================
+Relationship
+====================================================
+
+User Defined Route (UDR)
+│
+├── Stored In
+│     └── Route Table
+│
+├── Associated With
+│     └── Subnet
+│
+├── Uses
+│     ├── Destination Prefix
+│     └── Next Hop Type
+│
+├── Common Next Hop Types
+│     ├── Internet
+│     ├── Virtual Appliance
+│     ├── Virtual Network Gateway
+│     ├── Virtual Network
+│     └── None
+│
+├── Frequently Used With
+│     ├── Azure Firewall
+│     ├── Gateway Transit
+│     ├── Hub-and-Spoke Architecture
+│     └── VPN / ExpressRoute
+│
+└── Overrides
+      └── Azure System Routes (When Applicable)
+
+====================================================
+Architecture
+====================================================
+
+                Internet
+                    │
+                    ▼
+            Azure Firewall
+                    │
+            Route Table (UDR)
+                    │
+        ┌───────────┴───────────┐
+        │                       │
+        ▼                       ▼
+ Frontend Subnet         Backend Subnet
+        │                       │
+        └───────────┬───────────┘
+                    │
+                    ▼
+               Database Subnet
+
+Traffic is forced through Azure Firewall before reaching the destination.
+
+====================================================
+Enterprise Scenario
+====================================================
+
+A company deploys Azure Firewall inside a Hub VNet.
+
+There are three application subnets:
+
+• Frontend
+• Backend
+• Database
+
+The security team requires every subnet to send Internet-bound traffic through Azure Firewall.
+
+Instead of allowing Azure System Routes to send traffic directly to the Internet, a Route Table containing User Defined Routes is associated with each subnet.
+
+Now every packet first reaches Azure Firewall for inspection before leaving Azure.
+
+====================================================
+Prerequisites
+====================================================
+
+• Azure Virtual Network (VNet)
+  UDRs work inside a Virtual Network.
+
+• Subnet
+  Route Tables are associated with subnets, not individual Virtual Machines.
+
+• Route Table
+  A Route Table stores one or more User Defined Routes.
+
+• Destination Prefix
+  Defines which destination network the route applies to.
+
+  Examples:
+  0.0.0.0/0
+  10.0.0.0/16
+  172.16.0.0/16
+
+• Next Hop Type
+  Defines where Azure forwards the traffic.
+
+  Examples:
+
+  - Internet
+  - Virtual Appliance
+  - Virtual Network Gateway
+  - Virtual Network
+  - None
+
+• Next Hop IP Address
+  Required only when the Next Hop Type is Virtual Appliance.
+
+  Example:
+
+  Azure Firewall Private IP
+
+  10.0.0.4
+
+====================================================
+Configuration Flow
+====================================================
+
+Create Azure Virtual Network
+          ↓
+Create Required Subnets
+          ↓
+Deploy Azure Firewall (Optional)
+          ↓
+Create Route Table
+          ↓
+Create User Defined Route
+          ↓
+Configure Destination Prefix
+          ↓
+Select Next Hop Type
+          ↓
+Enter Next Hop IP (If Required)
+          ↓
+Associate Route Table with Subnet
+          ↓
+Test Traffic Flow
+
+====================================================
+Configuration Sequence
+====================================================
+
+Azure VNet
+     │
+     ├── Frontend Subnet
+     │         │
+     │         ▼
+     │   Associate Route Table
+     │         │
+     │         ▼
+     │   User Defined Route
+     │         │
+     │         ▼
+     │   Azure Firewall
+     │
+     ├── Backend Subnet
+     │
+     └── Database Subnet
+
+Every subnet associated with the Route Table starts following the configured User Defined Routes.
+
+====================================================
+Terraform Resources
+====================================================
+
+azurerm_route_table
+→ Creates an Azure Route Table.
+
+azurerm_route
+→ Creates a User Defined Route inside the Route Table.
+
+azurerm_subnet_route_table_association
+→ Associates the Route Table with the required subnet.
+
+Typical Terraform Deployment Order
+
+Virtual Network
+      │
+Subnets
+      │
+Azure Firewall (Optional)
+      │
+Route Table
+      │
+User Defined Route
+      │
+Subnet Association
+
+====================================================
+Post Configuration
+====================================================
+
+Azure automatically performs the following actions:
+
+• Applies the Route Table to the associated subnet.
+
+• Every VM inside the subnet starts using the Route Table.
+
+• Azure evaluates the User Defined Routes before forwarding traffic.
+
+• Matching traffic is forwarded to the configured Next Hop.
+
+Azure DOES NOT:
+
+• Restart Virtual Machines.
+
+• Modify NSG Rules.
+
+• Create Firewall Rules.
+
+• Deploy Azure Firewall automatically.
+
+====================================================
+Configuration Impact
+====================================================
+
+Before Configuration
+
+VM
+ │
+ ▼
+Azure System Route
+ │
+ ▼
+Internet
+
+Traffic bypasses Azure Firewall.
+
+----------------------------------------------------
+
+After Configuration
+
+VM
+ │
+ ▼
+Route Table (UDR)
+ │
+ ▼
+Azure Firewall
+ │
+ ▼
+Internet
+
+Traffic is inspected before leaving Azure.
+
+
+====================================================
+Best Practices
+====================================================
+
+• Use User Defined Routes only when Azure System Routes cannot meet your routing requirements.
+
+• Associate Route Tables only with the required subnets.
+  Avoid unnecessary associations.
+
+• Keep Route Tables simple and well documented.
+
+• Use Azure Firewall or a Network Virtual Appliance (NVA) as the Next Hop for centralized traffic inspection.
+
+• Reuse Route Tables whenever multiple subnets require the same routing policy.
+
+• Test routing after every Route Table modification.
+
+• In Hub-and-Spoke architecture, combine UDR with Gateway Transit for centralized routing.
+
+• Always verify the effective route after applying a Route Table.
+
+====================================================
+Important
+====================================================
+
+• Azure automatically creates System Routes for every VNet.
+
+• UDR overrides Azure System Routes when a matching route exists.
+
+• Route Tables are associated with subnets, NOT Virtual Machines.
+
+• One Route Table can contain multiple User Defined Routes.
+
+• A subnet can be associated with only one Route Table at a time.
+
+• A Route Table can be associated with multiple subnets.
+
+• Every User Defined Route requires:
+  - Destination Prefix
+  - Next Hop Type
+
+• Next Hop IP Address is required only when the Next Hop Type is "Virtual Appliance".
+
+• Azure always uses Longest Prefix Match.
+
+Example
+
+10.0.0.0/16
+
+10.0.1.0/24
+
+Destination IP
+
+10.0.1.15
+
+Azure selects
+
+10.0.1.0/24
+
+Reason
+
+It is the most specific route.
+
+----------------------------------------------------
+
+Common Next Hop Types
+
+Internet
+→ Sends traffic directly to the Internet.
+
+Virtual Appliance
+→ Sends traffic to Azure Firewall or an NVA.
+
+Virtual Network Gateway
+→ Sends traffic to VPN Gateway or ExpressRoute Gateway.
+
+Virtual Network
+→ Sends traffic inside the Azure Virtual Network.
+
+None
+→ Drops the traffic.
+
+----------------------------------------------------
+
+Azure Firewall + UDR
+
+Internet
+      │
+      ▼
+Azure Firewall
+      │
+Route Table
+      │
+Application Subnet
+
+All traffic is inspected before reaching the Internet.
+
+----------------------------------------------------
+
+Gateway Transit + UDR
+
+On-Premises
+      │
+VPN / ExpressRoute Gateway
+      │
+Hub VNet
+      │
+Route Table
+      │
+Spoke VNets
+
+Gateway Transit provides connectivity.
+
+UDR decides how traffic moves after entering the Hub VNet.
+
+====================================================
+Cost Note
+====================================================
+
+• Azure Route Tables are free.
+
+• User Defined Routes are free.
+
+• Charges apply only to the resources used as the Next Hop.
+
+Examples
+
+• Azure Firewall
+• VPN Gateway
+• ExpressRoute Gateway
+• Network Virtual Appliance (NVA)
+
+====================================================
+Interview Keywords
+====================================================
+
+• User Defined Route (UDR)
+
+• Route Table
+
+• System Route
+
+• Destination Prefix
+
+• Next Hop
+
+• Longest Prefix Match
+
+• Azure Firewall
+
+• Virtual Appliance
+
+• Virtual Network Gateway
+
+• Hub-and-Spoke
+
+• Gateway Transit
+
+====================================================
+Interview Questions
+====================================================
+
+Q. What is Azure User Defined Route (UDR)?
+
+Ans.
+A User Defined Route is a custom route that overrides Azure's default routing behavior and controls how traffic flows inside Azure.
+
+----------------------------------------------------
+
+Q. Why do we need UDR?
+
+Ans.
+To force traffic through a custom path such as Azure Firewall, VPN Gateway, ExpressRoute Gateway or an NVA instead of using Azure System Routes.
+
+----------------------------------------------------
+
+Q. What is a Route Table?
+
+Ans.
+A Route Table is an Azure resource that stores one or more User Defined Routes.
+
+----------------------------------------------------
+
+Q. Where is a Route Table associated?
+
+Ans.
+With a subnet.
+
+It cannot be associated directly with a Virtual Machine.
+
+----------------------------------------------------
+
+Q. Can one Route Table be associated with multiple subnets?
+
+Ans.
+Yes.
+
+----------------------------------------------------
+
+Q. Can one subnet have multiple Route Tables?
+
+Ans.
+No.
+
+A subnet can be associated with only one Route Table.
+
+----------------------------------------------------
+
+Q. What are the main components of a UDR?
+
+Ans.
+
+• Destination Prefix
+• Next Hop Type
+• Next Hop IP Address (only for Virtual Appliance)
+
+----------------------------------------------------
+
+Q. Which routing decision does Azure use?
+
+Ans.
+
+Longest Prefix Match.
+
+----------------------------------------------------
+
+Q. Which Next Hop Type is commonly used with Azure Firewall?
+
+Ans.
+
+Virtual Appliance.
+
+----------------------------------------------------
+
+Q. Does UDR replace NSG?
+
+Ans.
+
+No.
+
+NSG filters traffic.
+
+UDR controls the traffic path.
+
+====================================================
+Common Mistakes
+====================================================
+
+• Associating the Route Table with the wrong subnet.
+
+• Selecting an incorrect Destination Prefix.
+
+• Selecting the wrong Next Hop Type.
+
+• Forgetting the Next Hop IP Address when using Virtual Appliance.
+
+• Assuming NSG performs routing.
+
+• Assuming Azure Firewall automatically receives traffic without UDR.
+
+• Forgetting that one subnet can have only one Route Table.
+
+====================================================
+Troubleshooting
+====================================================
+
+Problem
+
+Traffic is bypassing Azure Firewall.
+
+Possible Reason
+
+The Route Table is not associated with the correct subnet.
+
+Solution
+
+Verify the Route Table association.
+
+----------------------------------------------------
+
+Problem
+
+Traffic is dropped.
+
+Possible Reason
+
+Incorrect Destination Prefix.
+
+Solution
+
+Verify the route configuration.
+
+----------------------------------------------------
+
+Problem
+
+Traffic is reaching the wrong destination.
+
+Possible Reason
+
+Incorrect Next Hop Type.
+
+Solution
+
+Verify the configured Next Hop.
+
+----------------------------------------------------
+
+Problem
+
+Traffic is not reaching Azure Firewall.
+
+Possible Reason
+
+Incorrect Firewall Private IP configured as the Next Hop.
+
+Solution
+
+Verify the Firewall Private IP Address.
+
+----------------------------------------------------
+
+Problem
+
+Traffic is still following the default Azure route.
+
+Possible Reason
+
+The User Defined Route does not match the destination.
+
+Solution
+
+Verify the Destination Prefix and remember that Azure always uses Longest Prefix Match.
+
+====================================================
+Remember
+====================================================
+
+User Defined Route (UDR)
+│
+├── Stored inside a Route Table
+├── Associated with a Subnet
+├── Overrides Azure System Routes
+├── Uses Destination Prefix
+├── Uses Next Hop
+├── Supports Azure Firewall
+├── Supports VPN Gateway
+├── Supports ExpressRoute Gateway
+├── Works with Gateway Transit
+├── Uses Longest Prefix Match
+└── Controls Custom Traffic Routing
+
+====================================================
+Quick Revision
+====================================================
+
+System Route
+        │
+        ▼
+Default Azure Routing
+
+        OR
+
+User Defined Route
+        │
+        ▼
+Custom Routing
+
+        │
+        ▼
+Route Table
+
+        │
+        ▼
+Subnet
+
+        │
+        ▼
+Traffic
+
+        │
+        ▼
+Next Hop
+
+        │
+        ├── Internet
+        ├── Azure Firewall
+        ├── VPN Gateway
+        ├── ExpressRoute Gateway
+        ├── Virtual Network
+        └── None
+
+

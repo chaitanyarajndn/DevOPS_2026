@@ -1,0 +1,318 @@
+====================================================
+AZURE_DNS
+====================================================
+
+Learning Goal
+-------------
+After completing this topic, you should be able to:
+
+• Explain what Azure DNS is.
+• Understand how DNS resolution works.
+• Create and manage DNS Zones.
+• Create common DNS Records.
+• Host custom domains in Azure DNS.
+• Configure Azure DNS using Azure Portal and Terraform.
+• Answer interview questions confidently.
+
+====================================================
+Definition (30 sec)
+====================================================
+
+Azure DNS is a managed Azure networking service that hosts DNS Zones and resolves domain names into IP addresses using Microsoft's global DNS infrastructure.
+
+====================================================
+Definition (1 min)
+====================================================
+
+Azure DNS is a fully managed Domain Name System (DNS) hosting service provided by Microsoft Azure. It allows organizations to host public DNS Zones, manage DNS records and resolve domain names to IP addresses. Azure DNS eliminates the need to manage DNS servers while providing high availability, scalability and global performance.
+
+====================================================
+Problem
+====================================================
+
+Computers communicate using IP Addresses.
+
+Humans prefer easy-to-remember names like:
+
+www.contoso.com
+
+instead of
+
+20.42.150.10
+
+Without DNS, users would have to remember IP addresses for every website or application.
+
+Also, IP addresses may change over time.
+
+====================================================
+Solution
+====================================================
+
+Use Azure DNS.
+
+Azure DNS stores DNS Records inside a DNS Zone.
+
+Whenever a user requests a domain name, Azure DNS resolves the domain name into the corresponding IP Address and returns it to the client.
+
+====================================================
+Relationship
+====================================================
+
+Azure DNS
+│
+├── Hosts
+│     └── DNS Zones
+│
+├── Stores
+│     ├── A Records
+│     ├── AAAA Records
+│     ├── CNAME Records
+│     ├── MX Records
+│     ├── TXT Records
+│     ├── NS Records
+│     └── SOA Record
+│
+├── Resolves
+│     ├── Domain Names
+│     ├── FQDN
+│     └── Custom Domains
+│
+├── Works With
+│     ├── Azure Public Endpoints
+│     ├── Azure Storage
+│     ├── Azure App Service
+│     ├── Azure Load Balancer
+│     └── Azure Traffic Manager
+│
+└── Related Topic
+      └── Private DNS Zone
+
+====================================================
+Architecture
+====================================================
+
+                User
+                  │
+                  ▼
+        www.contoso.com
+                  │
+                  ▼
+             Azure DNS
+                  │
+          DNS Resolution
+                  │
+                  ▼
+          Public IP Address
+                  │
+                  ▼
+         Azure Web Application
+
+Azure DNS only resolves the domain name.
+
+It does NOT forward application traffic.
+
+====================================================
+Enterprise Scenario
+====================================================
+
+A company hosts its public website in Azure.
+
+Users access:
+
+www.contoso.com
+
+instead of
+
+20.x.x.x
+
+Azure DNS resolves the domain name to the public IP of the Azure application.
+
+Whenever the application's public IP changes, only the DNS record needs to be updated.
+
+Users continue using the same domain name.
+
+====================================================
+Key Components
+====================================================
+
+• Domain Name
+  Human-readable website name.
+
+  Example:
+  contoso.com
+
+• FQDN (Fully Qualified Domain Name)
+  Complete domain name used to access a resource.
+
+  Example:
+  www.contoso.com
+
+• DNS Zone
+  Container that stores DNS Records.
+
+• DNS Record
+  Maps a domain name to an IP address or another DNS name.
+
+• Name Server (NS)
+  DNS servers responsible for answering queries for a DNS Zone.
+
+====================================================
+Prerequisites
+====================================================
+
+• Azure Subscription
+  Required to create Azure DNS resources.
+
+• Registered Domain Name
+  Example:
+
+  contoso.com
+
+  The domain must be registered with a domain registrar such as:
+
+  • Cloudflare
+  • GoDaddy
+  • Namecheap
+  • Squarespace Domains
+
+  After purchasing the domain, you can host its DNS Zone in Azure DNS.
+
+  Azure provides Name Servers (NS).
+
+  Update the Name Servers at your domain registrar to point to Azure DNS.
+
+  Then create DNS Records inside the Azure DNS Zone.
+
+  Example:
+
+  www.contoso.com
+          │
+          ▼
+      A Record
+          │
+          ▼
+   20.42.150.10 (Azure Public IP)
+
+• DNS Zone
+  Azure DNS stores all DNS Records inside a DNS Zone.
+
+• DNS Records
+  Used to map domain names to Azure resources.
+
+  Common Records:
+
+  • A Record      → Domain → IPv4 Address
+  • AAAA Record   → Domain → IPv6 Address
+  • CNAME Record  → Alias → Another Domain
+  • MX Record     → Mail Server
+  • TXT Record    → Domain Verification / SPF
+  • NS Record     → Name Servers
+  • SOA Record    → Zone Information
+
+====================================================
+Configuration Flow
+====================================================
+
+Register Domain Name
+          ↓
+Create Azure DNS Zone
+          ↓
+Create DNS Record
+          ↓
+Update Name Servers
+          ↓
+Wait for DNS Propagation
+          ↓
+Test Name Resolution
+
+====================================================
+Configuration Sequence
+====================================================
+
+Domain Registrar
+        │
+        ▼
+Azure DNS Zone
+        │
+        ▼
+DNS Record
+        │
+        ▼
+Azure Resource
+        │
+        ▼
+Client Request
+
+====================================================
+Terraform Resources
+====================================================
+
+azurerm_dns_zone
+→ Creates an Azure DNS Zone.
+
+azurerm_dns_a_record
+→ Creates an A Record.
+
+azurerm_dns_cname_record
+→ Creates a CNAME Record.
+
+azurerm_dns_txt_record
+→ Creates a TXT Record.
+
+azurerm_dns_mx_record
+→ Creates an MX Record.
+
+azurerm_dns_ns_record
+→ Creates an NS Record.
+
+====================================================
+Post Configuration
+====================================================
+
+Azure automatically:
+
+• Hosts the DNS Zone.
+• Publishes DNS records.
+• Resolves domain names using Microsoft's global DNS infrastructure.
+• Provides high availability without managing DNS servers.
+
+Azure does NOT:
+
+• Register domain names.
+• Automatically update records at your domain registrar.
+• Automatically create custom DNS records.
+
+====================================================
+Configuration Impact
+====================================================
+
+Before Configuration
+
+User
+ │
+ ▼
+www.contoso.com
+
+DNS Resolution Failed
+
+----------------------------------------------------
+
+After Configuration
+
+User
+ │
+ ▼
+www.contoso.com
+ │
+ ▼
+Azure DNS
+ │
+ ▼
+Public IP
+ │
+ ▼
+Azure Application
+
+Users can access the application using the domain name instead of the IP address.
+
+

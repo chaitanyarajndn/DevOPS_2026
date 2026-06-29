@@ -1,0 +1,400 @@
+====================================================
+AZURE VPN GATEWAY
+====================================================
+
+Learning Goal
+-------------
+After completing this topic, you should be able to:
+• Explain what Azure VPN Gateway is.
+• Understand when and why it is used.
+• Configure it using Azure Portal and Terraform.
+• Verify the VPN connection.
+• Answer interview questions confidently.
+
+====================================================
+Definition (30 sec)
+====================================================
+
+Azure VPN Gateway is a managed Azure networking service that securely connects an Azure Virtual Network (VNet) to another network using an encrypted IPSec/IKE VPN tunnel over the public Internet.
+
+====================================================
+Definition (1 min)
+====================================================
+
+Azure VPN Gateway is a managed Azure networking service that provides secure hybrid connectivity between Azure Virtual Networks, On-Premises datacenters, branch offices, remote users or other Azure VNets by creating encrypted VPN tunnels over the public Internet using IPSec/IKE protocols.
+
+====================================================
+Problem
+====================================================
+
+Suppose a company has an On-Premises Datacenter.
+
+The company starts migrating applications to Azure.
+
+By default, Azure VNet and the On-Premises network cannot communicate securely over the Internet.
+
+A secure communication channel is required.
+
+====================================================
+Solution
+====================================================
+
+Deploy Azure VPN Gateway.
+
+Azure VPN Gateway creates an encrypted IPSec/IKE VPN tunnel between Azure and the remote network, allowing secure communication over the public Internet.
+
+====================================================
+Relationship
+====================================================
+
+VPN Gateway
+│
+├── Requires
+│   ├── Azure Virtual Network (VPN Gateway is always deployed inside a VNet.)
+│   ├── GatewaySubnet (Dedicated subnet reserved for VPN Gateway. Name must be exactly "GatewaySubnet".)
+│   └── Standard Public IP (Used by the VPN Gateway for Internet communication.)
+│
+├── Uses
+│   ├── Local Network Gateway (Represents the On-Premises VPN device and its address space.)
+│   └── VPN Connection (Creates the encrypted VPN tunnel.)
+│
+├── Can be Shared By
+│   └── Gateway Transit
+│
+└── Alternative
+    └── ExpressRoute
+
+====================================================
+Architecture
+====================================================
+
+On-Premises Network
+        │
+     Internet
+        │
+Encrypted IPSec/IKE VPN Tunnel
+        │
+Azure VPN Gateway
+        │
+Azure Virtual Network (VNet)
+
+====================================================
+Enterprise Scenario
+====================================================
+
+Company Head Office
+        │
+     Internet
+        │
+Azure VPN Gateway
+        │
+Production VNet
+
+Use Case:
+A company wants secure connectivity between its On-Premises datacenter and Azure without purchasing a dedicated private connection.
+
+====================================================
+VPN Types
+====================================================
+
+1. Site-to-Site (S2S)
+   • Connects an entire On-Premises network to Azure.
+
+2. Point-to-Site (P2S)
+   • Connects an individual laptop or desktop to Azure.
+
+3. VNet-to-VNet
+   • Connects two Azure VNets securely using VPN Gateway.
+
+====================================================
+Prerequisites
+====================================================
+
+• Azure Virtual Network
+  VPN Gateway must always be deployed inside a VNet.
+
+• GatewaySubnet
+  Create a dedicated subnet named exactly "GatewaySubnet".
+  This name is mandatory in both Azure Portal and Terraform.
+  Azure automatically deploys the VPN Gateway into this subnet.
+  Do NOT deploy VMs or any other resources inside this subnet.
+
+• Standard SKU Public IP
+  Required because VPN Gateway communicates over the public Internet.
+
+• VPN Gateway SKU
+  Select the appropriate SKU (VpnGw1, VpnGw2, VpnGw3...) based on bandwidth, throughput and connection requirements.
+
+====================================================
+Configuration Flow
+====================================================
+
+Create Azure Virtual Network
+        ↓
+Create "GatewaySubnet"
+        ↓
+Create Standard Public IP
+        ↓
+Deploy Azure VPN Gateway
+        ↓
+Create Local Network Gateway
+        ↓
+Create VPN Connection
+        ↓
+Configure On-Premises VPN Device
+        ↓
+Test Connectivity
+
+====================================================
+Configuration Sequence
+====================================================
+
+Azure VNet
+│
+├── GatewaySubnet
+│
+├── Standard Public IP
+│
+└── Azure VPN Gateway
+      │
+      ▼
+Local Network Gateway
+      │
+      ▼
+VPN Connection
+      │
+      ▼
+On-Premises VPN Device
+
+====================================================
+Terraform Resources
+====================================================
+
+azurerm_virtual_network_gateway
+→ Creates the Azure VPN Gateway.
+
+azurerm_public_ip
+→ Creates the Standard Public IP for the VPN Gateway.
+
+azurerm_local_network_gateway
+→ Represents the On-Premises VPN device and network.
+
+azurerm_virtual_network_gateway_connection
+→ Creates the encrypted VPN tunnel.
+
+====================================================
+Post Configuration
+====================================================
+
+Azure automatically:
+
+• Deploys the VPN Gateway inside GatewaySubnet.
+• Associates the Standard Public IP.
+• Creates the gateway infrastructure.
+
+Azure does NOT:
+
+• Create the VPN tunnel automatically.
+• Configure the On-Premises VPN device.
+
+You must create the VPN Connection and configure the VPN device manually.
+
+Deployment Time:
+Approximately 30-45 minutes.
+
+====================================================
+Configuration Impact
+====================================================
+
+Before Configuration
+
+Azure VNet
+      ❌
+Cannot communicate securely with On-Premises.
+
+After Configuration
+
+Azure VNet
+      │
+Encrypted VPN Tunnel
+      │
+On-Premises Network
+
+Secure Hybrid Connectivity is established.
+
+====================================================
+Verification
+====================================================
+
+Azure Portal
+
+Virtual Network Gateway
+        │
+        ▼
+Provisioning State
+        │
+        └── Succeeded
+
+Connections
+        │
+        └── Connected
+
+Connectivity Test
+
+• SSH
+• RDP
+• Ping (If ICMP is allowed)
+• Application Communication
+
+====================================================
+Best Practices
+====================================================
+
+• Use Route-Based VPN.
+• Always use Standard SKU Public IP.
+• Keep GatewaySubnet dedicated.
+• Choose the correct Gateway SKU.
+• Enable BGP only if dynamic routing is required.
+• Use active-active configuration for high availability when required.
+
+====================================================
+Important
+====================================================
+
+• GatewaySubnet name must be exactly "GatewaySubnet".
+• GatewaySubnet should be created before deploying VPN Gateway.
+• GatewaySubnet should never contain VMs or any other resources.
+• VPN Connection is a separate Azure resource.
+• VPN Gateway deployment takes around 30-45 minutes.
+• VPN Gateway supports S2S, P2S and VNet-to-VNet connectivity.
+
+====================================================
+Cost Note
+====================================================
+
+• Azure VPN Gateway is a billable service.
+• Billing depends on the selected Gateway SKU.
+• Higher SKUs provide better throughput and support more VPN tunnels.
+
+====================================================
+Interview Keywords
+====================================================
+
+• Managed Service
+• Hybrid Connectivity
+• IPSec/IKE
+• VPN Tunnel
+• Route-Based VPN
+• GatewaySubnet
+• Standard Public IP
+• Local Network Gateway
+• VPN Connection
+
+====================================================
+Interview Questions
+====================================================
+
+Q. What is Azure VPN Gateway?
+
+Ans.
+A managed Azure networking service that provides secure VPN connectivity over the public Internet using IPSec/IKE encryption.
+
+----------------------------------------------------
+
+Q. Does VPN Gateway automatically create the VPN tunnel?
+
+Ans.
+No.
+A VPN Connection resource must be created separately.
+
+----------------------------------------------------
+
+Q. Which subnet is mandatory?
+
+Ans.
+GatewaySubnet.
+
+----------------------------------------------------
+
+Q. Can we deploy VMs inside GatewaySubnet?
+
+Ans.
+No.
+GatewaySubnet is reserved only for Azure gateway resources.
+
+----------------------------------------------------
+
+Q. Does VPN Gateway use the Internet?
+
+Ans.
+Yes.
+Traffic travels over the public Internet but remains encrypted.
+
+====================================================
+Common Mistakes
+====================================================
+
+• Creating a subnet with a different name instead of "GatewaySubnet".
+• Using Basic SKU Public IP.
+• Forgetting to create VPN Connection.
+• Deploying resources inside GatewaySubnet.
+• Choosing the wrong Gateway SKU.
+
+====================================================
+Troubleshooting
+====================================================
+
+Problem
+VPN Gateway deployment failed.
+
+Possible Reason
+GatewaySubnet is missing or incorrectly named.
+
+Solution
+Create a dedicated subnet named exactly "GatewaySubnet".
+
+----------------------------------------------------
+
+Problem
+VPN Connection Status = Not Connected.
+
+Possible Reason
+
+• Wrong Shared Key
+• Incorrect Public IP
+• Wrong Local Network Gateway configuration
+• Incorrect VPN device configuration
+
+Solution
+
+Verify:
+
+• Shared Key
+• Address Space
+• Public IP
+• IPSec/IKE settings
+• VPN Device Configuration
+
+====================================================
+Remember
+====================================================
+
+VPN Gateway
+│
+├── Internet-Based Connectivity
+├── IPSec/IKE Encryption
+├── Requires GatewaySubnet
+├── Requires Standard Public IP
+├── Requires VPN Connection
+├── Supports S2S / P2S / VNet-to-VNet
+└── Used for Hybrid Connectivity
+
+====================================================
+Next Topic
+====================================================
+
+VPN Gateway provides secure connectivity over the public Internet.
+
+What if an organization needs a private, dedicated connection to Azure without using the public Internet?
+
+➡ Azure ExpressRoute solves this requirement.

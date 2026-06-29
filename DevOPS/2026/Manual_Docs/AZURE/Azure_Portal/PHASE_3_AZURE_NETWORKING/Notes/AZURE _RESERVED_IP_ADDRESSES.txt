@@ -1,0 +1,95 @@
+==============================================================================
+AZURE RESERVED IP ADDRESSES
+==============================================================================
+
+Example Subnet
+
+10.10.1.0/24
+
+Range
+
+10.10.1.0  ----------------> 10.10.1.255
+
+==============================================================================
+IP ADDRESS         PURPOSE
+==============================================================================
+
+10.10.1.0
+-----------
+Network Address
+
+• Identifies the subnet.
+• Cannot be assigned to any resource.
+
+------------------------------------------------------------------------------
+
+10.10.1.1
+-----------
+Azure Default Gateway (Virtual Router)
+
+• Used by Azure Virtual Network.
+• All outbound traffic from VMs goes through this gateway.
+• Cannot be assigned to a VM.
+
+------------------------------------------------------------------------------
+
+10.10.1.2
+-----------
+Azure DNS Service
+
+• Used for Azure-provided DNS (168.63.129.16 is the virtual IP exposed to VMs).
+• Supports internal name resolution and platform services.
+• Reserved by Azure.
+
+------------------------------------------------------------------------------
+
+10.10.1.3
+-----------
+Azure Platform Services
+
+Used internally for Azure infrastructure, such as:
+
+• DHCP
+• Health Monitoring
+• Platform Communication
+• SDN Control Plane
+
+Cannot be used by customers.
+
+------------------------------------------------------------------------------
+
+10.10.1.4
+-----------
+Future Azure Platform Use
+
+Reserved for Azure internal services.
+
+Cannot be assigned.
+
+------------------------------------------------------------------------------
+
+10.10.1.255
+------------
+Last Address
+
+Reserved by Azure.
+
+Although Azure VNets do not use traditional Layer-2 broadcast,
+the last IP is still reserved and cannot be assigned.
+
+==============================================================================
+SUMMARY
+==============================================================================
+
+Address         Used For
+
+x.x.x.0         Network Address
+x.x.x.1         Azure Virtual Router (Gateway)
+x.x.x.2         Azure Platform DNS
+x.x.x.3         Azure Platform Services
+x.x.x.4         Azure Reserved (Future/Internal)
+x.x.x.255       Reserved Last Address
+
+Usable IPs
+
+Total IPs - 5

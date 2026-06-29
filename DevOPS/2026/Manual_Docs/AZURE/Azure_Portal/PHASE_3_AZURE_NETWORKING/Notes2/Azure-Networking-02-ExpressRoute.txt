@@ -1,0 +1,403 @@
+====================================================
+AZURE EXPRESSROUTE
+====================================================
+
+Learning Goal
+-------------
+After completing this topic, you should be able to:
+• Explain what Azure ExpressRoute is.
+• Understand why organizations choose ExpressRoute over VPN Gateway.
+• Understand ExpressRoute components.
+• Configure ExpressRoute using Azure Portal.
+• Understand where Gateway Transit is used.
+• Answer interview questions confidently.
+
+====================================================
+Definition (30 sec)
+====================================================
+
+Azure ExpressRoute is a managed Azure networking service that provides a private, dedicated, high-bandwidth connection between an On-Premises network and Microsoft Azure without using the public Internet.
+
+====================================================
+Definition (1 min)
+====================================================
+
+Azure ExpressRoute is a managed Azure networking service that establishes private connectivity between an organization's On-Premises infrastructure and Microsoft Azure through a connectivity provider. Traffic travels over the Microsoft Global Backbone instead of the public Internet, providing higher reliability, lower latency and better security.
+
+====================================================
+Problem
+====================================================
+
+VPN Gateway uses the public Internet.
+
+Although the traffic is encrypted, some organizations such as banks, telecom companies, government agencies and healthcare providers require a private, dedicated and highly reliable connection to Azure.
+
+====================================================
+Solution
+====================================================
+
+Deploy Azure ExpressRoute.
+
+ExpressRoute creates a private dedicated circuit between the On-Premises network and Microsoft Azure through an approved connectivity provider.
+
+Traffic never travels over the public Internet.
+
+====================================================
+Relationship
+====================================================
+
+ExpressRoute
+│
+├── Requires
+│   ├── ExpressRoute Circuit (Private dedicated connection.)
+│   ├── Connectivity Provider (ISP/Telecom Partner approved by Microsoft.)
+│   ├── ExpressRoute Gateway (Deployed inside Azure VNet.)
+│   └── Virtual Network (Gateway is deployed inside a VNet.)
+│
+├── Uses
+│   ├── Microsoft Global Backbone
+│   └── GatewaySubnet
+│
+├── Can be Shared By
+│   └── Gateway Transit
+│
+└── Alternative
+    └── VPN Gateway
+
+====================================================
+Architecture
+====================================================
+
+On-Premises Network
+        │
+Connectivity Provider
+        │
+Microsoft Edge POP
+        │
+Microsoft Global Backbone
+        │
+ExpressRoute Gateway
+        │
+Azure Virtual Network (VNet)
+
+====================================================
+Enterprise Scenario
+====================================================
+
+Company Head Office
+        │
+Private MPLS / Connectivity Provider
+        │
+Microsoft Edge POP
+        │
+Microsoft Global Backbone
+        │
+Production Azure VNet
+
+Use Case:
+A bank requires private, highly available and low-latency connectivity between its datacenter and Azure without using the public Internet.
+
+====================================================
+Components
+====================================================
+
+• ExpressRoute Circuit
+  Private dedicated circuit between Microsoft and the customer.
+
+• Connectivity Provider
+  Microsoft-approved ISP or telecom provider that delivers the physical connection.
+
+• Microsoft Edge POP
+  Entry point where customer traffic enters Microsoft's global network.
+
+• Microsoft Global Backbone
+  Microsoft's private worldwide fiber network.
+
+• ExpressRoute Gateway
+  Azure gateway deployed inside the VNet to receive ExpressRoute traffic.
+
+====================================================
+Prerequisites
+====================================================
+
+• Azure Virtual Network
+  ExpressRoute Gateway must be deployed inside a VNet.
+
+• GatewaySubnet
+  Create a dedicated subnet named exactly "GatewaySubnet".
+  Azure deploys the ExpressRoute Gateway inside this subnet.
+
+• ExpressRoute Circuit
+  Must be created before configuring the gateway connection.
+
+• Connectivity Provider
+  A Microsoft-approved provider is required to establish the dedicated circuit.
+
+• ExpressRoute Gateway SKU
+  Select the appropriate gateway SKU based on throughput requirements.
+
+====================================================
+Configuration Flow
+====================================================
+
+Create Azure Virtual Network
+        ↓
+Create "GatewaySubnet"
+        ↓
+Create ExpressRoute Circuit
+        ↓
+Provision Circuit through Connectivity Provider
+        ↓
+Deploy ExpressRoute Gateway
+        ↓
+Link VNet to ExpressRoute Circuit
+        ↓
+Validate Connectivity
+
+====================================================
+Configuration Sequence
+====================================================
+
+Azure VNet
+│
+├── GatewaySubnet
+│
+└── ExpressRoute Gateway
+        │
+        ▼
+ExpressRoute Circuit
+        │
+        ▼
+Connectivity Provider
+        │
+        ▼
+Microsoft Edge POP
+        │
+        ▼
+Microsoft Global Backbone
+        │
+        ▼
+On-Premises Network
+
+====================================================
+Terraform Resources
+====================================================
+
+azurerm_express_route_circuit
+→ Creates the ExpressRoute Circuit.
+
+azurerm_virtual_network_gateway
+→ Creates the ExpressRoute Gateway.
+
+azurerm_express_route_connection
+→ Connects the ExpressRoute Circuit to the VNet Gateway.
+
+====================================================
+Post Configuration
+====================================================
+
+Azure automatically:
+
+• Deploys the ExpressRoute Gateway inside GatewaySubnet.
+• Connects the VNet to the ExpressRoute Circuit.
+• Routes traffic through Microsoft Global Backbone.
+
+Azure does NOT:
+
+• Provision the physical circuit.
+• Configure the connectivity provider.
+
+These tasks must be completed by the service provider.
+
+====================================================
+Configuration Impact
+====================================================
+
+Before Configuration
+
+Azure
+      ❌
+No dedicated connectivity.
+
+After Configuration
+
+Azure
+      │
+Microsoft Global Backbone
+      │
+Private Dedicated Circuit
+      │
+On-Premises Network
+
+Private, secure and highly reliable connectivity is established.
+
+====================================================
+Verification
+====================================================
+
+Azure Portal
+
+• ExpressRoute Circuit = Provisioned
+• ExpressRoute Gateway = Succeeded
+• Connection Status = Connected
+
+Connectivity Test
+
+• Verify application communication.
+• Verify routing.
+• Verify latency.
+• Verify failover (if redundant circuit exists).
+
+====================================================
+Best Practices
+====================================================
+
+• Use ExpressRoute for production workloads.
+• Deploy redundant circuits for high availability.
+• Choose the appropriate bandwidth.
+• Use ExpressRoute FastPath when supported.
+• Monitor circuit utilization.
+• Use Gateway Transit when multiple VNets require the same circuit.
+
+====================================================
+Important
+====================================================
+
+• ExpressRoute does NOT use the public Internet.
+• Traffic travels over Microsoft's private Global Backbone.
+• GatewaySubnet is mandatory.
+• ExpressRoute Gateway is different from VPN Gateway.
+• Physical connectivity is provided by a Microsoft-approved connectivity provider.
+
+====================================================
+Cost Note
+====================================================
+
+• ExpressRoute is significantly more expensive than VPN Gateway.
+• Billing includes the ExpressRoute Circuit, bandwidth and gateway.
+• Additional charges may apply from the connectivity provider.
+
+====================================================
+Interview Keywords
+====================================================
+
+• Dedicated Connection
+• Private Connectivity
+• Microsoft Global Backbone
+• ExpressRoute Circuit
+• ExpressRoute Gateway
+• GatewaySubnet
+• Connectivity Provider
+• Microsoft Edge POP
+
+====================================================
+Interview Questions
+====================================================
+
+Q. What is Azure ExpressRoute?
+
+Ans.
+A managed Azure networking service that provides private dedicated connectivity between an On-Premises network and Azure without using the public Internet.
+
+----------------------------------------------------
+
+Q. Does ExpressRoute use the Internet?
+
+Ans.
+No.
+Traffic travels over Microsoft's private Global Backbone.
+
+----------------------------------------------------
+
+Q. What is an ExpressRoute Circuit?
+
+Ans.
+A dedicated private connection between the customer and Microsoft.
+
+----------------------------------------------------
+
+Q. Who provides the physical connection?
+
+Ans.
+A Microsoft-approved Connectivity Provider.
+
+----------------------------------------------------
+
+Q. Which subnet is required?
+
+Ans.
+GatewaySubnet.
+
+====================================================
+Common Mistakes
+====================================================
+
+• Assuming ExpressRoute uses the Internet.
+• Forgetting to create GatewaySubnet.
+• Confusing ExpressRoute Circuit with ExpressRoute Gateway.
+• Selecting an incorrect bandwidth.
+• Not provisioning redundancy for production workloads.
+
+====================================================
+Troubleshooting
+====================================================
+
+Problem
+ExpressRoute Connection is not established.
+
+Possible Reason
+
+• Circuit not provisioned.
+• Connectivity Provider configuration incomplete.
+• Gateway not linked to the circuit.
+
+Solution
+
+Verify:
+
+• Circuit provisioning status.
+• Provider activation.
+• Gateway configuration.
+• VNet link.
+
+====================================================
+Remember
+====================================================
+
+ExpressRoute
+│
+├── Private Dedicated Connection
+├── No Public Internet
+├── Uses Microsoft Global Backbone
+├── Requires GatewaySubnet
+├── Requires ExpressRoute Circuit
+├── Requires ExpressRoute Gateway
+└── Enterprise-Grade Hybrid Connectivity
+
+====================================================
+VPN Gateway vs ExpressRoute
+====================================================
+
+VPN Gateway
+• Uses Public Internet
+• Encrypted IPSec/IKE Tunnel
+• Lower Cost
+• Faster to Deploy
+• Suitable for Small & Medium Workloads
+
+ExpressRoute
+• Uses Microsoft Global Backbone
+• Private Dedicated Circuit
+• Higher Cost
+• Enterprise Grade
+• Suitable for Mission-Critical Workloads
+
+====================================================
+Next Topic
+====================================================
+
+Now that Azure has a dedicated connection to the On-Premises network...
+
+What if multiple Spoke VNets need to use the same VPN Gateway or ExpressRoute Gateway?
+
+➡ Azure Gateway Transit solves this problem.

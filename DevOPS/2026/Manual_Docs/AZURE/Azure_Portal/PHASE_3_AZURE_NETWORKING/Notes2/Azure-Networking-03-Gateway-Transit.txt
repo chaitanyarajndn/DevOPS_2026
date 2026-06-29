@@ -1,0 +1,379 @@
+====================================================
+AZURE GATEWAY TRANSIT
+====================================================
+
+Learning Goal
+-------------
+After completing this topic, you should be able to:
+• Explain what Gateway Transit is.
+• Understand why it is used in Hub-and-Spoke architecture.
+• Configure Gateway Transit using VNet Peering.
+• Understand its dependency on VPN Gateway and ExpressRoute Gateway.
+• Answer interview questions confidently.
+
+====================================================
+Definition (30 sec)
+====================================================
+
+Azure Gateway Transit is a feature that allows multiple Spoke Virtual Networks (VNets) to use the VPN Gateway or ExpressRoute Gateway deployed in a Hub VNet through VNet Peering.
+
+====================================================
+Definition (1 min)
+====================================================
+
+Azure Gateway Transit is a Hub-and-Spoke networking feature that enables Spoke VNets to share the VPN Gateway or ExpressRoute Gateway of a Hub VNet. Instead of deploying a separate gateway in every VNet, Azure allows all connected Spoke VNets to use a single centralized gateway through VNet Peering, reducing cost and simplifying network management.
+
+====================================================
+Problem
+====================================================
+
+Suppose an organization has one Hub VNet and five Spoke VNets.
+
+If every Spoke VNet deploys its own VPN Gateway or ExpressRoute Gateway:
+
+• Deployment cost increases.
+• Management becomes difficult.
+• Gateway administration becomes complex.
+• Resources are duplicated.
+
+====================================================
+Solution
+====================================================
+
+Deploy the VPN Gateway or ExpressRoute Gateway only in the Hub VNet.
+
+Enable Gateway Transit through VNet Peering.
+
+All Spoke VNets can now use the same gateway to communicate with On-Premises networks.
+
+====================================================
+Relationship
+====================================================
+
+Gateway Transit
+│
+├── Requires
+│   ├── Hub VNet
+│   ├── One or More Spoke VNets
+│   ├── VNet Peering
+│   ├── VPN Gateway OR ExpressRoute Gateway
+│   └── GatewaySubnet (Only in Hub VNet)
+│
+├── Works With
+│   ├── VPN Gateway
+│   ├── ExpressRoute Gateway
+│   └── Hub-and-Spoke Architecture
+│
+└── Often Used With
+    └── User Defined Routes (UDR)
+
+====================================================
+Architecture
+====================================================
+
+                 On-Premises
+                      │
+             VPN / ExpressRoute
+                      │
+              Hub VNet Gateway
+             (GatewaySubnet)
+                      │
+        ┌─────────────┼─────────────┐
+        │             │             │
+        ▼             ▼             ▼
+    Spoke VNet 1  Spoke VNet 2  Spoke VNet 3
+       │             │             │
+     VM/App        VM/App        VM/App
+
+Only the Hub VNet contains the gateway.
+All Spoke VNets use the same gateway.
+
+====================================================
+Enterprise Scenario
+====================================================
+
+A company has one centralized Hub VNet connected to its Head Office using ExpressRoute.
+
+The company has separate VNets for:
+
+• Production
+• Development
+• Testing
+
+Instead of deploying an ExpressRoute Gateway in every VNet, all VNets use the gateway deployed in the Hub VNet.
+
+====================================================
+Prerequisites
+====================================================
+
+• Hub Virtual Network
+  This VNet hosts the VPN Gateway or ExpressRoute Gateway.
+
+• Spoke Virtual Networks
+  These VNets consume the shared gateway.
+
+• GatewaySubnet
+  Required only in the Hub VNet because the gateway is deployed here.
+
+• VPN Gateway or ExpressRoute Gateway
+  At least one gateway must already exist before enabling Gateway Transit.
+
+• VNet Peering
+  Hub and Spoke VNets must be peered.
+
+====================================================
+Configuration Flow
+====================================================
+
+Create Hub VNet
+        ↓
+Create GatewaySubnet
+        ↓
+Deploy VPN Gateway or ExpressRoute Gateway
+        ↓
+Create Spoke VNets
+        ↓
+Configure VNet Peering
+        ↓
+Enable "Allow Gateway Transit" on Hub
+        ↓
+Enable "Use Remote Gateway" on Spoke
+        ↓
+Validate Connectivity
+
+====================================================
+Configuration Sequence
+====================================================
+
+On-Premises
+      │
+      ▼
+VPN Gateway / ExpressRoute Gateway
+      │
+      ▼
+Hub VNet
+      │
+      ├── VNet Peering
+      │
+      ├────────► Spoke VNet 1
+      ├────────► Spoke VNet 2
+      └────────► Spoke VNet 3
+
+====================================================
+Terraform Resources
+====================================================
+
+azurerm_virtual_network
+→ Creates Hub and Spoke VNets.
+
+azurerm_virtual_network_gateway
+→ Creates the VPN Gateway or ExpressRoute Gateway in the Hub VNet.
+
+azurerm_virtual_network_peering
+→ Connects Hub and Spoke VNets.
+
+Gateway Transit Settings
+→ allow_gateway_transit = true
+→ use_remote_gateways = true
+
+====================================================
+Post Configuration
+====================================================
+
+Azure automatically:
+
+• Allows Spoke VNets to use the Hub gateway.
+• Routes gateway traffic through VNet Peering.
+• Eliminates the need for multiple gateways.
+
+Azure does NOT:
+
+• Deploy gateways in the Spoke VNets.
+• Automatically create VNet Peering.
+
+====================================================
+Configuration Impact
+====================================================
+
+Before Configuration
+
+Hub VNet
+      │
+ VPN Gateway
+
+Spoke VNets
+      ❌
+No gateway access.
+
+After Configuration
+
+Hub VNet
+      │
+ VPN Gateway
+      │
+ ┌────┼────┐
+ ▼    ▼    ▼
+Spoke Spoke Spoke
+
+All Spoke VNets use the same gateway.
+
+====================================================
+Verification
+====================================================
+
+Azure Portal
+
+Virtual Network Peering
+
+Hub VNet
+• Allow Gateway Transit = Enabled
+
+Spoke VNet
+• Use Remote Gateway = Enabled
+
+Connectivity Test
+
+• Verify communication from Spoke VNet to On-Premises.
+• Verify routing through the Hub Gateway.
+
+====================================================
+Best Practices
+====================================================
+
+• Deploy gateways only in the Hub VNet.
+• Use Hub-and-Spoke architecture for enterprise environments.
+• Use Gateway Transit to reduce Azure costs.
+• Combine Gateway Transit with UDR for centralized routing.
+• Monitor gateway utilization.
+
+====================================================
+Important
+====================================================
+
+• Gateway Transit works only through VNet Peering.
+• Only one gateway is required for multiple Spoke VNets.
+• GatewaySubnet is required only in the Hub VNet.
+• Spoke VNets must NOT have their own gateway when using a remote gateway.
+• Enable "Allow Gateway Transit" on the Hub side.
+• Enable "Use Remote Gateway" on the Spoke side.
+
+====================================================
+Cost Note
+====================================================
+
+• Gateway Transit reduces deployment cost.
+• Only one VPN Gateway or ExpressRoute Gateway is required.
+• Eliminates the need for multiple gateway deployments.
+
+====================================================
+Interview Keywords
+====================================================
+
+• Hub-and-Spoke Architecture
+• VNet Peering
+• Shared Gateway
+• Remote Gateway
+• Allow Gateway Transit
+• Use Remote Gateway
+• Cost Optimization
+• Centralized Connectivity
+
+====================================================
+Interview Questions
+====================================================
+
+Q. What is Azure Gateway Transit?
+
+Ans.
+It allows multiple Spoke VNets to share the VPN Gateway or ExpressRoute Gateway deployed in the Hub VNet through VNet Peering.
+
+----------------------------------------------------
+
+Q. Is Gateway Transit a separate Azure resource?
+
+Ans.
+No.
+It is a feature of VNet Peering.
+
+----------------------------------------------------
+
+Q. Can every Spoke VNet have its own gateway?
+
+Ans.
+Yes, but when using Gateway Transit, the Spoke VNets use the Hub gateway instead.
+
+----------------------------------------------------
+
+Q. Which VNet contains the gateway?
+
+Ans.
+Only the Hub VNet.
+
+----------------------------------------------------
+
+Q. Which VNet Peering settings are required?
+
+Ans.
+Hub:
+• Allow Gateway Transit
+
+Spoke:
+• Use Remote Gateway
+
+====================================================
+Common Mistakes
+====================================================
+
+• Forgetting to configure VNet Peering.
+• Enabling Gateway Transit on the wrong VNet.
+• Forgetting to enable "Use Remote Gateway" on the Spoke.
+• Deploying unnecessary gateways in every VNet.
+• Assuming Gateway Transit works without a gateway.
+
+====================================================
+Troubleshooting
+====================================================
+
+Problem
+Spoke VNet cannot reach the On-Premises network.
+
+Possible Reason
+
+• VNet Peering is missing.
+• Gateway Transit is disabled.
+• Use Remote Gateway is not enabled.
+• Hub gateway is unavailable.
+
+Solution
+
+Verify:
+
+• VNet Peering
+• Allow Gateway Transit
+• Use Remote Gateway
+• Gateway health
+• Effective Routes
+
+====================================================
+Remember
+====================================================
+
+Gateway Transit
+│
+├── Uses VNet Peering
+├── Shares Hub Gateway
+├── Supports VPN Gateway
+├── Supports ExpressRoute Gateway
+├── Gateway remains only in Hub
+├── Reduces Cost
+└── Designed for Hub-and-Spoke Architecture
+
+====================================================
+Next Topic
+====================================================
+
+Gateway Transit shares the gateway.
+
+But who decides which path the traffic should follow after entering the Hub VNet?
+
+➡ User Defined Routes (UDR) solve this problem by allowing custom routing decisions.
