@@ -1,0 +1,67 @@
+==========================================================
+00_Terraform_Module_Development_Flow
+==========================================================
+
+Step 1  -------> Identify the Azure Resource.
+Question -------> What resource am I going to create?
+Example  -------> Virtual Network
+
+----------------------------------------------------------
+
+Step 2  -------> Check Azure Resource Documentation.
+Question -------> Which arguments are mandatory?
+Example  -------> name, location, resource_group_name, address_space
+
+----------------------------------------------------------
+
+Step 3  -------> Create Child Module variables.tf.
+Question -------> Which mandatory arguments should come from the Root Module?
+Action   -------> Declare only those variables.
+Example  -------> vn, rg, lc, ipadd
+
+----------------------------------------------------------
+
+Step 4  -------> Create Child Module main.tf.
+Question -------> How does Azure create this resource?
+Action   -------> Write the Azure resource block.
+Example  -------> resource "azurerm_virtual_network" "VN"
+
+----------------------------------------------------------
+
+Step 5  -------> Create Child Module outputs.tf.
+Question -------> Which outputs may be useful in the future?
+Action   -------> Expose useful outputs only.
+Example  -------> virtual_network_name, virtual_network_id
+
+----------------------------------------------------------
+
+Step 6  -------> Move to the Root Module variables.tf.
+Question -------> Which NEW variables are required?
+Action   -------> Add only new variables.
+Example  -------> vn, ipadd
+
+----------------------------------------------------------
+
+Step 7  -------> Update terraform.tfvars.
+Question -------> Which values belong to this environment?
+Action   -------> Assign environment-specific values.
+Example  -------> vn="linux-vnet", ipadd=["10.45.46.0/24"]
+
+----------------------------------------------------------
+
+Step 8  -------> Update Root main.tf.
+Question -------> How will the Child Module receive its inputs?
+Action   -------> Map every Child Module variable.
+Example  -------> vn=var.vn, lc=var.lc, rg=module.resource_group.resource_group_name, ipadd=var.ipadd
+
+----------------------------------------------------------
+
+Step 9  -------> Update Root outputs.tf.
+Question -------> Do I need this output today?
+YES      -------> Expose it.
+NO       -------> Skip it.
+
+----------------------------------------------------------
+
+Step 10 -------> Review everything.
+Checklist-------> Variables ✔ Mapping ✔ Outputs ✔ Dependency ✔ Apply ✔

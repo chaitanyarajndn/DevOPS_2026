@@ -1,0 +1,164 @@
+
+
+=========================================================
+Chapter 10 : Control Plane
+=========================================================
+
+Learning Objective
+---------------------------------------------------------
+
+After completing this chapter, you will be able to:
+
+• Understand the role of the Control Plane.
+• Know how the Control Plane manages a Kubernetes Cluster.
+• Explain the relationship between the Control Plane and Worker Nodes.
+
+=========================================================
+1. What is a Control Plane?
+=========================================================
+
+The Control Plane is the brain of a Kubernetes Cluster.
+
+It does not run application Containers.
+
+Instead, it manages the Cluster and tells Worker Nodes what to do.
+
+=========================================================
+2. Why is it Needed?
+=========================================================
+
+A Kubernetes Cluster may contain multiple Worker Nodes.
+
+Someone must decide:
+
+• Where a new application should run.
+• Which Worker Node should receive the workload.
+• What to do if a Worker Node fails.
+• Whether more Pods are required or not.
+
+The Control Plane is responsible for making these decisions.
+
+=========================================================
+3. Key Responsibilities
+=========================================================
+
+The Control Plane can:
+
+• Accept deployment requests.
+• Decide where a Pod should run.
+• Monitor the overall Cluster.
+• Detect failed Worker Nodes.
+• Instruct Worker Nodes to perform tasks.
+
+=========================================================
+4. Basic Workflow
+=========================================================
+
+User
+
+        │
+
+kubectl apply
+
+        │
+
+Control Plane
+
+(Think • Decide • Instruct)
+
+        │
+
+Worker Node
+
+(Execute)
+
+        │
+
+Container Runtime
+
+        │
+
+Container
+
+        │
+
+Pod Running
+
+=========================================================
+5. Real-World Example
+=========================================================
+
+Suppose an application needs three Pods.
+
+The request first reaches the Control Plane.
+
+The Control Plane checks the available Worker Nodes.
+
+It decides where each Pod should run.
+
+The selected Worker Nodes then create and run the Pods.
+
+=========================================================
+6. Important Note
+=========================================================
+
+The Control Plane does not run application Containers.
+
+Its job is to manage the Cluster and guide the Worker Nodes.
+
+The actual Containers run on Worker Nodes.
+
+=========================================================
+7. Quick Revision
+=========================================================
+
+Control Plane
+
+Think
+
+↓
+
+Decide
+
+↓
+
+Instruct
+
+-------------------------
+
+Worker Node
+
+Receive
+
+↓
+
+Execute
+
+↓
+
+Report Status
+
+=========================================================
+Key Takeaways
+=========================================================
+
+✓ The Control Plane is the brain of the Cluster.
+
+✓ It makes decisions for the Cluster.
+
+✓ It tells Worker Nodes what to do.
+
+✓ Worker Nodes run the application workload.
+
+=========================================================
+Interview Statement
+=========================================================
+
+The Control Plane manages the Kubernetes Cluster by making decisions, monitoring the Cluster, and instructing Worker Nodes where workloads should run.
+
+
+
+
+
+
+

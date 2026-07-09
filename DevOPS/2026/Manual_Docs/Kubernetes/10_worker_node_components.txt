@@ -1,0 +1,270 @@
+
+
+
+=========================================================
+Chapter 14 : Components Inside a Worker Node
+=========================================================
+
+Learning Objective
+---------------------------------------------------------
+
+After completing this chapter, you will be able to:
+
+• Understand the key components inside a Worker Node.
+• Know the responsibility of kubelet, Container Runtime,
+  and kube-proxy.
+• Explain how a Worker Node runs and manages application
+  workloads.
+
+=========================================================
+Overview
+=========================================================
+
+A Worker Node is responsible for running application workloads.
+
+To perform this job, every Worker Node contains three major components.
+
+                 Worker Node
+
+        +---------------------------+
+        |                           |
+        |  kubelet                  |
+        |                           |
+        |  Container Runtime        |
+        |                           |
+        |  kube-proxy               |
+        |                           |
+        +---------------------------+
+
+                    │
+
+                  Pods
+
+                    │
+
+               Containers
+
+=========================================================
+1. kubelet
+=========================================================
+
+Interview Definition
+---------------------------------------------------------
+
+kubelet is the primary agent running on every Worker Node.
+
+It receives instructions from the Control Plane and ensures that the required Pods are running on that Worker Node.
+
+Think Like
+---------------------------------------------------------
+
+Site Supervisor
+
+The Control Plane gives instructions.
+
+kubelet makes sure those instructions are executed on its Worker Node.
+
+Responsibilities
+---------------------------------------------------------
+
+kubelet
+
+├── Receive Instructions from the Control Plane
+├── Create and Manage Pods
+├── Monitor Pod Health
+├── Report Worker Node Status
+└── Communicate with the Control Plane
+
+Real DevOps Example
+---------------------------------------------------------
+
+Suppose the Scheduler selects Worker Node-2 for a new Pod.
+
+The kubelet running on Worker Node-2 receives the instruction and starts the Pod on that node.
+
+Nokia Connection
+---------------------------------------------------------
+
+During a CNF deployment, once a Worker Node is selected, kubelet is responsible for ensuring that the required Pods are created and kept running.
+
+Important Points
+---------------------------------------------------------
+
+• kubelet runs on every Worker Node.
+
+• kubelet does not select the Worker Node.
+
+• kubelet manages only the Pods running on its own Worker Node.
+
+Interview Statement
+---------------------------------------------------------
+
+kubelet is the Worker Node agent responsible for receiving instructions from the Control Plane, managing Pods, monitoring their health, and reporting the node status back to the Cluster.
+
+=========================================================
+2. Container Runtime
+=========================================================
+
+Interview Definition
+---------------------------------------------------------
+
+Container Runtime is the component responsible for creating and running Containers inside Pods.
+
+Think Like
+---------------------------------------------------------
+
+Engine
+
+kubelet requests a Container.
+
+Container Runtime creates and starts it.
+
+Responsibilities
+---------------------------------------------------------
+
+Container Runtime
+
+├── Pull Container Images
+├── Create Containers
+├── Start Containers
+├── Stop Containers
+├── Restart Containers
+└── Remove Containers
+
+Real DevOps Example
+---------------------------------------------------------
+
+A Pod is assigned to a Worker Node.
+
+The Container Runtime pulls the required image (if needed), creates the Container, and starts the application.
+
+Common Container Runtimes
+---------------------------------------------------------
+
+• containerd (Most Common)
+
+• CRI-O
+
+• Docker (Older Kubernetes Versions)
+
+Nokia Connection
+---------------------------------------------------------
+
+During a CNF deployment, the Container Runtime creates and starts the application Containers required by each Pod.
+
+Important Points
+---------------------------------------------------------
+
+• Container Runtime does not decide where Pods should run.
+
+• It only creates and manages Containers.
+
+• Modern Kubernetes clusters commonly use containerd.
+
+Interview Statement
+---------------------------------------------------------
+
+Container Runtime is responsible for pulling container images, creating containers, and managing the complete lifecycle of containers running inside Pods.
+
+=========================================================
+3. kube-proxy
+=========================================================
+
+Interview Definition
+---------------------------------------------------------
+
+kube-proxy is the networking component running on every Worker Node.
+
+It manages network rules and helps route traffic to the correct Pods.
+
+Think Like
+---------------------------------------------------------
+
+Traffic Police
+
+It helps direct incoming traffic to the correct application Pods.
+
+Responsibilities
+---------------------------------------------------------
+
+kube-proxy
+
+├── Manage Network Rules
+├── Route Traffic to Pods
+├── Support Load Balancing
+└── Enable Pod Communication
+
+Real DevOps Example
+---------------------------------------------------------
+
+Suppose three Pods are serving the same application.
+
+Incoming requests are distributed across those Pods through Kubernetes networking.
+
+kube-proxy helps implement those networking rules.
+
+Nokia Connection
+---------------------------------------------------------
+
+After a CNF is deployed, network traffic reaching the application is handled using Kubernetes networking components, where kube-proxy plays an important role.
+
+Important Points
+---------------------------------------------------------
+
+• kube-proxy is responsible for networking.
+
+• It does not create Pods.
+
+• It works together with Kubernetes Services.
+
+Interview Statement
+---------------------------------------------------------
+
+kube-proxy is the networking component of a Worker Node. It manages traffic routing and network rules, allowing users and applications to communicate with Pods.
+
+=========================================================
+Quick Revision
+=========================================================
+
+Worker Node
+
+├── kubelet
+│      Manage Pods
+│
+├── Container Runtime
+│      Run Containers
+│
+└── kube-proxy
+       Handle Networking
+
+=========================================================
+Key Takeaways
+=========================================================
+
+✓ kubelet manages Pods on the Worker Node.
+
+✓ Container Runtime creates and runs Containers.
+
+✓ kube-proxy manages networking and traffic routing.
+
+✓ All three components work together to keep applications running on the Worker Node.
+
+=========================================================
+Interview Summary
+=========================================================
+
+Every Worker Node contains three important components.
+
+kubelet receives instructions from the Control Plane and manages Pods.
+
+Container Runtime creates and runs Containers.
+
+kube-proxy manages networking and traffic between applications and Pods.
+
+
+
+
+
+
+
+

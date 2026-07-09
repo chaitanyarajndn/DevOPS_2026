@@ -1,0 +1,219 @@
+=========================================================
+Chapter 11A : Docker Ecosystem
+=========================================================
+
+Learning Objective
+---------------------------------------------------------
+
+After completing this chapter, you will be able to:
+
+• Understand the Docker Ecosystem.
+• Know the role of each Docker component.
+• Understand the difference between Docker Daemon and Container Runtime.
+• Compare Docker with other Container tools available in the market.
+
+=========================================================
+1. What is Docker?
+=========================================================
+
+Docker is a complete Container Platform.
+
+It provides everything required to build, store, distribute, and run Containers.
+
+Docker is much more than just a Container Runtime.
+
+=========================================================
+2. Docker Ecosystem
+=========================================================
+
+
+Docker CLI (docker run)
+Docker Platform
+Docker ka Container Runtime
+
+                    Docker Platform
+
+        ┌─────────────────────────────────┐
+        │                                 │
+        │  Docker CLI (Client)            │
+        │  Docker Engine                  │
+        │  Docker Daemon                  │
+        │  Docker Build                   │
+        │  Dockerfile                     │
+        │  Docker Images                  │
+        │  Docker Hub                     │
+        │  Container Runtime              │
+        │                                 │
+        └─────────────────────────────────┘
+
+=========================================================
+3. Docker CLI (Client)
+=========================================================
+
+Docker CLI is the interface used by the user.
+
+It accepts Docker commands and sends them to the Docker Engine.
+
+Examples:
+
+docker run
+
+docker pull
+
+docker build
+
+docker images
+
+docker ps
+
+---------------------------------------------------------
+Responsibilities
+---------------------------------------------------------
+
+• Accept user commands.
+• Communicate with Docker Engine.
+• Display command output.
+
+=========================================================
+4. Docker Engine
+=========================================================
+
+Docker Engine is the core software of the Docker Platform.
+
+It processes requests received from the Docker CLI.
+
+=========================================================
+5. Docker Daemon
+=========================================================
+
+Docker Daemon is the background service of Docker.
+
+It performs most of the Docker operations behind the scenes.
+
+---------------------------------------------------------
+Responsibilities
+---------------------------------------------------------
+
+Docker Daemon
+
+├── Pull Images
+├── Store Images
+├── Create Containers
+├── Start Containers
+├── Stop Containers
+├── Restart Containers
+├── Delete Containers
+├── Manage Networks
+├── Manage Volumes
+├── Manage Container Lifecycle
+└── Communicate with the Container Runtime
+
+=========================================================
+6. Container Runtime
+=========================================================
+
+Container Runtime is the component responsible for creating and running Containers.
+
+Its job starts after an Image is available.
+
+---------------------------------------------------------
+Responsibilities
+---------------------------------------------------------
+
+Container Runtime
+
+├── Create Container
+├── Start Container
+├── Stop Container
+├── Restart Container
+├── Remove Container
+└── Run the Container Process
+
+=========================================================
+7. Docker Workflow
+=========================================================
+
+Docker CLI
+
+        │
+
+Docker Engine
+
+        │
+
+Docker Daemon
+
+        │
+
+Container Runtime
+
+        │
+
+Running Container
+
+=========================================================
+8. Docker vs Other Container Tools
+=========================================================
+
++-------------+-----------------------------------------+
+| Tool        | Purpose                                 |
++-------------+-----------------------------------------+
+| Docker      | Complete Container Platform             |
+| Podman      | Docker Alternative                      |
+| containerd  | Container Runtime                       |
+| CRI-O       | Container Runtime for Kubernetes        |
+| LXC / LXD   | Linux System Containers                 |
++-------------+-----------------------------------------+
+
+=========================================================
+9. Quick Revision
+=========================================================
+
+Docker CLI
+
+↓
+
+Docker Engine
+
+↓
+
+Docker Daemon
+
+↓
+
+Container Runtime
+
+↓
+
+Running Container
+
+=========================================================
+Key Takeaways
+=========================================================
+
+✓ Docker is a complete Container Platform.
+
+✓ Docker CLI is used to run Docker commands.
+
+✓ Docker Daemon performs most Docker operations.
+
+✓ Container Runtime is responsible for creating and running Containers.
+
+✓ Kubernetes requires a Container Runtime, not the complete Docker Platform.
+
+=========================================================
+Interview Statement
+=========================================================
+
+Docker is a complete Container Platform that includes Docker CLI, Docker Engine, Docker Daemon, Docker Build, Docker Hub, and a Container Runtime. The Docker Daemon manages Docker operations, while the Container Runtime is responsible for creating and running Containers.
+
+
+
+
+
+
+
+
+
+
+

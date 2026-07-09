@@ -1,0 +1,195 @@
+
+
+
+====================================================================================
+Terraform For Expressions - When to Use [] and {}
+====================================================================================
+
+Golden Rule
+
+The brackets after 'value =' depend on the RETURN TYPE.
+
+They do NOT depend on the output block.
+
+====================================================================================
+
+Need A List?
+
+Use Square Brackets []
+
+Syntax
+
+output "vm_ids" {
+
+  value = [
+    for vm in azurerm_linux_virtual_machine.vm :
+    vm.id
+  ]
+
+}
+
+Output
+
+[
+  VM_ID_1,
+  VM_ID_2,
+  VM_ID_3
+]
+
+Return Type
+
+list(string)
+
+Meaning
+
+Only values are returned.
+
+====================================================================================
+
+Need A Map?
+
+Use Curly Braces {}
+
+Syntax
+
+output "vm_ids" {
+
+  value = {
+    for vm in azurerm_linux_virtual_machine.vm :
+    vm.name => vm.id
+  }
+
+}
+
+Output
+
+{
+  Linux-01 = VM_ID_1
+  Linux-02 = VM_ID_2
+  Linux-03 = VM_ID_3
+}
+
+Return Type
+
+map(string)
+
+Meaning
+
+Key → Value
+
+====================================================================================
+
+Need A Nested Map?
+
+Use Curly Braces {}
+
+Syntax
+
+output "vm_details" {
+
+  value = {
+    for vm in azurerm_linux_virtual_machine.vm :
+    vm.name => {
+      id         = vm.id
+      private_ip = vm.private_ip
+      location   = vm.location
+    }
+  }
+
+}
+
+Output
+
+{
+  Linux-01 = {
+    id         = VM_ID_1
+    private_ip = 10.0.1.4
+    location   = Central India
+  }
+
+  Linux-02 = {
+    id         = VM_ID_2
+    private_ip = 10.0.1.5
+    location   = East US
+  }
+}
+
+Return Type
+
+map(object)
+
+Meaning
+
+Key → Object
+
+====================================================================================
+
+Memory Trick
+
+[]  → List
+
+{}  → Map
+
+{}  → Nested Map
+
+====================================================================================
+
+Decision Flow
+
+Need only values?
+        ↓
+       []
+
+Need Key → Value?
+        ↓
+       {}
+
+Need Key → Object?
+        ↓
+       {}
+
+====================================================================================
+
+Quick Comparison
+
+[]                                {}
+
+List                              Map
+
+Values Only                       Key + Value
+
+list(string)                      map(string)
+
+list(object)                      map(object)
+
+====================================================================================
+
+Remember
+
+✔ value = does NOT decide [] or {}.
+
+✔ The required return type decides [] or {}.
+
+✔ [] always creates a List.
+
+✔ {} always creates a Map.
+
+✔ Nested Map also starts with {} because the top-level return type is still a Map.
+
+====================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

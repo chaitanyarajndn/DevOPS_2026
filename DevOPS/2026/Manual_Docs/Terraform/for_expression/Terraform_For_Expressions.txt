@@ -1,0 +1,194 @@
+
+=========================================================
+Terraform For Expressions - Introduction
+=========================================================
+
+Definition
+
+A For Expression reads an existing collection,
+processes each value one by one,
+and returns a new collection.
+
+---------------------------------------------------------
+
+Terraform introduced For Expressions to transform data.
+
+It does NOT create resources.
+
+It works only on existing data.
+
+---------------------------------------------------------
+
+Main Purpose
+
+- Read existing data
+- Process each item
+- Return a new collection
+
+---------------------------------------------------------
+
+Remember
+
+for_each
+
+↓
+
+Creates Resources
+
+For Expression
+
+↓
+
+Creates New Data
+
+=========================================================
+
+==============================================================================
+Terraform for_each vs Terraform For Expressions
+==============================================================================
+
++---------------------------+----------------------------------------------+
+|         for_each          |            Terraform For Expressions         |
++---------------------------+----------------------------------------------+
+| Creates resources         | Creates new data                             |
+|                           |                                              |
+| Works with resources      | Works with existing collections              |
+|                           | (List, Map, Set)                             |
+|                           |                                              |
+| Used during resource      | Used after data already exists               |
+| creation                  |                                              |
+|                           |                                              |
+| Creates multiple          | Reads each value one by one                  |
+| resource instances        |                                              |
+|                           |                                              |
+| Input = Collection        | Input = Existing Collection                  |
+|                           |                                              |
+| Output = Resources        | Output = New Collection                      |
+|                           |                                              |
+| Purpose = Infrastructure  | Purpose = Data Transformation                |
+| Creation                  |                                              |
+|                           |                                              |
+| Used in resource blocks   | Commonly used in Outputs                     |
+|                           |                                              |
+| Creates Azure resources   | Extracts information from                    |
+| like VM, NSG, Subnet      | existing Azure resources                     |
+|                           |                                              |
+| Uses each.key             | Uses one item at a time                      |
+| each.value                |                                              |
+|                           |                                              |
+| Cannot transform data     | Can transform existing data                  |
++---------------------------+----------------------------------------------+
+
+==============================================================================
+Real World Thinking
+==============================================================================
+
+for_each
+
+Template
+    ↓
+Machine makes 100 copies
+    ↓
+100 ID Cards are created
+
+Result:
+New objects are created.
+
+----------------------------------------------------------
+
+For Expressions
+
+100 ID Cards already exist
+        ↓
+Read every ID Card
+        ↓
+Extract Employee Name
+        ↓
+Create a new list of names
+
+Result:
+No new ID Cards are created.
+Only new data is created.
+
+==============================================================================
+Remember This Forever
+==============================================================================
+
+for_each
+    ↓
+Infrastructure Creation
+
+For Expression
+    ↓
+Data Transformation
+
+----------------------------------------------------------
+
+for_each
+    ↓
+Creates Resources
+
+For Expression
+    ↓
+Creates New Data
+
+----------------------------------------------------------
+
+for_each
+    ↓
+"I want Terraform to build resources."
+
+For Expression
+    ↓
+"I want Terraform to read existing resources
+and return the information I need."
+
+==============================================================================
+Your Azure Project
+==============================================================================
+
+Step 1
+
+Nested Map
+      ↓
+for_each
+      ↓
+Azure Resources Created
+
+Resource Group
+Virtual Network
+Subnets
+NSG
+NIC
+Linux VM
+
+----------------------------------------------------------
+
+Step 2
+
+Azure Resources Already Exist
+             ↓
+Need Resource IDs
+Need Resource Names
+Need Private IPs
+Need Subnet IDs
+
+             ↓
+
+Terraform For Expressions
+
+             ↓
+
+New Collection Returned
+
+==============================================================================
+Interview One-Liner
+==============================================================================
+
+for_each is used to create multiple resource instances from a collection.
+for_each is resource multiplication tool.
+
+Terraform For Expressions are used to read an existing collection,
+process each value, and return a new collection without creating any resources.
+
+==============================================================================

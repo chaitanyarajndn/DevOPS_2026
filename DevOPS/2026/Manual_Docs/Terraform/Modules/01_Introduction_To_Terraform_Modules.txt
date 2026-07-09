@@ -1,0 +1,247 @@
+==========================================================
+                TERRAFORM MODULES - PART 1
+             Introduction to Terraform Modules
+==========================================================
+
+
+----------------------------------------------------------
+What is a Terraform Module?
+----------------------------------------------------------
+
+Terraform Module ek reusable collection of Terraform configuration files hota hai.
+
+Simple language me bole to,
+
+"Ek module multiple Terraform resources ko ek reusable package me convert kar deta hai, jise hum baar-baar different projects ya environments me use kar sakte hain."
+
+
+----------------------------------------------------------
+Real Life Example
+----------------------------------------------------------
+
+Maan lo tum ek construction company me kaam karte ho.
+
+Har naye project me tumhe same type ka house banana hai.
+
+Har house me same cheeze hongi:
+
+- Bedroom
+- Kitchen
+- Bathroom
+- Parking
+
+Ab do options hain.
+
+Option 1
+
+Har baar naye project ke liye poora design dobara banao.
+
+Result
+
+- Time waste
+- Same work repeat hoga
+- Mistakes badhengi
+- Maintenance difficult hogi
+
+
+Option 2
+
+Ek standard blueprint bana lo.
+
+Ab jab bhi naya project aaye,
+usi blueprint ko use karo.
+
+Sirf ye change karo
+
+- House Name
+- House Size
+- Paint Color
+- Number of Rooms
+
+Bas.
+
+Yehi concept Terraform Module ka hai.
+
+
+----------------------------------------------------------
+Azure Example
+----------------------------------------------------------
+
+Suppose company ke paas 100 applications hain.
+
+Har application ko chahiye
+
+- Resource Group
+- Virtual Network
+- Subnet
+- NSG
+- Virtual Machine
+
+Agar har application ke liye ye resources manually likhenge,
+
+to har project me same Terraform code repeat hoga.
+
+Ye maintain karna bahut difficult ho jayega.
+
+Instead,
+
+hum ek reusable module bana dete hain.
+
+Example
+
+Resource Group Module
+
+Virtual Network Module
+
+Subnet Module
+
+Linux VM Module
+
+Ab har project sirf module ko call karega.
+
+Module infrastructure create karega.
+
+
+----------------------------------------------------------
+Why do we use Modules?
+----------------------------------------------------------
+
+Modules use karne ke main reasons:
+
+✔ Code Reusability
+
+Ek baar code likho.
+Unlimited projects me use karo.
+
+----------------------------------------------------------
+
+✔ Easy Maintenance
+
+Agar future me koi change karna hai,
+
+sirf module update karo.
+
+Har project automatically updated module use karega.
+
+----------------------------------------------------------
+
+✔ Standardization
+
+Har project same company standard follow karega.
+
+Infrastructure consistent rahega.
+
+----------------------------------------------------------
+
+✔ Less Duplicate Code
+
+Same Terraform code baar-baar likhne ki zarurat nahi padti.
+
+----------------------------------------------------------
+
+✔ Better Project Structure
+
+Project clean aur easy to understand hota hai.
+
+----------------------------------------------------------
+
+Enterprise Example
+----------------------------------------------------------
+
+Suppose company ke paas
+
+Dev
+
+QA
+
+Production
+
+teen environments hain.
+
+Har environment me
+
+Resource Group
+
+Virtual Network
+
+Subnet
+
+VM
+
+same structure follow karna hai.
+
+Is case me modules best solution hote hain.
+
+Environment sirf different values pass karega.
+
+Infrastructure same module create karega.
+
+
+----------------------------------------------------------
+Interview Definition
+----------------------------------------------------------
+
+Terraform Module is a reusable collection of Terraform configuration files.
+
+It helps us avoid duplicate code by creating reusable infrastructure components.
+
+Instead of writing the same resources multiple times, we create them once inside a module and reuse them across different environments by passing different input values.
+
+This improves consistency, simplifies maintenance, and makes infrastructure easier to manage.
+
+
+----------------------------------------------------------
+Key Points
+----------------------------------------------------------
+
+✔ Write Once
+
+Use Many Times
+
+----------------------------
+
+✔ Reusable Infrastructure
+
+----------------------------
+
+✔ Reduces Duplicate Code
+
+----------------------------
+
+✔ Easy Maintenance
+
+----------------------------
+
+✔ Standard Infrastructure
+
+----------------------------
+
+✔ Used in Enterprise Projects
+
+
+----------------------------------------------------------
+Important Note
+----------------------------------------------------------
+
+A Module is NOT a new Terraform resource.
+
+A Module is simply a folder that contains Terraform files such as
+
+main.tf
+
+variables.tf
+
+outputs.tf
+
+These files work together to create reusable infrastructure.
+
+
+==========================================================
+End of Part 1
+==========================================================
+
+Next Part
+
+Root Module vs Child Module
+
+

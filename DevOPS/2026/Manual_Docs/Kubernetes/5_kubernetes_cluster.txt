@@ -1,0 +1,177 @@
+
+
+
+
+=========================================================
+Chapter 9 : Kubernetes Cluster
+=========================================================
+
+Learning Objective
+---------------------------------------------------------
+
+After completing this chapter, you will be able to:
+
+• Understand what a Kubernetes Cluster is.
+• Know why a Cluster is required.
+• Explain the difference between a single machine and a Cluster.
+• Understand the basic structure of a Kubernetes Cluster.
+
+=========================================================
+1. What is a Kubernetes Cluster?
+=========================================================
+
+A Kubernetes Cluster is a group of machines managed as a single environment.
+
+These machines can be:
+
+• Virtual Machines
+• Physical Servers
+
+Kubernetes treats all of these machines as one Cluster.
+
+=========================================================
+2. Why Do We Need a Cluster?
+=========================================================
+
+A single machine has limited CPU, Memory, and Storage.
+
+As applications grow, one machine is no longer enough.
+
+Instead of running everything on one machine, Kubernetes uses multiple machines and manages them as a single Cluster.
+
+=========================================================
+3. Basic Cluster Structure
+=========================================================
+
+                Kubernetes Cluster
+
+        ┌─────────────────────────┐
+        │     Control Plane       │
+        ├─────────────────────────┤
+        │     Worker Node - 1     │
+        │     Worker Node - 2     │
+        │     Worker Node - 3     │
+        └─────────────────────────┘
+
+A Kubernetes Cluster mainly consists of:
+
+• One or more Control Plane Nodes
+• One or more Worker Nodes
+
+The responsibilities of these components will be covered in the next chapter.
+
+=========================================================
+4. Real-World Example
+=========================================================
+
+Imagine an online shopping application.
+
+During normal days, one machine may be enough.
+
+During a sale event, thousands of users access the application at the same time.
+
+Instead of upgrading one machine again and again, more machines are added to the Kubernetes Cluster.
+
+Kubernetes uses all available machines together to run the application.
+
+=========================================================
+5. Why is a Cluster Important?
+=========================================================
+
+A Kubernetes Cluster helps to:
+
+• Run applications on multiple machines.
+• Use available resources more efficiently.
+• Handle application growth more easily.
+• Continue running even if one machine becomes unavailable.
+
+=========================================================
+6. Quick Revision
+=========================================================
+
+Machine
+
+↓
+
+Runs Containers
+
+Multiple Machines
+
+↓
+
+Kubernetes Cluster
+
+↓
+
+One Managed Environment
+
+
+
+
+=========================================================
+Key Takeaways
+=========================================================
+
+✓ A Kubernetes Cluster is a group of machines.
+
+✓ A machine can be a Physical Server or a Virtual Machine.
+
+✓ Kubernetes manages all machines as a single Cluster.
+
+✓ A Cluster contains Control Plane Nodes and Worker Nodes.
+
+
+
+=========================================================
+Interview Statement
+=========================================================
+
+A Kubernetes Cluster is a group of physical servers or virtual machines managed as a single environment. It allows applications to run across multiple machines instead of depending on a single server.
+
+
+
+
+
+
+                         Kubernetes Cluster
+================================================================================
+
+                    +----------------------------------+
+                    |          Control Plane           |
+                    |----------------------------------|
+                    | API Server                       |
+                    | Scheduler                        |
+                    | Controller Manager               |
+                    | etcd                             |
+                    +----------------+-----------------+
+                                     |
+             -------------------------------------------------
+             |                                               |
+             |                                               |
++-------------------------------+          +-------------------------------+
+| Worker Node-1                 |          | Worker Node-2                 |
+|-------------------------------|          |-------------------------------|
+| kubelet                       |          | kubelet                       |
+| containerd                    |          | containerd                    |
+| kube-proxy                    |          | kube-proxy                    |
+|                               |          |                               |
+| +--------------------------+  |          | +--------------------------+  |
+| | Pod                      |  |          | | Pod                      |  |
+| |  └── Container           |  |          | |  └── Container           |  |
+| +--------------------------+  |          | +--------------------------+  |
+|                               |          |                               |
+| +--------------------------+  |          | +--------------------------+  |
+| | Pod                      |  |          | | Pod                      |  |
+| |  └── Container           |  |          | |  └── Container           |  |
+| +--------------------------+  |          | +--------------------------+  |
++-------------------------------+          +-------------------------------+
+
+================================================================================
+
+
+
+
+
+
+
+

@@ -1,0 +1,191 @@
+
+
+==============================================================================
+Azure_Resource_Relationships
+==============================================================================
+
+Definition
+
+Child Configuration : A configuration that exists INSIDE a Parent Azure Resource.
+
+Examples
+
+Network Interface ---> IP Configuration
+Load Balancer     ---> Frontend IP Configuration
+Application GW    ---> Listener | Backend Pool | HTTP Settings
+
+These are NOT display names.
+These are Azure Identifiers.
+
+==============================================================================
+
+RELATIONSHIP 1 : NIC  <------------------------------->  Backend Pool Association
+==============================================================================
+
+Terraform
+
+NIC
+
+ip_configuration {
+
+    name = "default-confweb1"
+
+}
+
+                                │ creates
+                                ▼
+
+Azure
+
+NIC (nic-web01)
+        │
+        └── IP Configuration
+                │
+                └── default-confweb1
+                        ▲
+                        │ searches
+                        │
+Backend Pool Association
+        │
+        └── ip_configuration_name = "default-confweb1"
+
+Execution Pipeline
+
+Terraform ---> Azure ---> Find NIC ---> Open NIC ---> Search "default-confweb1" ---> Found ---> Associate Backend Pool
+
+==============================================================================
+
+WRONG RELATIONSHIP
+==============================================================================
+
+NIC
+
+default-confweb1
+        ▲
+        │ searches
+        │
+Backend Pool Association
+
+Linx1Internal
+
+Execution Pipeline
+
+Terraform ---> Azure ---> Find NIC ---> Open NIC ---> Search "Linx1Internal" ---> NOT FOUND ---> Error
+
+Azure Error
+
+IP Configuration "Linx1Internal"
+was not found on NIC "nic-web01"
+
+==============================================================================
+
+RELATIONSHIP 2 : Load Balancer  <---------------------->  Load Balancer Rule
+==============================================================================
+
+Terraform
+
+frontend_ip_configuration {
+
+    name = "LinxIP1"
+
+}
+
+                                │ creates
+                                ▼
+
+Azure
+
+Load Balancer
+        │
+        └── Frontend IP Configuration
+                │
+                └── LinxIP1
+                        ▲
+                        │ searches
+                        │
+Load Balancer Rule
+        │
+        └── frontend_ip_configuration_name = "LinxIP1"
+
+Execution Pipeline
+
+Terraform ---> Azure ---> Find Load Balancer ---> Open LB ---> Search "LinxIP1" ---> Found ---> Create LB Rule
+
+==============================================================================
+
+WRONG RELATIONSHIP
+==============================================================================
+
+Load Balancer
+
+LinxIP1
+        ▲
+        │ searches
+        │
+LB Rule
+
+FrontendIP
+
+Execution Pipeline
+
+Terraform ---> Azure ---> Find Load Balancer ---> Open LB ---> Search "FrontendIP" ---> NOT FOUND ---> Error
+
+Azure Error
+
+Cannot find FrontEnd IP Configuration "FrontendIP"
+
+==============================================================================
+
+MENTAL MODEL
+==============================================================================
+
+Terraform Resource ---> Azure Resource ---> Child Configuration Created ---> Azure stores Configuration Name ---> Another Azure Resource searches SAME Name ---> Match = Success | Mismatch = Configuration Not Found
+
+==============================================================================
+
+TECHNICAL DICTIONARY
+==============================================================================
+
+Parent Resource         : Main Azure Resource (NIC, LB, App Gateway)
+
+Child Configuration     : Internal configuration inside Parent Resource
+
+Configuration Name      : Azure Identifier of a Child Configuration
+
+Reference               : Using an existing Configuration Name in another resource
+
+Relationship            : Connection between two Azure Resources
+
+==============================================================================
+
+GOLDEN RULE
+==============================================================================
+
+Create Child Configuration ---> Azure stores Configuration Name ---> Reuse SAME Name ---> Azure finds Child Configuration ---> Resource Created Successfully
+
+Never invent a new Configuration Name.
+Always reuse the exact name used while creating the Child Configuration.
+
+==============================================================================
+
+IMPORTANT OBSERVATION
+==============================================================================
+
+Terraform Validates ---> Syntax | Variables | Types | Maps | Outputs
+
+Azure Validates ---> Resource IDs | Configuration Names | Relationships | Existing Child Configurations
+
+Terraform can succeed,
+but Azure can still fail if the referenced Child Configuration Name does not exist.
+==============================================================================
+
+
+
+
+
+
+
+
+
+
+

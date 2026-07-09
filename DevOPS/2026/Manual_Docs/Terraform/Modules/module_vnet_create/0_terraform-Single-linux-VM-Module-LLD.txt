@@ -1,0 +1,79 @@
+
+
+terraform-Single-linux-vm-module/
+
+│
+├── environments/
+│   │
+│   ├── dev/
+│   │   ├── provider.tf
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── terraform.tfvars
+│   │   └── outputs.tf
+│   │
+│   ├── qa/
+│   │   ├── provider.tf
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── terraform.tfvars
+│   │   └── outputs.tf
+│   │
+│   └── prod/
+│       ├── provider.tf
+│       ├── main.tf
+│       ├── variables.tf
+│       ├── terraform.tfvars
+│       └── outputs.tf
+│
+└── modules/
+    │
+    ├── azurerm_resource_group/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    │
+    ├── azurerm_virtual_network/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    │
+    ├── azurerm_subnet/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    │
+    ├── azurerm_network_security_group/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    │
+    ├── azurerm_network_security_rule/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    │
+    ├── azurerm_subnet_network_security_group_association/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    │
+    ├── azurerm_public_ip/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    │
+    ├── azurerm_network_interface/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    │
+    ├── azurerm_network_interface_security_group_association/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    │
+    └── azurerm_linux_virtual_machine/
+        ├── main.tf
+        ├── variables.tf
+        └── outputs.tf

@@ -1,0 +1,276 @@
+
+
+====================================================================================
+Terraform For Expressions - Complete Output Examples
+====================================================================================
+
+1. List For Expression
+
+Purpose
+
+Return only VM IDs.
+
+Syntax
+
+output "vm_ids" {
+
+  value = [
+    for vm in azurerm_linux_virtual_machine.vm :
+    vm.id
+  ]
+
+}
+
+Execution
+
+Linux-01 → vm.id → VM_ID_1
+Linux-02 → vm.id → VM_ID_2
+Linux-03 → vm.id → VM_ID_3
+
+Output
+
+[
+  VM_ID_1,
+  VM_ID_2,
+  VM_ID_3
+]
+
+Type
+
+list(string)
+
+====================================================================================
+
+2. Simple Map For Expression
+
+Purpose
+
+Return VM Name → VM ID
+
+Syntax
+
+output "vm_ids" {
+
+  value = {
+    for vm in azurerm_linux_virtual_machine.vm :
+    vm.name => vm.id
+  }
+
+}
+
+Execution
+
+Linux-01 → VM_ID_1
+Linux-02 → VM_ID_2
+Linux-03 → VM_ID_3
+
+Output
+
+{
+  Linux-01 = VM_ID_1
+  Linux-02 = VM_ID_2
+  Linux-03 = VM_ID_3
+}
+
+Type
+
+map(string)
+
+====================================================================================
+
+3. Nested Map For Expression
+
+Purpose
+
+Return multiple VM properties.
+
+Syntax
+
+output "vm_details" {
+
+  value = {
+    for vm in azurerm_linux_virtual_machine.vm :
+    vm.name => {
+      id         = vm.id
+      private_ip = vm.private_ip
+      location   = vm.location
+    }
+  }
+
+}
+
+Execution
+
+Linux-01 → { id, private_ip, location }
+
+Linux-02 → { id, private_ip, location }
+
+Linux-03 → { id, private_ip, location }
+
+Output
+
+{
+  Linux-01 = {
+    id         = VM_ID_1
+    private_ip = 10.0.1.4
+    location   = Central India
+  }
+
+  Linux-02 = {
+    id         = VM_ID_2
+    private_ip = 10.0.1.5
+    location   = East US
+  }
+
+}
+
+Type
+
+map(object)
+
+====================================================================================
+
+4. List Filtering
+
+Purpose
+
+Return VM IDs only for Central India.
+
+Syntax
+
+output "vm_ids" {
+
+  value = [
+    for vm in azurerm_linux_virtual_machine.vm :
+    vm.id
+    if vm.location == "Central India"
+  ]
+
+}
+
+Execution
+
+Linux-01 → ✔ VM_ID_1
+
+Linux-02 → ❌ Skip
+
+Linux-03 → ✔ VM_ID_3
+
+Output
+
+[
+  VM_ID_1,
+  VM_ID_3
+]
+
+====================================================================================
+
+5. Simple Map Filtering
+
+Purpose
+
+Return VM Name → VM ID only for Central India.
+
+Syntax
+
+output "vm_ids" {
+
+  value = {
+    for vm in azurerm_linux_virtual_machine.vm :
+    vm.name => vm.id
+    if vm.location == "Central India"
+  }
+
+}
+
+Execution
+
+Linux-01 → ✔ Linux-01 = VM_ID_1
+
+Linux-02 → ❌ Skip
+
+Linux-03 → ✔ Linux-03 = VM_ID_3
+
+Output
+
+{
+  Linux-01 = VM_ID_1
+  Linux-03 = VM_ID_3
+}
+
+====================================================================================
+
+6. Nested Map Filtering
+
+Purpose
+
+Return VM details only for Central India.
+
+Syntax
+
+output "vm_details" {
+
+  value = {
+    for vm in azurerm_linux_virtual_machine.vm :
+    vm.name => {
+      id         = vm.id
+      private_ip = vm.private_ip
+      location   = vm.location
+    }
+    if vm.location == "Central India"
+  }
+
+}
+
+Execution
+
+Linux-01 → ✔ { id, private_ip, location }
+
+Linux-02 → ❌ Skip
+
+Linux-03 → ✔ { id, private_ip, location }
+
+Output
+
+{
+  Linux-01 = {
+    id         = VM_ID_1
+    private_ip = 10.0.1.4
+    location   = Central India
+  }
+
+  Linux-03 = {
+    id         = VM_ID_3
+    private_ip = 10.0.1.6
+    location   = Central India
+  }
+}
+
+Type
+
+map(object)
+
+====================================================================================
+
+Golden Rules
+
+vm.id                              → Property Extraction
+
+{ id = vm.id ... }                 → Object Transformation
+
+vm.name => vm.id                   → Simple Map
+
+vm.name => { ... }                 → Nested Map
+
+if condition                       → Filters Returned Result
+
+Expression after '=>'              → Decides Output Type
+
+====================================================================================
+
+
+
+
+
+
+

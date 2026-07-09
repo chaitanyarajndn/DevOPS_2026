@@ -1,0 +1,320 @@
+==========================================================
+             TERRAFORM MODULES - PART 5
+                  Input Variables
+==========================================================
+
+Concept
+• Input Variables are used to pass values from the Root Module to the Child Module.
+• Input Variables remove hardcoded values from Child Modules, making them reusable.
+• The same Child Module can be deployed in different environments by passing different values.
+• Input Variables are declared using the variable keyword and accessed using the var keyword.
+• Every configurable value such as Resource Group Name, Location, VNet Name, Address Space, and VM Size should be passed as an Input Variable.
+
+Execution Order
+
+terraform.tfvars
+      │
+      ▼
+Root Module
+variables.tf
+      │
+      ▼
+Root Module
+main.tf
+      │
+      ▼
+Child Module
+variables.tf
+      │
+      ▼
+Child Module
+main.tf
+      │
+      ▼
+Azure Resource
+
+Terraform Syntax
+
+----------------------------------------------------------
+Root Module
+terraform.tfvars
+----------------------------------------------------------
+
+rg_name  = "rg-dev"
+location = "Central India"
+
+----------------------------------------------------------
+Root Module
+variables.tf
+----------------------------------------------------------
+
+variable "rg_name" {
+  type = string
+}
+
+variable "location" {
+  type = string
+}
+
+----------------------------------------------------------
+Root Module
+main.tf
+----------------------------------------------------------
+
+module "resource_group" {
+  source   = "../../modules/azurerm_resource_group"
+  rg_name  = var.rg_name
+  location = var.location
+}
+
+----------------------------------------------------------
+Child Module
+variables.tf
+----------------------------------------------------------
+
+variable "rg_name" {
+  type = string
+}
+
+variable "location" {
+  type = string
+}
+
+----------------------------------------------------------
+Child Module
+main.tf
+----------------------------------------------------------
+
+resource "azurerm_resource_group" "rg" {
+  name     = var.rg_name
+  location = var.location
+}
+
+----------------------------------------------------------
+Keyword : variable
+----------------------------------------------------------
+
+Purpose
+• Declares an Input Variable.
+
+Where is it used?
+• Root Module
+• Child Module
+
+Syntax
+
+variable "rg_name" {
+  type = string
+}
+
+----------------------------------------------------------
+Keyword : var
+----------------------------------------------------------
+
+Purpose
+• Reads the value of a declared variable.
+
+Where is it used?
+• Root Module
+• Child Module
+
+Syntax
+
+var.rg_name
+
+----------------------------------------------------------
+Important Observation
+----------------------------------------------------------
+
+Notice the following before reading the explanation.
+
+• Both the Root Module and the Child Module contain a variables.tf file.
+• Both modules declare the same variable names such as rg_name and location.
+• Both modules use var.rg_name, but their responsibilities are different.
+• The Root Module receives values from terraform.tfvars.
+• The Child Module receives values from the Root Module.
+
+----------------------------------------------------------
+Code Explanation
+----------------------------------------------------------
+
+----------------------------------------------------------
+Root Module
+terraform.tfvars
+----------------------------------------------------------
+
+• Stores the actual values for the current environment.
+• Different environments such as Dev, QA, and Production usually have different values.
+• This file does not create Azure resources.
+
+----------------------------------------------------------
+Root Module
+variables.tf
+----------------------------------------------------------
+
+• Declares the variables expected by the Root Module.
+• Receives values from terraform.tfvars.
+• Makes the values available inside the Root Module.
+
+----------------------------------------------------------
+Root Module
+main.tf
+----------------------------------------------------------
+
+module "resource_group"
+
+• Calls the Resource Group Child Module.
+• resource_group is a logical module name used for referencing outputs.
+
+source
+
+• Specifies the location of the Child Module.
+• Terraform loads the module from this path.
+
+rg_name = var.rg_name
+
+• Reads the value available in the Root Module.
+• Passes the value to the Child Module.
+• Does not create an Azure Resource Group.
+
+location = var.location
+
+• Reads the location value from the Root Module.
+• Passes the location to the Child Module.
+
+----------------------------------------------------------
+Child Module
+variables.tf
+----------------------------------------------------------
+
+• Declares the variables expected by the Child Module.
+• Receives values from the Root Module.
+• Does not know anything about terraform.tfvars.
+
+----------------------------------------------------------
+Child Module
+main.tf
+----------------------------------------------------------
+
+resource "azurerm_resource_group" "rg"
+
+• Creates the Azure Resource Group.
+• Contains the actual implementation logic.
+
+name = var.rg_name
+
+• Reads the value received from the Root Module.
+• Assigns it as the Azure Resource Group name.
+
+location = var.location
+
+• Reads the location received from the Root Module.
+• Creates the Resource Group in the specified Azure region.
+
+----------------------------------------------------------
+Data Flow
+----------------------------------------------------------
+
+terraform.tfvars
+      │
+      ▼
+Root Module
+variables.tf
+      │
+      ▼
+Root Module
+main.tf
+      │
+      ▼
+Child Module
+variables.tf
+      │
+      ▼
+Child Module
+main.tf
+      │
+      ▼
+Azure Resource
+
+----------------------------------------------------------
+Interview Notes
+----------------------------------------------------------
+
+• Input Variables are used to pass configuration values from the Root Module to the Child Module.
+• The Root Module controls the deployment by passing values to reusable Child Modules.
+• Child Modules should never contain hardcoded environment-specific values.
+• A reusable module should receive all configurable values through Input Variables.
+
+----------------------------------------------------------
+Key Points
+----------------------------------------------------------
+
+• Input Variables always flow from the Root Module to the Child Module.
+• Variables are declared using the variable keyword.
+• Variable values are accessed using the var keyword.
+• The Root Module passes values.
+• The Child Module consumes those values.
+• Input Variables improve reusability and maintainability.
+
+==========================================================
+💡 Common Interview Doubts
+==========================================================
+
+Question
+
+Why do both the Root Module and the Child Module have variables.tf?
+
+Answer
+
+• The Root Module variables.tf receives values from terraform.tfvars.
+• The Child Module variables.tf receives values from the Root Module.
+• Both files declare variables, but they belong to different modules and have different responsibilities.
+
+----------------------------------------------------------
+
+Question
+
+Why do both modules use var.rg_name?
+
+Root Module
+
+rg_name = var.rg_name
+
+Child Module
+
+name = var.rg_name
+
+Answer
+
+• These two statements do different jobs.
+• In the Root Module, var.rg_name reads the value and passes it to the Child Module.
+• In the Child Module, var.rg_name reads the received value and uses it to create the Azure Resource Group.
+• Passing a value and using a value are two different responsibilities.
+
+----------------------------------------------------------
+
+Question
+
+Can the Child Module directly read terraform.tfvars?
+
+Answer
+
+• No.
+• Only the Root Module reads terraform.tfvars.
+• The Child Module only receives values passed by the Root Module.
+
+----------------------------------------------------------
+
+Question
+
+Can the Root Module create Azure resources?
+
+Answer
+
+• Yes, Terraform allows it.
+• However, in an enterprise module design, the Root Module should only orchestrate the deployment.
+• The actual Azure resources should be created inside Child Modules to keep the code reusable and maintainable.
+
+==========================================================
+End
+==========================================================

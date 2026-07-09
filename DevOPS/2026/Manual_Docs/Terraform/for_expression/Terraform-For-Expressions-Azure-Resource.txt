@@ -1,0 +1,275 @@
+================================================================================
+Terraform For Expressions - Azure Resource Collection
+================================================================================
+
+Resource Block
+
+resource "azurerm_linux_virtual_machine" "vm" {
+    for_each = var.linux_vm
+}
+
+--------------------------------------------------------------------------------
+
+Important
+
+One resource block is written.
+
+Multiple resource instances are created.
+
+--------------------------------------------------------------------------------
+
+Terraform Internal View
+
+azurerm_linux_virtual_machine.vm
+
+├── Linux-01
+├── Linux-02
+└── Linux-03
+
+This is NOT a single resource.
+
+This is a collection of resource instances.
+
+--------------------------------------------------------------------------------
+
+Each Resource Instance Contains
+
+Linux-01
+
+├── id
+├── name
+├── private_ip
+├── location
+└── size
+
+--------------------------------------------------------------------------------
+
+Terraform Execution
+
+Iteration 1 : Current VM = Linux-01 → vm.id → VM_ID_1
+Iteration 2 : Current VM = Linux-02 → vm.id → VM_ID_2
+Iteration 3 : Current VM = Linux-03 → vm.id → VM_ID_3
+
+--------------------------------------------------------------------------------
+
+Returned Collection
+
+[
+  VM_ID_1,
+  VM_ID_2,
+  VM_ID_3
+]
+
+--------------------------------------------------------------------------------
+
+Remember
+
+✔ for_each converts one resource block into multiple resource instances.
+
+✔ Terraform stores these instances as a collection.
+
+✔ A collection cannot directly return a single id or name.
+
+✔ Terraform must process each instance one at a time.
+
+================================================================================
+
+
+
+for_each
+
+↓
+
+One Resource Block
+
+↓
+
+Multiple Resource Instances
+
+↓
+
+Terraform stores them as a Collection
+
+(Foundation Complete ✅)
+
+
+================================================================================
+
+azurerm_linux_virtual_machine.vm
+
+├── Linux-01
+│   ├── id
+│   ├── name
+│   ├── private_ip
+│   └── size
+│
+├── Linux-02
+│   ├── id
+│   ├── name
+│   ├── private_ip
+│   └── size
+│
+└── Linux-03
+    ├── id
+    ├── name
+    ├── private_ip
+    └── size
+
+
+================================================================================
+
+
+=========================================================================================
+Terraform For Expressions - Real Azure Example
+=========================================================================================
+
+Source Collection
+
+azurerm_linux_virtual_machine.vm
+
+├── Linux-01
+├── Linux-02
+└── Linux-03
+
+-----------------------------------------------------------------------------------------
+
+For Expression
+
+[for vm in azurerm_linux_virtual_machine.vm : vm.name]
+
+Read Like English
+
+For every VM in azurerm_linux_virtual_machine.vm,
+return vm.name.
+
+-----------------------------------------------------------------------------------------
+
+Terraform Execution
+
+Iteration 1 : vm = Linux-01 → vm.name → Linux-01
+Iteration 2 : vm = Linux-02 → vm.name → Linux-02
+Iteration 3 : vm = Linux-03 → vm.name → Linux-03
+
+-----------------------------------------------------------------------------------------
+
+Returned Collection
+
+[
+  Linux-01,
+  Linux-02,
+  Linux-03
+]
+
+-----------------------------------------------------------------------------------------
+
+Changing Only The Expression
+
+vm.name         → Returns VM Names
+
+vm.id           → Returns VM IDs
+
+vm.private_ip   → Returns Private IPs
+
+vm.location     → Returns Locations
+
+vm.size         → Returns VM Sizes
+
+-----------------------------------------------------------------------------------------
+
+Remember
+
+✔ Source collection remains the same.
+
+✔ Only the expression changes.
+
+✔ Expression decides what goes into the new collection.
+
+✔ No resources are created.
+
+✔ A new collection is returned.
+
+=========================================================================================
+
+
+==========================================================================================
+Terraform For Expression - Returning All VM IDs
+==========================================================================================
+
+Code
+
+output "vm_ids" {
+  value = [for vm in azurerm_linux_virtual_machine.vm : vm.id]
+}
+
+Purpose : Return IDs of all Virtual Machines created using for_each.
+
+------------------------------------------------------------------------------------------
+
+Code Breakdown
+
+output "vm_ids"                    → Output name displayed after terraform apply.
+
+value =                            → Value to be returned.
+
+for                               → Start iterating over the collection.
+
+vm                                → Temporary variable (Current VM).
+
+in                                → Read data from this collection.
+
+azurerm_linux_virtual_machine.vm   → Collection of all VM instances.
+
+:                                 → Separator (Iteration | Returned Value).
+
+vm.id                             → Return current VM ID.
+
+------------------------------------------------------------------------------------------
+
+Terraform Internal Execution
+
+Source Collection
+
+azurerm_linux_virtual_machine.vm
+
+├── Linux-01
+├── Linux-02
+└── Linux-03
+
+Execution
+
+Iteration 1 : vm = Linux-01 → vm.id → VM_ID_1
+Iteration 2 : vm = Linux-02 → vm.id → VM_ID_2
+Iteration 3 : vm = Linux-03 → vm.id → VM_ID_3
+
+------------------------------------------------------------------------------------------
+
+Returned Value
+
+[
+  VM_ID_1,
+  VM_ID_2,
+  VM_ID_3
+]
+
+Output Type : list(string)
+
+Reason      : Every vm.id is a string, so Terraform returns List(String).
+
+------------------------------------------------------------------------------------------
+
+Remember
+
+✔ for_each created a collection.
+
+✔ vm is the current VM.
+
+✔ vm.id returns current VM ID.
+
+✔ For Expression returns a NEW list.
+
+✔ Expression decides what goes into the returned collection.
+
+==========================================================================================
+
+
+

@@ -1,0 +1,60 @@
+====================================================================================
+Object-Transformation
+====================================================================================
+
+What Is It?
+
+Object Transformation means reading an existing object and creating a new
+object containing only the required properties.
+
+------------------------------------------------------------------------------------
+
+Original Object
+
+VM
+
+├── id
+├── name
+├── private_ip
+├── location
+├── size
+└── tags
+
+------------------------------------------------------------------------------------
+
+New Object
+
+VM
+
+├── id
+├── private_ip
+└── location
+
+------------------------------------------------------------------------------------
+
+Example
+
+{
+  for vm in azurerm_linux_virtual_machine.vm :
+  vm.name => {
+    id         = vm.id
+    private_ip = vm.private_ip
+    location   = vm.location
+  }
+}
+
+------------------------------------------------------------------------------------
+
+Remember
+
+✔ Read an existing object.
+
+✔ Select only required properties.
+
+✔ Create a new object.
+
+✔ Return the new object.
+
+This process is called Object Transformation.
+
+====================================================================================

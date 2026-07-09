@@ -1,0 +1,202 @@
+=========================================================
+Chapter 11 : Pod (What & Why)
+=========================================================
+
+Learning Objective
+---------------------------------------------------------
+
+After completing this chapter, you will be able to:
+
+• Understand what a Pod is.
+• Know why Kubernetes uses Pods instead of Containers.
+• Explain the relationship between a Pod and a Container.
+• Answer the interview question - "Why do we need Pods?"
+
+=========================================================
+1. What is a Pod?
+=========================================================
+
+A Pod is the smallest unit that Kubernetes creates and manages.
+
+Whenever you deploy an application in Kubernetes, Kubernetes creates a Pod first.
+
+The Pod then runs one or more Containers.
+
+In most real-world applications, one Pod usually contains one Container.
+
+=========================================================
+2. Pod vs Container
+=========================================================
+
+Docker
+
+Image
+
+↓
+
+Container
+
+---------------------------------------------------------
+
+Kubernetes
+
+Image
+
+↓
+
+Container
+
+↓
+
+Pod
+
+The Container is still the same.
+
+The only difference is that Kubernetes does not work directly with Containers.
+
+It works with Pods.
+
+=========================================================
+3. Why Did Kubernetes Introduce Pods?
+=========================================================
+
+This is one of the most common interview questions.
+
+A Container can already run an application.
+
+Docker has no problem creating and running Containers.
+
+So why did Kubernetes add one more layer called a Pod?
+
+The answer is simple.
+
+Kubernetes wanted one standard object for deployment.
+
+Instead of managing thousands of individual Containers, Kubernetes manages Pods.
+
+This keeps the platform simple and consistent.
+
+=========================================================
+4. Why is a Pod Better than Managing Containers Directly?
+=========================================================
+
+Imagine Kubernetes had to manage Containers directly.
+
+Every Container Runtime works a little differently.
+
+Today a Cluster may use Docker.
+
+Tomorrow it may use containerd.
+
+In another environment, it may use CRI-O.
+
+If Kubernetes managed Containers directly, it would have to understand every Container Runtime.
+
+Instead, Kubernetes always works with Pods.
+
+The Container Runtime only receives the instruction to run the Container.
+
+This keeps Kubernetes independent of the underlying runtime.
+
+=========================================================
+5. Other Advantages of Pods
+=========================================================
+
+Pods also provide some practical benefits.
+
+• Multiple Containers can work together inside the same Pod.
+
+• Containers inside the same Pod share the same network.
+
+• They can share storage when required.
+
+• They start and stop together.
+
+• Kubernetes manages them as one logical unit instead of separate Containers.
+
+=========================================================
+6. Real DevOps Example
+=========================================================
+
+Developer creates an Nginx Image.
+
+Docker creates the Container.
+
+Kubernetes creates a Pod.
+
+The Pod runs the Nginx Container.
+
+So the application still runs inside the Container.
+
+The Pod simply becomes the object that Kubernetes manages.
+
+=========================================================
+7. Nokia Connection
+=========================================================
+
+After deploying a CNF, the common command is:
+
+kubectl get pods
+
+The output shows Pods because Kubernetes tracks Pods, not individual Containers.
+
+Containers exist inside the Pods.
+
+=========================================================
+8. Quick Revision
+=========================================================
+
+Docker
+
+Image
+
+↓
+
+Container
+
+-----------------------------------
+
+Kubernetes
+
+Image
+
+↓
+
+Container
+
+↓
+
+Pod
+
+-----------------------------------
+
+Docker manages Containers.
+
+Kubernetes manages Pods.
+
+=========================================================
+Key Takeaways
+=========================================================
+
+✓ A Pod is the smallest deployment unit in Kubernetes.
+
+✓ A Pod contains one or more Containers.
+
+✓ Most Pods contain only one Container.
+
+✓ Kubernetes works with Pods instead of individual Containers.
+
+=========================================================
+Interview Statement
+=========================================================
+
+A Pod is the smallest deployment unit in Kubernetes. It contains one or more Containers and acts as the object that Kubernetes creates, manages, and monitors throughout the application's lifecycle.
+
+
+"A Container is responsible for running the application. A Pod is responsible for helping Kubernetes manage that application."
+
+
+
+
+
+

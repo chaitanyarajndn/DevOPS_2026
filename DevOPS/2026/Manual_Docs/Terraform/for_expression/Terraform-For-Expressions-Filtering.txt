@@ -1,0 +1,293 @@
+
+
+====================================================================================
+Terraform For Expressions - Filtering (Introduction)
+====================================================================================
+
+Why Do We Need Filtering?
+
+Sometimes we don't need every item from a collection.
+
+We only want items that satisfy a condition.
+
+Filtering allows Terraform to return only the required items.
+
+------------------------------------------------------------------------------------
+
+Without Filtering
+
+VM1 ✔
+VM2 ✔
+VM3 ✔
+VM4 ✔
+
+↓
+
+All items are returned.
+
+------------------------------------------------------------------------------------
+
+With Filtering
+
+VM1 ✔
+VM2 ❌
+VM3 ✔
+VM4 ❌
+
+↓
+
+Only matching items are returned.
+
+------------------------------------------------------------------------------------
+
+Remember
+
+✔ Terraform still visits every item.
+
+✔ if does NOT stop iteration.
+
+✔ if only decides whether the current item should be returned or skipped.
+
+====================================================================================
+
+
+====================================================================================
+Terraform For Expression - Filtering Syntax
+====================================================================================
+
+Syntax
+
+[
+  for item in collection : expression
+  if condition
+]
+
+------------------------------------------------------------------------------------
+
+Breakdown
+
+for          → Start iterating over the collection.
+
+item         → Current item (Temporary Variable).
+
+in           → Read data from this collection.
+
+collection   → Source collection.
+
+:            → Separates iteration from returned value.
+
+expression   → Value to be returned.
+
+if           → Apply a condition.
+
+condition    → Return the current item only if the condition is TRUE.
+
+====================================================================================
+
+[
+  for vm in azurerm_linux_virtual_machine.vm : vm.id
+  if vm.location == "Central India"
+]
+
+------------------------------------------------------------------------------------
+
+Internal Execution
+
+Suppose collection hai:
+
+VM1 → Central India
+VM2 → East US
+VM3 → Central India
+VM4 → West Europe
+
+------------------------------------------------------------------------------------
+
+Terraform execution:
+
+Iteration 1 : VM1 → Condition ✔ True  → Return VM1 Name
+
+Iteration 2 : VM2 → Condition ❌ False → Skip
+
+Iteration 3 : VM3 → Condition ✔ True  → Return VM3 Name
+
+Iteration 4 : VM4 → Condition ❌ False → Skip
+
+
+------------------------------------------------------------------------------------
+
+Returned Collection
+
+[
+  VM1,
+  VM3
+]
+
+
+====================================================================================
+
+
+====================================================================================
+Simple Map + if Condition
+====================================================================================
+
+Requirement
+
+Return only the VMs deployed in "Central India".
+
+Syntax
+
+output "virtual_machines_output" {
+  value ={
+	  for vm in azurerm_linux_virtual_machine.vm :
+	  vm.name => vm.id
+	  if vm.location == "Central India"
+	}
+
+Execution
+
+Linux-01 (Central India) → ✔ Linux-01 = VM_ID_1
+
+Linux-02 (East US)       → ❌ Skip
+
+Linux-03 (Central India) → ✔ Linux-03 = VM_ID_3
+
+Linux-04 (West Europe)   → ❌ Skip
+
+Output
+
+{
+  Linux-01 = VM_ID_1
+  Linux-03 = VM_ID_3
+}
+
+Meaning
+
+Key
+ ↓
+One Value
+
+Only matching VMs are returned.
+
+====================================================================================
+
+Nested Map + if Condition
+====================================================================================
+
+Requirement
+
+Return complete VM details only for VMs deployed in "Central India".
+
+Syntax
+
+output "virtual_machines_output" {
+	value ={
+	  for vm in azurerm_linux_virtual_machine.vm :
+	  vm.name => {
+		id         = vm.id
+		private_ip = vm.private_ip
+		location   = vm.location
+	  }
+	  if vm.location == "Central India"
+	}
+
+Execution
+
+Linux-01 (Central India)
+        ↓
+✔ Return
+{
+  id         = VM_ID_1
+  private_ip = 10.0.1.4
+  location   = Central India
+}
+
+------------------------------------------------------------
+
+Linux-02 (East US)
+        ↓
+❌ Skip
+
+------------------------------------------------------------
+
+Linux-03 (Central India)
+        ↓
+✔ Return
+{
+  id         = VM_ID_3
+  private_ip = 10.0.1.6
+  location   = Central India
+}
+
+------------------------------------------------------------
+
+Linux-04 (West Europe)
+        ↓
+❌ Skip
+
+Output
+
+{
+  Linux-01 = {
+    id         = VM_ID_1
+    private_ip = 10.0.1.4
+    location   = Central India
+  }
+
+  Linux-03 = {
+    id         = VM_ID_3
+    private_ip = 10.0.1.6
+    location   = Central India
+  }
+}
+
+Meaning
+
+Key
+ ↓
+One Object
+ ↓
+id
+private_ip
+location
+
+Only matching VMs are returned.
+
+====================================================================================
+
+Remember
+
+Simple Map + if
+
+vm.name => vm.id
+        ↓
+Key → One Value
+
+------------------------------------------------------------
+
+Nested Map + if
+
+vm.name => {
+  id
+  private_ip
+  location
+}
+        ↓
+Key → One Object
+
+------------------------------------------------------------
+
+The 'if' condition only filters the result.
+
+It does NOT change whether the output is
+Simple Map or Nested Map.
+
+====================================================================================
+
+
+
+
+
+
+
+
+

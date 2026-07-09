@@ -1,0 +1,247 @@
+
+==========================================================================================
+Terraform For Expressions - Syntax Breakdown
+==========================================================================================
+
+Syntax
+
+[for item in collection : expression]
+
+Read It Like English
+
+"For every item in the collection, return the value defined in the expression."
+
+==========================================================================================
+1. for
+==========================================================================================
+
+Purpose      : Starts iterating over the collection.
+
+Think Like   : "Visit every item one by one."
+
+Terraform    : It tells Terraform to begin processing the collection.
+
+Internal     : Collection → VM1 → VM2 → VM3
+
+Remember     : ✔ Starts iteration.
+               ✔ Does NOT create resources.
+               ✔ Works only with existing data.
+
+Interview    : 'for' starts iterating over a collection.
+
+==========================================================================================
+2. item
+==========================================================================================
+
+Purpose      : Represents the CURRENT item being processed.
+
+Think Like   : Terraform picks ONE value from the collection and stores it
+               in a temporary variable.
+
+Terraform    : During every iteration, this variable points to only ONE item.
+
+Internal
+
+Collection
+
+VM1
+VM2
+VM3
+
+Execution
+
+Iteration 1 : item = VM1
+Iteration 2 : item = VM2
+Iteration 3 : item = VM3
+
+Notice       : The collection never changes.
+               Only the value stored inside 'item' changes.
+
+Important    : ✔ Not a Terraform keyword.
+               ✔ Temporary variable.
+               ✔ Exists only during the current iteration.
+               ✔ Name can be anything meaningful.
+
+Examples     : for vm in ...
+               for subnet in ...
+               for rule in ...
+               for nic in ...
+
+Interview    : 'item' is a temporary variable representing the current
+               element being processed.
+
+==========================================================================================
+3. in
+==========================================================================================
+
+Purpose      : Specifies the source collection.
+
+Think Like   : "Take one item at a time FROM this collection."
+
+Terraform    : Everything after 'in' is treated as the source collection.
+
+Example      : for vm in virtual_machines
+
+Meaning      : Take every VM from the virtual_machines collection.
+
+Remember     : ✔ 'in' never creates data.
+               ✔ It only tells Terraform where to read data from.
+
+Interview    : 'in' specifies the collection to iterate over.
+
+==========================================================================================
+4. collection
+==========================================================================================
+
+Purpose      : Contains all values that Terraform will process.
+
+Think Like   : A box containing multiple related items.
+
+Example
+
+virtual_machines
+
+├── VM1
+├── VM2
+└── VM3
+
+Terraform    : Reads one item at a time from this collection.
+
+Remember     : ✔ Collection is the input.
+               ✔ Collection is never modified.
+               ✔ Collection remains the same throughout the iteration.
+
+Interview    : A collection is the source of data for a For Expression.
+
+==========================================================================================
+5. :
+==========================================================================================
+
+Purpose      : Separates the iteration part from the returned value.
+
+Syntax
+
+for vm in virtual_machines : vm.name
+---------------------------   -------
+      Left Side               Right Side
+
+Left Side    : Which collection should Terraform iterate?
+
+Right Side   : What value should Terraform return for each item?
+
+Think Like   : "I have selected every VM.
+               Now tell me what you want from each VM."
+
+Internal
+
+Current Item : VM1
+Expression   : vm.name
+Returned     : Linux-01
+
+Current Item : VM2
+Expression   : vm.name
+Returned     : Linux-02
+
+Remember     : Everything after ':' becomes part of the NEW collection.
+
+Interview    : ':' separates iteration from the returned value.
+
+==========================================================================================
+6. expression
+==========================================================================================
+
+Purpose      : Defines the value that should be returned for the current item.
+
+Think Like   : "What information do you need from this item?"
+
+Examples
+
+vm.name         → Linux-01
+vm.id           → VM ID
+vm.private_ip   → Private IP
+subnet.id       → Subnet ID
+
+Terraform    : The returned value is added to the new collection.
+
+Remember     : ✔ Always works on the current item.
+               ✔ Decides what goes into the new collection.
+               ✔ Can return any required attribute.
+
+Interview    : The expression defines the value returned for each iteration.
+
+==========================================================================================
+Complete Internal Execution
+==========================================================================================
+
+Existing Collection
+
+[ VM1, VM2, VM3 ]
+
+Execution
+
+Iteration 1 : item = VM1  →  vm.name  →  Linux-01
+Iteration 2 : item = VM2  →  vm.name  →  Linux-02
+Iteration 3 : item = VM3  →  vm.name  →  Linux-03
+
+Returned Collection
+
+[
+  Linux-01,
+  Linux-02,
+  Linux-03
+]
+
+==========================================================================================
+Mental Model
+==========================================================================================
+
+Existing Collection
+        ↓
+Pick Current Item
+        ↓
+Store In Temporary Variable
+        ↓
+Read Required Value
+        ↓
+Return That Value
+        ↓
+Store In New Collection
+        ↓
+Repeat Until Collection Ends
+
+==========================================================================================
+Read The Syntax Like English
+==========================================================================================
+
+[for vm in virtual_machines : vm.name]
+
+↓
+
+For every VM
+inside the virtual_machines collection,
+return the VM name.
+
+==========================================================================================
+Remember
+==========================================================================================
+
+for         → Start processing the collection.
+
+item        → Current item (temporary variable).
+
+in          → Read items from this collection.
+
+collection  → Source containing all values.
+
+:           → Separates iteration from returned value.
+
+expression  → Defines what should be returned.
+
+==========================================================================================
+One-Line Summary
+==========================================================================================
+
+Terraform For Expressions iterate over an existing collection, process one item
+at a time, and return a new collection without creating any resources.
+
+==========================================================================================

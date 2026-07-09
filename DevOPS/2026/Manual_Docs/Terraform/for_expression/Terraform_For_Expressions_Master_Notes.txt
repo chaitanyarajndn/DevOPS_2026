@@ -1,0 +1,3309 @@
+
+========================================================================================================
+Terraform_For_Expressions_Master_Notes
+========================================================================================================
+
+
+01_Introduction_To_For_Expressions
+02_List_Comprehension
+03_Map_Comprehension
+04_Collections_Deep_Dive
+05_for_key_value_in_Collection
+06_Map_Access_(Index_Expression)
+07_Filtering_(if)
+08_Object_Transformation
+09_Module_Outputs
+10_Parent_Child_Data_Flow
+11_Module_for_each
+12_Resource_for_each_vs_Module_for_each
+13_Technical_Dictionary
+14_Golden_Rules
+
+
+========================================================================================================
+Terraform_For_Expressions_Master_Notes
+========================================================================================================
+
+What Is A For Expression?
+--------------------------------------------------------------------------------------------------------
+Creates a NEW collection from an EXISTING collection.
+Flow → Existing Collection → Process Each Item → Create New Collection
+Rule → Original Collection is NEVER modified.
+
+Why Terraform Introduced For Expressions?
+--------------------------------------------------------------------------------------------------------
+Problem → Terraform creates many resources but another resource/module usually needs only selected data.
+Examples → Resource Names | Resource IDs | Name→ID Mapping | Filtered Data | Modified Data
+Solution → For Expressions automatically prepare the required collection.
+
+Real Project Example
+--------------------------------------------------------------------------------------------------------
+Terraform Created
+
+VM01
+VM02
+VM03
+
+Requirement → VM Name → VM ID
+
+Manual Work
+
+VM01 = id1
+VM02 = id2
+VM03 = id3
+
+Terraform Output
+
+{
+  VM01 = id1
+  VM02 = id2
+  VM03 = id3
+}
+
+Where Are For Expressions Used?
+--------------------------------------------------------------------------------------------------------
+Outputs | Variables | Locals | Module Inputs | Resource Arguments | Dynamic Blocks | Filtering | Resource Mapping
+
+Supported Collections
+--------------------------------------------------------------------------------------------------------
+Collection      Purpose                             Example
+--------------------------------------------------------------------------------------------------------
+List            Ordered Values                      ["vm1","vm2"]
+Map             Key + Value                         {vm1=id1}
+Set             Unique Values                       toset(["80","443"])
+Object          Named Attributes                    {name="vm1",size="B2s"}
+
+Types Of For Expressions
+--------------------------------------------------------------------------------------------------------
+List Comprehension  → Creates New List
+Map Comprehension   → Creates New Map
+
+========================================================================================================
+List Comprehension
+========================================================================================================
+
+Purpose → Collection → Read Each Item → Create New List
+
+Syntax
+
+[
+  for ITEM in COLLECTION :
+  VALUE
+]
+
+Example
+
+output "vm_names" {
+  value = [
+    for vm in azurerm_linux_virtual_machine.vm :
+    vm.name
+  ]
+}
+
+Execution → VM Collection → Read vm.name → Create List<String>
+
+Result
+
+[
+  "vm01",
+  "vm02",
+  "vm03"
+]
+
+========================================================================================================
+Map Comprehension
+========================================================================================================
+
+Purpose → Collection → Read Each Item → Create New Map
+
+Syntax
+
+{
+  for ITEM in COLLECTION :
+  KEY => VALUE
+}
+
+Example
+
+output "vm_ids" {
+  value = {
+    for vm in azurerm_linux_virtual_machine.vm :
+    vm.name => vm.id
+  }
+}
+
+Execution → VM Collection → Read vm.name + vm.id → Create Map<String,String>
+
+Result
+
+{
+  vm01 = id1
+  vm02 = id2
+  vm03 = id3
+}
+
+========================================================================================================
+Understanding KEY => VALUE
+========================================================================================================
+
+KEY   → Unique Identifier
+VALUE → Information Stored Against That Key
+
+Example
+
+vm01 => id1
+
+Meaning
+
+KEY             VALUE
+------------------------------------------
+vm01            id1
+vm02            id2
+
+Execution → vm.name becomes KEY | vm.id becomes VALUE
+
+Result
+
+{
+  vm01 = id1
+  vm02 = id2
+}
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+Collection          → Group of Values
+List                → Ordered Collection
+Map                 → Key + Value Collection
+Set                 → Unique Collection
+Object              → Group of Named Attributes
+Iteration           → Processing One Item At A Time
+List Comprehension  → Creates New List
+Map Comprehension   → Creates New Map
+KEY                 → Unique Identifier
+VALUE               → Information Stored Against Key
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ Original Collection Never Changes
+✔ For Expression Always Creates New Collection
+✔ List Comprehension Returns List
+✔ Map Comprehension Returns Map
+✔ KEY Must Be Unique
+✔ VALUE Can Be Anything
+✔ Collections Can Be List | Map | Set | Object
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+Collections Deep Dive (List | Map | Set | Object)
+========================================================================================================
+
+What Is A Collection?
+--------------------------------------------------------------------------------------------------------
+Collection → A group of related values stored together.
+Purpose → Store multiple values in a single variable.
+
+Examples
+
+List   → ["vm01","vm02","vm03"]
+Map    → {vm01=id1,vm02=id2}
+Set    → {"80","443","22"}
+Object → {name="vm01",size="Standard_B2s"}
+
+========================================================================================================
+List
+========================================================================================================
+
+Definition → Ordered collection of values.
+
+Characteristics
+
+✔ Order is maintained.
+✔ Duplicate values allowed.
+✔ Access using Index.
+
+Example
+
+[
+  "vm01",
+  "vm02",
+  "vm03"
+]
+
+Access
+
+list[0] → vm01
+list[1] → vm02
+
+Real Terraform Example
+
+availability_zones = [
+  "Central India-1",
+  "Central India-2"
+]
+
+========================================================================================================
+Map
+========================================================================================================
+
+Definition → Collection of KEY + VALUE pairs.
+
+Characteristics
+
+✔ Every KEY must be unique.
+✔ VALUE can be any datatype.
+✔ Access using KEY.
+
+Example
+
+{
+  vm01 = id1
+  vm02 = id2
+}
+
+Access
+
+map["vm01"] → id1
+map["vm02"] → id2
+
+Real Terraform Example
+
+resource_group = {
+  rg-app = "Central India"
+  rg-db  = "East US"
+}
+
+========================================================================================================
+Set
+========================================================================================================
+
+Definition → Collection of UNIQUE values.
+
+Characteristics
+
+✔ No Duplicate Values.
+✔ No Index.
+✔ Order not guaranteed.
+
+Example
+
+toset([
+  "80",
+  "443",
+  "22"
+])
+
+Result
+
+{
+  "22",
+  "80",
+  "443"
+}
+
+========================================================================================================
+Object
+========================================================================================================
+
+Definition → Group of related attributes describing ONE thing.
+
+Think
+
+One Object = One Resource
+
+Example
+
+{
+  name     = "vm01"
+  size     = "Standard_B2s"
+  location = "Central India"
+}
+
+Meaning
+
+Attribute          Value
+------------------------------------------------------------
+name               vm01
+size               Standard_B2s
+location           Central India
+
+Access
+
+object.name
+object.size
+object.location
+
+========================================================================================================
+Map vs Object
+========================================================================================================
+
+Map                                      Object
+------------------------------------------------------------------------------------------
+Many Entries                             One Entry
+KEY → VALUE                              Attribute → Value
+Stores Multiple Items                    Describes One Item
+Access map["key"]                        Access object.attribute
+
+Example
+
+Map
+
+{
+  vm01 = id1
+  vm02 = id2
+}
+
+------------------------------------------------------------
+
+Object
+
+{
+  name = "vm01"
+  size = "Standard_B2s"
+}
+
+========================================================================================================
+Real Project Example
+========================================================================================================
+
+terraform.tfvars
+
+nic_map = {
+
+  nic_mapa = {
+
+    name      = "nic-web01"
+    subnet_id = "snet-web01"
+
+  }
+
+  nic_mapb = {
+
+    name      = "nic-web02"
+    subnet_id = "snet-web02"
+
+  }
+
+}
+
+Meaning
+
+nic_map        → Map
+nic_mapa       → Object
+name           → Object Attribute
+subnet_id      → Object Attribute
+
+========================================================================================================
+Visualization
+========================================================================================================
+
+nic_map (Map)
+
+├── nic_mapa (Object)
+│   ├── name
+│   ├── subnet_id
+│   ├── ipname
+│   └── location
+│
+└── nic_mapb (Object)
+    ├── name
+    ├── subnet_id
+    ├── ipname
+    └── location
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+Collection → Group of Values.
+List → Ordered Collection.
+Map → KEY + VALUE Collection.
+Set → Unique Collection.
+Object → Group of Related Attributes.
+Attribute → Property inside an Object.
+Index → Position inside a List.
+Key → Identifier inside a Map.
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ List uses Index.
+✔ Map uses KEY.
+✔ Object uses Attribute.
+✔ Set stores only Unique Values.
+✔ One Object usually represents One Resource.
+✔ One Map usually stores Multiple Objects.
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+Map Comprehension In Detail
+========================================================================================================
+
+Basic Syntax
+--------------------------------------------------------------------------------------------------------
+
+{
+  for ITEM in COLLECTION :
+  KEY => VALUE
+}
+
+Flow → Read Collection → Read Item → Generate KEY → Generate VALUE → Create New Map
+
+Example
+
+output "subnet_ids" {
+  value = {
+    for subnet in azurerm_subnet.SUBNET :
+    subnet.name => subnet.id
+  }
+}
+
+Execution
+
+Subnet Collection → Read subnet.name + subnet.id → Create Map
+
+Result
+
+{
+  snet-web01 = subnet_id_1
+  snet-web02 = subnet_id_2
+  AzureBastionSubnet = subnet_id_3
+}
+
+========================================================================================================
+Understanding ITEM
+========================================================================================================
+
+Syntax
+
+for ITEM in COLLECTION
+
+ITEM is a temporary variable.
+
+Example
+
+for subnet in azurerm_subnet.SUBNET
+
+Meaning
+
+COLLECTION                    ITEM
+---------------------------------------------------------
+azurerm_subnet.SUBNET         subnet
+
+Terraform reads one subnet at a time.
+
+Iteration
+
+Iteration 1 → subnet = snet-web01
+Iteration 2 → subnet = snet-web02
+Iteration 3 → subnet = AzureBastionSubnet
+
+========================================================================================================
+Understanding KEY
+========================================================================================================
+
+KEY identifies every element inside a Map.
+
+Example
+
+subnet.name => subnet.id
+
+Result
+
+KEY                     VALUE
+---------------------------------------------------------
+snet-web01              subnet_id_1
+snet-web02              subnet_id_2
+AzureBastionSubnet      subnet_id_3
+
+Rule
+
+✔ KEY should be unique.
+✘ Duplicate KEY is not allowed.
+
+========================================================================================================
+Understanding VALUE
+========================================================================================================
+
+VALUE is the information stored against every KEY.
+
+Example
+
+subnet.name => subnet.id
+
+KEY                     VALUE
+---------------------------------------------------------
+snet-web01              subnet_id_1
+snet-web02              subnet_id_2
+
+VALUE can be
+
+✔ String
+✔ Number
+✔ Boolean
+✔ List
+✔ Map
+✔ Object
+✔ Resource ID
+
+========================================================================================================
+Creating Different Maps
+========================================================================================================
+
+Example 1
+
+vm.name => vm.id
+
+Result
+
+{
+  vm01 = id1
+  vm02 = id2
+}
+
+--------------------------------------------------------
+
+Example 2
+
+vm.name => vm.private_ip_address
+
+Result
+
+{
+  vm01 = 10.0.1.4
+  vm02 = 10.0.1.5
+}
+
+--------------------------------------------------------
+
+Example 3
+
+vm.name => vm.size
+
+Result
+
+{
+  vm01 = Standard_B2s
+  vm02 = Standard_B4ms
+}
+
+Same Collection → Different Output Map
+
+========================================================================================================
+Real Azure Example
+========================================================================================================
+
+Subnet Module Output
+
+output "subnet_id" {
+  value = {
+    for subnet in azurerm_subnet.SUBNET :
+    subnet.name => subnet.id
+  }
+}
+
+Result
+
+{
+  AzureBastionSubnet = subnet_id_1
+  snet-web01         = subnet_id_2
+  snet-web02         = subnet_id_3
+}
+
+Why?
+
+Future Modules should access Subnet IDs using Subnet Name instead of remembering long Azure IDs.
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+ITEM              → Temporary variable used during iteration.
+KEY               → Unique identifier inside a Map.
+VALUE             → Information stored against the KEY.
+Map Creation      → Creating a new Map.
+Iteration         → Processing one item at a time.
+Map Output        → Final generated Map.
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+for key, value in Collection
+========================================================================================================
+
+Why Do We Need key, value?
+--------------------------------------------------------------------------------------------------------
+Sometimes VALUE alone is not enough. We also need the KEY of a Map.
+Purpose → Read KEY + VALUE together during iteration.
+
+Basic Syntax
+--------------------------------------------------------------------------------------------------------
+
+for KEY, VALUE in COLLECTION
+
+Meaning
+
+KEY   → Map Key
+VALUE → Data Stored Against That Key
+
+========================================================================================================
+Example 1
+========================================================================================================
+
+Map
+
+{
+  vm01 = id1
+  vm02 = id2
+}
+
+For Expression
+
+for vm_name, vm_id in vm_map
+
+Iteration
+
+Iteration 1 → vm_name="vm01" | vm_id="id1"
+Iteration 2 → vm_name="vm02" | vm_id="id2"
+
+========================================================================================================
+Terraform Syntax
+========================================================================================================
+
+{
+  for vm_name, vm_id in var.vm_map :
+  vm_name => vm_id
+}
+
+Flow → Read Map → Read Key → Read Value → Create New Map
+
+========================================================================================================
+Real Azure Example
+========================================================================================================
+
+Subnet Output
+
+{
+  AzureBastionSubnet = subnet_id_1
+  snet-web01         = subnet_id_2
+  snet-web02         = subnet_id_3
+}
+
+Iteration
+
+Iteration 1 → KEY="AzureBastionSubnet" | VALUE=subnet_id_1
+Iteration 2 → KEY="snet-web01"         | VALUE=subnet_id_2
+Iteration 3 → KEY="snet-web02"         | VALUE=subnet_id_3
+
+========================================================================================================
+When Do We Use Only VALUE?
+========================================================================================================
+
+Syntax
+
+for VALUE in COLLECTION
+
+Example
+
+for subnet in azurerm_subnet.SUBNET
+
+Meaning
+
+Terraform only gives one temporary variable.
+
+subnet → Complete Resource Object
+
+Access
+
+subnet.name
+subnet.id
+subnet.address_prefixes
+
+========================================================================================================
+When Do We Use KEY + VALUE?
+========================================================================================================
+
+Syntax
+
+for KEY, VALUE in MAP
+
+Example
+
+for subnet_name, subnet_id in module.subnet.subnet_id
+
+Result
+
+KEY                  VALUE
+------------------------------------------------------------
+AzureBastionSubnet   subnet_id_1
+snet-web01           subnet_id_2
+snet-web02           subnet_id_3
+
+========================================================================================================
+Difference
+========================================================================================================
+
+for VALUE in COLLECTION               for KEY, VALUE in MAP
+------------------------------------------------------------------------------------------
+One Variable                          Two Variables
+Resource/Object                       Map
+No Direct Key                         Direct Key Available
+VALUE Only                            KEY + VALUE
+
+========================================================================================================
+Real Project Usage
+========================================================================================================
+
+Scenario
+
+Subnet Module Output
+
+{
+  AzureBastionSubnet = subnet_id_1
+  snet-web01         = subnet_id_2
+  snet-web02         = subnet_id_3
+}
+
+Need
+
+Subnet Name + Subnet ID
+
+Solution
+
+for subnet_name, subnet_id in module.subnet.subnet_id
+
+Now
+
+subnet_name → "snet-web01"
+subnet_id   → subnet_id_2
+
+Both values are available in one iteration.
+
+========================================================================================================
+Common Mistakes
+========================================================================================================
+
+✘ Thinking KEY is Azure Resource Name.
+✔ KEY is simply the Map Key.
+
+------------------------------------------------------------
+
+✘ Thinking VALUE is always String.
+✔ VALUE can be String | Number | Boolean | List | Map | Object | Resource ID.
+
+------------------------------------------------------------
+
+✘ Thinking key,value works on every collection.
+✔ It works only when iterating over a Map.
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+KEY                 → Unique identifier inside a Map.
+VALUE               → Data stored against a KEY.
+Map Iteration       → Reading KEY and VALUE together.
+Temporary Variable  → Variable that exists only during iteration.
+Map Entry           → One KEY + VALUE pair.
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ key,value is used for Maps.
+✔ KEY and VALUE are available together.
+✔ VALUE can be any datatype.
+✔ KEY is usually used for naming or indexing.
+✔ VALUE is usually passed to another resource/module.
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+Map Access (Index Expression)
+========================================================================================================
+
+Why Do We Need Map Access?
+--------------------------------------------------------------------------------------------------------
+Sometimes we have the KEY but Terraform Resource needs the VALUE.
+Purpose → Read VALUE from a Map using its KEY.
+
+Flow → Map + KEY → Read VALUE
+
+========================================================================================================
+Basic Syntax
+========================================================================================================
+
+map["key"]
+
+Meaning
+
+Map                     → Collection
+"key"                   → Map Key
+Result                  → Corresponding Value
+
+========================================================================================================
+Example 1
+========================================================================================================
+
+Map
+
+{
+  vm01 = id1
+  vm02 = id2
+  vm03 = id3
+}
+
+Access
+
+vm_map["vm02"]
+
+Result
+
+id2
+
+Execution
+
+Map → KEY(vm02) → VALUE(id2)
+
+========================================================================================================
+Static Map Access
+========================================================================================================
+
+Definition → KEY is written manually.
+
+Syntax
+
+map["key"]
+
+Example
+
+module.subnet.subnet_id["snet-web01"]
+
+Execution
+
+Map → "snet-web01" → subnet_id_2
+
+Rule
+
+KEY never changes.
+
+========================================================================================================
+Dynamic Map Access
+========================================================================================================
+
+Definition → KEY comes from a variable or expression.
+
+Syntax
+
+map[variable]
+
+Example
+
+module.subnet.subnet_id[each.value.subnet_id]
+
+Execution
+
+each.value.subnet_id = "snet-web01"
+
+↓
+
+module.subnet.subnet_id["snet-web01"]
+
+↓
+
+subnet_id_2
+
+Flow
+
+Variable → KEY → Read VALUE → Return VALUE
+
+========================================================================================================
+Real Project Example
+========================================================================================================
+
+Subnet Module Output
+
+{
+  AzureBastionSubnet = subnet_id_1
+  snet-web01         = subnet_id_2
+  snet-web02         = subnet_id_3
+}
+
+NIC tfvars
+
+nic_map = {
+
+  nic_mapa = {
+
+    subnet_id = "snet-web01"
+
+  }
+
+}
+
+Parent Module
+
+subnet_id = module.subnet.subnet_id[each.value.subnet_id]
+
+Execution
+
+each.value.subnet_id ("snet-web01")
+        │
+        ▼
+module.subnet.subnet_id["snet-web01"]
+        │
+        ▼
+subnet_id_2
+        │
+        ▼
+Passed To Child Module
+
+========================================================================================================
+Why Did We Need Map Access?
+========================================================================================================
+
+NIC tfvars stores
+
+"snet-web01"
+
+Azure Resource requires
+
+subnet_id
+
+Map Access converts
+
+Subnet Name → Subnet ID
+
+========================================================================================================
+When Is Map Access Required?
+========================================================================================================
+
+Need Resource ID                     Need Map Access
+------------------------------------------------------------
+Subnet ID                            ✔ Yes
+NSG ID                               ✔ Yes
+Public IP ID                         ✔ Yes
+Load Balancer ID                     ✔ Yes
+
+Already Have Final Value             Need Map Access
+------------------------------------------------------------
+Resource Group Name                  ✘ No
+Location                             ✘ No
+VM Size                              ✘ No
+
+========================================================================================================
+Common Mistakes
+========================================================================================================
+
+✘ Thinking map["key"] returns KEY.
+✔ It always returns VALUE.
+
+------------------------------------------------------------
+
+✘ Thinking KEY must always be static.
+✔ KEY can be Dynamic.
+
+------------------------------------------------------------
+
+✘ Forgetting the KEY must exist inside the Map.
+✔ Invalid KEY produces an error.
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+Map Access        → Reading VALUE using KEY.
+Index Expression  → map["key"] syntax.
+Static Access     → Fixed KEY.
+Dynamic Access    → Variable KEY.
+Lookup Key        → KEY used to read VALUE.
+Returned Value    → VALUE returned from the Map.
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ Map Access always needs a KEY.
+✔ Result is always the VALUE.
+✔ Static KEY → map["key"]
+✔ Dynamic KEY → map[variable]
+✔ Parent Module usually performs Map Access.
+✔ Child Module usually receives the final VALUE.
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+Filtering (if)
+========================================================================================================
+
+What Is Filtering?
+--------------------------------------------------------------------------------------------------------
+Filtering means selecting only the required data from an existing collection.
+Flow → Existing Collection → Apply Condition → Keep Required Data → Create New Collection
+
+Why Do We Need Filtering?
+--------------------------------------------------------------------------------------------------------
+Real projects rarely need every resource.
+Sometimes we need
+
+✔ Only Linux VMs
+✔ Only Production Resources
+✔ Skip Azure Bastion Subnet
+✔ Only Enabled NSGs
+✔ Only Web Subnets
+
+Filtering removes unwanted items before Terraform creates the new collection.
+
+========================================================================================================
+Basic Syntax
+========================================================================================================
+
+[
+  for ITEM in COLLECTION :
+  VALUE
+  if CONDITION
+]
+
+------------------------------------------------------------
+
+{
+  for ITEM in COLLECTION :
+  KEY => VALUE
+  if CONDITION
+}
+
+Rule → if is always written after VALUE.
+
+========================================================================================================
+Example 1 - List Filtering
+========================================================================================================
+
+Input
+
+[
+  "vm01",
+  "vm02",
+  "vm03"
+]
+
+Condition
+
+Keep only vm02
+
+Result
+
+[
+  "vm02"
+]
+
+Flow
+
+Read vm01 → Reject
+Read vm02 → Keep
+Read vm03 → Reject
+
+========================================================================================================
+Example 2 - Map Filtering
+========================================================================================================
+
+Input
+
+{
+  vm01 = id1
+  vm02 = id2
+  vm03 = id3
+}
+
+Condition
+
+Keep only vm02
+
+Result
+
+{
+  vm02 = id2
+}
+
+Flow
+
+Read vm01 → Reject
+Read vm02 → Keep
+Read vm03 → Reject
+
+========================================================================================================
+Real Azure Example
+========================================================================================================
+
+Subnet Output
+
+{
+  AzureBastionSubnet = subnet_id_1
+  snet-web01         = subnet_id_2
+  snet-web02         = subnet_id_3
+}
+
+Requirement
+
+Skip Azure Bastion Subnet
+
+Result
+
+{
+  snet-web01 = subnet_id_2
+  snet-web02 = subnet_id_3
+}
+
+========================================================================================================
+Execution
+========================================================================================================
+
+Iteration 1 → KEY=AzureBastionSubnet → Condition=False → Skip
+Iteration 2 → KEY=snet-web01         → Condition=True  → Keep
+Iteration 3 → KEY=snet-web02         → Condition=True  → Keep
+
+Result
+
+{
+  snet-web01 = subnet_id_2
+  snet-web02 = subnet_id_3
+}
+
+========================================================================================================
+Common Conditions
+========================================================================================================
+
+Equal To                  ==
+
+Not Equal To              !=
+
+AND                       &&
+
+OR                        ||
+
+NOT                       !
+
+========================================================================================================
+Real Project Usage
+========================================================================================================
+
+Scenario
+
+One NSG should be attached only to
+
+✔ snet-web01
+✔ snet-web02
+
+Do NOT attach to
+
+✘ AzureBastionSubnet
+
+Filtering removes Bastion before Terraform starts creating NSG Associations.
+
+========================================================================================================
+Benefits
+========================================================================================================
+
+✔ Removes unwanted resources
+✔ Keeps configuration clean
+✔ Avoids unnecessary resource creation
+✔ Useful with for_each
+✔ Useful with For Expressions
+
+========================================================================================================
+Common Mistakes
+========================================================================================================
+
+✘ Thinking Filtering modifies the original collection.
+✔ Filtering creates a NEW collection.
+
+------------------------------------------------------------
+
+✘ Thinking skipped resources are deleted.
+✔ They are simply not included in the new collection.
+
+------------------------------------------------------------
+
+✘ Putting if before VALUE.
+✔ if always comes after VALUE.
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+Filtering         → Selecting required items only.
+Condition         → Rule used to decide Keep or Skip.
+Predicate         → Expression returning True or False.
+Keep              → Included in new collection.
+Reject            → Excluded from new collection.
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ Filtering never changes the original collection.
+✔ A new filtered collection is always created.
+✔ if is evaluated for every iteration.
+✔ True → Keep.
+✔ False → Skip.
+✔ Very common with for_each and Module Outputs.
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+Object Transformation
+========================================================================================================
+
+What Is Object Transformation?
+--------------------------------------------------------------------------------------------------------
+Object Transformation means creating a NEW Object by changing an EXISTING Object.
+Flow → Existing Object → Modify Structure → Create New Object
+Rule → Original Object is NEVER modified.
+
+========================================================================================================
+Why Do We Need Object Transformation?
+--------------------------------------------------------------------------------------------------------
+Sometimes one module/resource does not need the complete object.
+
+Current Object
+
+{
+  name     = "vm01"
+  size     = "Standard_B2s"
+  location = "Central India"
+  os       = "Linux"
+}
+
+Another module needs only
+
+{
+  name = "vm01"
+  os   = "Linux"
+}
+
+Instead of creating this object manually, Terraform creates it using Object Transformation.
+
+========================================================================================================
+Basic Idea
+========================================================================================================
+
+Old Object
+
+{
+  name
+  size
+  location
+  os
+}
+
+↓
+
+New Object
+
+{
+  name
+  os
+}
+
+Structure Changed
+
+Object Transformation Completed.
+
+========================================================================================================
+Transformation Types
+========================================================================================================
+
+Object → Object
+Object → Map
+Map    → Object
+Object → List
+List   → Map
+
+========================================================================================================
+Object → Object
+========================================================================================================
+
+Input
+
+{
+  name     = "vm01"
+  size     = "Standard_B2s"
+  location = "Central India"
+}
+
+Output
+
+{
+  vm_name = "vm01"
+  vm_size = "Standard_B2s"
+}
+
+Changes
+
+✔ Removed location
+✔ Renamed attributes
+✔ New object created
+
+========================================================================================================
+Object → Map
+========================================================================================================
+
+Input
+
+{
+  name = "vm01"
+  id   = "id1"
+}
+
+Output
+
+{
+  vm01 = id1
+}
+
+Flow
+
+Read Object → Select Attributes → Create Map
+
+========================================================================================================
+Map → Object
+========================================================================================================
+
+Input
+
+{
+  vm01 = id1
+}
+
+Output
+
+{
+  name = "vm01"
+  id   = "id1"
+}
+
+Flow
+
+Read Map → Build New Object
+
+========================================================================================================
+Object → List
+========================================================================================================
+
+Input
+
+{
+  name = "vm01"
+  size = "Standard_B2s"
+}
+
+Output
+
+[
+  "vm01",
+  "Standard_B2s"
+]
+
+========================================================================================================
+Real Azure Example
+========================================================================================================
+
+Terraform Resource
+
+{
+  name
+  id
+  location
+  address_prefixes
+  service_endpoints
+  delegation
+}
+
+Requirement
+
+Another module needs only
+
+{
+  name
+  id
+}
+
+Result
+
+New simplified Object created.
+
+Original Resource Object remains unchanged.
+
+========================================================================================================
+What Is NOT Object Transformation?
+========================================================================================================
+
+Example
+
+module.subnet.subnet_id["snet-web01"]
+
+This is NOT Transformation.
+
+Reason
+
+Nothing changed.
+
+Map
+
+↓
+
+Read Value
+
+↓
+
+Return Value
+
+Only data was accessed.
+
+========================================================================================================
+What IS Object Transformation?
+========================================================================================================
+
+Example
+
+Old Object
+
+{
+  name
+  id
+  location
+}
+
+↓
+
+New Object
+
+{
+  name
+  id
+}
+
+Structure changed.
+
+Therefore
+
+Transformation happened.
+
+========================================================================================================
+Benefits
+========================================================================================================
+
+✔ Remove unnecessary data.
+✔ Rename attributes.
+✔ Simplify objects.
+✔ Prepare data for another module.
+✔ Reduce complexity.
+
+========================================================================================================
+Common Mistakes
+========================================================================================================
+
+✘ Thinking reading a value is Transformation.
+✔ Reading is only Map Access.
+
+------------------------------------------------------------
+
+✘ Thinking original object changes.
+✔ Original object never changes.
+
+------------------------------------------------------------
+
+✘ Thinking Transformation edits existing object.
+✔ Transformation always creates a NEW object.
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+Transformation      → Changing the structure of data.
+Input Object        → Original object.
+Output Object       → Newly created object.
+Attribute           → Property inside an object.
+Projection          → Selecting only required attributes.
+Reshaping           → Changing object structure.
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ Transformation creates a NEW object.
+✔ Original object never changes.
+✔ Reading data is NOT Transformation.
+✔ Changing structure IS Transformation.
+✔ Removing attributes is Transformation.
+✔ Renaming attributes is Transformation.
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+Module Outputs
+========================================================================================================
+
+What Is A Module Output?
+--------------------------------------------------------------------------------------------------------
+Module Output exposes selected data from a Child Module to its Parent Module.
+Flow → Child Module → Output → Parent Module
+
+Rule → Parent Module can only access values exposed through Outputs.
+
+========================================================================================================
+Why Do We Need Outputs?
+--------------------------------------------------------------------------------------------------------
+Resources created inside a Child Module are private.
+
+Parent Module cannot directly access them.
+
+Child Module must explicitly expose required values using Output.
+
+========================================================================================================
+Without Output
+========================================================================================================
+
+Parent Module
+
+        │
+
+        ▼
+
+Child Module
+
+        │
+
+        ▼
+
+Terraform Resource
+
+Access
+
+✘ Not Allowed
+
+Reason
+
+Parent cannot directly access resources inside another module.
+
+========================================================================================================
+With Output
+========================================================================================================
+
+Child Module
+
+↓
+
+Terraform Resource
+
+↓
+
+Output
+
+↓
+
+Parent Module
+
+↓
+
+Another Child Module
+
+Flow
+
+Resource → Output → Parent → Next Module
+
+========================================================================================================
+Real Azure Example
+========================================================================================================
+
+Subnet Module creates
+
+AzureBastionSubnet
+snet-web01
+snet-web02
+
+NIC Module needs
+
+Subnet ID
+
+Solution
+
+Subnet Module exposes
+
+subnet_id
+
+using Output.
+
+========================================================================================================
+Example
+========================================================================================================
+
+Child Module
+
+output "subnet_id" {
+
+  value = {
+
+    for subnet in azurerm_subnet.SUBNET :
+
+    subnet.name => subnet.id
+
+  }
+
+}
+
+Parent Module
+
+module.subnet.subnet_id
+
+Result
+
+{
+
+  AzureBastionSubnet = subnet_id_1
+
+  snet-web01         = subnet_id_2
+
+  snet-web02         = subnet_id_3
+
+}
+
+========================================================================================================
+Output Data Flow
+========================================================================================================
+
+Terraform Resource → Output → Parent Module → Another Child Module
+
+Example
+
+Subnet Resource
+        │
+        ▼
+Output "subnet_id"
+        │
+        ▼
+module.subnet.subnet_id
+        │
+        ▼
+NIC Module
+
+========================================================================================================
+Output Can Return
+========================================================================================================
+
+✔ String
+✔ Number
+✔ Boolean
+✔ List
+✔ Map
+✔ Set
+✔ Object
+✔ Resource ID
+
+========================================================================================================
+Real Project Example
+========================================================================================================
+
+Subnet Module Output
+
+{
+
+  AzureBastionSubnet = subnet_id_1
+
+  snet-web01         = subnet_id_2
+
+  snet-web02         = subnet_id_3
+
+}
+
+Parent Module
+
+module.subnet.subnet_id
+
+↓
+
+Map Access
+
+module.subnet.subnet_id["snet-web01"]
+
+↓
+
+subnet_id_2
+
+↓
+
+Passed To NIC Module
+
+========================================================================================================
+Common Mistakes
+========================================================================================================
+
+✘ Parent can directly access Child Resources.
+✔ Parent can access only Outputs.
+
+------------------------------------------------------------
+
+✘ Every Resource should have Output.
+✔ Create Outputs only when another module needs that value.
+
+------------------------------------------------------------
+
+✘ Output changes the Resource.
+✔ Output only exposes existing values.
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+Output              → Exposes data from a Child Module.
+Expose              → Make data available outside the module.
+Consumer            → Module receiving the Output.
+Producer            → Module creating the Output.
+Interface           → Communication point between Parent and Child.
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ Child creates Resources.
+✔ Child exposes required values using Outputs.
+✔ Parent reads Outputs.
+✔ Parent passes required values to another Child.
+✔ Outputs define the communication interface between modules.
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+Parent → Child Data Flow
+========================================================================================================
+
+What Is Parent → Child Data Flow?
+--------------------------------------------------------------------------------------------------------
+Data Flow means passing values from one Module to another.
+Flow → Child Module → Output → Parent Module → Another Child Module
+
+Rule → Child Modules never communicate directly.
+
+========================================================================================================
+Communication Architecture
+========================================================================================================
+
+Child Module A ──► Parent Module ──► Child Module B
+
+✔ Allowed
+
+------------------------------------------------------------
+
+Child Module A ──► Child Module B
+
+✘ Not Allowed
+
+Reason
+
+Child Modules cannot directly access each other.
+
+========================================================================================================
+Why Parent Module?
+========================================================================================================
+
+Parent Module controls the entire infrastructure.
+
+Responsibilities
+
+✔ Calls Child Modules
+✔ Receives Outputs
+✔ Reads Values
+✔ Passes Values
+✔ Controls Execution Order
+
+========================================================================================================
+Real Project Architecture
+========================================================================================================
+
+Subnet Module ──► Parent Module ──► NIC Module
+
+Subnet Module creates Subnets.
+
+NIC Module creates NICs.
+
+NIC Module needs Subnet ID.
+
+Solution
+
+Subnet Module exposes Output.
+
+Parent receives Output.
+
+Parent passes required Subnet ID to NIC Module.
+
+========================================================================================================
+Complete Flow
+========================================================================================================
+
+Step 1
+
+Subnet Module
+
+↓
+
+Creates
+
+AzureBastionSubnet
+snet-web01
+snet-web02
+
+------------------------------------------------------------
+
+Step 2
+
+Subnet Module Output
+
+{
+
+  AzureBastionSubnet = subnet_id_1
+
+  snet-web01         = subnet_id_2
+
+  snet-web02         = subnet_id_3
+
+}
+
+------------------------------------------------------------
+
+Step 3
+
+Parent Receives
+
+module.subnet.subnet_id
+
+------------------------------------------------------------
+
+Step 4
+
+Parent Reads Required Value
+
+module.subnet.subnet_id["snet-web01"]
+
+------------------------------------------------------------
+
+Step 5
+
+Result
+
+subnet_id_2
+
+------------------------------------------------------------
+
+Step 6
+
+Parent Passes
+
+subnet_id = subnet_id_2
+
+------------------------------------------------------------
+
+Step 7
+
+NIC Module Receives
+
+var.subnet_id
+
+------------------------------------------------------------
+
+Step 8
+
+NIC Resource Uses
+
+subnet_id = var.subnet_id
+
+========================================================================================================
+Important Observation
+========================================================================================================
+
+Child Module
+
+Never knows
+
+Where the value came from.
+
+Child only receives
+
+var.subnet_id
+
+========================================================================================================
+Another Example
+========================================================================================================
+
+Public IP Module
+
+↓
+
+Output
+
+public_ip_id
+
+↓
+
+Parent
+
+↓
+
+Bastion Module
+
+========================================================================================================
+Another Example
+========================================================================================================
+
+NSG Module
+
+↓
+
+Output
+
+nsg_id
+
+↓
+
+Parent
+
+↓
+
+NSG Association Module
+
+========================================================================================================
+Parent Responsibilities
+========================================================================================================
+
+✔ Receive Outputs
+✔ Read Required Values
+✔ Perform Map Access
+✔ Pass Final Values
+✔ Connect Modules
+
+========================================================================================================
+Child Responsibilities
+========================================================================================================
+
+✔ Receive Variables
+✔ Create Resources
+✔ Return Outputs
+
+Child should NEVER
+
+✘ Read another Child Module
+✘ Call another Child Module
+✘ Know where values came from
+
+========================================================================================================
+Real NIC Example
+========================================================================================================
+
+terraform.tfvars
+
+subnet_id = "snet-web01"
+
+↓
+
+Parent
+
+module.subnet.subnet_id["snet-web01"]
+
+↓
+
+subnet_id_2
+
+↓
+
+Child
+
+var.subnet_id
+
+↓
+
+Azure NIC
+
+========================================================================================================
+Common Mistakes
+========================================================================================================
+
+✘ Child Module directly accessing another Child Module.
+
+------------------------------------------------------------
+
+✘ Parent passing complete objects when Child needs only one value.
+
+------------------------------------------------------------
+
+✘ Child performing unnecessary lookups.
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+Data Flow        → Movement of values between modules.
+Producer         → Module creating data.
+Consumer         → Module using data.
+Interface        → Variables and Outputs used for communication.
+Dependency Chain → Sequence of module communication.
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ Child Modules never communicate directly.
+✔ Parent Module is the communication hub.
+✔ Child exposes Outputs.
+✔ Parent receives Outputs.
+✔ Parent passes only required values.
+✔ Child remains independent and reusable.
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+Module for_each
+========================================================================================================
+
+What Is Module for_each?
+--------------------------------------------------------------------------------------------------------
+Module for_each creates multiple Child Module instances from a single Module block.
+Flow → Collection → Parent Module(for_each) → Multiple Child Module Instances
+
+Why Do We Need Module for_each?
+--------------------------------------------------------------------------------------------------------
+Instead of writing the same Module multiple times, Parent Module automatically creates multiple Child Modules.
+
+Without Module for_each
+
+module "nic01" { ... }
+module "nic02" { ... }
+module "nic03" { ... }
+
+Problem → Duplicate Code | Difficult Maintenance | Poor Scalability
+
+With Module for_each
+
+module "network_interface" {
+  for_each = var.nic_map
+  ...
+}
+
+Result → Terraform automatically creates one Child Module per Map Object.
+
+========================================================================================================
+Execution
+========================================================================================================
+
+terraform.tfvars → nic_map(2 Objects) → Parent Module(for_each) → Child Module #1 + Child Module #2
+
+========================================================================================================
+Real Project Example
+========================================================================================================
+
+nic_map
+
+{
+  nic_mapa = {
+    name      = "nic-web01"
+    subnet_id = "snet-web01"
+  }
+
+  nic_mapb = {
+    name      = "nic-web02"
+    subnet_id = "snet-web02"
+  }
+}
+
+Parent Module
+
+for_each = var.nic_map
+
+Terraform Creates
+
+network_interface["nic_mapa"]
+network_interface["nic_mapb"]
+
+========================================================================================================
+Iteration
+========================================================================================================
+
+Iteration          each.key          each.value
+--------------------------------------------------------------------------------------------------------
+1                  nic_mapa          {name="nic-web01",subnet_id="snet-web01",...}
+2                  nic_mapb          {name="nic-web02",subnet_id="snet-web02",...}
+
+========================================================================================================
+Parent Module Responsibilities
+========================================================================================================
+
+✔ Read Collection
+✔ Perform Iteration
+✔ Read each.key
+✔ Read each.value
+✔ Perform Map Access
+✔ Pass Final Values
+✔ Create Child Module Instances
+
+Flow
+
+Collection → each.key + each.value → Read Required Values → Pass Variables → Child Module
+
+========================================================================================================
+Child Module Responsibilities
+========================================================================================================
+
+✔ Receive Variables
+✔ Create One Resource
+✔ Return Outputs
+
+Child Module DOES NOT
+
+✘ Perform for_each
+✘ Read Collection
+✘ Read each.key
+✘ Read each.value
+✘ Know about nic_map
+
+Flow
+
+Variables → Resource Creation → Output
+
+========================================================================================================
+Real Project Flow
+========================================================================================================
+
+nic_map → Parent(for_each) → each.value.subnet_id("snet-web01") → module.subnet.subnet_id["snet-web01"] → subnet_id_2 → Child Module(var.subnet_id) → Azure NIC
+
+========================================================================================================
+Variable Types
+========================================================================================================
+
+Parent Module
+
+variable "nic_map"
+
+↓
+
+map(object)
+
+------------------------------------------------------------
+
+Child Module
+
+variable "name"
+
+↓
+
+string
+
+------------------------------------------------------------
+
+variable "subnet_id"
+
+↓
+
+string
+
+Reason → Parent breaks one Object into individual variables before passing them to Child.
+
+========================================================================================================
+Advantages
+========================================================================================================
+
+✔ No Duplicate Module Blocks
+✔ Reusable Modules
+✔ Clean Parent Module
+✔ Scalable Design
+✔ Enterprise Standard
+✔ Easy Maintenance
+
+========================================================================================================
+Common Mistakes
+========================================================================================================
+
+✘ Declaring map(object) again inside Child Module.
+
+✔ Child receives individual variables.
+
+------------------------------------------------------------
+
+✘ Using each.value inside Child Module.
+
+✔ each exists only inside Parent Module.
+
+------------------------------------------------------------
+
+✘ Passing complete Collection to Child.
+
+✔ Pass only required values.
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+Module Instance     → One copy of a Child Module.
+Iteration           → One execution of Module for_each.
+Collection          → Map used by for_each.
+Orchestrator        → Parent Module controlling all Child Modules.
+Consumer            → Child Module receiving values.
+Producer            → Parent Module passing values.
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ Parent performs for_each.
+✔ Parent owns each.key and each.value.
+✔ Child never sees the Collection.
+✔ Child receives only final values.
+✔ One Iteration = One Child Module Instance.
+✔ One Child Module Instance = One Resource (or one logical unit).
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+Resource_for_each_vs_Module_for_each
+========================================================================================================
+
+Why Compare Both?
+--------------------------------------------------------------------------------------------------------
+Both create multiple resources but their architecture is different.
+Choosing the correct approach makes Terraform Modules reusable, scalable and easy to maintain.
+
+========================================================================================================
+Resource for_each
+========================================================================================================
+
+Definition
+--------------------------------------------------------------------------------------------------------
+for_each is applied directly on a Resource Block.
+
+Flow
+
+Collection → Child Module(Resource for_each) → Multiple Resources
+
+Example
+
+resource "azurerm_network_interface" "NIC" {
+  for_each = var.nic_map
+}
+
+Result
+
+NIC Resource #1
+NIC Resource #2
+NIC Resource #3
+
+========================================================================================================
+Module for_each
+========================================================================================================
+
+Definition
+--------------------------------------------------------------------------------------------------------
+for_each is applied on a Module Block.
+
+Flow
+
+Collection → Parent Module(for_each) → Multiple Child Module Instances → Resources
+
+Example
+
+module "network_interface" {
+  for_each = var.nic_map
+}
+
+Result
+
+Module Instance #1 → NIC Resource
+Module Instance #2 → NIC Resource
+Module Instance #3 → NIC Resource
+
+========================================================================================================
+Execution Comparison
+========================================================================================================
+
+Resource for_each
+
+terraform.tfvars → Child Module(for_each) → Multiple Resources
+
+------------------------------------------------------------
+
+Module for_each
+
+terraform.tfvars → Parent Module(for_each) → Multiple Child Modules → Multiple Resources
+
+========================================================================================================
+Where Does Iteration Happen?
+========================================================================================================
+
+Type                      Iteration Location
+--------------------------------------------------------------------------------------------------------
+Resource for_each         Child Module
+Module for_each           Parent Module
+
+========================================================================================================
+Where Is each Available?
+========================================================================================================
+
+Type                      each.key / each.value Available In
+--------------------------------------------------------------------------------------------------------
+Resource for_each         Child Resource
+Module for_each           Parent Module
+
+========================================================================================================
+Collection Ownership
+========================================================================================================
+
+Resource for_each
+
+Collection stays inside Child Module.
+
+Child understands
+
+✔ Map
+✔ Object
+✔ each.key
+✔ each.value
+
+------------------------------------------------------------
+
+Module for_each
+
+Collection stays inside Parent Module.
+
+Child never sees
+
+✘ Map
+✘ Object
+✘ each.key
+✘ each.value
+
+Child receives only final variables.
+
+========================================================================================================
+Variable Comparison
+========================================================================================================
+
+Resource for_each
+
+Parent
+
+nic = var.nic_map
+
+Child Variable
+
+Variable              Type
+------------------------------------------------------------
+nic                   map(object)
+
+------------------------------------------------------------
+
+Module for_each
+
+Parent
+
+Expression                                              Passed Value
+--------------------------------------------------------------------------------------------------------
+each.value.name                                         string
+each.value.location                                     string
+each.value.resource_group_name                          string
+module.subnet.subnet_id[each.value.subnet_id]           string (Subnet ID)
+each.value.ipname                                       string
+each.value.private_ip_address_allocation                string
+
+Child Variables
+
+Variable                              Type
+--------------------------------------------------------------------------------------------------------
+name                                  string
+location                              string
+resource_group_name                   string
+subnet_id                             string
+ipname                                string
+private_ip_address_allocation          string
+
+========================================================================================================
+Responsibilities
+========================================================================================================
+
+Resource for_each
+
+Component              Responsibility
+--------------------------------------------------------------------------------------------------------
+Parent                 Pass Collection
+Child                  Iterate | Read each.value | Create Resources
+
+------------------------------------------------------------
+
+Module for_each
+
+Component              Responsibility
+--------------------------------------------------------------------------------------------------------
+Parent                 Iterate | Read each.value | Perform Map Access | Pass Final Values
+Child                  Receive Variables | Create Resource | Return Output
+
+========================================================================================================
+Real Project Comparison
+========================================================================================================
+
+Resource for_each
+
+terraform.tfvars → Parent(nic_map) → Child(for_each) → each.value.subnet_id → Create NIC
+
+------------------------------------------------------------
+
+Module for_each
+
+terraform.tfvars → Parent(for_each) → each.value.subnet_id → module.subnet.subnet_id["snet-web01"] → subnet_id_2 → Child(var.subnet_id) → Create NIC
+
+========================================================================================================
+Advantages
+========================================================================================================
+
+Resource for_each
+
+✔ Less Parent Logic
+✔ Good For Small Modules
+
+------------------------------------------------------------
+
+Module for_each
+
+✔ Clean Child Module
+✔ Better Reusability
+✔ Better SRP
+✔ Enterprise Standard
+✔ Easy Testing
+✔ Better Module Design
+
+========================================================================================================
+Disadvantages
+========================================================================================================
+
+Resource for_each
+
+✘ Child handles iteration.
+✘ Child depends on Collection structure.
+✘ Lower reusability.
+
+------------------------------------------------------------
+
+Module for_each
+
+✘ Parent contains more logic.
+✘ Slightly more code in Parent.
+
+========================================================================================================
+When Should We Use?
+========================================================================================================
+
+Project Type                     Recommended
+--------------------------------------------------------------------------------------------------------
+Small Projects                   Resource for_each
+Enterprise Modules               Module for_each
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+Term                     Meaning
+--------------------------------------------------------------------------------------------------------
+Resource Iteration       Iteration inside Resource Block.
+Module Iteration         Iteration inside Module Block.
+Module Instance          One Child Module created by Module for_each.
+Collection Ownership     Module responsible for the Collection.
+SRP                      Single Responsibility Principle.
+Orchestrator             Parent Module coordinating Child Modules.
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ Resource for_each → Smart Child
+✔ Module for_each → Smart Parent
+✔ Parent performs Mapping
+✔ Parent passes Final Values
+✔ Child receives only required Variables
+✔ Enterprise Terraform prefers Module for_each for reusable modules
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+Terraform_For_Expressions_Golden_Rules
+========================================================================================================
+
+Collection Rules
+--------------------------------------------------------------------------------------------------------
+
+✔ For Expression always reads an Existing Collection.
+✔ Original Collection is NEVER modified.
+✔ A NEW Collection is always created.
+
+========================================================================================================
+List Rules
+========================================================================================================
+
+✔ List uses Index.
+✔ Order is maintained.
+✔ Duplicate values are allowed.
+✔ Access using list[index].
+
+========================================================================================================
+Map Rules
+========================================================================================================
+
+✔ Map stores KEY + VALUE.
+✔ Every KEY must be unique.
+✔ VALUE can be any datatype.
+✔ Access using map["key"].
+
+========================================================================================================
+Object Rules
+========================================================================================================
+
+✔ Object represents ONE entity/resource.
+✔ Object stores Attributes.
+✔ Access using object.attribute.
+
+========================================================================================================
+Map Comprehension Rules
+========================================================================================================
+
+✔ Creates a NEW Map.
+✔ Uses KEY => VALUE.
+✔ KEY should always be unique.
+
+========================================================================================================
+List Comprehension Rules
+========================================================================================================
+
+✔ Creates a NEW List.
+✔ Returns only VALUE.
+✔ No KEY is created.
+
+========================================================================================================
+Map Access Rules
+========================================================================================================
+
+✔ map["key"] always returns VALUE.
+✔ KEY can be Static.
+✔ KEY can be Dynamic.
+✔ Invalid KEY returns an error.
+
+========================================================================================================
+Filtering Rules
+========================================================================================================
+
+✔ Filtering never changes the original collection.
+✔ if is evaluated for every iteration.
+✔ True → Keep.
+✔ False → Skip.
+
+========================================================================================================
+Module Output Rules
+========================================================================================================
+
+✔ Child creates Resources.
+✔ Child exposes Outputs.
+✔ Parent reads Outputs.
+✔ Parent passes only required values.
+
+========================================================================================================
+Parent → Child Rules
+========================================================================================================
+
+✔ Child Modules never communicate directly.
+✔ Parent Module is the communication hub.
+✔ Parent receives Outputs.
+✔ Parent performs Map Access.
+✔ Parent passes final values.
+✔ Child only consumes variables.
+
+========================================================================================================
+Module for_each Rules
+========================================================================================================
+
+✔ Parent performs Iteration.
+✔ Parent owns each.key.
+✔ Parent owns each.value.
+✔ Child never sees the Collection.
+✔ Child receives only final variables.
+✔ One Iteration = One Module Instance.
+
+========================================================================================================
+Resource for_each Rules
+========================================================================================================
+
+✔ Child performs Iteration.
+✔ Child owns each.key.
+✔ Child owns each.value.
+✔ Parent passes complete Collection.
+
+========================================================================================================
+Enterprise Design Rules
+========================================================================================================
+
+✔ Keep Parent Smart.
+✔ Keep Child Simple.
+✔ Child should have Single Responsibility.
+✔ Pass only required values.
+✔ Create Outputs only when needed.
+✔ Avoid duplicate logic.
+✔ Design reusable modules.
+
+========================================================================================================
+Interview Rules
+========================================================================================================
+
+✔ Know the difference between List, Map, Set and Object.
+✔ Know when to use Resource for_each.
+✔ Know when to use Module for_each.
+✔ Understand Parent → Child Data Flow.
+✔ Understand Map Access.
+✔ Understand Module Outputs.
+✔ Understand Filtering.
+✔ Understand KEY vs VALUE.
+
+========================================================================================================
+One Line Summary
+========================================================================================================
+
+Collection → For Expression → Output → Parent Module → Map Access → Child Module → Azure Resource
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================
+Terraform Technical Dictionary
+========================================================================================================
+
+Collection
+--------------------------------------------------------------------------------------------------------
+Meaning      → Group of related values.
+Why Used     → Store multiple values in one variable.
+Real Example → nic_map
+
+========================================================================================================
+
+List
+--------------------------------------------------------------------------------------------------------
+Meaning      → Ordered collection of values.
+Why Used     → Store multiple values where order matters.
+Real Example → ["vm01","vm02","vm03"]
+
+========================================================================================================
+
+Map
+--------------------------------------------------------------------------------------------------------
+Meaning      → Collection of KEY + VALUE pairs.
+Why Used     → Quickly access a VALUE using its KEY.
+Real Example → {vm01=id1,vm02=id2}
+
+========================================================================================================
+
+Set
+--------------------------------------------------------------------------------------------------------
+Meaning      → Collection of unique values.
+Why Used     → Remove duplicate values.
+Real Example → toset(["80","443","80"])
+
+========================================================================================================
+
+Object
+--------------------------------------------------------------------------------------------------------
+Meaning      → Group of related attributes representing one entity.
+Why Used     → Describe one resource.
+Real Example → {name="vm01",size="Standard_B2s"}
+
+========================================================================================================
+
+Attribute
+--------------------------------------------------------------------------------------------------------
+Meaning      → Property inside an Object.
+Why Used     → Store information about an object.
+Real Example → object.name
+
+========================================================================================================
+
+Key
+--------------------------------------------------------------------------------------------------------
+Meaning      → Unique identifier inside a Map.
+Why Used     → Read the required VALUE.
+Real Example → "snet-web01"
+
+========================================================================================================
+
+Value
+--------------------------------------------------------------------------------------------------------
+Meaning      → Information stored against a KEY.
+Why Used     → Used by Terraform Resources.
+Real Example → subnet_id_2
+
+========================================================================================================
+
+Iteration
+--------------------------------------------------------------------------------------------------------
+Meaning      → Processing one item at a time.
+Why Used     → Create multiple resources from one block.
+Real Example → for_each
+
+========================================================================================================
+
+For Expression
+--------------------------------------------------------------------------------------------------------
+Meaning      → Creates a NEW collection from an EXISTING collection.
+Why Used     → Prepare data for Outputs, Modules and Resources.
+Real Example → vm.name => vm.id
+
+========================================================================================================
+
+List Comprehension
+--------------------------------------------------------------------------------------------------------
+Meaning      → Creates a NEW List.
+Why Used     → Extract selected values.
+Real Example → [for vm in vm_list : vm.name]
+
+========================================================================================================
+
+Map Comprehension
+--------------------------------------------------------------------------------------------------------
+Meaning      → Creates a NEW Map.
+Why Used     → Create KEY → VALUE mappings.
+Real Example → {for vm in vm_list : vm.name => vm.id}
+
+========================================================================================================
+
+Map Access
+--------------------------------------------------------------------------------------------------------
+Meaning      → Read VALUE using a KEY.
+Why Used     → Convert Name into Resource ID.
+Real Example → module.subnet.subnet_id["snet-web01"]
+
+========================================================================================================
+
+Index Expression
+--------------------------------------------------------------------------------------------------------
+Meaning      → Terraform syntax used to access Map values.
+Why Used     → Read VALUE using KEY.
+Real Example → map["key"]
+
+========================================================================================================
+
+Filtering
+--------------------------------------------------------------------------------------------------------
+Meaning      → Select only required items from a collection.
+Why Used     → Skip unwanted resources.
+Real Example → Skip AzureBastionSubnet
+
+========================================================================================================
+
+Condition
+--------------------------------------------------------------------------------------------------------
+Meaning      → Rule that returns True or False.
+Why Used     → Decide Keep or Skip.
+Real Example → if key != "AzureBastionSubnet"
+
+========================================================================================================
+
+Transformation
+--------------------------------------------------------------------------------------------------------
+Meaning      → Change data structure and create a NEW structure.
+Why Used     → Prepare simplified data.
+Real Example → Object → Object
+
+========================================================================================================
+
+Output
+--------------------------------------------------------------------------------------------------------
+Meaning      → Exposes values from Child Module.
+Why Used     → Parent Module cannot access Child Resources directly.
+Real Example → output "subnet_id"
+
+========================================================================================================
+
+Variable
+--------------------------------------------------------------------------------------------------------
+Meaning      → Input received by a Module.
+Why Used     → Pass values into Resources.
+Real Example → variable "subnet_id"
+
+========================================================================================================
+
+Module
+--------------------------------------------------------------------------------------------------------
+Meaning      → Reusable Terraform component.
+Why Used     → Avoid duplicate code.
+Real Example → module "network_interface"
+
+========================================================================================================
+
+Parent Module
+--------------------------------------------------------------------------------------------------------
+Meaning      → Module that calls other Modules.
+Why Used     → Coordinate infrastructure deployment.
+Real Example → main.tf
+
+========================================================================================================
+
+Child Module
+--------------------------------------------------------------------------------------------------------
+Meaning      → Module called by Parent.
+Why Used     → Create one logical resource.
+Real Example → modules/network_interface
+
+========================================================================================================
+
+Module Output
+--------------------------------------------------------------------------------------------------------
+Meaning      → Data exposed by Child Module.
+Why Used     → Share values with Parent Module.
+Real Example → module.subnet.subnet_id
+
+========================================================================================================
+
+Module Instance
+--------------------------------------------------------------------------------------------------------
+Meaning      → One copy of a Child Module.
+Why Used     → Created automatically by Module for_each.
+Real Example → network_interface["nic_mapa"]
+
+========================================================================================================
+
+Resource Mapping
+--------------------------------------------------------------------------------------------------------
+Meaning      → Connecting one Azure Resource with another.
+Why Used     → Build infrastructure relationships.
+Real Example → NIC → Subnet
+
+========================================================================================================
+
+Data Flow
+--------------------------------------------------------------------------------------------------------
+Meaning      → Movement of values between Modules.
+Why Used     → Pass Outputs to another Module.
+Real Example → Subnet → Parent → NIC
+
+========================================================================================================
+
+Producer
+--------------------------------------------------------------------------------------------------------
+Meaning      → Module creating data.
+Why Used     → Generates Outputs.
+Real Example → Subnet Module
+
+========================================================================================================
+
+Consumer
+--------------------------------------------------------------------------------------------------------
+Meaning      → Module using data.
+Why Used     → Receives Variables.
+Real Example → NIC Module
+
+========================================================================================================
+
+Interface
+--------------------------------------------------------------------------------------------------------
+Meaning      → Communication point between Modules.
+Why Used     → Exchange data safely.
+Real Example → Variables + Outputs
+
+========================================================================================================
+
+SRP (Single Responsibility Principle)
+--------------------------------------------------------------------------------------------------------
+Meaning      → One Module should have one responsibility.
+Why Used     → Improve readability, testing and reusability.
+Real Example → Subnet Module only creates Subnets.
+
+========================================================================================================
+
+Orchestrator
+--------------------------------------------------------------------------------------------------------
+Meaning      → Component coordinating multiple Modules.
+Why Used     → Control deployment flow.
+Real Example → Parent Module
+
+========================================================================================================
+
+Module for_each
+--------------------------------------------------------------------------------------------------------
+Meaning      → Creates multiple Child Module instances.
+Why Used     → Build reusable enterprise modules.
+Real Example → NIC Module
+
+========================================================================================================
+
+Resource for_each
+--------------------------------------------------------------------------------------------------------
+Meaning      → Creates multiple Resources from one Resource block.
+Why Used     → Reduce duplicate Resource blocks.
+Real Example → Multiple NSGs
+
+========================================================================================================
+
+Lookup
+--------------------------------------------------------------------------------------------------------
+Meaning      → Common programming term for reading a VALUE using its KEY.
+Terraform Name→ Map Access (Index Expression)
+Real Example → module.subnet.subnet_id["snet-web01"]
+
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

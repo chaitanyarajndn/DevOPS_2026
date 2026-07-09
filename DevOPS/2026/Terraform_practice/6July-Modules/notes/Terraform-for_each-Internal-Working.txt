@@ -1,0 +1,192 @@
+==============================================================================
+Terraform-for_each-Internal-Working
+==============================================================================
+
+Rule
+
+If a resource uses "for_each", Terraform DOES NOT create a single resource.
+
+Instead, Terraform internally creates a MAP OF RESOURCE OBJECTS.
+
+This happens even if terraform.tfvars contains only ONE item.
+
+==============================================================================
+
+Example
+
+terraform.tfvars
+
+lb_map = {
+
+    linxlb = {
+
+        name = "LinxLoadBalancer"
+
+    }
+
+}
+
+==============================================================================
+
+Resource
+
+resource "azurerm_lb" "LINXLB" {
+
+    for_each = var.lb
+
+}
+
+==============================================================================
+
+Terraform Internal Representation
+
+Terraform internally creates
+
+azurerm_lb.LINXLB
+
+↓
+
+{
+
+    linxlb = Resource Object
+
+}
+
+NOT
+
+azurerm_lb.LINXLB
+
+↓
+
+Resource Object
+
+==============================================================================
+
+What is a Resource Object?
+
+A Resource Object is Terraform's internal representation of one created resource.
+
+Example
+
+Resource Object
+
+↓
+
+{
+    id
+    name
+    location
+    tags
+    frontend_ip_configuration
+    ...
+}
+
+Terraform stores all resource attributes inside this object.
+
+==============================================================================
+
+Accessing Resource Attributes
+
+❌ Wrong
+
+azurerm_lb.LINXLB.id
+
+Reason
+
+Terraform sees LINXLB as a Map of Resource Objects.
+
+It does not know which Resource Object to use.
+
+Result
+
+Missing resource instance key
+
+------------------------------------------------------------------------------
+
+✅ Correct
+
+azurerm_lb.LINXLB["linxlb"].id
+
+Flow
+
+Map
+    │
+    ▼
+Select Resource Object
+    │
+    ▼
+Read id
+
+==============================================================================
+
+Important Rule
+
+Resource Declaration
+
+↓
+
+for_each
+
+↓
+
+Terraform creates
+
+Map<Resource Object>
+
+↓
+
+Output becomes
+
+Map<String>
+
+↓
+
+Parent Module must access using
+
+["key"]
+
+==============================================================================
+
+Key Learning
+
+The number of resources in terraform.tfvars does NOT decide the return type.
+
+The Resource Declaration decides the internal resource shape.
+
+Even if there is only ONE resource,
+
+using for_each means Terraform still creates
+
+Map<Resource Object>.
+
+==============================================================================
+
+Mental Model
+
+terraform.tfvars
+        │
+        ▼
+Map Input
+        │
+        ▼
+for_each
+        │
+        ▼
+Terraform creates
+Map<Resource Object>
+        │
+        ▼
+Access Resource Object
+        │
+        ▼
+Read Attribute
+        │
+        ▼
+id / name / location / ...
+
+
+
+
+
+
+

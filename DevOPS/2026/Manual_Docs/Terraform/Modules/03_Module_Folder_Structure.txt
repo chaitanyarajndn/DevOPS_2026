@@ -1,0 +1,381 @@
+==========================================================
+             TERRAFORM MODULES - PART 3
+              Module Folder Structure
+==========================================================
+
+
+----------------------------------------------------------
+Why is Folder Structure Important?
+----------------------------------------------------------
+
+Enterprise projects me sirf Terraform code likhna important nahi hota.
+
+Code ko organize karna bhi utna hi important hota hai.
+
+Agar folder structure proper nahi hoga,
+
+to project maintain karna difficult ho jayega.
+
+Isi liye har company ek standard folder structure follow karti hai.
+
+
+----------------------------------------------------------
+Our Enterprise Folder Structure
+----------------------------------------------------------
+
+terraform-vm-module/
+
+│
+├── environments/
+│   │
+│   ├── dev/
+│   │   ├── provider.tf
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── terraform.tfvars
+│   │   └── outputs.tf
+│   │
+│   ├── qa/
+│   │   ├── provider.tf
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── terraform.tfvars
+│   │   └── outputs.tf
+│   │
+│   └── prod/
+│       ├── provider.tf
+│       ├── main.tf
+│       ├── variables.tf
+│       ├── terraform.tfvars
+│       └── outputs.tf
+│
+└── modules/
+    │
+    ├── azurerm_resource_group/
+    │
+    ├── azurerm_virtual_network/
+    │
+    ├── azurerm_subnet/
+    │
+    ├── azurerm_network_security_group/
+    │
+    ├── azurerm_network_security_rule/
+    │
+    ├── azurerm_subnet_network_security_group_association/
+    │
+    ├── azurerm_public_ip/
+    │
+    ├── azurerm_network_interface/
+    │
+    ├── azurerm_network_interface_security_group_association/
+    │
+    └── azurerm_linux_virtual_machine/
+
+
+----------------------------------------------------------
+Folder Explanation
+----------------------------------------------------------
+
+terraform-vm-module/
+
+Ye hamara main project folder hai.
+
+Iske andar complete Terraform project rahega.
+
+
+----------------------------------------------------------
+environments/
+----------------------------------------------------------
+
+Is folder ke andar
+
+Dev
+
+QA
+
+Production
+
+ke liye alag-alag deployment folders honge.
+
+Har environment apni configuration use karega.
+
+Lekin modules same rahenge.
+
+
+----------------------------------------------------------
+modules/
+----------------------------------------------------------
+
+Ye folder reusable Terraform Modules store karta hai.
+
+Har folder ek specific Azure Resource ke liye responsible hai.
+
+Example
+
+azurerm_resource_group
+
+sirf Resource Group create karega.
+
+azurerm_virtual_network
+
+sirf Virtual Network create karega.
+
+azurerm_linux_virtual_machine
+
+sirf Linux Virtual Machine create karega.
+
+
+----------------------------------------------------------
+Environment Folder
+----------------------------------------------------------
+
+Example
+
+environments/dev/
+
+Ye Root Module hai.
+
+Yahin se hum
+
+terraform init
+
+terraform plan
+
+terraform apply
+
+execute karenge.
+
+
+----------------------------------------------------------
+Files inside Environment Folder
+----------------------------------------------------------
+
+provider.tf
+
+Azure Provider Configuration
+
+
+-----------------------------------
+
+main.tf
+
+Saare Child Modules ko call karega.
+
+
+-----------------------------------
+
+variables.tf
+
+Variables declare karega.
+
+
+-----------------------------------
+
+terraform.tfvars
+
+Variables ki values store karega.
+
+
+-----------------------------------
+
+outputs.tf
+
+Final Outputs display karega.
+
+
+----------------------------------------------------------
+Files inside Child Module
+----------------------------------------------------------
+
+Example
+
+modules/
+
+azurerm_virtual_network/
+
+
+Har Child Module ke andar generally
+
+main.tf
+
+variables.tf
+
+outputs.tf
+
+hote hain.
+
+
+-----------------------------------
+
+main.tf
+
+Actual Resource Creation
+
+
+-----------------------------------
+
+variables.tf
+
+Input Variables
+
+
+-----------------------------------
+
+outputs.tf
+
+Output Values
+
+
+----------------------------------------------------------
+Execution Flow
+----------------------------------------------------------
+
+Developer
+
+        │
+
+terraform apply
+
+        │
+
+environments/dev
+
+(Root Module)
+
+        │
+
+calls
+
+        │
+
+modules/
+
+        │
+
+azurerm_resource_group
+
+        │
+
+azurerm_virtual_network
+
+        │
+
+azurerm_subnet
+
+        │
+
+azurerm_network_interface
+
+        │
+
+azurerm_linux_virtual_machine
+
+
+----------------------------------------------------------
+Real World Example
+----------------------------------------------------------
+
+Suppose
+
+Dev Team
+
+QA Team
+
+Production Team
+
+teeno ko same infrastructure deploy karna hai.
+
+Difference sirf itna hai
+
+Dev
+
+Small VM
+
+--------------------------------
+
+QA
+
+Medium VM
+
+--------------------------------
+
+Production
+
+Large VM
+
+Baaki infrastructure same hai.
+
+Isliye
+
+Modules same use honge.
+
+Sirf terraform.tfvars change hoga.
+
+
+----------------------------------------------------------
+Benefits of this Structure
+----------------------------------------------------------
+
+✔ Easy to Understand
+
+--------------------------------
+
+✔ Easy to Maintain
+
+--------------------------------
+
+✔ Reusable Modules
+
+--------------------------------
+
+✔ Separate Environment Configuration
+
+--------------------------------
+
+✔ Better Team Collaboration
+
+--------------------------------
+
+✔ Enterprise Standard
+
+
+----------------------------------------------------------
+Interview Answer
+----------------------------------------------------------
+
+In enterprise projects, Terraform code is usually divided into two parts.
+
+The environments folder contains the Root Modules for Dev, QA, and Production.
+
+The modules folder contains reusable Child Modules for individual resources such as Resource Groups, Virtual Networks, Subnets, NSGs, and Virtual Machines.
+
+Each environment calls the same modules but provides different input values through terraform.tfvars.
+
+This approach improves code reusability, consistency, and maintainability.
+
+
+----------------------------------------------------------
+Key Points
+----------------------------------------------------------
+
+✔ environments = Root Modules
+
+✔ modules = Child Modules
+
+✔ Each module creates one resource.
+
+✔ Same modules are reused by Dev, QA, and Production.
+
+✔ Different environments use different variable values.
+
+✔ Enterprise projects always separate reusable modules from environment-specific configuration.
+
+
+==========================================================
+End of Part 3
+==========================================================
+
+
+Next Part
+
+Module Block and source

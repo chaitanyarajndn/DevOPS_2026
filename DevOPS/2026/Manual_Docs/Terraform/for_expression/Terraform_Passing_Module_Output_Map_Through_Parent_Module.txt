@@ -1,0 +1,335 @@
+
+
+=================================================================================================
+Using a Module Output (Map) in the Parent Module and Passing It to Another Child Module
+==================================================================================================
+
+STEP 1 : Child Module Creates Output
+
+Subnet Module
+
+output "subnet_ids" {
+
+  value = {
+    for key, subnet in azurerm_subnet.SBN :
+    key => subnet.id
+  }
+
+}
+
+Returned Output
+
+{
+  sbna = subnet_id_1
+  sbnb = subnet_id_2
+  sbnc = subnet_id_3
+}
+
+Return Type
+
+map(string)
+
+Technical Term
+
+This is called a Module Output.
+
+====================================================================================
+
+STEP 2 : Parent Module Receives The Output
+
+module.subnet.subnet_ids
+
+↓
+
+{
+  sbna = subnet_id_1
+  sbnb = subnet_id_2
+  sbnc = subnet_id_3
+}
+
+Technical Term
+
+The Parent Module acts as an Orchestrator.
+
+Its job is NOT to create resources.
+
+Its job is to connect Child Modules.
+
+====================================================================================
+
+STEP 3 : Parent Passes The Output To Another Child Module
+
+module "subnet_nsg_association" {
+
+  subnet_ids = module.subnet.subnet_ids
+
+}
+
+Meaning
+
+Left Side
+
+subnet_ids
+
+↓
+
+Input Variable expected by the Child Module.
+
+------------------------------------------------------------
+
+Right Side
+
+module.subnet.subnet_ids
+
+↓
+
+Output received from another Child Module.
+
+Technical Term
+
+Passing Outputs Between Modules
+
+(Module Chaining)
+
+====================================================================================
+
+STEP 4 : Terraform Injects The Value
+
+Parent
+
+subnet_ids = module.subnet.subnet_ids
+
+            │
+            ▼
+
+Child
+
+variable "subnet_ids" {}
+
+            │
+            ▼
+
+var.subnet_ids
+
+Terraform automatically copies the value into the Child Module.
+
+====================================================================================
+
+STEP 5 : Child Receives
+
+var.subnet_ids
+
+↓
+
+{
+  sbna = subnet_id_1
+  sbnb = subnet_id_2
+  sbnc = subnet_id_3
+}
+
+Return Type
+
+map(string)
+
+Observation
+
+This is a NEW Map.
+
+====================================================================================
+
+Old Map
+
+{
+  sbna = {
+    name = "Subnet-A"
+    ...
+  }
+
+  sbnb = {
+    name = "Subnet-B"
+    ...
+  }
+
+}
+
+↓
+
+each.key
+
+sbna
+
+↓
+
+each.value
+
+Complete Subnet Object
+
+====================================================================================
+
+New Map
+
+{
+  sbna = subnet_id_1
+  sbnb = subnet_id_2
+  sbnc = subnet_id_3
+}
+
+↓
+
+each.key
+
+sbna
+
+↓
+
+each.value
+
+subnet_id_1
+
+====================================================================================
+
+What Changed?
+
+✔ Value changed.
+
+Old Value
+
+Complete Object
+
+↓
+
+New Value
+
+Subnet ID (String)
+
+------------------------------------------------------------------------------------
+
+What Stayed Same?
+
+✔ Map
+
+✔ Key
+
+✔ for_each
+
+✔ each.key
+
+✔ each.value
+
+Only the VALUE type changed.
+
+====================================================================================
+
+STEP 6 : Child Iterates Over The Map
+
+for_each = var.subnet_ids
+
+↓
+
+Iteration 1
+
+each.key   = sbna
+
+each.value = subnet_id_1
+
+↓
+
+Association
+
+subnet_id_1  ←────→  nsg-web
+
+------------------------------------------------------------
+
+Iteration 2
+
+each.key   = sbnb
+
+each.value = subnet_id_2
+
+↓
+
+Association
+
+subnet_id_2  ←────→  nsg-web
+
+------------------------------------------------------------
+
+Iteration 3
+
+each.key   = sbnc
+
+each.value = subnet_id_3
+
+↓
+
+Association
+
+subnet_id_3  ←────→  nsg-web
+
+====================================================================================
+
+Resource Logic
+
+subnet_id
+
+↓
+
+Changes Every Iteration
+
+↓
+
+each.value
+
+------------------------------------------------------------
+
+network_security_group_id
+
+↓
+
+Same For Every Iteration
+
+↓
+
+var.nsg_id
+
+====================================================================================
+
+Technical Terms
+
+Module Output          = Value returned by a Child Module.
+
+Module Input           = Value received by a Child Module.
+
+Module Chaining        = Output of one module becomes input of another module.
+
+Orchestrator           = Parent Module connects Child Modules.
+
+Iteration              = Terraform processes one map entry at a time.
+
+Map Iteration          = Looping through key-value pairs.
+
+each.key               = Current Map Key.
+
+each.value             = Current Map Value.
+
+====================================================================================
+
+Golden Rules
+
+✔ Parent Module coordinates modules.
+
+✔ Child Module implements the logic.
+
+✔ Output of one Child Module can become the Input of another Child Module.
+
+✔ for_each always iterates over a Collection.
+
+✔ A Map always contains Key → Value.
+
+✔ each.key remains the Map Key.
+
+✔ each.value remains the Map Value.
+
+✔ Only the Value Type can change (Object → String), the Map concept never changes.
+
+====================================================================================

@@ -1,0 +1,176 @@
+==========================================================
+             TERRAFORM MODULES - PART 6
+                   Output Values
+==========================================================
+
+Concept
+• Output Values are used to return data from a Child Module to the Root Module.
+• They allow one module to share information with another module.
+• Output Values remove the need to hardcode resource names and IDs.
+• Outputs are defined in outputs.tf and accessed using the module.<module_name>.<output_name> syntax.
+• Most Azure resources return values such as name, id, subnet_id, nic_id, and public_ip.
+
+Execution Order
+
+Child Module
+outputs.tf
+      │
+      ▼
+Root Module
+main.tf
+      │
+      ▼
+Another Child Module
+
+Terraform Syntax
+
+----------------------------------------------------------
+Child Module
+outputs.tf
+----------------------------------------------------------
+
+output "resource_group_name" {
+  value = azurerm_resource_group.rg.name
+}
+
+output "resource_group_id" {
+  value = azurerm_resource_group.rg.id
+}
+
+----------------------------------------------------------
+Root Module
+main.tf
+----------------------------------------------------------
+
+module "resource_group" {
+  source   = "../../modules/azurerm_resource_group"
+  rg_name  = var.rg_name
+  location = var.location
+}
+
+module "virtual_network" {
+  source              = "../../modules/azurerm_virtual_network"
+  resource_group_name = module.resource_group.resource_group_name
+  location            = var.location
+  address_space       = var.address_space
+}
+
+----------------------------------------------------------
+Keyword : output
+----------------------------------------------------------
+
+Purpose
+• Returns a value from a Child Module.
+
+Where is it used?
+• Child Module
+
+Syntax
+
+output "resource_group_name" {
+  value = azurerm_resource_group.rg.name
+}
+
+Code Explanation
+
+Child Module
+
+output "resource_group_name"
+• Creates an output variable named resource_group_name.
+• This name is later used by the Root Module.
+
+value = azurerm_resource_group.rg.name
+• Reads the Resource Group name from the resource.
+• Returns the value to the Root Module.
+
+output "resource_group_id"
+• Creates another output variable.
+• Returns the Resource Group ID.
+
+Root Module
+
+module.resource_group.resource_group_name
+• module refers to the Module namespace.
+• resource_group is the logical module name.
+• resource_group_name is the output returned by the Child Module.
+• The returned value is passed to the Virtual Network Module.
+
+Important Observation
+• Output Values are always defined inside the Child Module.
+• The Root Module cannot directly access resources inside a Child Module.
+• The Root Module can only access values that the Child Module exposes through outputs.
+• Child Modules do not communicate directly with each other.
+• The Root Module receives outputs from one Child Module and passes them as inputs to another Child Module.
+
+Data Flow
+
+Child Module
+outputs.tf
+      │
+      ▼
+Root Module
+main.tf
+      │
+      ▼
+Another Child Module
+
+Interview Notes
+• Output Values are used to expose resource information from a Child Module.
+• The Root Module uses those outputs as inputs for other Child Modules.
+• Outputs reduce hardcoding and improve module reusability.
+• Modules communicate through the Root Module using outputs and input variables.
+
+Key Points
+• Outputs always flow from the Child Module to the Root Module.
+• Outputs are declared in outputs.tf.
+• Outputs are accessed using module.<module_name>.<output_name>.
+• Child Modules never communicate directly with each other.
+
+==========================================================
+💡 Common Interview Doubts
+==========================================================
+
+Question
+
+Why do we need outputs if the resource already exists?
+
+Answer
+• Resources created inside a Child Module are isolated from the Root Module.
+• Outputs expose only the required values to the Root Module.
+• Without outputs, other modules cannot use resource names or IDs.
+
+----------------------------------------------------------
+
+Question
+
+Can the Root Module directly access this?
+
+azurerm_resource_group.rg.name
+
+Answer
+• No.
+• That resource exists inside the Child Module.
+• The Root Module must use the output instead.
+
+Correct
+
+module.resource_group.resource_group_name
+
+Incorrect
+
+azurerm_resource_group.rg.name
+
+----------------------------------------------------------
+
+Question
+
+Can one Child Module directly access another Child Module?
+
+Answer
+• No.
+• Child Modules never communicate directly.
+• The Root Module receives the output from one module and passes it as an input to another module.
+
+==========================================================
+End
+==========================================================

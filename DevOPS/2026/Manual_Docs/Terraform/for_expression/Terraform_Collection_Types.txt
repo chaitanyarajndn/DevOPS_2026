@@ -1,0 +1,139 @@
+=========================================================
+Terraform Collection Types - Introduction
+=========================================================
+
+What is a Collection?
+
+A Collection is a single container that stores multiple
+related values together.
+
+Instead of creating many separate variables,
+Terraform allows us to keep related values in one place.
+
+---------------------------------------------------------
+
+Single Value
+
+A variable stores only one value.
+
+Examples:
+
+- "East US"
+- "Standard_B2s"
+- "Linux"
+- 22
+
+---------------------------------------------------------
+
+Collection
+
+A Collection stores multiple related values inside
+a single container.
+
+Example:
+
+Virtual Machines
+
+├── VM1
+├── VM2
+└── VM3
+
+Here,
+
+Collection  = Virtual Machines
+Values      = VM1, VM2, VM3
+
+---------------------------------------------------------
+
+Why did Terraform introduce Collections?
+
+Sometimes a single variable needs to store multiple
+related values.
+
+For example:
+
+- Multiple Subnets
+- Multiple NSG Rules
+- Multiple Virtual Machines
+- Multiple IP Addresses
+
+Instead of creating separate variables for each value,
+Terraform groups them into one collection.
+
+This makes the code:
+
+- Cleaner
+- Easier to manage
+- More scalable
+- Easier to maintain
+
+---------------------------------------------------------
+
+Real World Example
+
+Imagine a wardrobe.
+
+Instead of keeping every shirt in a different room,
+you keep all shirts inside one wardrobe.
+
+The wardrobe is the Collection.
+
+Each shirt is a value inside that Collection.
+
+---------------------------------------------------------
+
+Terraform Example
+
+Subnets
+
+├── Frontend
+├── Backend
+└── Database
+
+Collection = Subnets
+
+Values = Frontend, Backend, Database
+
+---------------------------------------------------------
+
+Main Collection Types in Terraform
+
+1. List
+2. Map
+3. Set
+
+We will study each one separately.
+
+---------------------------------------------------------
+
+Important Notes
+
+✔ A Collection is a container.
+
+✔ A Collection stores multiple related values.
+
+✔ Values inside a Collection are individual items.
+
+✔ Collections are useful in both small and enterprise
+  Terraform projects.
+
+✔ Terraform For Expressions work on Collections.
+
+=========================================================
+Key Difference
+=========================================================
+
+Single Value
+
+One variable
+        ↓
+One value
+
+Collection
+
+One variable
+        ↓
+Multiple related values
+
+=========================================================
+

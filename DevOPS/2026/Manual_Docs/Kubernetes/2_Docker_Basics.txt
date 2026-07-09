@@ -1,0 +1,602 @@
+=========================================================
+Chapter 3 : Docker Basics
+=========================================================
+
+1. What is Docker?
+---------------------------------------------------------
+
+Docker is a container platform used to build, package, distribute, and run applications as Containers.
+
+Docker itself is not a Container.
+
+Docker is responsible for creating and managing Containers.
+
+=========================================================
+2. What is a Docker Image?
+=========================================================
+
+A Docker Image is a packaged version of an application.
+
+A Docker Image contains:
+
+• Application
+• Required Libraries
+• Configuration Files
+• Startup Command
+
+A Docker Image is a Read-Only Template.
+
+It is not a running application.
+
+Docker uses an Image to create a running Container.
+
+=========================================================
+3. Docker Hub and Harbor
+=========================================================
+
+Docker Hub is a Public Image Registry.
+
+It stores thousands of ready-to-use Docker Images.
+
+Examples:
+
+• nginx
+• redis
+• mysql
+• ubuntu
+• python
+
+Harbor is a Private Image Registry.
+
+Organizations use Harbor to store their own Docker Images securely.
+
+Example:
+
+• hss-core:v23.1
+• hss-db:v23.1
+• hss-oam:v23.1
+
+Docker Hub is Public.
+
+Harbor is Private.
+
+=========================================================
+4. Docker Workflow
+=========================================================
+
+Step 1
+
+docker pull nginx
+
+Docker checks whether the nginx Image already exists on the local machine.
+
+If the Image is not available locally, Docker downloads it from Docker Hub (or Harbor).
+
+---------------------------------------------------------
+
+Step 2
+
+docker images
+
+Displays all locally available Docker Images.
+
+---------------------------------------------------------
+
+Step 3
+
+docker run nginx
+
+Docker creates a Container from the Docker Image and starts the application.
+
+=========================================================
+5. Traditional Installation vs Docker
+=========================================================
+
+Traditional Linux Installation
+
+sudo apt install nginx
+
+The application is installed directly on the Operating System.
+
+---------------------------------------------------------
+
+Docker Installation
+
+docker run nginx
+
+Docker downloads the Nginx Image (if required), creates a Container from that Image, and starts the Nginx application inside the Container.
+
+=========================================================
+6. Nokia Production Example
+=========================================================
+
+Harbor
+
+        │
+
+Stores Docker Images
+
+        │
+
+Image Pull
+
+        │
+
+Worker Node
+
+        │
+
+Docker / Container Runtime
+
+        │
+
+Running Container
+
+        │
+
+Pod
+
+        │
+
+CNF Service (HSS, nTAS, SBC...)
+
+=========================================================
+7. Remember
+=========================================================
+
+Docker = Platform
+
+Docker Image = Packaged Application
+
+Docker Hub / Harbor = Image Registry
+
+docker pull = Download Image
+
+docker run = Create and Start Container
+
+=========================================================
+Interview Statement
+=========================================================
+
+Docker is a container platform that packages applications as Docker Images. Docker downloads Images from an Image Registry such as Docker Hub or Harbor and creates running Containers from those Images.
+
+
+
+=========================================================
+Chapter 4 : Docker Container
+=========================================================
+
+1. Concept
+---------------------------------------------------------
+
+A Docker Container is a running instance of a Docker Image.
+
+A Docker Image is a package.
+
+A Docker Container is the running application created from that package.
+
+A Docker Image cannot run by itself.
+
+Docker creates a Container from the Image.
+
+=========================================================
+2. How is a Container Created?
+=========================================================
+
+Example:
+
+docker run nginx
+
+Docker performs the following steps:
+
+• Checks whether the nginx Image exists locally.
+• Downloads the Image if it is not available.
+• Creates a Container from the Image.
+• Starts the Nginx application inside the Container.
+
+=========================================================
+3. Image vs Container
+=========================================================
+
+Docker Image
+
+• Read-Only
+• Packaged Application
+• Cannot run by itself
+
+Docker Container
+
+• Running Application
+• Created from an Image
+• Can Start, Stop, Restart, and Delete
+
+=========================================================
+4. One Image, Multiple Containers
+=========================================================
+
+A single Docker Image can create multiple Containers.
+
+Example:
+
+nginx Image
+
+        │
+
+ ├── Container-1
+
+ ├── Container-2
+
+ ├── Container-3
+
+ └── Container-4
+
+Every Container is an independent running instance.
+
+=========================================================
+5. What Does a Container Contain?
+=========================================================
+
+A running Container typically contains:
+
+• Running Application
+• Running Processes
+• Temporary Files
+• Logs
+• Application Memory
+
+A Container does NOT store the Docker Image.
+
+The Docker Image remains in Docker's local Image storage.
+
+=========================================================
+6. Real DevOps Example
+=========================================================
+
+docker pull nginx
+
+↓
+
+Docker downloads the nginx Image.
+
+↓
+
+docker run nginx
+
+↓
+
+Docker creates a Container.
+
+↓
+
+Nginx starts running inside the Container.
+
+=========================================================
+7. Nokia Production Example
+=========================================================
+
+Harbor
+
+        │
+
+Stores Docker Images
+
+        │
+
+Image Pull
+
+        │
+
+Worker Node
+
+        │
+
+Docker / Container Runtime
+
+        │
+
+Creates Container
+
+        │
+
+Container runs as part of a Kubernetes Pod
+
+=========================================================
+8. Remember
+=========================================================
+
+Docker Image = Packaged Application
+
+Docker Container = Running Application
+
+One Docker Image can create multiple Containers.
+
+=========================================================
+Interview Statement
+=========================================================
+
+A Docker Container is a running instance of a Docker Image. Docker creates a Container from an Image, and multiple Containers can be created from the same Image.
+
+
+
+=========================================================
+05_docker_lifecycle.txt
+=========================================================
+
+
+	docker pull
+
+	Image Download
+        │
+        ▼
+	Docker Image (Local)
+
+	List Image
+        │
+        ▼
+	docker run
+
+	Container Create
+        │
+        ▼
+	docker ps
+
+	Running Containers
+        │
+        ▼
+	docker stop
+
+	Stop Container
+        │
+        ▼
+	docker start
+
+	Start Existing Container
+        │
+        ▼
+	docker rm
+
+	Delete Container
+        │
+        ▼
+	Container Deleted
+
+	(Image still exists)
+        │
+        ▼
+	docker rmi
+
+	Delete Image
+
+
+
+
+
+=========================================================
+Chapter 5 : Docker Architecture
+=========================================================
+
+1. Overview
+---------------------------------------------------------
+
+When a user runs a Docker command, multiple Docker components work together to complete the request.
+
+Example:
+
+docker run nginx
+
+High-Level Architecture
+
+                docker run nginx
+                       │
+                       ▼
+                 Docker Client
+                       │
+                       ▼
+                 Docker Engine
+                       │
+                       ▼
+                 Docker Daemon
+                       │
+             ┌─────────┴─────────┐
+             ▼                   ▼
+      Docker Images      Docker Containers
+
+=========================================================
+2. Docker Client
+=========================================================
+
+What is it?
+
+Docker Client is the command-line interface used to interact with Docker.
+
+Responsibility
+
+• Accepts user commands.
+• Sends requests to Docker Engine.
+
+Why is it important?
+
+Without Docker Client, users cannot communicate with Docker.
+
+Example
+
+docker pull nginx
+
+docker run nginx
+
+docker ps
+
+=========================================================
+3. Docker Engine
+=========================================================
+
+What is it?
+
+Docker Engine is the core component of the Docker platform.
+
+Responsibility
+
+• Receives requests from Docker Client.
+• Coordinates Docker operations.
+• Communicates with Docker Daemon.
+
+Why is it important?
+
+Docker Engine acts as the central controller that manages the complete Docker workflow.
+
+=========================================================
+4. Docker Daemon
+=========================================================
+
+What is it?
+
+Docker Daemon is a background service that performs all Docker operations.
+
+Responsibility
+
+• Pull Docker Images
+• Create Containers
+• Start Containers
+• Stop Containers
+• Restart Containers
+• Delete Containers
+• Delete Images
+
+Why is it important?
+
+Docker Daemon performs the actual work behind every Docker command.
+
+Without Docker Daemon, Docker cannot create or manage Containers.
+
+=========================================================
+5. Complete Docker Workflow
+=========================================================
+
+docker run nginx
+
+        │
+
+Docker Client
+
+        │
+
+Docker Engine
+
+        │
+
+Docker Daemon
+
+        │
+
+Checks Local Image
+
+        │
+
+Image Available?
+
+     Yes          No
+      │            │
+      │      Pull Image
+      │            │
+      └──────┬─────┘
+             │
+             ▼
+     Create Container
+             │
+             ▼
+      Start Application
+
+=========================================================
+6. Nokia Production Example
+=========================================================
+
+NCOM
+
+        │
+
+Deployment Request
+
+        │
+
+Worker Node
+
+        │
+
+Container Runtime
+
+        │
+
+Pull Image
+
+        │
+
+Create Container
+
+        │
+
+Start Application
+
+The deployment is triggered from NCOM, while the Container Runtime performs the actual container operations on the worker node.
+
+=========================================================
+7. Responsibilities Summary
+=========================================================
+
+Docker Client
+• Accepts user commands.
+
+Docker Engine
+• Coordinates Docker operations.
+
+Docker Daemon
+• Pulls Images.
+• Creates and manages Containers.
+
+Docker Image
+• Stores the packaged application.
+
+Docker Container
+• Runs the application.
+
+=========================================================
+8. Remember
+=========================================================
+
+Docker Client
+        │
+Accepts Commands
+        │
+Docker Engine
+        │
+Coordinates Requests
+        │
+Docker Daemon
+        │
+Creates and Manages Containers
+
+=========================================================
+Interview Statement
+=========================================================
+
+Docker Client accepts user commands, Docker Engine coordinates Docker operations, and Docker Daemon performs the actual tasks such as pulling Images, creating Containers, and managing their lifecycle.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

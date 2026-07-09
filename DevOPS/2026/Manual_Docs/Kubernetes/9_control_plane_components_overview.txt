@@ -1,0 +1,326 @@
+
+
+
+
+=========================================================
+Chapter 12 : Control Plane Components (Overview)
+=========================================================
+
+Learning Objective
+---------------------------------------------------------
+
+After completing this chapter, you will be able to:
+
+• Understand the role of each Control Plane component.
+• Know how each component contributes to managing the Kubernetes Cluster.
+• Explain the responsibility of API Server, Scheduler,
+  Controller Manager and etcd in an interview.
+
+=========================================================
+What is a Control Plane?
+=========================================================
+
+The Control Plane is the management layer of a Kubernetes Cluster.
+
+It does not run application workloads.
+
+Instead, it manages the entire Cluster and ensures that applications are deployed, monitored, and maintained correctly.
+
+=========================================================
+1. API Server
+=========================================================
+
+Interview Definition
+---------------------------------------------------------
+
+API Server is the main entry point of the Kubernetes Control Plane.
+
+Every request to the Kubernetes Cluster first reaches the API Server.
+
+It validates the request and coordinates with other Control Plane components to complete the requested operation.
+
+Think Like
+---------------------------------------------------------
+
+Reception + Security Gate
+
+Responsibilities
+---------------------------------------------------------
+
+API Server
+
+├── Accept Requests
+├── Authenticate Users
+├── Authorize Users
+├── Validate Requests
+├── Communicate with Scheduler
+├── Communicate with Controller Manager
+├── Communicate with etcd
+└── Return Response
+
+Real DevOps Example
+---------------------------------------------------------
+
+When a DevOps Engineer runs:
+
+kubectl apply -f nginx.yaml
+
+the request first reaches the API Server.
+
+The API Server validates the request before forwarding it to the appropriate Control Plane component.
+
+Nokia Connection
+---------------------------------------------------------
+
+NCOM deployment requests are received by the API Server before Kubernetes processes the deployment.
+
+Important Points
+---------------------------------------------------------
+
+• API Server is the front door of Kubernetes.
+• Every request passes through the API Server.
+• Other Control Plane components also communicate through the API Server.
+
+Interview Statement
+---------------------------------------------------------
+
+API Server is the central communication component of Kubernetes. Every request first reaches the API Server, which validates the request and coordinates with other Control Plane components.
+
+=========================================================
+2. Scheduler
+=========================================================
+
+Interview Definition
+---------------------------------------------------------
+
+The Scheduler is responsible for selecting the most suitable Worker Node for a newly created Pod.
+
+It makes scheduling decisions based on available resources and cluster conditions.
+
+Think Like
+---------------------------------------------------------
+
+HR Team / Resource Allocator
+
+Responsibilities
+---------------------------------------------------------
+
+Scheduler
+
+├── Find Available Worker Nodes
+├── Check CPU Availability
+├── Check Memory Availability
+├── Check Node Health
+├── Apply Scheduling Rules
+└── Select the Best Worker Node
+
+Real DevOps Example
+---------------------------------------------------------
+
+Suppose a new Pod needs to be deployed.
+
+The Scheduler checks all available Worker Nodes and selects the best one based on available resources.
+
+Nokia Connection
+---------------------------------------------------------
+
+During a CNF deployment, every Pod must run on a Worker Node.
+
+The Scheduler decides which Worker Node will host each Pod.
+
+Important Points
+---------------------------------------------------------
+
+• Scheduler selects the Worker Node.
+• Scheduler does not create Pods.
+• Scheduler mainly works when new Pods need placement.
+
+Interview Statement
+---------------------------------------------------------
+
+The Scheduler selects the most suitable Worker Node for a Pod after evaluating available resources, node health, and scheduling rules.
+
+=========================================================
+3. Controller Manager
+=========================================================
+
+Interview Definition
+---------------------------------------------------------
+
+Controller Manager continuously monitors the Kubernetes Cluster.
+
+It compares the desired state with the current state and triggers corrective actions whenever a difference is detected.
+
+Think Like
+---------------------------------------------------------
+
+Operations Manager
+
+Responsibilities
+---------------------------------------------------------
+
+Controller Manager
+
+├── Monitor Cluster Health
+├── Compare Desired vs Current State
+├── Detect Failed Pods
+├── Detect Failed Worker Nodes
+├── Trigger Self-Healing
+├── Trigger Scaling
+├── Trigger Rolling Updates
+├── Trigger Rollback
+└── Maintain Desired State
+
+Real DevOps Example
+---------------------------------------------------------
+
+Suppose an application should have five Pods.
+
+If only four Pods are running, the Controller Manager detects the difference and triggers the creation of another Pod.
+
+The Scheduler then decides where the new Pod should run.
+
+Nokia Connection
+---------------------------------------------------------
+
+After a CNF deployment, the Controller Manager continuously monitors the cluster and helps maintain the required application state.
+
+Important Points
+---------------------------------------------------------
+
+• Controller Manager does not choose Worker Nodes.
+• It continuously monitors the Cluster.
+• It helps keep applications healthy after deployment.
+
+Interview Statement
+---------------------------------------------------------
+
+Controller Manager continuously monitors the Kubernetes Cluster and ensures that the current state always matches the desired state.
+
+=========================================================
+4. etcd
+=========================================================
+
+Interview Definition
+---------------------------------------------------------
+
+etcd is the distributed key-value database used by Kubernetes.
+
+It stores the complete configuration and current state of the Kubernetes Cluster.
+
+Think Like
+---------------------------------------------------------
+
+Company Database
+
+Responsibilities
+---------------------------------------------------------
+
+etcd
+
+├── Store Cluster Configuration
+├── Store Worker Node Information
+├── Store Pod Information
+├── Store Deployments
+├── Store Services
+├── Store ConfigMaps
+├── Store Secrets
+└── Store Current Cluster State
+
+Real DevOps Example
+---------------------------------------------------------
+
+Whenever a deployment, Service, or Pod is created or updated, Kubernetes stores the latest cluster information in etcd.
+
+Nokia Connection
+---------------------------------------------------------
+
+Whenever the cluster changes during a CNF deployment, Kubernetes updates the latest cluster state in etcd.
+
+Important Points
+---------------------------------------------------------
+
+• etcd stores Kubernetes metadata, not application data.
+• It is the source of truth for the Cluster.
+• Every important cluster change is stored in etcd.
+
+Interview Statement
+---------------------------------------------------------
+
+etcd is the Kubernetes database. It stores the complete Cluster state and configuration, allowing Kubernetes to manage and recover the environment consistently.
+
+=========================================================
+Quick Revision
+=========================================================
+
+API Server
+↓
+
+Accept and Validate Requests
+
+--------------------------------------
+
+Scheduler
+↓
+
+Select the Best Worker Node
+
+--------------------------------------
+
+Controller Manager
+↓
+
+Monitor and Maintain the Cluster
+
+--------------------------------------
+
+etcd
+↓
+
+Store Cluster State and Configuration
+
+=========================================================
+Key Takeaways
+=========================================================
+
+✓ API Server is the entry point of the Cluster.
+
+✓ Scheduler decides where Pods should run.
+
+✓ Controller Manager keeps the Cluster healthy.
+
+✓ etcd stores the complete Cluster state.
+
+=========================================================
+Interview Summary
+=========================================================
+
+The Control Plane is responsible for managing the Kubernetes Cluster.
+
+API Server receives requests.
+
+Scheduler selects Worker Nodes.
+
+Controller Manager monitors and maintains the desired state.
+
+etcd stores the complete Cluster configuration and state.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

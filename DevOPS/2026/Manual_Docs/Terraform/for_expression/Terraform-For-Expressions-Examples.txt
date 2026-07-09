@@ -1,0 +1,142 @@
+
+
+================================================================================
+Terraform For Expressions - Example 1 (List → List)
+================================================================================
+
+Input Collection
+
+students
+
+[
+  Rahul,
+  Aman,
+  Priya
+]
+
+-------------------------------------------------------------------------------
+
+For Expression
+
+[for student in students : student]
+
+-------------------------------------------------------------------------------
+
+Read Like English
+
+For every student
+inside the students collection,
+return the student.
+
+-------------------------------------------------------------------------------
+
+Internal Execution
+
+Iteration 1 : student = Rahul  →  Return Rahul
+Iteration 2 : student = Aman   →  Return Aman
+Iteration 3 : student = Priya  →  Return Priya
+
+-------------------------------------------------------------------------------
+
+Output Collection
+
+[
+  Rahul,
+  Aman,
+  Priya
+]
+
+-------------------------------------------------------------------------------
+
+Observation
+
+✔ Input and output are the same.
+
+✔ No resource is created.
+
+✔ No value is modified.
+
+✔ This example is only to understand the syntax.
+
+✔ The real power comes when the expression returns a different value.
+
+================================================================================
+
+
+================================================================================
+Terraform For Expressions - Example 2 (Object → Required Property)
+================================================================================
+
+Input Collection
+
+Employee 1 → Name=Rahul | Age=25 | City=Delhi
+Employee 2 → Name=Aman  | Age=28 | City=Noida
+Employee 3 → Name=Priya | Age=24 | City=Pune
+
+--------------------------------------------------------------------------------
+
+For Expression
+
+[for employee in employees : employee.name]
+
+--------------------------------------------------------------------------------
+
+Read Like English
+
+For every employee in the employees collection,
+return only employee.name.
+
+--------------------------------------------------------------------------------
+
+Internal Execution
+
+Iteration 1 : employee = Employee 1 → employee.name → Rahul
+Iteration 2 : employee = Employee 2 → employee.name → Aman
+Iteration 3 : employee = Employee 3 → employee.name → Priya
+
+--------------------------------------------------------------------------------
+
+Output Collection
+
+[
+  Rahul,
+  Aman,
+  Priya
+]
+
+--------------------------------------------------------------------------------
+
+Observation
+
+✔ Terraform reads one employee at a time.
+
+✔ The complete employee object is available.
+
+✔ Only the required property (name) is returned.
+
+✔ The output becomes a new collection.
+
+✔ This process is called Data Transformation.
+
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

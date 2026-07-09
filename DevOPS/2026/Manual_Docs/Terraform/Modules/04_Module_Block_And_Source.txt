@@ -1,0 +1,258 @@
+==========================================================
+             TERRAFORM MODULES - PART 4
+              Module Block and Source
+==========================================================
+
+Concept
+• A Module Block is used to call a Child Module from the Root Module.
+• A Child Module never executes on its own; it is always called by a Root Module.
+• The source attribute tells Terraform where the Child Module is located.
+• A Root Module can call one or multiple Child Modules.
+• Every reusable module must be called through a Module Block.
+
+Execution Order
+
+Root Module
+main.tf
+      │
+      ▼
+module "resource_group"
+      │
+      ▼
+source
+      │
+      ▼
+Child Module
+      │
+      ▼
+Azure Resource
+
+Terraform Syntax
+
+----------------------------------------------------------
+Root Module
+main.tf
+----------------------------------------------------------
+
+module "resource_group" {
+  source   = "../../modules/azurerm_resource_group"
+  rg_name  = var.rg_name
+  location = var.location
+}
+
+----------------------------------------------------------
+Child Module
+main.tf
+----------------------------------------------------------
+
+resource "azurerm_resource_group" "rg" {
+  name     = var.rg_name
+  location = var.location
+}
+
+----------------------------------------------------------
+Keyword : module
+----------------------------------------------------------
+
+Purpose
+• Used to call a Child Module.
+
+Where is it used?
+• Root Module
+
+Syntax
+
+module "resource_group" {
+  ...
+}
+
+----------------------------------------------------------
+Keyword : source
+----------------------------------------------------------
+
+Purpose
+• Specifies the location of the Child Module.
+
+Where is it used?
+• Inside the Module Block.
+
+Syntax
+
+source = "../../modules/azurerm_resource_group"
+
+Code Explanation
+
+Root Module
+
+module "resource_group"
+• Creates a logical reference named resource_group.
+• This is not the folder name; it is the module instance name used inside the Root Module.
+• This name is later used to access outputs, for example module.resource_group.resource_group_name.
+
+source = "../../modules/azurerm_resource_group"
+• Tells Terraform where the Child Module exists.
+• Terraform reads all Terraform files from this folder.
+• Without source, Terraform cannot locate the Child Module.
+
+rg_name = var.rg_name
+• Reads the value from the Root Module.
+• Passes the value to the Child Module.
+• No Azure resource is created here.
+
+location = var.location
+• Reads the location value from the Root Module.
+• Passes the value to the Child Module.
+
+Child Module
+
+resource "azurerm_resource_group" "rg"
+• Creates the actual Azure Resource Group.
+• The Child Module contains the implementation logic.
+
+name = var.rg_name
+• Receives the value from the Root Module.
+• Assigns it as the Resource Group name.
+
+location = var.location
+• Receives the location from the Root Module.
+• Creates the Resource Group in the specified Azure region.
+
+Important Observation
+• The Root Module does not know how to create a Resource Group.
+• The Child Module does not know where the values come from.
+• The Root Module only passes values.
+• The Child Module only creates resources.
+• The module block acts as a bridge between the Root Module and the Child Module.
+
+Data Flow
+
+Root Module
+main.tf
+      │
+      ▼
+module "resource_group"
+      │
+      ▼
+source
+      │
+      ▼
+Child Module
+main.tf
+      │
+      ▼
+Azure Resource
+
+Interview Notes
+• A Module Block is used to invoke a reusable Child Module.
+• The source attribute specifies the location of the Child Module.
+• The Root Module controls the deployment by calling one or more Child Modules.
+• The Child Module contains the actual infrastructure code.
+
+Key Points
+• module calls a Child Module.
+• source locates the Child Module.
+• Root Module controls the deployment.
+• Child Module creates Azure resources.
+• One Root Module can call multiple Child Modules.
+
+==========================================================
+💡 Common Interview Doubts
+==========================================================
+
+Question
+
+Why do we need a Module Block?
+
+Answer
+• Terraform cannot execute a Child Module unless it is called by a Module Block.
+• The Module Block connects the Root Module with the Child Module.
+• It is responsible for passing input values to the Child Module.
+
+Question
+
+Can a Child Module run independently?
+
+Answer
+• No.
+• A Child Module must always be called by a Root Module.
+• Terraform commands such as init, plan, and apply are executed from the Root Module.
+
+Question
+
+What is the difference between module and source?
+
+Answer
+• module creates a logical reference for the Child Module.
+• source tells Terraform where the Child Module is located.
+• Both are required to invoke a reusable module.
+
+
+Question
+
+Is the module name mandatory?
+
+Example
+
+module "resource_group" { }
+
+module "rg" { }
+
+module "prod_rg" { }
+
+Answer
+
+• No. The module name is not mandatory.
+• It is a logical name used only for referencing the module.
+• Any meaningful name can be used.
+
+----------------------------------------------------------
+
+Question
+
+Is the resource logical name mandatory?
+
+Example
+
+resource "azurerm_resource_group" "rg" { }
+
+resource "azurerm_resource_group" "resource_group" { }
+
+resource "azurerm_resource_group" "prod_rg" { }
+
+Answer
+
+• No. The logical resource name is not mandatory.
+• Only the resource type (azurerm_resource_group) is mandatory.
+• The logical name is used only for referencing the resource inside the Terraform configuration.
+
+----------------------------------------------------------
+
+Question
+
+Can both the Module and Resource use the same logical name?
+
+Example
+
+module "rg" { }
+
+resource "azurerm_resource_group" "rg" { }
+
+Answer
+
+• Yes. This is completely valid.
+• Modules and Resources belong to different namespaces, so Terraform does not get confused.
+• However, using descriptive module names and shorter resource names improves code readability.
+
+Recommended Naming
+
+Module
+
+module "resource_group" { }
+
+Resource
+
+resource "azurerm_resource_group" "rg" { }
+
+==========================================================
+End
+==========================================================

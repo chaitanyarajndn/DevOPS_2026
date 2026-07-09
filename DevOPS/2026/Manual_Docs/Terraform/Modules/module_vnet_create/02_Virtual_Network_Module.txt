@@ -1,0 +1,314 @@
+==========================================================
+02_Virtual_Network_Module
+==========================================================
+
+Concept
+----------------------------------------------------------
+
+• Creates an Azure Virtual Network.
+• Requires an existing Resource Group.
+• Receives all required inputs from the Root Module.
+• Exposes useful outputs for future modules.
+
+==========================================================
+Child Module
+==========================================================
+
+--------------------------
+variables.tf
+--------------------------
+
+variable "vn" {
+  description = "Azure Virtual Network Name"
+  type        = string
+}
+
+variable "rg" {
+  description = "Azure Resource Group Name"
+  type        = string
+}
+
+variable "lc" {
+  description = "Azure Region"
+  type        = string
+}
+
+variable "ipadd" {
+  description = "Virtual Network Address Space"
+  type        = list(string)
+}
+
+Explanation
+
+variable "vn"     -------> Declares the Virtual Network Name expected by this module.
+
+variable "rg"     -------> Declares the Resource Group Name expected by this module.
+
+variable "lc"     -------> Declares the Azure Region expected by this module.
+
+variable "ipadd"  -------> Declares the Virtual Network Address Space.
+                      Why? -------> Azure address_space expects list(string), allowing one or more CIDR blocks.
+
+----------------------------------------------------------
+main.tf
+----------------------------------------------------------
+
+resource "azurerm_virtual_network" "VN" {
+
+  name                = var.vn
+  location            = var.lc
+  resource_group_name = var.rg
+  address_space       = var.ipadd
+
+}
+
+Explanation
+
+resource "azurerm_virtual_network"
+                  -------> Creates an Azure Virtual Network.
+
+"VN"              -------> Local Terraform resource name. Used only inside this Child Module.
+
+name = var.vn     -------> Uses the Virtual Network Name received from variables.tf.
+
+location = var.lc -------> Uses the Azure Region received from variables.tf.
+
+resource_group_name = var.rg
+                  -------> Associates the Virtual Network with the Resource Group received from variables.tf.
+
+address_space = var.ipadd
+                  -------> Configures the Virtual Network CIDR range.
+                      Why? -------> Azure expects address_space as list(string).
+
+----------------------------------------------------------
+outputs.tf
+----------------------------------------------------------
+
+output "virtual_network_name" {
+  description = "Azure Virtual Network Name"
+  value       = azurerm_virtual_network.VN.name
+}
+
+output "virtual_network_id" {
+  description = "Azure Virtual Network ID"
+  value       = azurerm_virtual_network.VN.id
+}
+
+Explanation
+
+virtual_network_name
+                  -------> Exposes the Virtual Network Name to the Root Module.
+                      Why? -------> The Root Module may display it after terraform apply or pass it to another module if required.
+
+virtual_network_id
+                  -------> Exposes the Virtual Network ID to the Root Module.
+                      Why? -------> Future modules such as Subnet, VNet Peering, Azure Firewall or Route Table may require this ID.
+
+==========================================================
+Root Module
+==========================================================
+
+----------------------------------------------------------
+variables.tf
+----------------------------------------------------------
+
+Add:
+
+variable "vn" {
+  description = "Azure Virtual Network Name"
+  type        = string
+}
+
+variable "ipadd" {
+  description = "Virtual Network Address Space"
+  type        = list(string)
+}
+
+----------------------------------------------------------
+terraform.tfvars
+----------------------------------------------------------
+
+Add:
+
+vn    = "linux-vnet"
+ipadd = ["10.45.46.0/24"]
+
+Explanation
+
+vn                 -------> Assigns the Virtual Network Name for the Dev environment.
+
+ipadd              -------> Assigns the Virtual Network Address Space.
+                     Why? -------> Azure address_space expects list(string).
+
+----------------------------------------------------------
+main.tf
+----------------------------------------------------------
+
+Add:
+
+module "virtual_network" {
+
+  source = "../../modules/azurerm_virtual_network"
+
+  vn    = var.vn
+  lc    = var.lc
+  rg    = module.resource_group.resource_group_name
+  ipadd = var.ipadd
+
+}
+
+Explanation
+
+module "virtual_network"
+                  -------> Calls the Virtual Network Child Module.
+
+source            -------> Specifies the location of the Child Module.
+
+vn = var.vn       -------> Passes the Virtual Network Name.
+
+lc = var.lc       -------> Passes the Azure Region.
+                     Why? -------> Region is an input configuration value, so it should come directly from the Root Module.
+
+rg = module.resource_group.resource_group_name
+                  -------> Passes the Resource Group Module output.
+                     Why? -------> Automatically creates an Implicit Dependency.
+
+ipadd = var.ipadd -------> Passes the Virtual Network Address Space.
+
+----------------------------------------------------------
+outputs.tf
+----------------------------------------------------------
+
+Add:
+
+output "virtual_network_name" {
+  description = "Azure Virtual Network Name"
+  value       = module.virtual_network.virtual_network_name
+}
+
+Explanation
+
+virtual_network_name
+                  -------> Receives the Child Module output.
+                      Why? -------> Displays the Virtual Network Name after terraform apply for verification.
+
+==========================================================
+Output Design Guidelines
+==========================================================
+
+• Child Modules may expose all useful outputs such as Name and ID.
+• Root Module should expose only the outputs currently required.
+• Exposing extra outputs is not an error, but exposing only useful outputs keeps the Root Module clean and maintainable.
+
+==========================================================
+Important Notes
+==========================================================
+
+• Child Modules never communicate directly.
+• Root Module manages module communication.
+• Module outputs automatically create Implicit Dependencies.
+• No depends_on is required in this implementation.
+• Child Modules should remain reusable and independent.
+
+==========================================================
+Common Mistakes
+==========================================================
+
+❌ Wrong
+
+ipadd = "10.45.46.0/24"
+
+Reason -------> address_space expects list(string).
+
+----------------------------------------------------------
+
+✅ Correct
+
+ipadd = ["10.45.46.0/24"]
+
+----------------------------------------------------------
+
+❌ Wrong
+
+module "virtual_network" {
+
+  name                = var.vn
+  location            = var.lc
+  resource_group_name = module.resource_group.resource_group_name
+  address_space       = var.ipadd
+
+}
+
+Reason -------> These are Azure resource arguments, not Child Module input variables.
+
+----------------------------------------------------------
+
+✅ Correct
+
+module "virtual_network" {
+
+  vn    = var.vn
+  lc    = var.lc
+  rg    = module.resource_group.resource_group_name
+  ipadd = var.ipadd
+
+}
+
+Reason -------> Module arguments must exactly match the variable names declared inside the Child Module variables.tf.
+
+==========================================================
+Interview Notes
+==========================================================
+
+• address_space always expects list(string).
+• Module outputs automatically create Implicit Dependencies.
+• Child Modules should remain reusable.
+• Root Module manages communication between modules.
+• Use depends_on only when Terraform cannot determine the dependency automatically.
+
+==========================================================
+Value Flow (Input - ipadd)
+==========================================================
+
+Root variables.tf      -------> Declares the Root Module input variable.
+variable "ipadd"       -------> Terraform expects the Virtual Network Address Space.
+                         │
+                         ▼
+terraform.tfvars       -------> Assigns the Address Space for the Dev environment.
+ipadd=["10.45.46.0/24"]-------> Terraform assigns this value to the declared variable.
+                         │
+                         ▼
+Root main.tf           -------> Calls the Virtual Network Child Module.
+ipadd = var.ipadd      -------> Passes the Address Space to the Child Module.
+                         │
+                         ▼
+Child variables.tf     -------> Declares the expected Child Module input.
+variable "ipadd"       -------> Receives the Address Space from the Root Module.
+                         │
+                         ▼
+Child main.tf          -------> Creates the Azure Virtual Network.
+address_space=var.ipadd-------> Uses the received Address Space as the VNet CIDR.
+                         │
+                         ▼
+Azure Virtual Network  -------> Final Azure Resource.
+Address Space          -------> 10.45.46.0/24
+
+==========================================================
+Value Flow (Output - virtual_network_id)
+==========================================================
+
+Child main.tf                  -------> Creates the Azure Virtual Network.
+azurerm_virtual_network.VN.id  -------> Azure generates the Virtual Network ID.
+                         │
+                         ▼
+Child outputs.tf               -------> Exposes the Virtual Network ID.
+virtual_network_id             -------> Returns the ID to the Root Module.
+                         │
+                         ▼
+Root main.tf                   -------> Receives the Child Module output.
+module.virtual_network.virtual_network_id
+                               -------> This output can be passed to future modules such as Subnet, VNet Peering or Azure Firewall whenever required.
+
+==========================================================
+End
+==========================================================

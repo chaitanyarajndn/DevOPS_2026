@@ -1,0 +1,269 @@
+
+
+
+
+
+=========================================================
+Chapter 8 : Why Kubernetes?
+=========================================================
+
+Learning Objective
+---------------------------------------------------------
+
+After completing this chapter, you will be able to:
+
+• Understand why Kubernetes was introduced.
+• Explain the relationship between Docker and Kubernetes.
+• Know what problems Kubernetes solves.
+
+=========================================================
+1. Why Kubernetes?
+=========================================================
+
+Docker works well when Containers are running on a single machine.
+
+As applications grow, organizations deploy Containers across multiple Virtual Machines.
+
+Managing these Containers manually becomes difficult.
+
+This is where Kubernetes comes into the picture.
+
+=========================================================
+2. What is Kubernetes?
+=========================================================
+
+Kubernetes is a Container Orchestration platform.
+
+It manages Containers running across multiple servers from a single platform.
+
+Docker runs Containers.
+
+Kubernetes manages those Containers.
+
+=========================================================
+3. Why is Kubernetes Needed?
+=========================================================
+
+Imagine an application running on 20 Virtual Machines.
+
+Each Virtual Machine is running Docker.
+
+Now the application needs 200 Containers.
+
+Questions:
+
+• Which Virtual Machine should run a new Container?
+• What happens if one Virtual Machine fails?
+• How do you increase Containers during high traffic?
+• How do you update the application without downtime?
+
+Managing all of this manually is difficult.
+
+Kubernetes handles these tasks automatically.
+
+=========================================================
+4. Key Responsibilities
+=========================================================
+
+Kubernetes can:
+
+• Decide where a Container should run.
+• Restart Containers if they fail.
+• Increase or decrease Containers based on traffic.
+• Update applications with little or no downtime.
+• Manage Containers running across multiple servers.
+
+=========================================================
+5. Real-World Example
+=========================================================
+
+Without Kubernetes
+
+VM-1
+
+Docker
+
+Nginx Container
+
+Everything is managed manually.
+
+---------------------------------------------------------
+
+With Kubernetes
+
+VM-1
+
+VM-2
+
+VM-3
+
+        │
+
+Kubernetes
+
+        │
+
+Containers
+
+Kubernetes manages the complete environment from a single platform.
+
+=========================================================
+6. Quick Revision
+=========================================================
+
+Docker
+
+• Runs Containers.
+
+Kubernetes
+
+• Manages Containers.
+
+Docker and Kubernetes work together.
+
+They do not replace each other.
+
+=========================================================
+Key Takeaways
+=========================================================
+
+✓ Docker is responsible for running Containers.
+
+✓ Kubernetes is responsible for managing Containers.
+
+✓ Kubernetes becomes useful when Containers run across multiple servers.
+
+=========================================================
+Interview Statement
+=========================================================
+
+Docker is used to create and run Containers, while Kubernetes is used to manage Containers across multiple servers. It provides features such as scheduling, self-healing, scaling, and rolling updates.
+
+
+
+=========================================================
+Kubernetes Lifecycle
+=========================================================
+
+Many people think Kubernetes is only used to deploy applications.
+
+That is not true.
+
+Deployment is only the beginning.
+
+After the application is deployed, Kubernetes continues to manage it throughout its lifecycle.
+
+=========================================================
+What Does Kubernetes Do After Deployment?
+=========================================================
+
+• Monitors the health of Pods.
+
+• Restarts Pods if they crash.
+
+• Distributes traffic across running Pods.
+
+• Increases or decreases the number of Pods based on application traffic.
+
+• Performs rolling updates with minimal downtime.
+
+• Rolls back to the previous version if an update fails.
+
+• Moves workloads if a Worker Node becomes unavailable.
+
+• Continuously maintains the desired state of the application.
+
+=========================================================
+Quick Revision
+=========================================================
+
+Deploy
+
+↓
+
+Monitor
+
+↓
+
+Heal
+
+↓
+
+Scale
+
+↓
+
+Manage Traffic
+
+↓
+
+Update
+
+↓
+
+Rollback
+
+↓
+
+Keep the Application Running
+
+=========================================================
+Interview Statement
+=========================================================
+
+Kubernetes is not just a deployment platform. It continuously manages the application after deployment by monitoring its health, handling failures, scaling workloads, managing traffic, and maintaining the desired state.
+
+
+
+
+
+                         Kubernetes Cluster
+================================================================================
+
+                    +----------------------------------+
+                    |          Control Plane           |
+                    |----------------------------------|
+                    | API Server                       |
+                    | Scheduler                        |
+                    | Controller Manager               |
+                    | etcd                             |
+                    +----------------+-----------------+
+                                     |
+             -------------------------------------------------
+             |                                               |
+             |                                               |
++-------------------------------+          +-------------------------------+
+| Worker Node-1                 |          | Worker Node-2                 |
+|-------------------------------|          |-------------------------------|
+| kubelet                       |          | kubelet                       |
+| containerd                    |          | containerd                    |
+| kube-proxy                    |          | kube-proxy                    |
+|                               |          |                               |
+| +--------------------------+  |          | +--------------------------+  |
+| | Pod                      |  |          | | Pod                      |  |
+| |  └── Container           |  |          | |  └── Container           |  |
+| +--------------------------+  |          | +--------------------------+  |
+|                               |          |                               |
+| +--------------------------+  |          | +--------------------------+  |
+| | Pod                      |  |          | | Pod                      |  |
+| |  └── Container           |  |          | |  └── Container           |  |
+| +--------------------------+  |          | +--------------------------+  |
++-------------------------------+          +-------------------------------+
+
+================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

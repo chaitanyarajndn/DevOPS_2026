@@ -1,0 +1,151 @@
+=========================================================
+Chapter 2 : Why Containers?
+=========================================================
+
+1. Concept
+---------------------------------------------------------
+
+Before Containers, applications were commonly deployed inside Virtual Machines (VMs).
+
+Each Virtual Machine contains:
+
+• Operating System
+• Application
+• Required Libraries
+• Dependencies
+
+Example:
+
+VM-1
+- Windows
+- Chrome
+
+VM-2
+- Windows
+- VS Code
+
+VM-3
+- Windows
+- Spotify
+
+Even if all VMs use the same version of Windows, every VM runs its own separate Operating System.
+
+=========================================================
+2. Problem with Virtual Machines
+=========================================================
+
+Because every VM has its own Operating System:
+
+• More CPU and RAM are consumed.
+• More storage is required.
+• Boot time is longer because the Operating System must start first.
+• Running multiple VMs on the same server becomes resource intensive.
+
+=========================================================
+3. Windows Example
+=========================================================
+
+Think about your own Windows laptop.
+
+You can run multiple applications such as:
+
+• Chrome
+• VS Code
+• Spotify
+• VLC Media Player
+• Notepad++
+
+All these applications share the same Windows Operating System.
+
+Windows is loaded only once.
+
+Every application uses the existing Operating System instead of installing its own copy.
+
+Containers follow the same idea.
+
+=========================================================
+4. Real-World DevOps Example
+=========================================================
+
+Imagine an Azure Linux Virtual Machine.
+
+A development team needs to deploy three different applications:
+
+• Nginx
+• Python API
+• Redis
+
+Option 1 - Using Virtual Machines
+
+VM-1
+- Ubuntu
+- Nginx
+
+VM-2
+- Ubuntu
+- Python API
+
+VM-3
+- Ubuntu
+- Redis
+
+Each Virtual Machine has its own Operating System.
+
+This increases CPU, RAM, and storage usage.
+
+---------------------------------------------------------
+
+Option 2 - Using Containers
+
+Azure VM
+- Ubuntu
+- Docker
+
+Containers
+- Nginx
+- Python API
+- Redis
+
+All containers share the same Host Operating System.
+
+Each container includes only the application and its required dependencies.
+
+Benefits:
+
+• Lower resource consumption
+• Faster startup
+• Better server utilization
+• Easier application deployment
+
+=========================================================
+5. Nokia Production Example
+=========================================================
+
+In a Cloud-Native Network Function (CNF) environment, applications such as nTAS, HSS, SBC, and CFX-5000 are deployed as containers instead of separate Virtual Machines.
+
+The worker node already has a Host Operating System.
+
+Multiple CNFs run as individual containers while sharing the same Host Operating System.
+
+This allows better resource utilization and supports efficient deployment of multiple network functions on the same worker node.
+
+=========================================================
+6. Summary
+=========================================================
+
+Containers solve one of the biggest limitations of Virtual Machines.
+
+Instead of creating a separate Operating System for every application, multiple containers share the same Host Operating System.
+
+As a result, containers are:
+
+• Lightweight
+• Faster to start
+• More resource efficient
+• Easier to deploy and manage
+
+=========================================================
+7. Interview Statement
+=========================================================
+
+A Virtual Machine includes its own Operating System, while a Container shares the Host Operating System. This makes Containers lightweight, faster to start, and more resource efficient than Virtual Machines.

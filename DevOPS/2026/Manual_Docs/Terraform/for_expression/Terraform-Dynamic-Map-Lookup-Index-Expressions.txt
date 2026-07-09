@@ -1,0 +1,276 @@
+
+====================================================================================
+Terraform Dynamic Map Lookup (Index Expressions)
+====================================================================================
+
+
+
+====================================================================================
+NIC Module Needs
+====================================================================================
+
+Azure NIC Resource
+
+↓
+
+Needs
+
+subnet_id
+
+====================================================================================
+
+But NIC tfvars Contains
+
+{
+
+  nic-web01 = {
+
+    subnet = "snet-web01"
+
+  }
+
+}
+
+↓
+
+Only Subnet Name
+
+NOT
+
+Subnet ID
+
+====================================================================================
+
+Who Will Convert Name → ID ?
+
+❌ Child Module
+
+Child should only create NICs.
+
+(SRP - Single Responsibility Principle)
+
+------------------------------------------------------------
+
+✔ Parent Module
+
+Parent already has
+
+module.subnet.subnet_id
+
+↓
+
+{
+
+  AzureBastionSubnet = id1
+
+  snet-web01         = id2
+
+  snet-web02         = id3
+
+}
+
+↓
+
+Parent maps
+
+"snet-web01"
+
+↓
+
+id2
+
+↓
+
+Passes id2 to Child Module
+
+====================================================================================
+
+====================================================================================
+Terraform Dynamic Map Lookup (Index Expressions)
+====================================================================================
+
+Problem
+
+NIC tfvars
+
+nic-web01 = {
+
+  subnet = "snet-web01"
+
+}
+
+↓
+
+NIC Module Needs
+
+subnet_id
+
+NOT
+
+Subnet Name
+
+====================================================================================
+
+Parent Already Has
+
+module.subnet.subnet_id
+
+↓
+
+{
+
+  AzureBastionSubnet = subnet_id_1
+
+  snet-web01         = subnet_id_2
+
+  snet-web02         = subnet_id_3
+
+}
+
+====================================================================================
+
+Step 1
+
+each.value.subnet
+
+↓
+
+Returns
+
+"snet-web01"
+
+====================================================================================
+
+Step 2
+
+Use That Value As A Map Key
+
+module.subnet.subnet_id[each.value.subnet]
+
+====================================================================================
+
+Terraform Internally
+
+each.value.subnet
+
+↓
+
+"snet-web01"
+
+↓
+
+module.subnet.subnet_id["snet-web01"]
+
+↓
+
+subnet_id_2
+
+====================================================================================
+
+Final Value Passed To Child
+
+subnet_id = subnet_id_2
+
+====================================================================================
+
+Syntax
+
+map[dynamic_key]
+
+====================================================================================
+
+Example
+
+module.subnet.subnet_id[each.value.subnet]
+
+====================================================================================
+
+Execution Flow
+
+each.value.subnet
+
+↓
+
+"snet-web01"
+
+↓
+
+Map Lookup
+
+↓
+
+subnet_id_2
+
+↓
+
+Passed To Child Module
+
+====================================================================================
+
+Difference
+
+Static Lookup
+
+module.nsg.nsg_id["nsg-web"]
+
+↓
+
+Hardcoded Key
+
+------------------------------------------------------------
+
+Dynamic Lookup
+
+module.subnet.subnet_id[each.value.subnet]
+
+↓
+
+Key Comes From Data
+
+====================================================================================
+
+Technical Terms
+
+Index Expression
+
+Map Lookup
+
+Dynamic Key
+
+Key-Based Resource Mapping
+
+====================================================================================
+
+Golden Rule
+
+Static Lookup
+
+↓
+
+Known Key
+
+↓
+
+map["key"]
+
+------------------------------------------------------------
+
+Dynamic Lookup
+
+↓
+
+Key Comes From Variable / Object
+
+↓
+
+map[each.value.key]
+
+====================================================================================
+
+
+
+
+
+
+
+

@@ -1,0 +1,305 @@
+
+
+
+==========================================================================================
+Terraform Map For Expressions - Introduction
+==========================================================================================
+
+Why Was It Introduced?
+
+List For Expressions return only values.
+
+Sometimes we also need to know which value belongs to which resource.
+
+Map For Expressions solve this problem by returning Key → Value pairs.
+
+------------------------------------------------------------------------------------------
+
+List For Expression
+
+Input
+
+VM Collection
+
+↓
+
+Output
+
+[
+  id1,
+  id2,
+  id3
+]
+
+Problem
+
+id2 belongs to which VM?
+
+Unknown.
+
+------------------------------------------------------------------------------------------
+
+Map For Expression
+
+Input
+
+VM Collection
+
+↓
+
+Output
+
+{
+  Linux-01 = id1
+  Linux-02 = id2
+  Linux-03 = id3
+}
+
+Benefit
+
+Every value is associated with its key.
+
+------------------------------------------------------------------------------------------
+
+Remember
+
+✔ List returns only values.
+
+✔ Map returns Key + Value.
+
+✔ Map provides more meaningful output.
+
+✔ Enterprise projects frequently use Map outputs.
+
+==========================================================================================
+
+==========================================================================================
+1. Simple Map
+==========================================================================================
+
+Purpose
+
+One Key
+   ↓
+One Value
+
+Example
+
+location = {
+
+  eastus        = "East US"
+
+  centralindia = "Central India"
+
+  westus        = "West US"
+
+}
+
+Structure
+
+Key              Value
+----------------------------------
+eastus        →  East US
+centralindia  →  Central India
+westus        →  West US
+
+Think Like
+
+A dictionary.
+
+You search using the key and get one value.
+
+==========================================================================================
+
+
+==========================================================================================
+2. Nested Map
+==========================================================================================
+
+Purpose
+
+One Key
+   ↓
+One Object
+   ↓
+Object Contains Multiple Properties
+
+Example
+
+linux_vm = {
+
+  vm1 = {
+    name     = "Linux-01"
+    size     = "Standard_B2s"
+    location = "Central India"
+  }
+
+  vm2 = {
+    name     = "Linux-02"
+    size     = "Standard_B2s"
+    location = "East US"
+  }
+
+}
+
+Structure
+
+vm1
+ ├── name
+ ├── size
+ └── location
+
+vm2
+ ├── name
+ ├── size
+ └── location
+
+Think Like
+
+An Employee Record.
+
+Employee ID
+     ↓
+Complete Employee Details
+
+==========================================================================================
+
+
+
+
+====================================================================================
+Simple Map vs Nested Map
+====================================================================================
+
+Simple Map
+
+Syntax
+
+{
+  for vm in azurerm_linux_virtual_machine.vm :
+  vm.name => vm.id
+}
+
+Structure
+
+Key                 → Value
+
+Linux-01            → VM_ID_1
+Linux-02            → VM_ID_2
+Linux-03            → VM_ID_3
+
+Output
+
+{
+  Linux-01 = VM_ID_1
+  Linux-02 = VM_ID_2
+  Linux-03 = VM_ID_3
+}
+
+Use When
+
+Need only ONE value for each key.
+
+Examples
+
+VM Name      → VM ID
+Subnet Name  → Subnet ID
+NIC Name     → NIC ID
+
+====================================================================================
+
+Nested Map
+
+Syntax
+
+{
+  for vm in azurerm_linux_virtual_machine.vm :
+  vm.name => {
+    id         = vm.id
+    private_ip = vm.private_ip
+    location   = vm.location
+  }
+}
+
+Structure
+
+Key                 → Object
+
+Linux-01            → { id, private_ip, location }
+Linux-02            → { id, private_ip, location }
+Linux-03            → { id, private_ip, location }
+
+Output
+
+{
+  Linux-01 = {
+    id         = VM_ID_1
+    private_ip = 10.0.1.4
+    location   = Central India
+  }
+
+  Linux-02 = {
+    id         = VM_ID_2
+    private_ip = 10.0.1.5
+    location   = Central India
+  }
+}
+
+Use When
+
+Need MULTIPLE related values for each key.
+
+Examples
+
+VM Name → { ID, Private IP, Location }
+
+====================================================================================
+
+Difference
+
+Simple Map                     Nested Map
+
+Key → Value                    Key → Object
+
+One Property                   Multiple Properties
+
+vm.name => vm.id               vm.name => { id, private_ip, location }
+
+Easy Lookup                    Rich Information
+
+====================================================================================
+
+Golden Rule
+
+After =>
+
+String / Number / Bool          → Simple Map
+
+Object                          → Nested Map
+
+The expression after '=>' decides the output type.
+
+====================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

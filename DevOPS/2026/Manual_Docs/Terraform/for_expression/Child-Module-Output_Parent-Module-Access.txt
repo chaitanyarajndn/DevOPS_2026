@@ -1,0 +1,209 @@
+
+
+====================================================================================
+Complete Flow - Child Module Output → Parent Module Access
+====================================================================================
+
+STEP 1 : terraform.tfvars
+
+pip_map = {
+
+  pipa = {
+    name                = "pip-lb"
+    location            = "Central India"
+    resource_group_name = "rg-web"
+  }
+
+  pipb = {
+    name                = "pip-bastion"
+    location            = "Central India"
+    resource_group_name = "rg-web"
+  }
+
+}
+
+Terraform Keys                    Azure Resource Names
+
+pipa                              pip-lb
+pipb                              pip-bastion
+
+====================================================================================
+
+STEP 2 : Child Module (main.tf)
+
+resource "azurerm_public_ip" "PIP" {
+
+  for_each            = var.pip
+
+  name                = each.value.name
+  location            = each.value.location
+  resource_group_name = each.value.resource_group_name
+
+}
+
+Terraform Creates
+
+PIP
+
+├── pipa  ─────► name = "pip-lb"
+└── pipb  ─────► name = "pip-bastion"
+
+====================================================================================
+
+STEP 3 : Child Module (outputs.tf)
+
+output "public_ip_ID" {
+
+  value = {
+    for pip in azurerm_public_ip.PIP :
+    pip.name => pip.id
+  }
+
+}
+
+Returned Output
+
+{
+  "pip-lb"       = "<public_ip_id_1>"
+  "pip-bastion"  = "<public_ip_id_2>"
+}
+
+Return Type
+
+map(string)
+
+Notice
+
+Output Key = pip.name
+
+Output Key is NOT
+
+pipa
+pipb
+
+====================================================================================
+
+STEP 4 : Parent Module (main.tf)
+
+module "bastion" {
+
+  source = "../../modules/08-azurerm_bastion_host"
+
+  public_ip = module.public_IP.public_ip_ID["pip-bastion"]
+
+}
+
+====================================================================================
+
+Execution
+
+module.public_IP.public_ip_ID
+
+↓
+
+{
+  "pip-lb"       = "<public_ip_id_1>"
+  "pip-bastion"  = "<public_ip_id_2>"
+}
+
+↓
+
+Search Key
+
+"pip-bastion"
+
+↓
+
+Found
+
+"<public_ip_id_2>"
+
+↓
+
+Returned Value
+
+"<public_ip_id_2>"
+
+====================================================================================
+
+Wrong Example
+
+module.public_IP.public_ip_ID["pipb"]        ❌
+
+Reason
+
+Output map does NOT contain
+
+pipa
+pipb
+
+Output map contains
+
+pip-lb
+pip-bastion
+
+====================================================================================
+
+Golden Rule
+
+terraform.tfvars
+
+pipa
+pipb
+
+   │
+   ▼
+
+Azure Resource
+
+pip-lb
+pip-bastion
+
+   │
+   ▼
+
+Output Key
+
+pip.name
+
+   │
+   ▼
+
+Parent Module
+
+module.public_IP.public_ip_ID["pip-lb"]
+
+====================================================================================
+
+Remember
+
+✔ The expression before '=>' becomes the OUTPUT MAP KEY.
+
+✔ pip.name => pip.id
+
+      Output Key = Azure Resource Name
+
+✔ key => pip.id
+
+      Output Key = Terraform for_each Key
+
+✔ Parent Module must always access the map using the SAME key
+  returned by the Child Module.
+
+====================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

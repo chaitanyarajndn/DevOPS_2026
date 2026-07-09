@@ -1,0 +1,360 @@
+==========================================================
+             TERRAFORM MODULES - PART 2
+           Root Module vs Child Module
+==========================================================
+
+
+----------------------------------------------------------
+Why do we need to understand this?
+----------------------------------------------------------
+
+Terraform Modules seekhne se pehle ek concept samajhna bahut important hai.
+
+Terraform me do types ke modules hote hain.
+
+1. Root Module
+
+2. Child Module
+
+Ye dono ka relationship samajhna bahut important hai.
+
+Agar ye concept clear ho gaya,
+
+to poori Module series bahut easy lagne lagegi.
+
+
+----------------------------------------------------------
+What is a Root Module?
+----------------------------------------------------------
+
+Simple language me,
+
+Jis folder se hum Terraform commands execute karte hain,
+
+wo Root Module kehlata hai.
+
+Example
+
+terraform init
+
+terraform plan
+
+terraform apply
+
+Ye commands hamesha Root Module se chalti hain.
+
+Terraform kabhi bhi Child Module ke andar jaakar directly execute nahi hota.
+
+
+----------------------------------------------------------
+Our Project Example
+----------------------------------------------------------
+
+terraform-vm-module/
+
+│
+├── environments/
+│   │
+│   ├── dev/
+│   │
+│   │   ├── provider.tf
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── terraform.tfvars
+│   │   └── outputs.tf
+│   │
+│   ├── qa/
+│   │
+│   └── prod/
+│
+└── modules/
+
+Hum jab
+
+cd environments/dev
+
+me jaakar
+
+terraform apply
+
+chalate hain,
+
+to
+
+environments/dev
+
+Root Module ban jata hai.
+
+
+----------------------------------------------------------
+What is a Child Module?
+----------------------------------------------------------
+
+Child Module wo module hota hai
+
+jise Root Module call karta hai.
+
+Child Module khud kabhi execute nahi hota.
+
+Wo sirf Root Module ke through execute hota hai.
+
+Example
+
+modules/
+
+azurerm_resource_group/
+
+azurerm_virtual_network/
+
+azurerm_subnet/
+
+Ye sab Child Modules hain.
+
+
+----------------------------------------------------------
+Execution Flow
+----------------------------------------------------------
+
+Developer
+
+        │
+
+terraform apply
+
+        │
+
+Root Module
+
+(environments/dev)
+
+        │
+
+calls
+
+        │
+
+Resource Group Module
+
+        │
+
+calls
+
+        │
+
+Virtual Network Module
+
+        │
+
+calls
+
+        │
+
+Subnet Module
+
+        │
+
+calls
+
+        │
+
+NIC Module
+
+        │
+
+calls
+
+        │
+
+Linux VM Module
+
+
+Root Module sab Child Modules ko control karta hai.
+
+
+----------------------------------------------------------
+Real Life Example
+----------------------------------------------------------
+
+Ek Company me
+
+Project Manager
+
+aur
+
+Engineers
+
+hote hain.
+
+Project Manager
+
+khud wiring ya plumbing nahi karta.
+
+Wo sirf work assign karta hai.
+
+Engineer apna specific kaam karta hai.
+
+Exactly same concept Terraform me hota hai.
+
+Project Manager
+
+=
+
+Root Module
+
+Engineers
+
+=
+
+Child Modules
+
+Root Module decide karta hai
+
+kis module ko
+
+kab
+
+aur
+
+kis order me
+
+execute karna hai.
+
+
+----------------------------------------------------------
+Responsibilities
+----------------------------------------------------------
+
+Root Module
+
+✔ Calls Child Modules
+
+✔ Passes Variable Values
+
+✔ Reads terraform.tfvars
+
+✔ Controls Deployment
+
+✔ Executes terraform commands
+
+✔ Receives Outputs
+
+
+----------------------------------------------------------
+
+Child Module
+
+✔ Creates Resources
+
+✔ Accepts Input Variables
+
+✔ Returns Output Values
+
+✔ Does NOT execute directly
+
+✔ Reusable in multiple projects
+
+
+----------------------------------------------------------
+Our Project
+----------------------------------------------------------
+
+Root Module
+
+environments/
+
+dev/
+
+qa/
+
+prod/
+
+--------------------------------
+
+Child Modules
+
+modules/
+
+azurerm_resource_group/
+
+azurerm_virtual_network/
+
+azurerm_subnet/
+
+azurerm_network_security_group/
+
+azurerm_public_ip/
+
+azurerm_network_interface/
+
+azurerm_linux_virtual_machine/
+
+
+----------------------------------------------------------
+Important Interview Point
+----------------------------------------------------------
+
+Root Module can call multiple Child Modules.
+
+A Child Module can also be reused by different Root Modules.
+
+Example
+
+Dev
+
+QA
+
+Production
+
+teeno same
+
+Virtual Network Module
+
+use kar sakte hain.
+
+Sirf input values alag hongi.
+
+
+----------------------------------------------------------
+Interview Answer
+----------------------------------------------------------
+
+In Terraform, the Root Module is the entry point of the deployment.
+
+It is the directory from which we run Terraform commands like init, plan, and apply.
+
+The Root Module calls one or more Child Modules and passes input values to them.
+
+Child Modules contain reusable infrastructure code.
+
+They receive inputs, create resources, and return outputs to the Root Module.
+
+This approach keeps the code modular, reusable, and easy to maintain across different environments.
+
+
+----------------------------------------------------------
+Key Points
+----------------------------------------------------------
+
+✔ Root Module is the entry point.
+
+✔ Terraform commands always run from the Root Module.
+
+✔ Child Modules never run independently.
+
+✔ Root Module controls the deployment.
+
+✔ Child Modules create reusable infrastructure.
+
+✔ One Root Module can call multiple Child Modules.
+
+✔ One Child Module can be reused by multiple environments.
+
+
+==========================================================
+End of Part 2
+==========================================================
+
+
+Next Part
+
+Module Folder Structure

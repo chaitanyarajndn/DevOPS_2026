@@ -1,0 +1,153 @@
+
+
+=========================================================
+Chapter 7 : Container Orchestration
+=========================================================
+
+Learning Objective
+---------------------------------------------------------
+
+After completing this chapter, you will be able to:
+
+• Understand what Container Orchestration is.
+• Explain why it is needed.
+• Know how it solves Docker limitations.
+• Understand why Kubernetes became popular.
+
+=========================================================
+1. What is Container Orchestration?
+=========================================================
+
+Container Orchestration is a way to manage Containers running on multiple servers from a single platform.
+
+Docker can create and run Containers.
+
+Container Orchestration manages those Containers when they are spread across many servers.
+
+=========================================================
+2. Why is it Needed?
+=========================================================
+
+Docker works well when Containers are running on a single machine.
+
+As the application grows, more Virtual Machines and more Containers are required.
+
+Managing them manually becomes difficult.
+
+A Container Orchestration platform handles these tasks and keeps the environment running smoothly.
+
+=========================================================
+3. What Can It Do?
+=========================================================
+
+A Container Orchestration platform can:
+
+• Deploy new Containers.
+• Decide which server should run a Container.
+• Restart a Container if it crashes.
+• Increase the number of Containers during high traffic.
+• Reduce the number of Containers when traffic decreases.
+• Update applications with little or no downtime.
+• Manage Containers running on multiple servers.
+
+=========================================================
+4. Real-World Example
+=========================================================
+
+Suppose an application is running on three Virtual Machines.
+
+VM-1
+Docker
+10 Containers
+
+VM-2
+Docker
+10 Containers
+
+VM-3
+Docker
+10 Containers
+
+Now VM-2 suddenly goes down.
+
+Without Container Orchestration, someone has to manually start those Containers on another server.
+
+With Container Orchestration, the platform detects the failure and starts the required Containers on another available server.
+
+=========================================================
+5. Why is it Important?
+=========================================================
+
+Without Container Orchestration:
+
+• Every deployment is manual.
+• Scaling takes time.
+• Recovery after a failure is manual.
+• Managing many servers becomes difficult.
+
+As the environment grows, manual management is no longer practical.
+
+=========================================================
+6. Kubernetes
+=========================================================
+
+Kubernetes is the most widely used Container Orchestration platform.
+
+It helps manage Containers running across multiple servers and provides features such as:
+
+• Scheduling
+• Self-Healing
+• Auto Scaling
+• Rolling Updates
+• Centralized Management
+
+=========================================================
+7. Remember
+=========================================================
+
+Docker
+
+• Creates and runs Containers.
+
+Container Orchestration
+
+• Manages Containers running on multiple servers.
+
+Kubernetes
+
+• A Container Orchestration Platform.
+
+=========================================================
+Key Takeaways
+=========================================================
+
+✓ Docker runs Containers.
+
+✓ Docker works well on a single machine.
+
+✓ Container Orchestration manages Containers across multiple servers.
+
+✓ Kubernetes is the most popular Container Orchestration platform.
+
+=========================================================
+Interview Statement
+=========================================================
+
+Docker is responsible for creating and running Containers. When Containers need to run across multiple servers, a Container Orchestration platform such as Kubernetes is used to manage them.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

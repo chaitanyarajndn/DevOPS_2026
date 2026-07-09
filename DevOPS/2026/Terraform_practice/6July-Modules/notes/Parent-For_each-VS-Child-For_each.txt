@@ -1,0 +1,388 @@
+
+
+
+
+========================================================================================================
+Parent Module for_each
+========================================================================================================
+
+Concept
+--------------------------------------------------------------------------------------------------------
+Parent Module performs iteration using for_each. Each iteration creates one Child Module Instance. Child Module receives only the required values and remains simple.
+
+Purpose → Keep Parent Smart | Keep Child Simple | Maximum Reusability
+
+Architecture
+--------------------------------------------------------------------------------------------------------
+terraform.tfvars → Parent main.tf(for_each) → Child Module → Azure Resource
+
+========================================================================================================
+Syntax
+========================================================================================================
+
+module "network_interface" {
+
+  for_each = var.nic_map
+
+  source = "../../modules/09-azurerm_network_interface"
+
+  name                          = each.value.name
+  location                      = each.value.location
+  resource_group_name           = each.value.resource_group_name
+  subnet_id                     = module.subnet.subnet_id[each.value.subnet_id]
+  ipname                        = each.value.ipname
+  private_ip_address_allocation = each.value.private_ip_address_allocation
+
+}
+
+========================================================================================================
+Execution Flow
+========================================================================================================
+
+terraform.tfvars → Parent main.tf(for_each) → each.value → Child variables.tf → Child main.tf → Azure Resource
+
+========================================================================================================
+Value Flow
+========================================================================================================
+
+Source                              Parent Action                           Child Receives
+--------------------------------------------------------------------------------------------------------
+terraform.tfvars                    Read nic_map                            each.value
+each.value.name                     Pass Value                              variable "name"
+each.value.location                 Pass Value                              variable "location"
+each.value.resource_group_name      Pass Value                              variable "resource_group_name"
+each.value.subnet_id                Map Access                              variable "subnet_id"
+each.value.ipname                   Pass Value                              variable "ipname"
+each.value.private_ip_address_allocation Pass Value                         variable "private_ip_address_allocation"
+
+========================================================================================================
+Child Variable Definition
+========================================================================================================
+
+Variable                              Type
+--------------------------------------------------------------------------------------------------------
+name                                  string
+location                              string
+resource_group_name                   string
+subnet_id                             string
+ipname                                string
+private_ip_address_allocation          string
+
+========================================================================================================
+Real Azure Example
+========================================================================================================
+
+terraform.tfvars
+
+nic_map = {
+  nic_mapa = {
+    name      = "nic-web01"
+    subnet_id = "web1sbnet"
+  }
+  nic_mapb = {
+    name      = "nic-web02"
+    subnet_id = "web2sbnet"
+  }
+}
+
+Execution
+
+terraform.tfvars → Parent(for_each) → each.value.subnet_id("web1sbnet") → module.subnet.subnet_id["web1sbnet"] → subnet_id_2 → Child(subnet_id) → Azure NIC
+
+========================================================================================================
+Advantages
+========================================================================================================
+
+✔ Child Module remains simple.
+✔ Child receives only final values.
+✔ Better SRP (Single Responsibility Principle).
+✔ Highly reusable Child Modules.
+✔ Easy unit testing.
+✔ Enterprise standard architecture.
+✔ Parent controls all mappings.
+
+========================================================================================================
+Best Use Cases
+========================================================================================================
+
+✔ Enterprise Infrastructure
+✔ Shared Terraform Modules
+✔ Reusable Modules
+✔ Platform Engineering
+✔ Large Production Environments
+✔ Different Child Modules requiring different values
+
+========================================================================================================
+Disadvantages
+========================================================================================================
+
+✘ Parent Module contains more logic.
+✘ More variables must be passed individually.
+✘ Parent becomes responsible for all data mapping.
+✘ Parent file becomes larger as infrastructure grows.
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+Term                              Meaning
+--------------------------------------------------------------------------------------------------------
+Module Instance                   One Child Module created during one iteration.
+Iteration                         One execution of the for_each loop.
+each.key                          Current Map Key.
+each.value                        Current Map Value (Object).
+Map Access                        Reading a VALUE using its KEY.
+Orchestrator                      Parent Module coordinating all Child Modules.
+SRP                               Single Responsibility Principle.
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ Parent owns for_each.
+✔ Parent owns each.key and each.value.
+✔ Parent performs Map Access.
+✔ Child never knows where values came from.
+✔ Child receives only final values.
+✔ One Iteration = One Child Module Instance.
+✔ One Child Module Instance usually creates one logical resource.
+
+========================================================================================================
+
+
+
+
+
+
+========================================================================================================
+Child Module (Resource for_each)
+========================================================================================================
+
+Concept
+--------------------------------------------------------------------------------------------------------
+Child Module performs iteration using Resource for_each. Parent Module passes complete Collections and Supporting Maps. Child Module creates multiple Azure Resources from a single Resource Block.
+
+Purpose → Keep Parent Simple | Child Handles Iteration | Good For Small & Medium Projects
+
+Architecture
+--------------------------------------------------------------------------------------------------------
+terraform.tfvars → Parent main.tf → Child variables.tf → Child main.tf(for_each) → Multiple Azure Resources
+
+========================================================================================================
+Syntax
+========================================================================================================
+
+Parent Module
+
+module "network_interface" {
+
+  source = "../../modules/09-azurerm_network_interface"
+
+  nic         = var.nic_map
+  subnet_ids  = module.subnet.subnet_id
+
+}
+
+------------------------------------------------------------
+
+Child variables.tf
+
+variable "nic" {}
+variable "subnet_ids" {}
+
+------------------------------------------------------------
+
+Child main.tf
+
+resource "azurerm_network_interface" "NIC" {
+
+  for_each = var.nic
+
+  name                          = each.value.name
+  location                      = each.value.location
+  resource_group_name           = each.value.resource_group_name
+  subnet_id                     = var.subnet_ids[each.value.subnet_id]
+  private_ip_address_allocation = each.value.private_ip_address_allocation
+
+}
+
+========================================================================================================
+Execution Flow
+========================================================================================================
+
+terraform.tfvars → Parent main.tf → Pass nic_map + subnet_id Map → Child variables.tf → Resource for_each → Azure NIC Resources
+
+========================================================================================================
+Value Flow
+========================================================================================================
+
+Source                               Child Action                              Final Value
+--------------------------------------------------------------------------------------------------------
+terraform.tfvars                     var.nic                                   Map(Object)
+module.subnet.subnet_id              var.subnet_ids                            Map(String)
+each.value.name                      Resource                                  NIC Name
+each.value.location                  Resource                                  Azure Location
+each.value.resource_group_name       Resource                                  Resource Group
+each.value.subnet_id                 Map Access                                "web1sbnet"
+var.subnet_ids["web1sbnet"]          Resource                                  subnet_id_2
+each.value.private_ip_address_allocation Resource                              Dynamic/Static
+
+========================================================================================================
+Supporting Map Flow
+========================================================================================================
+
+Subnet Module Output
+
+{
+  bastionsbnet = subnet_id_1
+  web1sbnet    = subnet_id_2
+  web2sbnet    = subnet_id_3
+}
+
+↓
+
+Parent Module
+
+subnet_ids = module.subnet.subnet_id
+
+↓
+
+Child Variable
+
+var.subnet_ids
+
+↓
+
+Resource
+
+var.subnet_ids[each.value.subnet_id]
+
+↓
+
+Actual Azure Subnet ID
+
+========================================================================================================
+Iteration Example
+========================================================================================================
+
+Iteration        each.key        each.value.subnet_id      Resource Receives
+--------------------------------------------------------------------------------------------------------
+1                nic_mapa        web1sbnet                subnet_id_2
+2                nic_mapb        web2sbnet                subnet_id_3
+
+========================================================================================================
+Variable Definition
+========================================================================================================
+
+Variable                              Type
+--------------------------------------------------------------------------------------------------------
+nic                                   map(object(...))
+subnet_ids                            map(string)
+
+========================================================================================================
+Real Azure Example
+========================================================================================================
+
+terraform.tfvars
+
+nic_map = {
+
+  nic_mapa = {
+    name      = "nic-web01"
+    subnet_id = "web1sbnet"
+  }
+
+  nic_mapb = {
+    name      = "nic-web02"
+    subnet_id = "web2sbnet"
+  }
+
+}
+
+Execution
+
+terraform.tfvars
+→ Parent Module
+→ Pass nic_map
+→ Pass subnet_id Map
+→ Child(Resource for_each)
+→ each.value.subnet_id
+→ var.subnet_ids["web1sbnet"]
+→ subnet_id_2
+→ Azure NIC-1
+
+terraform.tfvars
+→ Parent Module
+→ Pass nic_map
+→ Pass subnet_id Map
+→ Child(Resource for_each)
+→ each.value.subnet_id
+→ var.subnet_ids["web2sbnet"]
+→ subnet_id_3
+→ Azure NIC-2
+
+========================================================================================================
+Advantages
+========================================================================================================
+
+✔ Parent Module remains simple.
+✔ Less Parent-side mapping.
+✔ Easy to understand.
+✔ Good for Learning Terraform.
+✔ Good for Small & Medium Projects.
+✔ One Child Module can create multiple Resources.
+
+========================================================================================================
+Best Use Cases
+========================================================================================================
+
+✔ Learning Projects.
+✔ Lab Environments.
+✔ Small Infrastructure.
+✔ Medium Infrastructure.
+✔ Multiple Resources sharing one common Collection.
+✔ When Child Module owns the complete business logic.
+
+========================================================================================================
+Disadvantages
+========================================================================================================
+
+✘ Child Module becomes smarter.
+✘ Child owns for_each.
+✘ Child performs Map Access.
+✘ Child depends on Collection structure.
+✘ Lower reusability compared to Parent Module for_each.
+
+========================================================================================================
+Technical Terms
+========================================================================================================
+
+Term                               Meaning
+--------------------------------------------------------------------------------------------------------
+Resource for_each                  Iteration inside a Resource Block.
+Collection                         Group of related values.
+Supporting Map                     Additional Map passed by Parent Module.
+Map Access                         Reading VALUE using KEY.
+each.key                           Current Map Key.
+each.value                         Current Map Value (Object).
+Iteration                          One Resource creation cycle.
+Resource Instance                  One Azure Resource created during one iteration.
+
+========================================================================================================
+Golden Rules
+========================================================================================================
+
+✔ Parent passes Collections.
+✔ Parent passes Supporting Maps.
+✔ Child owns for_each.
+✔ Child owns each.key and each.value.
+✔ Child performs Map Access.
+✔ One Iteration = One Azure Resource.
+✔ Supporting Maps are commonly used to resolve Names into Azure Resource IDs.
+
+========================================================================================================
+
+
+
+
+

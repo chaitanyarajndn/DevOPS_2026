@@ -1,0 +1,186 @@
+==============================================================================
+AZURE TERRAFORM LAB-1 : IP PLANNING
+==============================================================================
+
+Resource Group
+--------------
+Name                : rg-web
+Location            : Central India
+
+==============================================================================
+
+Virtual Network
+------------------------------------------------------------------------------
+
+Name                : vnet-web
+Address Space       : 10.77.0.0/20
+
+Usable Range        : 10.77.0.1  - 10.77.15.254
+
+==============================================================================
+
+SUBNET PLANNING
+==============================================================================
+
+1. Azure Bastion Subnet
+
+Terraform Key       : bastionsbnet
+Azure Name          : AzureBastionSubnet
+CIDR                : 10.77.0.0/24
+Usable IP Range     : 10.77.0.1  - 10.77.0.254
+
+------------------------------------------------------------------------------
+
+2. Web Server Subnet-1
+
+Terraform Key       : web1sbnet
+Azure Name          : snet-web01
+CIDR                : 10.77.1.0/24
+Usable IP Range     : 10.77.1.1  - 10.77.1.254
+
+------------------------------------------------------------------------------
+
+3. Web Server Subnet-2
+
+Terraform Key       : web2sbnet
+Azure Name          : snet-web02
+CIDR                : 10.77.2.0/24
+Usable IP Range     : 10.77.2.1  - 10.77.2.254
+
+==============================================================================
+
+PUBLIC IPs
+==============================================================================
+
+Load Balancer
+
+Terraform Key       : loadbalancerpip
+Azure Name          : pip-lb
+Allocation          : Static
+Public IP           : 20.219.58.55
+
+------------------------------------------------------------------------------
+
+Azure Bastion
+
+Terraform Key       : pipbastion
+Azure Name          : pip-bastion
+Allocation          : Static
+Public IP           : (Assigned after deployment)
+
+==============================================================================
+
+NETWORK INTERFACES
+==============================================================================
+
+NIC-1
+
+Terraform Key       : web1nic
+Azure Name          : nic-web01
+Subnet              : snet-web01
+IP Configuration    : default-confweb1
+Private IP          : Dynamic (10.77.1.x)
+
+------------------------------------------------------------------------------
+
+NIC-2
+
+Terraform Key       : web2nic
+Azure Name          : nic-web02
+Subnet              : snet-web02
+IP Configuration    : default-confweb2
+Private IP          : Dynamic (10.77.2.x)
+
+==============================================================================
+
+LINUX VIRTUAL MACHINES
+==============================================================================
+
+VM-1
+
+Terraform Key       : linxvm1
+Azure Name          : web1vm
+NIC                 : nic-web01
+Private IP          : 10.77.1.x
+
+------------------------------------------------------------------------------
+
+VM-2
+
+Terraform Key       : linxvm2
+Azure Name          : web2vm
+NIC                 : nic-web02
+Private IP          : 10.77.2.x
+
+==============================================================================
+
+LOAD BALANCER
+==============================================================================
+
+Terraform Key       : linxlb
+Azure Name          : LinxLoadBalancer
+SKU                 : Standard
+
+Frontend Public IP  : 20.219.58.55
+Frontend Config     : LinxIP1
+
+Backend Pool        : LinxBackendPool
+
+Backend Members
+
+web1vm (nic-web01)
+
+web2vm (nic-web02)
+
+Health Probe
+
+HealthProbe
+
+HTTP : 80
+
+Load Balancer Rule
+
+Linx-LBRule
+
+20.219.58.55:80
+        │
+        ▼
+LinxBackendPool
+        │
+        ├── web1vm (10.77.1.x)
+        └── web2vm (10.77.2.x)
+
+==============================================================================
+
+ACCESS FLOW
+==============================================================================
+
+Internet
+     │
+     ▼
+20.219.58.55 (pip-lb)
+     │
+     ▼
+LinxLoadBalancer
+     │
+     ▼
+LinxBackendPool
+     │
+     ├── web1vm (10.77.1.x)
+     └── web2vm (10.77.2.x)
+
+------------------------------------------------------------------------------
+Management Access
+
+Admin
+     │
+     ▼
+pip-bastion
+     │
+     ▼
+Azure Bastion
+     │
+     ├── web1vm
+     └── web2vm
+
+==============================================================================

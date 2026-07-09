@@ -1,0 +1,267 @@
+
+
+==========================================================
+01_Resource_Group_Module
+==========================================================
+
+Concept
+----------------------------------------------------------
+
+• Creates an Azure Resource Group.
+• Acts as the parent container for Azure resources.
+• Receives all required inputs from the Root Module.
+• Exposes useful outputs for other modules.
+
+==========================================================
+Child Module
+==========================================================
+
+--------------------------
+variables.tf
+--------------------------
+
+variable "rg" {
+  description = "Azure Resource Group Name"
+  type        = string
+}
+
+variable "lc" {
+  description = "Azure Region"
+  type        = string
+}
+
+Explanation
+
+variable "rg"        -------> Declares the Resource Group Name expected by this module.
+variable "lc"        -------> Declares the Azure Region expected by this module.
+description          -------> Explains the purpose of the variable.
+type = string        -------> Accepts only a single text value.
+
+--------------------------
+main.tf
+--------------------------
+
+resource "azurerm_resource_group" "RG" {
+
+  name     = var.rg
+  location = var.lc
+
+}
+
+Explanation
+
+resource "azurerm_resource_group"
+                     -------> Creates an Azure Resource Group.
+
+"RG"                 -------> Local Terraform resource name. Used only inside this module.
+
+name = var.rg        -------> Uses the Resource Group Name received from variables.tf.
+
+location = var.lc    -------> Uses the Azure Region received from variables.tf.
+
+--------------------------
+outputs.tf
+--------------------------
+
+output "resource_group_name" {
+  description = "Azure Resource Group Name"
+  value       = azurerm_resource_group.RG.name
+}
+
+output "resource_group_id" {
+  description = "Azure Resource Group ID"
+  value       = azurerm_resource_group.RG.id
+}
+
+Explanation
+
+resource_group_name  -------> Exposes the Resource Group Name to the Root Module.
+
+resource_group_id    -------> Exposes the Azure Resource Group ID for future modules.
+
+==========================================================
+Root Module
+==========================================================
+
+--------------------------
+variables.tf
+--------------------------
+
+Add:
+
+variable "rg" {
+  description = "Azure Resource Group Name"
+  type        = string
+}
+
+variable "lc" {
+  description = "Azure Region"
+  type        = string
+}
+
+Explanation
+
+variable "rg"        -------> Declares the Root Module input variable.
+
+variable "lc"        -------> Declares the Azure Region variable.
+
+--------------------------
+terraform.tfvars
+--------------------------
+
+Add:
+
+rg = "inter-rg-dev"
+lc = "Central India"
+
+Explanation
+
+rg                   -------> Assigns the Resource Group Name for the Dev environment.
+
+lc                   -------> Assigns the Azure Region for the Dev environment.
+
+--------------------------
+main.tf
+--------------------------
+
+Add:
+
+module "resource_group" {
+
+  source = "../../modules/azurerm_resource_group"
+
+  rg = var.rg
+  lc = var.lc
+
+}
+
+Explanation
+
+module "resource_group"
+                     -------> Calls the Resource Group Child Module.
+
+source               -------> Specifies the location of the Child Module.
+
+rg = var.rg          -------> Passes the Resource Group Name to the Child Module.
+
+lc = var.lc          -------> Passes the Azure Region to the Child Module.
+
+--------------------------
+outputs.tf
+--------------------------
+
+Add:
+
+output "resource_group_name" {
+  description = "Azure Resource Group Name"
+  value       = module.resource_group.resource_group_name
+}
+
+Explanation
+
+module.resource_group.resource_group_name
+                     -------> Receives the output from the Child Module.
+
+output               -------> Displays the Resource Group Name after terraform apply.
+
+==========================================================
+Important Notes
+==========================================================
+
+• Child Modules never read terraform.tfvars directly.
+• Root Module is responsible for passing values to Child Modules.
+• Child Modules should remain independent and reusable.
+• Outputs are used to expose values outside the Child Module.
+• Every Child Module should have its own variables.tf, main.tf and outputs.tf.
+
+==========================================================
+Common Mistake
+==========================================================
+
+❌ Wrong
+
+module "resource_group" {
+
+  name = var.rg
+
+}
+
+Reason  -------> "name" is an Azure resource argument, not a Child Module input variable.
+
+----------------------------------------------------------
+
+✅ Correct
+
+module "resource_group" {
+
+  rg = var.rg
+
+}
+
+Reason  -------> Module arguments must match the variable names declared inside the Child Module variables.tf.
+
+==========================================================
+Interview Notes
+==========================================================
+
+• Child Modules should be reusable.
+• Root Module manages module communication.
+• Outputs expose values to other modules.
+• Variables receive input values.
+• Resource blocks create Azure resources.
+
+==========================================================
+Value Flow (Input - rg)
+==========================================================
+
+Root variables.tf     -------> Declares the Root Module input variable.
+variable "rg"         -------> Terraform expects this variable to receive a value.
+                         │
+                         ▼
+terraform.tfvars      -------> Assigns the value for the current environment.
+rg = "inter-rg-dev"   -------> Terraform assigns this value to the declared variable "rg".
+                         │
+                         ▼
+Root main.tf          -------> Calls the Resource Group Child Module.
+rg = var.rg           -------> Reads the Root Module variable and passes it to the Child Module.
+                         │
+                         ▼
+Child variables.tf    -------> Declares the expected Child Module input.
+variable "rg"         -------> Receives the value from the Root Module.
+                         │
+                         ▼
+Child main.tf         -------> Creates the Azure Resource Group.
+name = var.rg         -------> Uses the received value as the Resource Group Name.
+                         │
+                         ▼
+Azure Resource Group  -------> Final Azure Resource.
+Name = inter-rg-dev   -------> Resource Group created successfully.
+
+==========================================================
+Value Flow (Output - resource_group_name)
+==========================================================
+
+Child main.tf                  -------> Creates the Azure Resource Group.
+name = var.rg                  -------> Resource Group Name assigned.
+                         │
+                         ▼
+Child outputs.tf               -------> Exposes the Resource Group Name.
+resource_group_name            -------> Returns the value to the Root Module.
+                         │
+                         ▼
+Root outputs.tf                -------> Receives the Child Module output.
+module.resource_group.resource_group_name
+                               -------> Displays the Resource Group Name after terraform apply.
+
+==========================================================
+End
+==========================================================
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,256 @@
+
+
+
+
+
+=========================================================
+Chapter 10 : Worker Node
+=========================================================
+
+Learning Objective
+---------------------------------------------------------
+
+After completing this chapter, you will be able to:
+
+• Understand what a Worker Node is.
+• Know why Worker Nodes are required in a Kubernetes Cluster.
+• Understand the responsibilities of a Worker Node.
+• Explain the role of a Worker Node in an interview.
+
+=========================================================
+What is a Worker Node?
+=========================================================
+
+Interview Definition
+---------------------------------------------------------
+
+A Worker Node is a machine in a Kubernetes Cluster where application workloads run.
+
+It hosts Pods and provides the resources required to run application Containers.
+
+=========================================================
+Think Like
+=========================================================
+
+Execution Machine
+
+OR
+
+Application Server
+
+The Control Plane manages the Cluster.
+
+The Worker Node executes those decisions and runs the applications.
+
+=========================================================
+Why Do We Need Worker Nodes?
+=========================================================
+
+The Control Plane can manage the Cluster, but it cannot run applications.
+
+Applications need CPU, Memory, Storage, and Networking resources.
+
+These resources are provided by Worker Nodes.
+
+Without Worker Nodes, there is no place to run Pods or Containers.
+
+=========================================================
+Responsibilities
+=========================================================
+
+Worker Node
+
+├── Run Pods
+├── Run Containers
+├── Provide CPU Resources
+├── Provide Memory Resources
+├── Provide Storage Resources
+├── Provide Network Connectivity
+├── Execute Control Plane Instructions
+└── Report Status to the Control Plane
+
+=========================================================
+Real DevOps Example
+=========================================================
+
+Suppose a Kubernetes Cluster contains three Worker Nodes.
+
+Worker Node-1
+
+CPU : 8 Cores
+
+Memory : 16 GB
+
+--------------------------------------
+
+Worker Node-2
+
+CPU : 8 Cores
+
+Memory : 16 GB
+
+--------------------------------------
+
+Worker Node-3
+
+CPU : 16 Cores
+
+Memory : 32 GB
+
+A developer deploys an application with ten Pods.
+
+The Scheduler selects the appropriate Worker Nodes.
+
+Those Worker Nodes provide the required resources and run the Pods.
+
+=========================================================
+Real-World Infrastructure
+=========================================================
+
+A Worker Node can be:
+
+• A Physical Server
+• A Virtual Machine
+• An Azure Virtual Machine
+• An AWS EC2 Instance
+• A VMware Virtual Machine
+• An OpenStack Virtual Machine
+
+Kubernetes treats all of them as Worker Nodes.
+
+=========================================================
+Nokia Connection
+=========================================================
+
+During a CNF deployment, Pods do not run automatically.
+
+They run on Linux Virtual Machines or Servers that are part of the Kubernetes Cluster.
+
+These machines act as Worker Nodes.
+
+Simplified deployment flow:
+
+NCOM
+
+↓
+
+Control Plane
+
+↓
+
+Worker Node
+
+↓
+
+Pods
+
+↓
+
+CNF Components
+
+=========================================================
+Important Points
+=========================================================
+
+• Worker Nodes run application workloads.
+
+• Worker Nodes provide compute resources.
+
+• Worker Nodes execute instructions received from the Control Plane.
+
+• Worker Nodes do not make scheduling decisions.
+
+=========================================================
+Common Interview Questions
+=========================================================
+
+Q. Does a Worker Node decide where a Pod should run?
+
+Answer:
+
+No.
+
+The Scheduler selects the Worker Node.
+
+---------------------------------------------------------
+
+Q. Can applications run without Worker Nodes?
+
+Answer:
+
+No.
+
+Applications always run on Worker Nodes.
+
+---------------------------------------------------------
+
+Q. Does the Control Plane run application Pods?
+
+Answer:
+
+No.
+
+The Control Plane manages the Cluster.
+
+Worker Nodes run the application Pods.
+
+=========================================================
+Quick Revision
+=========================================================
+
+Control Plane
+
+↓
+
+Manage the Cluster
+
+↓
+
+Worker Node
+
+↓
+
+Run Pods
+
+↓
+
+Run Containers
+
+↓
+
+Application Running
+
+=========================================================
+Key Takeaways
+=========================================================
+
+✓ Worker Nodes are responsible for running application workloads.
+
+✓ Worker Nodes provide CPU, Memory, Storage, and Networking resources.
+
+✓ Worker Nodes execute instructions received from the Control Plane.
+
+✓ Worker Nodes do not make scheduling decisions.
+
+=========================================================
+Interview Statement
+=========================================================
+
+A Worker Node is the execution layer of a Kubernetes Cluster. It hosts Pods, runs application Containers, provides compute resources, and executes instructions received from the Control Plane.
+
+A Worker Node is a machine in a Kubernetes Cluster where application workloads run. It hosts Pods, executes the instructions received from the Control Plane, and reports its status back to the Cluster.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
