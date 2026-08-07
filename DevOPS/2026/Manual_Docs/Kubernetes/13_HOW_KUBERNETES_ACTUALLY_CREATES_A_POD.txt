@@ -1,0 +1,240 @@
+
+========================================================================================================================
+HOW KUBERNETES ACTUALLY CREATES A POD
+========================================================================================================================
+
+What    : This is the complete internal journey of a Pod from deployment.yaml until the application starts running
+          inside a Worker Node.
+
+Why     : Most beginners only know "kubectl apply creates a Pod", but Kubernetes performs many internal steps before
+          a container actually starts. Understanding this flow makes topics like Scheduler, kubelet, containerd,
+          imagePullPolicy, Probes and Services much easier to understand.
+
+How     : Kubernetes processes the Deployment one component at a time. Every component has a specific responsibility,
+          and the next component starts only after the previous one finishes its job.
+
+Think   : Like ordering a new car. You place the order once, but many departments work behind the scenes before the
+          car is delivered to you.
+
+Memory  : Deployment creates Objects, kubelet creates Containers.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Complete Internal Flow
+----------------------
+
+Step 1 : User applies the Deployment
+
+kubectl apply -f deployment.yaml
+
+        │
+
+Step 2 : API Server receives the request
+
+        │
+
+Step 3 : Deployment Object is stored inside etcd
+
+        │
+
+Step 4 : Deployment Controller notices a new Deployment
+
+        │
+
+Step 5 : Deployment Controller creates a ReplicaSet
+
+        │
+
+Step 6 : ReplicaSet checks Desired Pods vs Current Pods
+
+        │
+
+Step 7 : ReplicaSet creates Pod Object(s)
+
+        │
+
+Step 8 : Scheduler selects the best Worker Node
+
+        │
+
+Step 9 : API Server assigns the Pod to that Worker Node
+
+        │
+
+Step 10 : kubelet on that Worker Node notices a new Pod
+
+        │
+
+Step 11 : kubelet reads template.spec
+
+        │
+
+Step 12 : kubelet asks containerd (Container Runtime)
+
+        │
+
+Step 13 : containerd checks whether the Image already exists
+
+        │
+
+Step 14 : Pull Image (if required)
+
+        │
+
+Step 15 : Create Container
+
+        │
+
+Step 16 : Start Application
+
+        │
+
+Running Pod
+
+------------------------------------------------------------------------------------------------------------------------
+
+Who Does What?
+--------------
+
+API Server              → Accepts all Kubernetes requests.
+
+etcd                    → Stores the Deployment and Pod Objects.
+
+Deployment Controller   → Creates ReplicaSet.
+
+ReplicaSet             → Creates the required number of Pods.
+
+Scheduler              → Chooses the best Worker Node.
+
+kubelet                → Reads Pod Specification and manages the Pod.
+
+containerd             → Pulls Images and creates Containers.
+
+Application            → Finally starts inside the Container.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Complete Responsibility Chain
+-----------------------------
+
+User
+ │
+ ▼
+API Server
+ │
+ ▼
+Deployment
+ │
+ ▼
+ReplicaSet
+ │
+ ▼
+Pod
+ │
+ ▼
+Scheduler
+ │
+ ▼
+Worker Node
+ │
+ ▼
+kubelet
+ │
+ ▼
+containerd
+ │
+ ▼
+Container
+ │
+ ▼
+Application
+
+------------------------------------------------------------------------------------------------------------------------
+
+Interview Questions
+-------------------
+
+Q. Does Deployment create Containers directly?
+
+Ans. No.
+
+Deployment → ReplicaSet → Pod → kubelet → containerd → Container
+
+------------------------------------------------------------
+
+Q. Who actually starts the Container?
+
+Ans. containerd (or another Container Runtime) starts the container after receiving instructions from kubelet.
+
+------------------------------------------------------------
+
+Q. Who reads template.spec?
+
+Ans. ReplicaSet copies it while creating the Pod.
+     kubelet reads it again on the Worker Node to start the containers.
+
+------------------------------------------------------------
+
+Q. Who chooses the Worker Node?
+
+Ans. Scheduler.
+
+------------------------------------------------------------
+
+Q. Who stores the Deployment object?
+
+Ans. etcd.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Common Beginner Mistakes
+------------------------
+
+❌ kubectl directly creates a Pod.
+
+✔ kubectl only sends a request to the API Server.
+
+------------------------------------------------------------
+
+❌ Deployment creates Containers.
+
+✔ Deployment creates ReplicaSet.
+  ReplicaSet creates Pods.
+  kubelet + containerd create Containers.
+
+------------------------------------------------------------
+
+❌ Scheduler starts the Pod.
+
+✔ Scheduler only selects the Worker Node.
+
+------------------------------------------------------------
+
+❌ kubelet creates Images.
+
+✔ kubelet asks the Container Runtime to create Containers from Images.
+
+========================================================================================================================
+
+
+Production Reality
+------------------
+
+Local Lab
+----------
+image: nginx:latest
+
+Production
+-----------
+image: company/payment-service:v2.3.7
+
+Reason
+------
+Production environments avoid "latest" because a new image pushed to the registry can unexpectedly change application behavior. Fixed version tags make deployments predictable and rollbacks reliable.
+
+
+
+
+
+
+

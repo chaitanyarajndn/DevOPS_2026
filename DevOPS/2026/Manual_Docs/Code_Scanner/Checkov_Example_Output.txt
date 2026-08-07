@@ -1,0 +1,960 @@
+
+PS C:\WINDOWS\system32> cd C:\Users\chait\OneDrive\Documents\Devops\Terraform\DevOPS\2026\Terraform_practice\6July-Modules
+PS C:\Users\chait\OneDrive\Documents\Devops\Terraform\DevOPS\2026\Terraform_practice\6July-Modules>
+PS C:\Users\chait\OneDrive\Documents\Devops\Terraform\DevOPS\2026\Terraform_practice\6July-Modules>
+PS C:\Users\chait\OneDrive\Documents\Devops\Terraform\DevOPS\2026\Terraform_practice\6July-Modules>
+PS C:\Users\chait\OneDrive\Documents\Devops\Terraform\DevOPS\2026\Terraform_practice\6July-Modules> checkov -d .
+[ secrets framework ]: 100%|████████████████████|[57/57], Current File Scanned=.\modules\15-azurerm_network_interface_backend_address_pool_association\variables.tf
+[ terraform framework ]: 100%|████████████████████|[120/120], Current File Scanned=modules\15-azurerm_network_interface_backend_address_pool_association\variables.tf
+
+       _               _
+   ___| |__   ___  ___| | _______   __
+  / __| '_ \ / _ \/ __| |/ / _ \ \ / /
+ | (__| | | |  __/ (__|   < (_) \ V /
+  \___|_| |_|\___|\___|_|\_\___/ \_/
+
+By Prisma Cloud | version: 3.3.8
+
+terraform scan results:
+
+Passed checks: 22, Failed checks: 13, Skipped checks: 0
+
+Check: CKV_AZURE_183: "Ensure that VNET uses local DNS addresses"
+        PASSED for resource: module.virtual_network.azurerm_virtual_network.VN["vna"]
+        File: \modules\02-azurerm_virtual_network\main.tf:1-7
+        Calling File: \environment\qa\main.tf:8-12
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-183
+Check: CKV_AZURE_182: "Ensure that VNET has at least 2 connected DNS Endpoints"
+        PASSED for resource: module.virtual_network.azurerm_virtual_network.VN["vna"]
+        File: \modules\02-azurerm_virtual_network\main.tf:1-7
+        Calling File: \environment\qa\main.tf:8-12
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-182
+Check: CKV_AZURE_160: "Ensure that HTTP (port 80) access is restricted from the internet"
+        PASSED for resource: module.network_security_group.azurerm_network_security_group.NSG["webnsg"]
+        File: \modules\04-azurerm_network_security_group\main.tf:1-7
+        Calling File: \environment\qa\main.tf:24-28
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-http-port-80-access-from-the-internet-is-restricted
+Check: CKV_AZURE_9: "Ensure that RDP access is restricted from the internet"
+        PASSED for resource: module.network_security_group.azurerm_network_security_group.NSG["webnsg"]
+        File: \modules\04-azurerm_network_security_group\main.tf:1-7
+        Calling File: \environment\qa\main.tf:24-28
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-2
+Check: CKV_AZURE_10: "Ensure that SSH access is restricted from the internet"
+        PASSED for resource: module.network_security_group.azurerm_network_security_group.NSG["webnsg"]
+        File: \modules\04-azurerm_network_security_group\main.tf:1-7
+        Calling File: \environment\qa\main.tf:24-28
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-3
+Check: CKV_AZURE_77: "Ensure that UDP Services are restricted from the Internet "
+        PASSED for resource: module.network_security_group.azurerm_network_security_group.NSG["webnsg"]
+        File: \modules\04-azurerm_network_security_group\main.tf:1-7
+        Calling File: \environment\qa\main.tf:24-28
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-udp-services-are-restricted-from-the-internet
+Check: CKV_AZURE_160: "Ensure that HTTP (port 80) access is restricted from the internet"
+        PASSED for resource: module.network_security_rule.azurerm_network_security_rule.NSR["nsra"]
+        File: \modules\05-azurerm_network_security_rule\main.tf:1-14
+        Calling File: \environment\qa\main.tf:32-36
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-http-port-80-access-from-the-internet-is-restricted
+Check: CKV_AZURE_9: "Ensure that RDP access is restricted from the internet"
+        PASSED for resource: module.network_security_rule.azurerm_network_security_rule.NSR["nsra"]
+        File: \modules\05-azurerm_network_security_rule\main.tf:1-14
+        Calling File: \environment\qa\main.tf:32-36
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-2
+Check: CKV_AZURE_77: "Ensure that UDP Services are restricted from the Internet "
+        PASSED for resource: module.network_security_rule.azurerm_network_security_rule.NSR["nsra"]
+        File: \modules\05-azurerm_network_security_rule\main.tf:1-14
+        Calling File: \environment\qa\main.tf:32-36
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-udp-services-are-restricted-from-the-internet
+Check: CKV_AZURE_9: "Ensure that RDP access is restricted from the internet"
+        PASSED for resource: module.network_security_rule.azurerm_network_security_rule.NSR["nsrb"]
+        File: \modules\05-azurerm_network_security_rule\main.tf:1-14
+        Calling File: \environment\qa\main.tf:32-36
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-2
+Check: CKV_AZURE_10: "Ensure that SSH access is restricted from the internet"
+        PASSED for resource: module.network_security_rule.azurerm_network_security_rule.NSR["nsrb"]
+        File: \modules\05-azurerm_network_security_rule\main.tf:1-14
+        Calling File: \environment\qa\main.tf:32-36
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-3
+Check: CKV_AZURE_77: "Ensure that UDP Services are restricted from the Internet "
+        PASSED for resource: module.network_security_rule.azurerm_network_security_rule.NSR["nsrb"]
+        File: \modules\05-azurerm_network_security_rule\main.tf:1-14
+        Calling File: \environment\qa\main.tf:32-36
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-udp-services-are-restricted-from-the-internet
+Check: CKV_AZURE_118: "Ensure that Network Interfaces disable IP forwarding"
+        PASSED for resource: module.network_interface.azurerm_network_interface.NIC["web1nic"]
+        File: \modules\09-azurerm_network_interface\main.tf:1-12
+        Calling File: \environment\qa\main.tf:68-74
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-network-interfaces-disable-ip-forwarding
+Check: CKV_AZURE_118: "Ensure that Network Interfaces disable IP forwarding"
+        PASSED for resource: module.network_interface.azurerm_network_interface.NIC["web2nic"]
+        File: \modules\09-azurerm_network_interface\main.tf:1-12
+        Calling File: \environment\qa\main.tf:68-74
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-network-interfaces-disable-ip-forwarding
+Check: CKV_AZURE_179: "Ensure VM agent is installed"
+        PASSED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm1"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-179
+Check: CKV_AZURE_92: "Ensure that Virtual Machines use managed disks"
+        PASSED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm1"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-virtual-machines-use-managed-disks
+Check: CKV_AZURE_179: "Ensure VM agent is installed"
+        PASSED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm2"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-179
+Check: CKV_AZURE_92: "Ensure that Virtual Machines use managed disks"
+        PASSED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm2"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-that-virtual-machines-use-managed-disks
+Check: CKV_AZURE_119: "Ensure that Network Interfaces don't use public IPs"
+        PASSED for resource: module.network_interface.azurerm_network_interface.NIC["web1nic"]
+        File: \modules\09-azurerm_network_interface\main.tf:1-12
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-network-interfaces-dont-use-public-ips
+Check: CKV_AZURE_119: "Ensure that Network Interfaces don't use public IPs"
+        PASSED for resource: module.network_interface.azurerm_network_interface.NIC["web2nic"]
+        File: \modules\09-azurerm_network_interface\main.tf:1-12
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-network-interfaces-dont-use-public-ips
+Check: CKV2_AZURE_39: "Ensure Azure VM is not configured with public IP and serial console access"
+        PASSED for resource: module.network_interface.azurerm_network_interface.NIC["web1nic"]
+        File: \modules\09-azurerm_network_interface\main.tf:1-12
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azure-2-39
+Check: CKV2_AZURE_39: "Ensure Azure VM is not configured with public IP and serial console access"
+        PASSED for resource: module.network_interface.azurerm_network_interface.NIC["web2nic"]
+        File: \modules\09-azurerm_network_interface\main.tf:1-12
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azure-2-39
+Check: CKV_AZURE_10: "Ensure that SSH access is restricted from the internet"
+        FAILED for resource: module.network_security_rule.azurerm_network_security_rule.NSR["nsra"]
+        File: \modules\05-azurerm_network_security_rule\main.tf:1-14
+        Calling File: \environment\qa\main.tf:32-36
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-3
+
+                1  | resource "azurerm_network_security_rule" "NSR" {
+                2  |   for_each                    = var.nsr
+                3  |   name                        = each.value.name
+                4  |   priority                    = each.value.priority
+                5  |   direction                   = each.value.direction
+                6  |   access                      = each.value.access
+                7  |   protocol                    = each.value.protocol
+                8  |   source_port_range           = each.value.source_port_range
+                9  |   destination_port_range      = each.value.destination_port_range
+                10 |   source_address_prefix       = each.value.source_address_prefix
+                11 |   destination_address_prefix  = each.value.destination_address_prefix
+                12 |   resource_group_name         = each.value.resource_group_name
+                13 |   network_security_group_name = each.value.network_security_group_name
+                14 | }
+
+Check: CKV_AZURE_160: "Ensure that HTTP (port 80) access is restricted from the internet"
+        FAILED for resource: module.network_security_rule.azurerm_network_security_rule.NSR["nsrb"]
+        File: \modules\05-azurerm_network_security_rule\main.tf:1-14
+        Calling File: \environment\qa\main.tf:32-36
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-http-port-80-access-from-the-internet-is-restricted
+
+                1  | resource "azurerm_network_security_rule" "NSR" {
+                2  |   for_each                    = var.nsr
+                3  |   name                        = each.value.name
+                4  |   priority                    = each.value.priority
+                5  |   direction                   = each.value.direction
+                6  |   access                      = each.value.access
+                7  |   protocol                    = each.value.protocol
+                8  |   source_port_range           = each.value.source_port_range
+                9  |   destination_port_range      = each.value.destination_port_range
+                10 |   source_address_prefix       = each.value.source_address_prefix
+                11 |   destination_address_prefix  = each.value.destination_address_prefix
+                12 |   resource_group_name         = each.value.resource_group_name
+                13 |   network_security_group_name = each.value.network_security_group_name
+                14 | }
+
+Check: CKV_AZURE_50: "Ensure Virtual Machine Extensions are not Installed"
+        FAILED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm1"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/bc-azr-general-14
+
+                1  | resource "azurerm_linux_virtual_machine" "LinxVM" {
+                2  |   for_each = var.linxvm
+                3  |   name                = each.value.name
+                4  |   resource_group_name = each.value.resource_group_name
+                5  |   location            = each.value.location
+                6  |   size                = each.value.size
+                7  |   admin_username      = each.value.admin_username
+                8  |   admin_password        = each.value.admin_password
+                9  |   disable_password_authentication = false
+                10 |   network_interface_ids = [var.nic_ID[each.value.network_interface_ids]]
+                11 |
+                12 |   os_disk {
+                13 |     caching              = "ReadWrite"
+                14 |     storage_account_type = "Standard_LRS"
+                15 |   }
+                16 |
+                17 |   source_image_reference {
+                18 |     publisher = "Canonical"
+                19 |     offer     = "0001-com-ubuntu-server-jammy"
+                20 |     sku       = "22_04-lts-gen2"
+                21 |     version   = "latest"
+                22 |   }
+                23 |
+                24 | }
+Check: CKV_AZURE_1: "Ensure Azure Instance does not use basic authentication(Use SSH Key Instead)"
+        FAILED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm1"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-1
+
+                1  | resource "azurerm_linux_virtual_machine" "LinxVM" {
+                2  |   for_each = var.linxvm
+                3  |   name                = each.value.name
+                4  |   resource_group_name = each.value.resource_group_name
+                5  |   location            = each.value.location
+                6  |   size                = each.value.size
+                7  |   admin_username      = each.value.admin_username
+                8  |   admin_password        = each.value.admin_password
+                9  |   disable_password_authentication = false
+                10 |   network_interface_ids = [var.nic_ID[each.value.network_interface_ids]]
+                11 |
+                12 |   os_disk {
+                13 |     caching              = "ReadWrite"
+                14 |     storage_account_type = "Standard_LRS"
+                15 |   }
+                16 |
+                17 |   source_image_reference {
+                18 |     publisher = "Canonical"
+                19 |     offer     = "0001-com-ubuntu-server-jammy"
+                20 |     sku       = "22_04-lts-gen2"
+                21 |     version   = "latest"
+                22 |   }
+                23 |
+                24 | }
+Check: CKV_AZURE_178: "Ensure linux VM enables SSH with keys for secure communication"
+        FAILED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm1"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-178
+
+                1  | resource "azurerm_linux_virtual_machine" "LinxVM" {
+                2  |   for_each = var.linxvm
+                3  |   name                = each.value.name
+                4  |   resource_group_name = each.value.resource_group_name
+                5  |   location            = each.value.location
+                6  |   size                = each.value.size
+                7  |   admin_username      = each.value.admin_username
+                8  |   admin_password        = each.value.admin_password
+                9  |   disable_password_authentication = false
+                10 |   network_interface_ids = [var.nic_ID[each.value.network_interface_ids]]
+                11 |
+                12 |   os_disk {
+                13 |     caching              = "ReadWrite"
+                14 |     storage_account_type = "Standard_LRS"
+                15 |   }
+                16 |
+                17 |   source_image_reference {
+                18 |     publisher = "Canonical"
+                19 |     offer     = "0001-com-ubuntu-server-jammy"
+                20 |     sku       = "22_04-lts-gen2"
+                21 |     version   = "latest"
+                22 |   }
+                23 |
+                24 | }
+Check: CKV_AZURE_149: "Ensure that Virtual machine does not enable password authentication"
+        FAILED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm1"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-azure-virtual-machine-does-not-enable-password-authentication
+
+                1  | resource "azurerm_linux_virtual_machine" "LinxVM" {
+                2  |   for_each = var.linxvm
+                3  |   name                = each.value.name
+                4  |   resource_group_name = each.value.resource_group_name
+                5  |   location            = each.value.location
+                6  |   size                = each.value.size
+                7  |   admin_username      = each.value.admin_username
+                8  |   admin_password        = each.value.admin_password
+                9  |   disable_password_authentication = false
+                10 |   network_interface_ids = [var.nic_ID[each.value.network_interface_ids]]
+                11 |
+                12 |   os_disk {
+                13 |     caching              = "ReadWrite"
+                14 |     storage_account_type = "Standard_LRS"
+                15 |   }
+                16 |
+                17 |   source_image_reference {
+                18 |     publisher = "Canonical"
+                19 |     offer     = "0001-com-ubuntu-server-jammy"
+                20 |     sku       = "22_04-lts-gen2"
+                21 |     version   = "latest"
+                22 |   }
+                23 |
+                24 | }
+Check: CKV_AZURE_50: "Ensure Virtual Machine Extensions are not Installed"
+        FAILED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm2"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/bc-azr-general-14
+
+                1  | resource "azurerm_linux_virtual_machine" "LinxVM" {
+                2  |   for_each = var.linxvm
+                3  |   name                = each.value.name
+                4  |   resource_group_name = each.value.resource_group_name
+                5  |   location            = each.value.location
+                6  |   size                = each.value.size
+                7  |   admin_username      = each.value.admin_username
+                8  |   admin_password        = each.value.admin_password
+                9  |   disable_password_authentication = false
+                10 |   network_interface_ids = [var.nic_ID[each.value.network_interface_ids]]
+                11 |
+                12 |   os_disk {
+                13 |     caching              = "ReadWrite"
+                14 |     storage_account_type = "Standard_LRS"
+                15 |   }
+                16 |
+                17 |   source_image_reference {
+                18 |     publisher = "Canonical"
+                19 |     offer     = "0001-com-ubuntu-server-jammy"
+                20 |     sku       = "22_04-lts-gen2"
+                21 |     version   = "latest"
+                22 |   }
+                23 |
+                24 | }
+Check: CKV_AZURE_1: "Ensure Azure Instance does not use basic authentication(Use SSH Key Instead)"
+        FAILED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm2"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-1
+
+                1  | resource "azurerm_linux_virtual_machine" "LinxVM" {
+                2  |   for_each = var.linxvm
+                3  |   name                = each.value.name
+                4  |   resource_group_name = each.value.resource_group_name
+                5  |   location            = each.value.location
+                6  |   size                = each.value.size
+                7  |   admin_username      = each.value.admin_username
+                8  |   admin_password        = each.value.admin_password
+                9  |   disable_password_authentication = false
+                10 |   network_interface_ids = [var.nic_ID[each.value.network_interface_ids]]
+                11 |
+                12 |   os_disk {
+                13 |     caching              = "ReadWrite"
+                14 |     storage_account_type = "Standard_LRS"
+                15 |   }
+                16 |
+                17 |   source_image_reference {
+                18 |     publisher = "Canonical"
+                19 |     offer     = "0001-com-ubuntu-server-jammy"
+                20 |     sku       = "22_04-lts-gen2"
+                21 |     version   = "latest"
+                22 |   }
+                23 |
+                24 | }
+Check: CKV_AZURE_178: "Ensure linux VM enables SSH with keys for secure communication"
+        FAILED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm2"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-178
+
+                1  | resource "azurerm_linux_virtual_machine" "LinxVM" {
+                2  |   for_each = var.linxvm
+                3  |   name                = each.value.name
+                4  |   resource_group_name = each.value.resource_group_name
+                5  |   location            = each.value.location
+                6  |   size                = each.value.size
+                7  |   admin_username      = each.value.admin_username
+                8  |   admin_password        = each.value.admin_password
+                9  |   disable_password_authentication = false
+                10 |   network_interface_ids = [var.nic_ID[each.value.network_interface_ids]]
+                11 |
+                12 |   os_disk {
+                13 |     caching              = "ReadWrite"
+                14 |     storage_account_type = "Standard_LRS"
+                15 |   }
+                16 |
+                17 |   source_image_reference {
+                18 |     publisher = "Canonical"
+                19 |     offer     = "0001-com-ubuntu-server-jammy"
+                20 |     sku       = "22_04-lts-gen2"
+                21 |     version   = "latest"
+                22 |   }
+                23 |
+                24 | }
+Check: CKV_AZURE_149: "Ensure that Virtual machine does not enable password authentication"
+        FAILED for resource: module.virtual_machines.azurerm_linux_virtual_machine.LinxVM["linxvm2"]
+        File: \modules\10-azurerm_linux_virtual_machine\main.tf:1-24
+        Calling File: \environment\qa\main.tf:77-82
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-azure-virtual-machine-does-not-enable-password-authentication
+
+                1  | resource "azurerm_linux_virtual_machine" "LinxVM" {
+                2  |   for_each = var.linxvm
+                3  |   name                = each.value.name
+                4  |   resource_group_name = each.value.resource_group_name
+                5  |   location            = each.value.location
+                6  |   size                = each.value.size
+                7  |   admin_username      = each.value.admin_username
+                8  |   admin_password        = each.value.admin_password
+                9  |   disable_password_authentication = false
+                10 |   network_interface_ids = [var.nic_ID[each.value.network_interface_ids]]
+                11 |
+                12 |   os_disk {
+                13 |     caching              = "ReadWrite"
+                14 |     storage_account_type = "Standard_LRS"
+                15 |   }
+                16 |
+                17 |   source_image_reference {
+                18 |     publisher = "Canonical"
+                19 |     offer     = "0001-com-ubuntu-server-jammy"
+                20 |     sku       = "22_04-lts-gen2"
+                21 |     version   = "latest"
+                22 |   }
+                23 |
+                24 | }
+Check: CKV2_AZURE_31: "Ensure VNET subnet is configured with a Network Security Group (NSG)"
+        FAILED for resource: module.subnet.azurerm_subnet.SBN["bastionsbnet"]
+        File: \modules\03-azurerm_subnet\main.tf:1-7
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/bc-azure-2-31
+
+                1 | resource "azurerm_subnet" "SBN" {
+                2 |   for_each             = var.sbn
+                3 |   name                 = each.value.name
+                4 |   resource_group_name  = each.value.resource_group_name
+                5 |   virtual_network_name = each.value.virtual_network_name
+                6 |   address_prefixes     = each.value.address_prefixes
+                7 | }
+
+Check: CKV2_AZURE_31: "Ensure VNET subnet is configured with a Network Security Group (NSG)"
+        FAILED for resource: module.subnet.azurerm_subnet.SBN["web1sbnet"]
+        File: \modules\03-azurerm_subnet\main.tf:1-7
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/bc-azure-2-31
+
+                1 | resource "azurerm_subnet" "SBN" {
+                2 |   for_each             = var.sbn
+                3 |   name                 = each.value.name
+                4 |   resource_group_name  = each.value.resource_group_name
+                5 |   virtual_network_name = each.value.virtual_network_name
+                6 |   address_prefixes     = each.value.address_prefixes
+                7 | }
+
+Check: CKV2_AZURE_31: "Ensure VNET subnet is configured with a Network Security Group (NSG)"
+        FAILED for resource: module.subnet.azurerm_subnet.SBN["web2sbnet"]
+        File: \modules\03-azurerm_subnet\main.tf:1-7
+        Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/bc-azure-2-31
+
+                1 | resource "azurerm_subnet" "SBN" {
+                2 |   for_each             = var.sbn
+                3 |   name                 = each.value.name
+                4 |   resource_group_name  = each.value.resource_group_name
+                5 |   virtual_network_name = each.value.virtual_network_name
+                6 |   address_prefixes     = each.value.address_prefixes
+                7 | }
+
+
+
+
+
+
+
+
+================================================================================
+Command
+================================================================================
+
+PS C:\Users\chait\OneDrive\Documents\Devops\Terraform\DevOPS\2026\Terraform_practice\6July-Modules> checkov -d .
+
+Breakdown
+---------
+PS
+→ PowerShell Prompt
+
+C:\Users\chait\OneDrive\Documents\Devops\Terraform\DevOPS\2026\Terraform_practice\6July-Modules
+→ Current Working Directory
+→ Yahi folder scan hoga.
+
+>
+→ PowerShell command ka wait kar raha hai.
+
+checkov
+→ Checkov tool execute hua.
+
+-d
+→ d = Directory
+
+.
+→ Current Directory
+
+Complete Meaning
+----------------
+checkov ko bola gaya:
+
+"Current folder aur uske andar jitni bhi supported files hain unhe scan karo."
+
+================================================================================
+Next Output
+================================================================================
+
+[ secrets framework ]: 100%|████████████████████|[57/57], Current File Scanned=.\modules\15-azurerm_network_interface_backend_address_pool_association\variables.tf
+
+Breakdown
+---------
+
+[ secrets framework ]
+→ Checkov ka Secret Scanner run hua.
+
+Purpose
+-------
+Password
+API Keys
+Tokens
+Private Keys
+Connection Strings
+Hardcoded Secrets
+
+100%
+→ Secret scanning complete.
+
+████████████████████
+→ Progress Bar.
+
+57/57
+→ Total 57 files scan hui.
+
+Current File Scanned
+--------------------
+modules\15-azurerm_network_interface_backend_address_pool_association\variables.tf
+
+Meaning
+-------
+Ye last file thi jo scan process ke time chal rahi thi.
+Ye result nahi hai.
+Sirf progress information hai.
+
+================================================================================
+
+================================================================================
+Next Output
+================================================================================
+
+       _               _
+   ___| |__   ___  ___| | _______   __
+  / __| '_ \ / _ \/ __| |/ / _ \ \ / /
+ | (__| | | |  __/ (__|   < (_) \ V /
+  \___|_| |_|\___|\___|_|\_\___/ \_/
+
+By Prisma Cloud | version: 3.3.8
+
+terraform scan results:
+
+Passed checks: 22
+Failed checks: 13
+Skipped checks: 0
+
+Breakdown
+---------
+
+       _               _
+   ___| |__   ___  ___| | _______   __
+  / __| '_ \ / _ \/ __| |/ / _ \ \ / /
+ | (__| | | |  __/ (__|   < (_) \ V /
+  \___|_| |_|\___|\___|_|\_\___/ \_/
+
+→ Checkov ka Logo (ASCII Banner)
+→ Sirf branding hai.
+→ Iska scan result se koi relation nahi.
+
+-------------------------------------------------------------------------------
+
+By Prisma Cloud
+
+Meaning
+-------
+Checkov ko Prisma Cloud maintain karta hai.
+
+-------------------------------------------------------------------------------
+
+version : 3.3.8
+
+Meaning
+-------
+Tumhare system me installed Checkov ki version.
+
+-------------------------------------------------------------------------------
+
+terraform scan results:
+
+Meaning
+-------
+Ab actual report start ho rahi hai.
+
+Ab tak sirf scanning chal rahi thi.
+Is line ke baad Checkov apne findings dikhana start karta hai.
+
+-------------------------------------------------------------------------------
+
+Passed checks : 22
+
+Meaning
+-------
+22 Security Policies PASS hui.
+
+Matlab
+
+22 jagah Checkov ne code check kiya aur koi security problem nahi mili.
+
+-------------------------------------------------------------------------------
+
+Failed checks : 13
+
+Meaning
+-------
+13 Security Policies FAIL hui.
+
+Matlab
+
+13 jagah Checkov ko security issue mila.
+
+Ye errors nahi hain.
+Ye Security Recommendations hain.
+
+-------------------------------------------------------------------------------
+
+Skipped checks : 0
+
+Meaning
+-------
+Koi bhi security check intentionally skip nahi kiya gaya.
+
+Agar tum kisi policy ko ignore kar dete to yahan count badh jata.
+
+-------------------------------------------------------------------------------
+
+Current Summary
+---------------
+
+Terraform Project Scanned        : YES
+Total PASS Security Checks       : 22
+Total FAILED Security Checks     : 13
+Total SKIPPED Security Checks    : 0
+
+Ab iske baad Checkov ek-ek security finding explain karega.
+
+Sabse pehli finding hogi:
+
+Check: CKV_AZURE_183
+
+
+
+
+
+================================================================================
+Next Output
+================================================================================
+
+Check: CKV_AZURE_183: "Ensure that VNET uses local DNS addresses"
+
+        PASSED for resource:
+        module.virtual_network.azurerm_virtual_network.VN["vna"]
+
+        File:
+        \modules\02-azurerm_virtual_network\main.tf:1-7
+
+        Calling File:
+        \environment\qa\main.tf:8-12
+
+        Guide:
+        https://docs....
+
+Breakdown
+---------
+
+Check:
+------
+CKV_AZURE_183
+
+Meaning
+-------
+Ye Checkov Policy ID hai.
+
+CKV
+→ Checkov
+
+AZURE
+→ Azure Cloud
+
+183
+→ Is security rule ka unique number.
+
+Easy Remember
+-------------
+CKV_AZURE_183
+=
+Azure Security Rule No.183
+
+-------------------------------------------------------------------------------
+
+"Ensure that VNET uses local DNS addresses"
+
+Meaning
+-------
+Ye policy kis cheez ko verify kar rahi hai.
+
+Simple words me
+
+"VNet me Local DNS configured hai ya nahi?"
+
+Abhi bas itna samajhna hai.
+Ye policy ka naam hai.
+
+-------------------------------------------------------------------------------
+
+PASSED
+
+Meaning
+-------
+Tumhara code is security rule ko satisfy karta hai.
+
+Isliye
+
+PASS ✅
+
+-------------------------------------------------------------------------------
+
+for resource:
+
+module.virtual_network.azurerm_virtual_network.VN["vna"]
+
+Breakdown
+---------
+
+module.virtual_network
+→ Terraform Module Name
+
+azurerm_virtual_network
+→ Azure Resource Type
+
+VN["vna"]
+→ Resource Instance Name
+
+Simple Meaning
+--------------
+Checkov ne VNet resource ko check kiya.
+
+-------------------------------------------------------------------------------
+
+File
+
+\modules\02-azurerm_virtual_network\main.tf:1-7
+
+Meaning
+-------
+Original Terraform code yahan hai.
+
+main.tf
+Lines 1-7
+
+Yahin se resource read kiya gaya.
+
+-------------------------------------------------------------------------------
+
+Calling File
+
+\environment\qa\main.tf:8-12
+
+Meaning
+-------
+Ye module directly execute nahi hua.
+
+Is module ko
+
+environment\qa\main.tf
+
+ne call kiya.
+
+Simple Flow
+-----------
+
+environment\qa\main.tf
+        │
+        ▼
+module.virtual_network
+        │
+        ▼
+modules\02-azurerm_virtual_network\main.tf
+
+-------------------------------------------------------------------------------
+
+Guide
+
+https://docs....
+
+Meaning
+-------
+Agar policy samajhni ho ya fix dekhna ho,
+to Checkov official documentation ka link deta hai.
+
+Interview me normally iski zarurat nahi padti.
+
+================================================================================
+Summary
+================================================================================
+
+CKV_AZURE_183
+→ Security Policy ID
+
+Policy Name
+→ Kis cheez ki checking ho rahi hai.
+
+PASSED
+→ Rule satisfy ho gaya.
+
+Resource
+→ Kis Azure resource ko check kiya.
+
+File
+→ Resource kahan defined hai.
+
+Calling File
+→ Module ko kis file ne call kiya.
+
+Guide
+→ Official documentation.
+
+
+
+
+
+
+
+================================================================================
+First FAILED Check
+================================================================================
+
+
+Check: CKV_AZURE_10: "Ensure that SSH access is restricted from the internet"
+
+        FAILED for resource:
+        module.network_security_rule.azurerm_network_security_rule.NSR["nsra"]
+
+        File:
+        \modules\05-azurerm_network_security_rule\main.tf:1-14
+
+        Calling File:
+        \environment\qa\main.tf:32-36
+
+        Guide:
+        https://....
+
+                1  | resource "azurerm_network_security_rule" "NSR" {
+                ...
+                14 | }
+
+
+
+------------
+Breakdown
+------------
+
+
+
+Check
+-----
+CKV_AZURE_10
+
+Meaning
+-------
+This is the unique security policy ID assigned by Checkov.
+CKV means Checkov.
+AZURE means this policy belongs to Microsoft Azure.
+10 is the unique policy number.
+Whenever you see CKV_AZURE_10, Checkov is evaluating the same Azure security rule.
+
+================================================================================
+Policy
+------
+
+Ensure that SSH access is restricted from the internet
+
+Meaning
+-------
+Checkov is checking whether your Virtual Machine can be accessed through SSH from the public Internet.
+According to security best practices, SSH should not be open to everyone.
+Instead, it should be limited to trusted IP addresses or private networks.
+If SSH is publicly accessible, attackers can continuously attempt to log in using brute-force attacks.
+
+================================================================================
+FAILED
+------
+
+Meaning
+-------
+Checkov compared your Terraform configuration against this security policy.
+Your configuration did not satisfy the expected security requirement.
+Because the policy was violated, Checkov marked this finding as FAILED.
+
+Important
+---------
+FAILED does NOT mean your Terraform code is wrong.
+FAILED does NOT mean "terraform apply" will fail.
+FAILED simply means Checkov found a potential security risk in your infrastructure configuration.
+
+================================================================================
+Resource
+--------
+
+module.network_security_rule.azurerm_network_security_rule.NSR["nsra"]
+
+Meaning
+-------
+This is the exact Terraform resource where the security issue was detected.
+If you want to investigate or fix this finding, this is the resource you need to review.
+
+================================================================================
+File
+----
+
+\modules\05-azurerm_network_security_rule\main.tf:1-14
+
+Meaning
+-------
+This is the file where the resource is actually written.
+The affected resource is located between line 1 and line 14.
+Checkov evaluated this resource and generated the FAILED result.
+
+================================================================================
+Calling File
+------------
+
+\environment\qa\main.tf:32-36
+
+Meaning
+-------
+Your project uses Terraform Modules.
+The resource is defined inside the module, but that module is being called from environment\qa\main.tf.
+Checkov shows both locations so you can easily trace the resource in a modular Terraform project.
+
+================================================================================
+Guide
+-----
+
+Meaning
+-------
+This is the official Checkov documentation for this security policy.
+It explains why the policy exists, why it is considered a security risk, and how the issue can be fixed.
+
+================================================================================
+Code Snippet
+------------
+
+Meaning
+-------
+Checkov prints only the affected resource instead of the entire file.
+This allows you to quickly identify the resource responsible for the security finding without searching through the complete project.
+
+================================================================================
+
+
+
+
+
+
+
+
+
+

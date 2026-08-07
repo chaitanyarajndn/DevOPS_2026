@@ -1,0 +1,455 @@
+==============================================================================================================
+19. VM Scale Set (VMSS - Virtual_Machine_Scale_Set)
+---------------------------------------------------
+
+
+Meaning:
+
+A Virtual Machine Scale Set (VMSS) is an Azure service that allows you to deploy and manage multiple identical Virtual Machines (VMs) as a single resource.
+
+It automatically increases or decreases the number of VMs based on application traffic or resource utilization (CPU, Memory, etc.).
+
+Why is VMSS Needed?
+
+Imagine your application normally receives 100 users.
+ 
+One Virtual Machine is enough to handle this traffic.
+
+However, during a sale or festival, the number of users suddenly increases to 10,000.
+
+A single VM may become overloaded, resulting in:
+• Slow response time
+• Application downtime
+• Poor user experience
+
+Instead of manually creating new Virtual Machines, VM Scale Set automatically creates additional VM instances when the load increases.
+
+Similarly, when traffic decreases, VMSS automatically removes the extra VMs to reduce infrastructure cost.
+
+Traffic Flow:
+
+
+              Internet
+                  │
+                  ▼
+          Azure Load Balancer
+                  │
+    ┌─────────────┼─────────────┐
+    ▼             ▼             ▼
+  VM-1          VM-2          VM-3
+    ▲             ▲             ▲
+    │             │             │
+
+  Automatically Added/Removed by VM Scale Set
+
+
+Benefits
+
+• Automatic Scaling (Scale Out / Scale In)
+• High Availability
+• Load Distribution
+• Improved Performance
+• Reduced Operational Effort
+• Cost Optimization (Pay only for required VM instances)
+
+Azure Load Balancer
+
+• Commonly used with VM Scale Sets.
+• Distributes incoming traffic across all VM instances.
+
+Azure Application Gateway
+
+• Can also be used with VM Scale Sets for HTTP/HTTPS applications.
+• Provides Layer-7 routing, SSL Termination and WAF before forwarding requests to VM instances.
+
+Common Scaling Triggers
+
+• CPU Utilization
+• Memory Utilization (via Azure Monitor)
+• Number of Requests
+• Queue Length
+• Custom Metrics
+
+Interview One-Liner:
+
+"Azure Virtual Machine Scale Set (VMSS) automatically adds or removes identical Virtual Machine instances based on traffic or resource utilization, ensuring high availability, better performance and cost optimization."
+
+
+Q. Why do we use a Load Balancer with VMSS?
+
+Answer:
+
+VM Scale Set is responsible for creating and removing VM instances, while Azure Load Balancer is responsible for distributing incoming traffic evenly across those VM instances. VMSS handles scaling, whereas Load Balancer handles traffic distribution.
+
+
+
+
+==========================================================================================================
+VMSS + Azure Load Balancer
+==========================================================================================================
+
+
+
+Purpose : Distribute Layer-4 (TCP/UDP) traffic across multiple VM instances.
+
+Architecture
+
+                    Internet
+                        │
+                        ▼
+              Azure Load Balancer
+              (Layer-4 Distribution)
+                        │
+        ┌───────────────┼───────────────┐
+        ▼               ▼               ▼
+     VM Instance 1   VM Instance 2   VM Instance 3
+            \             |             /
+             \            |            /
+              └──────── VM Scale Set ────────┘
+              (Automatically Scales VM Instances)
+
+Responsibilities
+
+Load Balancer
+• Layer-4 Traffic Distribution
+• Health Probes
+• Backend Pool
+• Sends traffic only to healthy VM instances
+
+VM Scale Set
+• Scale Out
+• Scale In
+• Creates identical VM instances
+• High Availability
+
+Use Cases
+
+• SSH
+• RDP
+• SQL Server
+• Gaming
+• Custom TCP/UDP Applications
+
+
+
+==========================================================================================================
+VMSS + Azure Application Gateway
+==========================================================================================================
+
+
+
+Purpose : Distribute Layer-7 (HTTP/HTTPS) traffic across multiple VM instances.
+
+Architecture
+
+                    Internet
+                        │
+                        ▼
+            Azure Application Gateway
+      (WAF + SSL + URL/Host Routing)
+                        │
+        ┌───────────────┼───────────────┐
+        ▼               ▼               ▼
+     VM Instance 1   VM Instance 2   VM Instance 3
+            \             |             /
+             \            |            /
+              └──────── VM Scale Set ────────┘
+              (Automatically Scales VM Instances)
+
+Responsibilities
+
+Application Gateway
+• URL-Based Routing
+• Host-Based Routing
+• SSL/TLS Termination
+• Web Application Firewall (WAF)
+• Health Probes
+• Backend Pool
+
+VM Scale Set
+• Scale Out
+• Scale In
+• Creates identical VM instances
+• High Availability
+
+Use Cases
+
+• Websites
+• REST APIs
+• Banking Applications
+• E-commerce
+• Enterprise Portals
+
+
+
+==========================================================================================================
+Real Production Architecture
+==========================================================================================================
+
+
+                           Internet
+                               │
+                               ▼
+                  Azure Application Gateway
+            (WAF + SSL + URL/Host Routing)
+                               │
+                               ▼
+                    Azure Load Balancer
+                  (Layer-4 Distribution)
+                               │
+               ┌───────────────┼───────────────┐
+               ▼               ▼               ▼
+            VM-1            VM-2            VM-3
+                  \            |            /
+                   \           |           /
+                    └────── VM Scale Set ──────┘
+
+Responsibilities
+
+Application Gateway  → Layer-7 Routing + WAF + SSL Termination
+Load Balancer        → Layer-4 Traffic Distribution
+VM Scale Set         → Automatically Creates/Removes VM Instances
+
+
+
+==========================================================================================================
+Interview One-Liner
+==========================================================================================================
+
+VM Scale Set performs Auto Scaling.
+Azure Load Balancer performs Layer-4 Load Balancing.
+Azure Application Gateway performs Layer-7 Load Balancing with WAF, SSL Termination,
+URL-Based Routing and Host-Based Routing.
+
+
+
+
+==========================================================================================================
+Creating VM Scale Set with Azure Application Gateway (Azure Portal)
+==========================================================================================================
+
+Azure Portal
+    │
+    ▼
+Create Resource Group
+    │
+    ▼
+Create Virtual Network (VNet)
+    │
+    ▼
+Create Subnets
+    │
+    ├── Application Gateway Subnet
+    │
+    └── VM Subnet
+    │
+    ▼
+Create Application Gateway
+    │
+    ├── Frontend IP
+    ├── Listener
+    ├── Routing Rule
+    └── Backend Pool
+    │
+    ▼
+Create Virtual Machine Scale Set (VMSS)
+    │
+    ├── Image
+    ├── VM Size
+    ├── Instance Count
+    ├── Attach to VNet
+    ├── Select VM Subnet
+    └── Associate with Application Gateway Backend Pool
+    │
+    ▼
+Azure Automatically Creates
+    │
+    ├── VM Instance 1
+    ├── VM Instance 2
+    ├── VM Instance 3
+    └── Network Interfaces (NICs)
+    │
+    ▼
+Application Gateway Starts Sending Traffic
+
+
+
+==========================================================================================================
+Creating VM Scale Set with Azure Application Gateway (Terraform)
+==========================================================================================================
+
+
+Terraform Apply
+      │
+      ▼
+Resource Group
+      │
+      ▼
+Virtual Network (VNet)
+      │
+      ▼
+Subnets
+      │
+      ├── Application Gateway Subnet
+      │
+      └── VM Subnet
+      │
+      ▼
+Public IP
+      │
+      ▼
+Application Gateway
+      │
+      ├── Frontend IP Configuration
+      ├── Listener
+      ├── Backend Pool
+      ├── Health Probe
+      └── Routing Rule
+      │
+      ▼
+Virtual Machine Scale Set (VMSS)
+      │
+      ├── Image
+      ├── VM Size
+      ├── Network Interface
+      ├── VM Subnet
+      └── Backend Pool Association
+      │
+      ▼
+Auto Scaling Rules (Optional)
+
+
+
+==========================================================================================================
+Azure VM Scale Set (VMSS) - Latest Azure Portal (2026)
+==========================================================================================================
+
+
+Wizard Tabs
+
+Basics     : Subscription | Resource Group | VMSS Name | Region | Availability Zone | Orchestration (Flexible/Uniform)
+Spot       : Spot VM | Max Price | Eviction Policy
+Disks      : OS Disk | Disk Type | Encryption | Delete Options
+Networking : VNet | Subnet | Public IP | NSG | Load Balancer | Application Gateway | Backend Pool
+Management : Boot Diagnostics | Managed Identity | Guest Patching | Monitoring | Auto Shutdown
+Health     : Health Extension | Automatic Instance Repair
+Advanced   : Cloud-init | Extensions | Dedicated Host | Capacity Reservation
+Tags       : Resource Metadata
+Review     : Validation & Deployment
+
+
+==========================================================================================================
+Azure VM Scale Set (VMSS) - Create Wizard (Latest Azure Portal)
+==========================================================================================================
+
+
+Basics     : Select Subscription, Resource Group, VMSS Name, Region, Availability Zone and Orchestration Mode.
+
+Spot       : Configure Azure Spot VMs for lower cost (optional).
+
+Disks      : Configure OS Disk type, storage performance and disk encryption.
+
+Networking : Select VNet, Subnet, NSG, Public IP and associate Load Balancer/Application Gateway.
+
+Management : Configure Boot Diagnostics, Managed Identity, Guest Patching and Monitoring.
+
+Health     : Enable Health Extension and Automatic Instance Repair for unhealthy VM instances.
+
+Advanced   : Configure Cloud-init, VM Extensions, Dedicated Host and other advanced settings.
+
+Tags       : Add key-value pairs (metadata) for resource organization and management.
+
+Review     : Azure validates all settings before creating the VM Scale Set.
+
+
+
+==========================================================================================================
+What Azure Creates
+==========================================================================================================
+
+Resource Group → VM Scale Set
+                     │
+          ┌──────────┼──────────┐
+          ▼          ▼          ▼
+        VM-1       VM-2       VM-3
+          │          │          │
+         NIC        NIC        NIC
+          │          │          │
+      Managed OS Disks
+          │
+          ▼
+Load Balancer / Application Gateway (Optional)
+
+
+==========================================================================================================
+Auto Scaling (Latest Azure Portal)
+==========================================================================================================
+
+
+VMSS Created
+     │
+     ▼
+VM Scale Set
+     │
+     ├── Overview
+     ├── Instances
+     ├── Networking
+     ├── Scaling        ← Configure Autoscale Rules Here
+     ├── Monitoring
+     └── Extensions
+
+
+==========================================================================================================
+Autoscale Flow
+==========================================================================================================
+
+
+
+Azure Monitor
+      │
+      ▼
+Collect Metrics (CPU | Memory | Requests | Queue)
+      │
+      ▼
+Autoscale Rule
+      │
+      ├── CPU > 70% (5 min)  → +1 VM
+      ├── CPU < 30% (10 min) → -1 VM
+      ├── Requests > 1000/min → +1 VM
+      └── Queue Length > 100  → +1 VM
+      │
+      ▼
+VM Scale Set
+
+
+
+==========================================================================================================
+Responsibilities
+==========================================================================================================
+
+
+VMSS             → Create/Delete VM Instances
+Azure Monitor    → Collect Metrics
+Autoscale Engine → Evaluate Rules
+Load Balancer    → Layer-4 Traffic Distribution
+App Gateway      → Layer-7 Traffic Distribution
+
+
+==========================================================================================================
+Interview One-Liner
+==========================================================================================================
+
+VMSS performs Auto Scaling.
+Azure Monitor collects metrics.
+Autoscale Engine evaluates rules.
+VMSS creates/removes VMs.
+Load Balancer/Application Gateway only distribute traffic.
+
+
+
+
+
+
+
+
+

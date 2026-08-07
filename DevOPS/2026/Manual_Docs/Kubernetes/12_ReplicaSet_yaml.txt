@@ -1,0 +1,397 @@
+========================================================================================================================
+ReplicaSet
+========================================================================================================================
+
+What    : ReplicaSet is a Kubernetes object that keeps the required number of identical Pods running all the time.
+          If a Pod is deleted, crashes or a Worker Node fails, ReplicaSet creates a new Pod to maintain the desired
+          count.
+
+Why     : Pods are temporary (Ephemeral). They can disappear anytime because of failures, upgrades or manual deletion.
+          If nobody monitors them, your application may stop working. ReplicaSet continuously watches the Pods and
+          makes sure the required number of Pods is always available. This feature is called Self-Healing.
+
+How     : ReplicaSet continuously compares the Desired Pod Count with the Current Running Pod Count.
+          • If Running Pods < Desired Pods → Create New Pod(s)
+          • If Running Pods > Desired Pods → Delete Extra Pod(s)
+          • If Running Pods = Desired Pods → Do Nothing
+
+Think   : Imagine a hotel manager who must always keep 10 rooms occupied. If one guest leaves, the manager immediately
+          brings another guest so the total remains 10. ReplicaSet works exactly like that for Pods.
+
+Memory  : ReplicaSet = Pod Manager
+          Deployment Creates ReplicaSet
+          ReplicaSet Creates Pods
+          ReplicaSet Maintains Pods
+
+========================================================================================================================
+Responsibilities of ReplicaSet
+========================================================================================================================
+
+✔ Creates Pods
+
+✔ Maintains Desired Number of Pods
+
+✔ Self-Healing (Recreates Deleted/Failed Pods)
+
+✔ Removes Extra Pods During Scale Down
+
+✔ Continuously Monitors Pod Count
+
+ReplicaSet DOES NOT
+
+✘ Expose Application
+✘ Load Balance Traffic
+✘ Route Network Requests
+✘ Store Configuration
+✘ Manage Secrets
+
+========================================================================================================================
+Important Points
+========================================================================================================================
+
+• ReplicaSet creates Pods directly.
+
+• Deployment does NOT create Pods directly.
+
+• ReplicaSet does NOT repair a crashed Pod.
+
+• ReplicaSet creates a BRAND NEW Pod.
+
+• Newly created Pod gets a NEW unique name.
+
+• ReplicaSet works using Labels and Selectors (Next Topic).
+
+========================================================================================================================
+Interview Questions
+========================================================================================================================
+
+Q. What is ReplicaSet?
+
+Ans:
+ReplicaSet is a Kubernetes object that ensures the desired number of identical Pods are always running.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. Why do we need ReplicaSet?
+
+Ans:
+Because Pods are temporary and can fail at any time. ReplicaSet automatically recreates Pods to maintain application
+availability.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. Who creates Pods?
+
+Ans:
+ReplicaSet creates Pods.
+Deployment creates ReplicaSet.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. What happens if a Pod crashes?
+
+Ans:
+ReplicaSet detects that the running Pod count has decreased and immediately creates a new Pod.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. Does ReplicaSet repair the existing Pod?
+
+Ans:
+No.
+It creates a completely new Pod.
+
+========================================================================================================================
+Common Beginner Mistakes
+========================================================================================================================
+
+❌ Deployment creates Pods.
+
+✔ Deployment creates ReplicaSet.
+  ReplicaSet creates Pods.
+
+------------------------------------------------------------------------------------------------------------------------
+
+❌ ReplicaSet repairs crashed Pods.
+
+✔ ReplicaSet creates NEW Pods.
+
+------------------------------------------------------------------------------------------------------------------------
+
+❌ ReplicaSet keeps the same Pod name.
+
+✔ Replacement Pod gets a new unique name.
+
+========================================================================================================================
+Example
+========================================================================================================================
+
+Deployment
+
+replicas: 3
+
+Running Pods
+
+Pod-A
+Pod-B
+Pod-C
+
+Someone Deletes
+
+kubectl delete pod Pod-B
+
+Final Result
+
+Pod-A
+Pod-C
+Pod-D
+
+Desired Pods : 3
+Running Pods : 3
+
+========================================================================================================================
+Flow
+========================================================================================================================
+
+                Deployment
+                     │
+              Creates ReplicaSet
+                     │
+                     ▼
+               ReplicaSet
+                     │
+      Continuously Watches Pods
+                     │
+      Desired Pods == Running Pods ?
+             ┌──────────┴──────────┐
+             │                     │
+            YES                   NO
+             │                     │
+      Do Nothing        Create/Delete Pods
+                     │
+                     ▼
+              Desired State Achieved
+
+========================================================================================================================
+
+
+========================================================================================================================
+ReplicaSet YAML
+========================================================================================================================
+
+
+What    : ReplicaSet is an independent Kubernetes object, so it has its own YAML file just like Pod, Deployment,
+          Service and ConfigMap.
+
+Why     : Kubernetes allows you to create a ReplicaSet directly if you only want Pod replication and self-healing.
+          However, in real-world projects, engineers usually create a Deployment instead because Deployment manages
+          ReplicaSets automatically and provides additional features like Rolling Updates and Rollbacks.
+
+How     : There are two ways to create a ReplicaSet.
+
+          1. Directly using ReplicaSet YAML.
+          2. Indirectly by creating a Deployment, where Kubernetes automatically creates the ReplicaSet.
+
+Think   : Think of a company.
+
+          You can hire employees directly (ReplicaSet YAML).
+
+          Or you can hire a Manager (Deployment), and the Manager hires and manages the employees (ReplicaSet).
+
+Memory  : ReplicaSet can be created directly.
+          Deployment creates ReplicaSet automatically.
+
+
+========================================================================================================================
+Two Ways to Create ReplicaSet
+========================================================================================================================
+
+			Method-1 : Direct ReplicaSet YAML
+
+			User
+			 │
+			 ▼
+			ReplicaSet YAML
+			 │
+			 ▼
+			API Server
+			 │
+			 ▼
+			etcd
+			 │
+			 ▼
+			ReplicaSet
+			 │
+			 ▼
+			Pods
+
+------------------------------------------------------------------------------------------------------------------------
+
+			Method-2 : Deployment YAML (Most Common)
+
+			User
+			 │
+			 ▼
+			Deployment YAML
+			 │
+			 ▼
+			API Server
+			 │
+			 ▼
+			etcd
+			 │
+			 ▼
+			Deployment
+			 │
+			 ▼
+			ReplicaSet (Automatically Created)
+			 │
+			 ▼
+			Pods
+
+========================================================================================================================
+Important Points
+========================================================================================================================
+
+
+✔ ReplicaSet has its own YAML.
+
+✔ Deployment also has its own YAML.
+
+✔ Deployment automatically creates and manages ReplicaSet.
+
+✔ ReplicaSet directly creates Pods.
+
+✔ In production, Deployment is preferred over ReplicaSet.
+
+
+========================================================================================================================
+Interview Questions
+========================================================================================================================
+
+
+Q. Does ReplicaSet have its own YAML?
+
+Ans:
+Yes. ReplicaSet is an independent Kubernetes object, so it has its own YAML.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. Do we usually create ReplicaSet directly?
+
+Ans:
+No.
+In real-world environments, we usually create a Deployment. Deployment automatically creates and manages the
+ReplicaSet.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. If I apply a Deployment YAML, do I also need to create a ReplicaSet YAML?
+
+Ans:
+No.
+Deployment automatically creates the required ReplicaSet.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. What objects are created after applying a Deployment YAML?
+
+	Ans:
+
+	Deployment
+		 │
+	Creates
+		 ▼
+	ReplicaSet
+		 │
+	Creates
+		 ▼
+	Pods
+
+========================================================================================================================
+Common Beginner Mistakes
+========================================================================================================================
+
+❌ ReplicaSet cannot be created directly.
+
+✔ ReplicaSet can be created directly using its own YAML.
+
+------------------------------------------------------------------------------------------------------------------------
+
+❌ Deployment and ReplicaSet are the same object.
+
+✔ Deployment is a higher-level object that manages ReplicaSets.
+
+------------------------------------------------------------------------------------------------------------------------
+
+❌ We need both Deployment YAML and ReplicaSet YAML.
+
+✔ Normally only Deployment YAML is written. Kubernetes automatically creates the ReplicaSet.
+
+========================================================================================================================
+Example (ReplicaSet YAML)
+========================================================================================================================
+
+apiVersion: apps/v1
+kind: ReplicaSet
+
+metadata:
+  name: nginx-rs
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: nginx
+
+  template:
+    metadata:
+      labels:
+        app: nginx
+
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+
+========================================================================================================================
+Flow
+========================================================================================================================
+
+ReplicaSet YAML
+      │
+	  ▼
+kubectl apply
+      │
+	  ▼ 
+API Server
+      │
+	  ▼
+	etcd
+      │
+	  ▼
+ReplicaSet
+      │
+	  ▼
+Creates Pods
+
+------------------------------------------------------------------------------------------------------------------------
+
+Deployment YAML
+      │
+kubectl apply
+      │
+API Server
+      │
+etcd
+      │
+Deployment
+      │
+Automatically Creates
+      │
+ReplicaSet
+      │
+Creates Pods
+
+========================================================================================================================

@@ -1,0 +1,253 @@
+
+==========================================================================================================
+Azure_Storage-Basics
+==========================================================================================================
+
+What is Azure Storage?
+----------------------
+• Azure Storage is Microsoft's cloud storage service.
+• Used to store files, images, videos, backups and application data.
+• Highly available, durable and scalable.
+• Accessible from anywhere over the internet (based on permissions).
+• Supports structured and unstructured data.
+• Pay only for the storage you use.
+
+
+==========================================================================================================
+Storage Account
+==========================================================================================================
+
+• Storage Account is the parent resource for all Azure Storage services.
+• It provides a unique namespace for storing data.
+• Every storage service must belong to a Storage Account.
+• Defines performance, replication and security settings.
+• Multiple containers, file shares and queues can exist inside one Storage Account.
+• Similar to a "folder" that manages different storage services.
+
+Example
+-------
+Storage Account (stcompanyprod)
+        │
+        ├── Blob Containers
+        ├── File Shares
+        ├── Queues
+        └── Tables
+
+
+==========================================================================================================
+Storage Services
+==========================================================================================================
+
+Blob Storage   → Store unstructured data (Images, Videos, Backups, Terraform State File)
+File Share     → SMB/NFS shared folders accessible by multiple VMs
+Queue Storage  → Store application messages for asynchronous processing
+Table Storage  → Store NoSQL key-value structured data
+
+Interview Point
+---------------
+Blob  → Objects
+Files → Shared Files
+Queue → Messages
+Table → NoSQL Data
+
+
+==========================================================================================================
+Blob Container
+==========================================================================================================
+
+• A Blob Container is similar to a folder inside a Storage Account.
+• Used to organize Blob objects.
+• Stores files such as images, videos, logs and backups.
+• Supports Public or Private access.
+• Multiple containers can exist inside one Storage Account.
+• Commonly used to store Terraform State Files.
+
+Example
+-------
+Storage Account
+       │
+       ▼
+Blob Container
+       │
+       ├── image.jpg
+       ├── backup.zip
+       ├── logs.txt
+       └── terraform.tfstate
+
+
+==========================================================================================================
+Interview One-Liners
+==========================================================================================================
+
+Storage Account → Parent resource for Azure Storage.
+Blob Storage    → Stores unstructured objects.
+File Share      → Shared network storage.
+Queue Storage   → Stores application messages.
+Table Storage   → NoSQL key-value storage.
+Blob Container  → Logical container for Blob objects.
+
+
+
+
+==========================================================================================================
+Access Tiers (Blob Storage)
+==========================================================================================================
+
+Hot Tier
+--------
+• Frequently accessed data.
+• Highest storage cost, lowest access cost.
+• Best for active application data.
+• Fastest access.
+• Example : Website Images, Daily Logs, Active Documents.
+
+Cool Tier
+---------
+• Infrequently accessed data (30+ days).
+• Lower storage cost, higher access cost.
+• Good for backups and old files.
+• Suitable for monthly reports.
+• Example : Weekly Backups, Archived Logs.
+
+Cold Tier
+---------
+• Rarely accessed data (90+ days).
+• Lower storage cost than Cool.
+• Higher retrieval cost.
+• Used for long-term retention.
+• Example : Compliance Data, Old Backups.
+
+Archive Tier
+------------
+• Lowest storage cost.
+• Highest retrieval cost and retrieval time.
+• Data must be rehydrated before access.
+• Used for long-term archival.
+• Example : 5-10 year old backups, Legal Records.
+
+Interview Point
+---------------
+Hot → Frequent Access
+Cool → Occasional Access
+Cold → Rare Access
+Archive → Almost Never Access
+
+==========================================================================================================
+Public vs Private Access
+==========================================================================================================
+
+Private Access
+--------------
+• Default and recommended option.
+• Authentication is required.
+• Only authorized users/applications can access data.
+• Most enterprise storage accounts use Private access.
+• Best for confidential data.
+
+Public Access
+-------------
+• Files can be accessed without authentication.
+• Anyone with the URL can access the file.
+• Used for public content.
+• Should not be used for sensitive data.
+• Example : Public Images, Software Downloads.
+
+Interview Point
+---------------
+Private → Secure (Default)
+Public  → Anonymous Access
+
+==========================================================================================================
+Storage Replication
+==========================================================================================================
+
+LRS (Locally Redundant Storage)
+-------------------------------
+• Stores 3 copies within a single Azure datacenter.
+• Lowest cost.
+• Protects against disk/server failure.
+• Does NOT protect against datacenter failure.
+• Best for development and non-critical workloads.
+
+ZRS (Zone-Redundant Storage)
+----------------------------
+• Stores data across 3 Availability Zones.
+• Protects against zone failure.
+• Higher availability than LRS.
+• Suitable for production workloads.
+• Requires region with Availability Zones.
+
+GRS (Geo-Redundant Storage)
+---------------------------
+• 3 copies in Primary Region + 3 copies in Secondary Region.
+• Protects against regional disaster.
+• Secondary region is used during disaster recovery.
+• Better durability than LRS/ZRS.
+• Common for backup storage.
+
+GZRS (Geo-Zone-Redundant Storage)
+---------------------------------
+• Combines ZRS + GRS.
+• Zone protection + Regional protection.
+• Highest availability and durability.
+• Recommended for business-critical applications.
+• Highest cost.
+
+Interview Point
+---------------
+LRS  → Single Datacenter
+ZRS  → Multiple Availability Zones
+GRS  → Multiple Regions
+GZRS → Zones + Regions
+
+==========================================================================================================
+Storage Account Keys & SAS Token
+==========================================================================================================
+
+Storage Account Keys
+--------------------
+• Two access keys (Key1 & Key2) are generated.
+• Provide full access to the Storage Account.
+• Used by applications and scripts.
+• Keys can be regenerated.
+• Rotate keys regularly for security.
+
+SAS (Shared Access Signature)
+-----------------------------
+• Generates temporary access to storage resources.
+• Can limit permissions (Read, Write, Delete, List).
+• Can set expiry date and time.
+• More secure than sharing Account Keys.
+• Commonly used to share files securely.
+
+Interview Point
+---------------
+Account Key → Full Storage Account Access
+SAS Token   → Temporary & Limited Access
+
+==========================================================================================================
+Real Examples
+==========================================================================================================
+
+Website Images            → Hot Tier
+Monthly Backup            → Cool Tier
+1-Year Old Backup         → Cold Tier
+7-Year Legal Backup       → Archive Tier
+
+Internal Company Files    → Private Access
+Software ISO Download     → Public Access
+
+Development Environment   → LRS
+Production Application    → ZRS
+Disaster Recovery Backup  → GRS
+Banking / Critical Apps   → GZRS
+
+Terraform Script          → Storage Account Key / Managed Identity
+Share Backup File         → SAS Token
+
+
+
+
+
+
+

@@ -1,0 +1,656 @@
+
+Checkov
+│
+├── Definition
+│   Checkov is an open-source Infrastructure as Code (IaC) security scanner.
+│   It scans infrastructure code before deployment and identifies security
+│   misconfigurations, policy violations and compliance issues.
+│
+├── Purpose
+│   Prevent insecure cloud infrastructure from being deployed. Instead of
+│   discovering security problems after deployment, Checkov detects them
+│   during development or in the CI/CD pipeline so they can be fixed early.
+│
+├── Why Needed
+│   ├── Terraform validates syntax but does not verify security.
+│   ├── Developers can accidentally expose cloud resources.
+│   ├── Security teams need consistent policy enforcement.
+│   ├── Finding issues before deployment is faster and cheaper than fixing
+│   │   them in production.
+│   └── Helps organizations follow security and compliance standards.
+│
+├── Who Developed Checkov?
+│   Bridgecrew (now part of Palo Alto Networks).
+│   Originally developed by Bridgecrew as an open-source IaC security tool.
+│   After Palo Alto Networks acquired Bridgecrew, Checkov became part of
+│   Palo Alto's cloud security ecosystem while remaining open source.
+│
+├── How Checkov Works
+│
+│   Terraform Code / Kubernetes YAML / CloudFormation
+│                         │
+│                         ▼
+│                  Checkov Scanner
+│                         │
+│         Loads Built-in Security Policies
+│                         │
+│                         ▼
+│            Compares Code Against Policies
+│                         │
+│                         ▼
+│      Detects Security Misconfigurations
+│                         │
+│                         ▼
+│             Generates Security Report
+│                         │
+│                         ▼
+│          Fix Issues → Deploy Infrastructure
+│
+├── What Does Checkov Actually Check?
+│   It does not execute Terraform code or create cloud resources.
+│   It only reads the IaC files and compares them against hundreds of
+│   predefined security rules.
+│
+├── Supported File Types
+│   ├── Terraform (.tf)
+│   │   Most common use case for Azure, AWS and GCP infrastructure.
+│   │
+│   ├── Kubernetes YAML
+│   │   Checks Pods, Deployments, Services, Ingress and other manifests.
+│   │
+│   ├── CloudFormation
+│   │   Scans AWS CloudFormation templates.
+│   │
+│   ├── ARM Templates
+│   │   Scans Azure Resource Manager templates.
+│   │
+│   ├── Bicep
+│   │   Scans Microsoft's Infrastructure as Code language for Azure.
+│   │
+│   ├── Dockerfile
+│   │   Detects insecure Docker build configurations.
+│   │
+│   └── GitHub Actions / GitLab CI / Azure Pipelines
+│       Scans CI/CD configuration files for security issues.
+│
+├── Supported Cloud Providers
+│   ├── Azure
+│   │   Virtual Machines, Storage Accounts, NSGs, Key Vaults, VNets,
+│   │   AKS, Load Balancers and many other Azure resources.
+│   │
+│   ├── AWS
+│   │   EC2, S3, IAM, VPC, RDS, Lambda, EKS and more.
+│   │
+│   └── GCP
+│       Compute Engine, GKE, Cloud Storage, IAM, VPC and more.
+│
+├── Common Security Issues Detected
+│   ├── Public Storage Account
+│   │   Detects storage resources that allow public access.
+│   │
+│   ├── SSH Open to Internet
+│   │   Detects Security Groups or NSGs allowing 0.0.0.0/0 on port 22.
+│   │
+│   ├── RDP Open to Internet
+│   │   Detects unrestricted access to Windows VMs on port 3389.
+│   │
+│   ├── Public IP Attached
+│   │   Identifies resources unnecessarily exposed to the Internet.
+│   │
+│   ├── Encryption Disabled
+│   │   Detects storage or disks without encryption enabled.
+│   │
+│   ├── Logging Disabled
+│   │   Identifies resources where audit or diagnostic logging is missing.
+│   │
+│   └── Hardcoded Secrets
+│       Detects passwords, tokens or keys written directly in code.
+│
+├── Where is Checkov Used?
+│   ├── Developer Laptop
+│   │   Scan Terraform before committing code.
+│   │
+│   ├── Pull Request Validation
+│   │   Prevent insecure code from being merged.
+│   │
+│   ├── CI/CD Pipeline
+│   │   Automatically fail the pipeline if critical findings are detected.
+│   │
+│   └── Enterprise Compliance
+│       Verify infrastructure follows company security policies.
+│
+├── Advantages
+│   ├── Open Source
+│   ├── Free to use
+│   ├── Supports multiple cloud providers
+│   ├── Hundreds of built-in security policies
+│   ├── Easy CI/CD integration
+│   └── Fast scanning
+│
+├── Limitations
+│   ├── Checks IaC code, not running cloud resources.
+│   ├── Cannot detect runtime attacks.
+│   ├── May require skip rules for acceptable exceptions.
+│   └── Depends on the quality of the IaC being scanned.
+│
+├── Checkov vs Terraform Validate
+│
+│   Terraform Validate                 Checkov
+│   -------------------               ----------------------------
+│   Checks syntax                     Checks security
+│   Verifies references               Detects misconfigurations
+│   Built into Terraform              External security tool
+│   Required for deployment           Recommended before deployment
+│
+└── Interview Remember
+    • Checkov is an IaC Security Scanner.
+    • It scans code before infrastructure is deployed.
+    • It supports Azure, AWS and GCP.
+    • It works with Terraform, Kubernetes YAML, ARM, Bicep,
+      CloudFormation, Dockerfile and CI/CD configuration files.
+    • It is commonly executed before "terraform apply" in a CI/CD pipeline.
+
+
+
+====================================================================================================
+Checkov - Basic Commands
+====================================================================================================
+
+Check Help
+----------
+Purpose : Display all available Checkov commands and options.
+Command : checkov --help
+
+----------------------------------------------------------------------------------------------------
+
+Check Version
+-------------
+Purpose : Display the installed Checkov version.
+Command : checkov --version
+
+----------------------------------------------------------------------------------------------------
+
+Scan Current Directory
+----------------------
+Purpose : Scan all supported IaC files in the current directory and its sub-directories.
+Command : checkov -d .
+
+----------------------------------------------------------------------------------------------------
+
+Scan Specific Directory
+-----------------------
+Purpose : Scan a specific folder.
+Command : checkov -d terraform/
+
+----------------------------------------------------------------------------------------------------
+
+Scan Single File
+----------------
+Purpose : Scan a single IaC file.
+Command : checkov -f main.tf
+
+----------------------------------------------------------------------------------------------------
+
+Scan Multiple Files
+-------------------
+Purpose : Scan multiple IaC files.
+Command : checkov -f main.tf -f variables.tf
+
+----------------------------------------------------------------------------------------------------
+
+Scan Kubernetes YAML
+--------------------
+Purpose : Scan Kubernetes manifest files.
+Command : checkov -f deployment.yaml
+
+----------------------------------------------------------------------------------------------------
+
+Scan Dockerfile
+---------------
+Purpose : Scan a Dockerfile for security best practices.
+Command : checkov -f Dockerfile
+
+----------------------------------------------------------------------------------------------------
+
+Scan ARM Template
+-----------------
+Purpose : Scan Azure ARM templates.
+Command : checkov -f azuredeploy.json
+
+----------------------------------------------------------------------------------------------------
+
+Scan Bicep File
+---------------
+Purpose : Scan Azure Bicep templates.
+Command : checkov -f main.bicep
+
+----------------------------------------------------------------------------------------------------
+
+Scan CloudFormation Template
+----------------------------
+Purpose : Scan AWS CloudFormation templates.
+Command : checkov -f template.yaml
+
+----------------------------------------------------------------------------------------------------
+
+Scan Current Directory (Compact Output)
+---------------------------------------
+Purpose : Display a shorter summary instead of detailed results.
+Command : checkov -d . --compact
+
+----------------------------------------------------------------------------------------------------
+
+Output as CLI
+-------------
+Purpose : Display results in the terminal (Default).
+Command : checkov -d . -o cli
+
+----------------------------------------------------------------------------------------------------
+
+Output as JSON
+--------------
+Purpose : Generate report in JSON format.
+Command : checkov -d . -o json
+
+----------------------------------------------------------------------------------------------------
+
+Output as JUnit XML
+-------------------
+Purpose : Generate JUnit XML report for Jenkins and other CI tools.
+Command : checkov -d . -o junitxml
+
+----------------------------------------------------------------------------------------------------
+
+Output as SARIF
+---------------
+Purpose : Generate SARIF report for GitHub Advanced Security and Azure DevOps.
+Command : checkov -d . -o sarif
+
+----------------------------------------------------------------------------------------------------
+
+Save Report to File
+-------------------
+Purpose : Save scan results to a file.
+Command : checkov -d . -o json > report.json
+
+----------------------------------------------------------------------------------------------------
+
+Run Specific Check
+------------------
+Purpose : Execute only one security policy.
+Command : checkov -d . --check CKV_AZURE_1
+
+----------------------------------------------------------------------------------------------------
+
+Run Multiple Checks
+-------------------
+Purpose : Execute only selected security policies.
+Command : checkov -d . --check CKV_AZURE_1,CKV_AZURE_2
+
+----------------------------------------------------------------------------------------------------
+
+Skip Specific Check
+-------------------
+Purpose : Ignore a specific security policy.
+Command : checkov -d . --skip-check CKV_AZURE_1
+
+----------------------------------------------------------------------------------------------------
+
+Skip Multiple Checks
+--------------------
+Purpose : Ignore multiple security policies.
+Command : checkov -d . --skip-check CKV_AZURE_1,CKV_AZURE_2
+
+----------------------------------------------------------------------------------------------------
+
+Soft Fail
+---------
+Purpose : Continue execution even if security findings are detected.
+Command : checkov -d . --soft-fail
+
+----------------------------------------------------------------------------------------------------
+
+Quiet Mode
+----------
+Purpose : Hide informational messages and display only findings.
+Command : checkov -d . --quiet
+
+----------------------------------------------------------------------------------------------------
+
+Framework Selection
+-------------------
+Purpose : Scan only a specific framework.
+Command : checkov -d . --framework terraform
+
+Examples
+--------
+Terraform      : checkov -d . --framework terraform
+Kubernetes     : checkov -d . --framework kubernetes
+Dockerfile     : checkov -d . --framework dockerfile
+Bicep          : checkov -d . --framework bicep
+
+----------------------------------------------------------------------------------------------------
+
+Common Real-World Commands
+--------------------------
+Scan Current Project      : checkov -d .
+Scan Single Terraform     : checkov -f main.tf
+Scan Kubernetes YAML      : checkov -f deployment.yaml
+Generate JSON Report      : checkov -d . -o json > report.json
+Generate SARIF Report     : checkov -d . -o sarif
+Skip One Check            : checkov -d . --skip-check CKV_AZURE_1
+Run One Check             : checkov -d . --check CKV_AZURE_1
+Soft Fail                 : checkov -d . --soft-fail
+
+====================================================================================================
+Interview Remember
+====================================================================================================
+
+✓ -d              = Scan Directory
+✓ -f              = Scan File
+✓ -o              = Output Format
+✓ --framework     = Scan Specific Framework
+✓ --check         = Run Specific Check
+✓ --skip-check    = Ignore Specific Check
+✓ --soft-fail     = Don't Fail Pipeline
+✓ --quiet         = Minimal Console Output
+
+Most Frequently Used Commands
+-----------------------------
+
+checkov -d .
+checkov -f main.tf
+checkov --version
+checkov --help
+
+
+
+
+
+
+====================================================================================================
+Checkov Installation
+====================================================================================================
+
+Windows (PowerShell)
+--------------------
+Step 1 : Verify Python
+
+python --version
+
+If Python is not installed
+
+https://www.python.org/downloads/
+
+✔ Enable "Add Python to PATH"
+
+Step 2 : Verify pip
+
+pip --version
+
+If pip is not installed
+
+python -m ensurepip --upgrade
+
+Step 3 : Install Checkov
+
+pip install checkov
+
+Step 4 : Verify Installation
+
+checkov --version
+
+====================================================================================================
+Ubuntu / Linux / WSL
+====================================================================================================
+
+Step 1 : Update Package List
+
+sudo apt update
+
+Step 2 : Install Python3
+
+sudo apt install python3 -y
+
+Step 3 : Install pip3
+
+sudo apt install python3-pip -y
+
+Step 4 : Install Checkov
+
+pip3 install checkov
+
+Step 5 : Verify Installation
+
+checkov --version
+
+====================================================================================================
+Docker
+====================================================================================================
+
+Step 1 : Pull Image
+
+docker pull bridgecrew/checkov
+
+Step 2 : Verify Installation
+
+docker run --rm bridgecrew/checkov --version
+
+====================================================================================================
+GitHub (Alternative Method)
+====================================================================================================
+
+Step 1 : Clone Repository
+
+git clone https://github.com/bridgecrewio/checkov.git
+
+Step 2 : Move to Project
+
+cd checkov
+
+Step 3 : Install
+
+pip install .
+
+Step 4 : Verify
+
+checkov --version
+
+
+
+
+
+
+
+# =============================================================================
+# Checkov Configuration File
+# Project : Azure Terraform
+# File    : .checkov.yaml
+# =============================================================================
+
+# Framework to scan
+framework:
+  - terraform
+
+# Directory to scan
+directory:
+  - .
+
+# Skip specific policy checks
+skip-check:
+  - CKV_AZURE_9
+  - CKV_AZURE_10
+
+# Display compact scan output
+compact: true
+
+# Show all scan results
+quiet: false
+
+# Download external Terraform modules before scanning
+download-external-modules: true
+
+# Evaluate Terraform variables during scan
+evaluate-variables: true
+
+# Exit with success even if violations are found
+soft-fail: false
+
+# Output format
+output:
+  - cli
+
+
+
+
+
+
+
+===============================================================================
+.checkov.yaml
+===============================================================================
+
+Purpose
+-------
+Stores Checkov scan configuration in a single file.
+
+Why Used
+--------
+• Avoid long Checkov commands.
+• Standardize scan settings.
+• Ensure all developers use the same configuration.
+• Easy CI/CD integration.
+• Easy to maintain.
+
+Location
+--------
+Terraform Project Root
+
+Example
+-------
+Terraform_Project/
+├── .checkov.yaml
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── providers.tf
+├── terraform.tfvars
+├── modules/
+└── environment/
+
+Execution
+---------
+Command:
+checkov -d .
+
+Flow:
+checkov -d .
+        │
+        ▼
+Search .checkov.yaml
+        │
+        ▼
+Load Configuration
+        │
+        ▼
+Start Security Scan
+        │
+        ▼
+Generate Report
+
+===============================================================================
+Configuration
+===============================================================================
+
+framework
+---------
+Purpose : Specifies which Infrastructure/Platform framework Checkov should scan.
+Value   : terraform
+Meaning : Scan only Terraform files.
+
+directory
+---------
+Purpose : Defines the folder to scan.
+Value   : .
+Meaning : Current working directory.
+
+skip-check
+----------
+Purpose : Ignore selected policy IDs.
+Value   : CKV_AZURE_9, CKV_AZURE_10
+Meaning : These policies will not be evaluated.
+
+compact
+-------
+Purpose : Display short scan output.
+true  = Compact report.
+false = Detailed report.
+
+quiet
+-----
+Purpose : Control console output.
+true  = Show only failed checks.
+false = Show passed and failed checks.
+
+download-external-modules
+-------------------------
+Purpose : Download remote Terraform modules before scanning.
+true  = Download modules.
+false = Skip downloading.
+
+evaluate-variables
+------------------
+Purpose : Resolve Terraform variables before evaluation.
+true  = Evaluate variable values.
+false = Scan without resolving variables.
+
+soft-fail
+---------
+Purpose : Control Checkov exit status.
+true  = Exit Code 0 even if violations exist.
+false = Return non-zero exit code when violations are found.
+
+output
+------
+Purpose : Select report format.
+cli  = Terminal output.
+json = JSON report.
+sarif = SARIF report for GitHub/Azure DevOps.
+
+===============================================================================
+Real Project Flow
+===============================================================================
+
+Developer
+    │
+    ▼
+checkov -d .
+    │
+    ▼
+Read .checkov.yaml
+    │
+    ▼
+Load Configuration
+    │
+    ▼
+Scan Terraform Code
+    │
+    ▼
+Apply Policies
+    │
+    ▼
+Generate Report
+    │
+    ▼
+PASS / FAIL
+
+===============================================================================
+Interview Answer
+===============================================================================
+
+.checkov.yaml is a configuration file used to store Checkov scan settings such as framework, skipped policies, output format, variable evaluation, module download, and scan behavior. It eliminates long command-line arguments, ensures consistent scans across developers and CI/CD pipelines, and centralizes security scan configuration.
+
+
+===============================================================================
+
+

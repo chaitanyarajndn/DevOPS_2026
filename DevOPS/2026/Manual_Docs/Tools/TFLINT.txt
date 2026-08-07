@@ -1,0 +1,894 @@
+===============================================================================
+TFLINT
+Terraform Linter
+===============================================================================
+
+Definition
+----------
+TFLint is an open-source Terraform linter that checks Terraform code for errors, best practice violations, and cloud provider-specific issues before infrastructure is deployed.
+
+Simple Meaning
+--------------
+TFLint checks your Terraform code and tells you if it follows best practices or contains mistakes.
+
+Purpose
+-------
+• Improve Terraform code quality.
+• Find configuration mistakes.
+• Follow Terraform best practices.
+• Detect cloud provider-specific issues.
+• Find issues before terraform apply.
+
+
+
+Why was TFLint Created?
+-----------------------
+Terraform validates syntax and creates infrastructure, but it does not check whether your code follows best practices or cloud provider recommendations.
+TFLint was created to find these issues before infrastructure is deployed.
+
+
+
+Without TFLint
+--------------
+Developer Writes Terraform
+         │
+         ▼
+terraform validate
+         │
+         ▼
+terraform plan
+         │
+         ▼
+terraform apply
+         │
+         ▼
+Poor Code Quality Found Later
+
+Problems
+--------
+Poor Code Quality | Provider Mistakes | Wrong Resource Configuration | Manual Code Review | Inconsistent Code
+
+
+
+With TFLint
+-----------
+Developer Writes Terraform
+         │
+         ▼
+Run TFLint
+         │
+   ┌─────┴─────┐
+   │           │
+   ▼           ▼
+ CLEAN      ISSUES
+   │           │
+   ▼           ▼
+terraform   Fix Code
+validate        │
+   │            ▼
+   ▼      Run TFLint Again
+terraform
+plan
+   │
+   ▼
+terraform
+apply
+
+
+
+Benefits
+--------
+Better Code Quality | Early Detection | Consistent Code | Fewer Mistakes | Faster Reviews
+
+===============================================================================
+
+Where is it Used?
+-----------------
+Cloud Platforms     : Azure | AWS | GCP
+Infrastructure      : Terraform
+DevOps              : Development | DevOps | CI/CD Pipelines
+Organizations       : Startups | Enterprises
+
+
+
+Installation
+------------
+• Download the latest TFLint ZIP file from the official GitHub Releases page.
+• Extract the ZIP file to C:\TOOLS.
+• Add C:\TOOLS to the Windows PATH environment variable.
+• Open Command Prompt or PowerShell.
+• Verify the installation:
+  tflint --version
+
+
+
+Configuration File
+------------------
+Configuration File : .tflint.hcl
+Purpose            : Store TFLint settings and plugin configuration.
+
+
+
+Why use Configuration File?
+---------------------------
+• Keep the same settings for the whole team.
+• Avoid writing options every time.
+• Enable cloud provider plugins.
+• Control scan rules from one place.
+
+
+
+Basic Example
+-------------
+plugin "azurerm" {
+  enabled = true
+  version = "0.28.0"
+  source  = "github.com/terraform-linters/tflint-ruleset-azurerm"
+}
+
+
+
+Plugin Initialization
+---------------------
+TFLint uses plugins to check cloud provider-specific rules (Azure, AWS, GCP).
+
+Why run tflint --init?
+----------------------
+• Downloads the plugins defined in the .tflint.hcl file.
+• Initializes the plugins before scanning.
+• Required before running TFLint for the first time.
+• Run it again only if a plugin is added or updated.
+
+Workflow
+--------
+Create .tflint.hcl
+        │
+        ▼
+tflint --init
+        │
+        ▼
+Plugins Downloaded
+        │
+        ▼
+tflint
+        │
+        ▼
+Scan Terraform Code
+
+
+===============================================================================
+
+
+
+Q. Do we need to run tflint --init every time?
+
+Ans.
+No.
+
+Run it:
+• When using TFLint for the first time.
+• After adding a new plugin.
+• After updating an existing plugin.
+• When working on a newly cloned project.
+
+Otherwise, simply run:
+
+tflint
+
+
+
+===============================================================================
+
+Important Commands
+------------------
+
+
+tflint                                              Scan Current Directory
+
+tflint main.tf                                      Scan Single Terraform File
+
+tflint --init                                       Download & Initialize Plugins
+
+tflint --recursive                                  Scan Current Directory Recursively
+
+tflint --filter=main.tf                             Scan Specific File
+
+tflint --format default                             Default Output
+
+tflint --format compact                             Compact Output
+
+tflint --format json                                JSON Output
+
+tflint --format json > tflint_report.json           Save JSON Report
+
+tflint --format sarif                               SARIF Output
+
+tflint --format sarif > report.sarif                Save SARIF Report
+
+===============================================================================
+
+
+
+Workflow
+--------
+
+Developer Writes Terraform Code
+               │
+               ▼
+terraform fmt
+               │
+               ▼
+terraform validate
+               │
+               ▼
+tflint
+               │
+        ┌──────┴──────┐
+        │             │
+        ▼             ▼
+      CLEAN        ISSUES
+        │             │
+        ▼             ▼
+terraform plan    Fix Code
+        │             │
+        ▼             ▼
+terraform apply  Run TFLint Again
+
+Best Practices
+--------------
+• Always run terraform fmt before TFLint.
+• Run terraform validate before TFLint.
+• Use .tflint.hcl for team settings.
+• Run tflint before every terraform plan.
+• Use provider plugins (Azure, AWS, GCP).
+• Add TFLint to your CI/CD pipeline.
+
+Advantages
+----------
+Better Code Quality | Early Detection | Cloud Best Practices | Consistent Code | Easy to Use | Open Source
+
+Limitations
+-----------
+Checks Terraform Only | Not a Security Scanner | Does Not Create Infrastructure | Needs Provider Plugins
+
+Interview Questions
+-------------------
+
+Q. What is TFLint?
+Ans.
+TFLint is a Terraform linter that checks Terraform code for best practices, configuration mistakes, and provider-specific issues before deployment.
+
+Q. Why do we use TFLint?
+Ans.
+To improve Terraform code quality and find issues before running terraform apply.
+
+Q. What is the difference between terraform validate and TFLint?
+Ans.
+terraform validate checks Terraform syntax and configuration validity.
+TFLint checks code quality, best practices, and provider-specific issues.
+
+Q. Is TFLint a security tool?
+Ans.
+No.
+TFLint checks code quality and best practices.
+For security scanning, tools like Checkov or Trivy are used.
+
+Q. Why do we run tflint --init?
+Ans.
+It downloads and initializes the plugins defined in the .tflint.hcl file before scanning.
+
+
+====================================================================
+Hands-on Lab
+====================================================================
+
+Lab-1 : Scan Current Project
+
+tflint                                             Scan current Terraform directory.
+
+------------------------------------------------------------
+
+Lab-2 : Scan Entire Terraform Project
+
+tflint --recursive                                Scan all Terraform files and modules recursively.
+
+------------------------------------------------------------
+
+Lab-3 : Generate JSON Report
+
+tflint --format json > report.json                Save scan result in JSON format.
+
+------------------------------------------------------------
+
+Lab-4 : Verify Version & Plugins
+
+tflint --version                                  Display TFLint version and installed plugins.
+
+Expected Output
+
+TFLint version 0.xx.x
++ ruleset.terraform
++ ruleset.azurerm
+
+------------------------------------------------------------
+
+Lab-5 : Initialize Plugins
+
+tflint --init                                     Download or update configured plugins.
+
+Run When
+
+- First-time setup.
+- New plugin added.
+- Repository cloned.
+- Plugin version changed.
+
+
+
+
+====================================================================
+CI/CD Integration
+====================================================================
+
+Purpose
+
+Run TFLint automatically before Terraform deployment.
+
+Benefits
+
+- Maintain code quality.
+- Enforce Terraform best practices.
+- Prevent poor-quality code from reaching production.
+- Provide early feedback to developers.
+
+Typical Pipeline
+
+Developer
+    │
+    ▼
+Git Push
+    │
+    ▼
+terraform fmt
+    │
+    ▼
+terraform validate
+    │
+    ▼
+TFLint
+    │
+    ▼
+Checkov
+    │
+    ▼
+terraform plan
+    │
+    ▼
+terraform apply
+
+Pipeline Result
+
+No Issues Found
+
+✔ Continue Deployment
+
+Issues Found
+
+✖ Fail Pipeline
+✔ Developer fixes code
+✔ Push again
+
+
+
+
+====================================================================
+GitHub Actions
+====================================================================
+
+Purpose
+
+Automatically run TFLint whenever code is pushed or a Pull Request is created.
+
+Typical Flow
+
+Developer Push
+      │
+      ▼
+GitHub Actions Trigger
+      │
+      ▼
+Checkout Repository
+      │
+      ▼
+Terraform Init
+      │
+      ▼
+TFLint
+      │
+      ▼
+Pass / Fail
+
+Enterprise Use
+
+- Pull Request validation.
+- Mandatory quality check.
+- Prevent bad Terraform code from merging.
+
+
+
+====================================================================
+Azure DevOps Integration
+====================================================================
+
+Purpose
+
+Run TFLint as a pipeline validation stage.
+
+Typical Flow
+
+Azure Repos
+      │
+      ▼
+Azure DevOps Pipeline
+      │
+      ▼
+Terraform Init
+      │
+      ▼
+TFLint
+      │
+      ▼
+Checkov
+      │
+      ▼
+Terraform Plan
+      │
+      ▼
+Terraform Apply
+
+Enterprise Use
+
+- Infrastructure validation.
+- Quality gate before deployment.
+- Production approval process.
+
+
+
+
+====================================================================
+Advanced .tflint.hcl Configuration
+====================================================================
+
+Example
+
+plugin "azurerm" {
+  enabled = true
+  version = "0.28.0"
+  source  = "github.com/terraform-linters/tflint-ruleset-azurerm"
+}
+
+config {
+  module = true
+  force  = false
+}
+
+Meaning
+
+module = true
+
+- Scan local Terraform modules.
+
+force = false
+
+- Exit with non-zero status if issues are found.
+- Used to fail CI/CD pipelines.
+
+Common Options
+
+module = true                                  Scan local modules.
+
+force = false                                  Fail pipeline if issues exist.
+
+disabled_by_default = false                    Enable default rules.
+
+
+
+====================================================================
+Custom Rules
+====================================================================
+
+Purpose
+
+Enable or disable specific linting rules.
+
+Example
+
+rule "terraform_required_version" {
+  enabled = true
+}
+
+rule "terraform_typed_variables" {
+  enabled = true
+}
+
+Disable Rule
+
+rule "terraform_typed_variables" {
+  enabled = false
+}
+
+Why Disable?
+
+- Legacy project.
+- Gradual migration.
+- Temporary exception.
+
+Best Practice
+
+Disable rules only when there is a valid business or technical reason.
+
+
+
+====================================================================
+Real Interview Scenarios
+====================================================================
+
+Scenario-1
+
+Developer forgets to define required_version.
+
+Result
+
+Terraform may still work.
+
+TFLint Warning
+
+terraform_required_version
+
+------------------------------------------------------------
+
+Scenario-2
+
+Variable has no type.
+
+Example
+
+variable "rg_map" {}
+
+TFLint Warning
+
+terraform_typed_variables
+
+------------------------------------------------------------
+
+Scenario-3
+
+Developer pushes Terraform code.
+
+Pipeline
+
+terraform fmt
+terraform validate
+tflint
+
+Result
+
+Pipeline fails because TFLint detects quality issues.
+
+Developer fixes warnings and pushes again.
+
+------------------------------------------------------------
+
+Scenario-4
+
+Team uses multiple Terraform modules.
+
+Solution
+
+tflint --recursive
+
+Scans all modules with a single command.
+
+------------------------------------------------------------
+
+Scenario-5
+
+Manager asks for machine-readable report.
+
+Solution
+
+tflint --format json > report.json
+
+JSON report can be integrated with dashboards or CI/CD systems.
+
+
+
+====================================================================
+Interview Questions
+====================================================================
+
+Q1. Why use TFLint when terraform validate already exists?
+
+Answer
+
+terraform validate checks syntax and configuration validity.
+
+TFLint checks
+
+- Code quality.
+- Terraform best practices.
+- Missing required_version.
+- Missing variable types.
+- Provider-specific issues.
+
+------------------------------------------------------------
+
+Q2. Can TFLint stop terraform apply?
+
+Answer
+
+No.
+
+TFLint only reports issues.
+
+It blocks deployment only when CI/CD is configured to fail on TFLint errors.
+
+------------------------------------------------------------
+
+Q3. Does TFLint modify Terraform code?
+
+Answer
+
+No.
+
+It only detects issues.
+
+Developers must fix the code manually.
+
+------------------------------------------------------------
+
+Q4. What does TFLint mainly check?
+
+Answer
+
+- Terraform best practices.
+- Code quality.
+- Provider-specific issues.
+- Missing required_version.
+- Missing variable types.
+
+------------------------------------------------------------
+
+Q5. Is TFLint a security tool?
+
+Answer
+
+No.
+
+TFLint checks code quality.
+
+Security scanning is performed by tools like Checkov and Trivy.
+
+
+
+====================================================================
+Real Enterprise Workflow
+====================================================================
+
+Developer
+    │
+    ▼
+Write Terraform Code
+    │
+    ▼
+terraform fmt
+    │
+    ▼
+terraform validate
+    │
+    ▼
+TFLint
+(Code Quality)
+    │
+    ▼
+Checkov
+(Security)
+    │
+    ▼
+Terraform Plan
+    │
+    ▼
+Terraform Apply
+    │
+    ▼
+Production
+
+
+
+====================================================================
+Advanced .tflint.hcl Configuration (Optional)
+====================================================================
+
+Example
+
+plugin "azurerm" {
+  enabled = true
+  version = "0.28.0"
+  source  = "github.com/terraform-linters/tflint-ruleset-azurerm"
+}
+
+config {
+  module = true
+  force  = false
+}
+
+rule "terraform_required_version" {
+  enabled = true
+}
+
+rule "terraform_typed_variables" {
+  enabled = true
+}
+
+------------------------------------------------------------
+
+plugin "azurerm"
+
+Purpose  : Load Azure-specific TFLint rules.
+
+enabled
+
+• Enable or disable the Azure plugin.
+
+version
+
+• Specifies which plugin version will be downloaded.
+
+source
+
+• GitHub repository from where the plugin is downloaded.
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+
+config {}
+
+• The config {} block is optional.
+• You do NOT need to write config {} for normal projects.
+• Use config {} only when you want to change the default TFLint behavior.
+
+Example
+
+config {
+  module = true
+  force  = false
+}
+
+------------------------------------------------------------
+
+module = true
+
+• Default value is false.
+• Use only if your project contains local Terraform modules.
+• When enabled, TFLint scans the Root Module and all Local Modules.
+• If your project does not use modules, you do not need this option.
+
+Disable
+
+config {
+  module = false
+}
+
+Meaning
+
+• Scan only the Root Module.
+
+------------------------------------------------------------
+
+force = false
+
+• Default value is false.
+• Return Exit Code = 1 if issues are found.
+• CI/CD pipeline fails.
+• Recommended for production environments.
+
+Enable
+
+config {
+  force = true
+}
+
+Meaning
+
+• Return Exit Code = 0 even if issues are found.
+• CI/CD pipeline continues.
+• Mostly used during legacy project migration.
+
+------------------------------------------------------------
+
+rule {}
+
+• Most built-in TFLint rules are enabled by default.
+• You do NOT need to write rule {} blocks in normal projects.
+• Writing enabled = true does not change anything because the rule is already enabled.
+• Use rule {} only when you want to change the default behavior.
+• The most common use case is enabled = false to disable a specific check.
+
+------------------------------------------------------------
+
+terraform_required_version
+
+Example
+
+rule "terraform_required_version" {
+  enabled = true
+}
+
+• No need to write this because the rule is already enabled by default.
+• Use this block only if you want to disable the check.
+
+Example
+
+rule "terraform_required_version" {
+  enabled = false
+}
+
+Meaning
+
+• Do not check whether required_version is defined.
+
+------------------------------------------------------------
+
+terraform_typed_variables
+
+Example
+
+rule "terraform_typed_variables" {
+  enabled = true
+}
+
+• No need to write this because the rule is already enabled by default.
+• Use this block only if you want to disable the check.
+
+Example
+
+rule "terraform_typed_variables" {
+  enabled = false
+}
+
+Meaning
+
+• Do not check whether Terraform variables have a defined type.
+
+------------------------------------------------------------
+
+Easy Remember
+
+plugin {}  --> Load Provider Plugin
+
+config {}  --> Control TFLint Behavior
+
+rule {}    --> Enable or Disable Individual Checks
+
+
+
+
+
+
+
+
+===============================================================================
+END
+===============================================================================
+
+
+
+
+
+
+
+
+
+
+

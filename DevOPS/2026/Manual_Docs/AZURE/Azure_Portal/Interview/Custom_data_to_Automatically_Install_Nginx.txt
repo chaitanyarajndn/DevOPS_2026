@@ -1,0 +1,174 @@
+============================================================================================================
+
+# Using custom_data_to_Automatically_Install_Nginx & Deploy a Website on an Azure Linux VM (Terraform)
+
+============================================================================================================
+
+Flow
+Terraform Apply
+│
+▼
+Azure Linux VM Created
+│
+▼
+custom_data Sent to VM
+│
+▼
+Cloud-Init Executes Instructions
+│
+├── Update Package Repository
+├── Install Nginx
+├── Create Custom index.html
+├── Enable Nginx Service
+└── Start Nginx
+│
+▼
+Open VM / Load Balancer Public IP
+│
+▼
+Custom Website Displayed
+
+========================================================================================================================
+
+Step 1 : Create the custom_data File
+
+File Name
+install-nginx.yaml
+
+Purpose
+• This file contains all the commands and configuration that should run automatically when the Linux VM starts for the first time.
+• It is written in Cloud-Init YAML format because Azure Linux VMs understand this format during initial provisioning.
+• Everything required for the initial setup is kept in one file, making the deployment simple and automated.
+• In this project, the file installs Nginx, creates a custom website, and starts the web server automatically.
+
+========================================================================================================================
+
+Step 2 : Write the Required Configuration
+
+install-nginx.yaml
+│
+├── package_update
+├── packages
+├── write_files
+└── runcmd
+
+package_update
+• Updates the Linux package repository before installing any software packages.
+• Downloads the latest package information from the configured repositories.
+• Helps prevent installation failures caused by outdated package indexes.
+• Runs automatically before package installation begins.
+
+packages
+• Specifies which software packages should be installed on the VM.
+• In this project, the nginx package is installed automatically.
+• Cloud-Init downloads and installs the package without any manual login.
+• No SSH access is required to perform the installation.
+
+write_files
+• Creates files automatically inside the Linux VM during deployment.
+• Creates /var/www/html/index.html, which is the default web page location for Nginx.
+• Writes the complete HTML website content into the file automatically.
+• Replaces the default Nginx page with the custom website created for this project.
+
+runcmd
+• Executes Linux commands after package installation and file creation are completed.
+• Enables the Nginx service so it starts automatically after every VM reboot.
+• Starts the Nginx service immediately after deployment finishes.
+• Makes the custom website available as soon as the VM becomes ready.
+
+========================================================================================================================
+
+Step 3 : Attach the File to the Linux VM
+
+Terraform Code
+
+custom_data = base64encode(file("${path.module}/install-nginx.yaml"))
+
+Purpose
+• Reads the install-nginx.yaml file from the Terraform module directory.
+• Converts the file into Base64 because Azure expects custom_data in encoded format.
+• Sends the encoded content to the Azure Linux VM while it is being created.
+• The instructions are available to the VM during its initial boot process.
+
+========================================================================================================================
+
+Step 4 : Deploy the Infrastructure
+
+Command
+
+terraform apply
+
+What Happens
+• Terraform provisions all Azure resources, including the Linux Virtual Machine.
+• The custom_data file is attached to the VM during the deployment process.
+• The VM receives the instructions before its first boot is completed.
+• No manual software installation or configuration is required after deployment.
+
+========================================================================================================================
+
+Step 5 : Cloud-Init Executes the Instructions
+
+Execution Order
+
+Cloud-Init
+│
+├── Update Package Repository
+├── Install Nginx
+├── Create index.html
+├── Enable Nginx Service
+└── Start Nginx
+
+Purpose
+• Cloud-Init reads and executes every instruction from the custom_data file automatically.
+• Each task is executed sequentially in the order defined inside install-nginx.yaml.
+• The web server is fully configured before the VM becomes available for use.
+• The entire setup process is completed without any manual intervention.
+
+========================================================================================================================
+
+Step 6 : Verify the Deployment
+
+Open
+
+http://<Public-IP>
+
+or
+
+http://<LoadBalancer-Public-IP>
+
+Expected Result
+• The Nginx web server is already installed and running successfully.
+• The default Nginx page has been replaced with the custom HTML website.
+• The Azure Infrastructure Dashboard is displayed in the browser.
+• The VM is immediately ready to serve web traffic after deployment completes.
+
+========================================================================================================================
+
+Complete Workflow
+
+Terraform Apply
+│
+▼
+Azure Linux VM Created
+│
+▼
+custom_data Sent to VM
+│
+▼
+Cloud-Init Executes Instructions
+│
+├── Update Package Repository
+├── Install Nginx
+├── Create Custom index.html
+├── Enable Nginx Service
+└── Start Nginx
+│
+▼
+Open Public IP / Load Balancer Public IP
+│
+▼
+Custom Website Displayed
+
+==================================================================================================================
+
+

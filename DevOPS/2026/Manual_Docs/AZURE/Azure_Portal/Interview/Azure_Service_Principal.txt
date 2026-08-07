@@ -1,0 +1,692 @@
+============================================================
+Azure_Service_Principal (Basic)
+============================================================
+
+Meaning
+-------
+Service Principal is a non-human identity in Microsoft Entra ID used by applications, automation tools and scripts to authenticate and access Azure resources.
+
+Examples : Terraform | Azure DevOps | GitHub Actions | Jenkins | Ansible | Python Scripts
+
+User               → Human Identity
+Service Principal  → Application Identity
+
+=========================================================
+Why Service Principal?
+=========================================================
+
+Local Development
+-----------------
+	You
+	 │
+	 ▼
+  az login
+	 │
+	 ▼
+  Terraform
+	 │
+	 ▼
+	Azure
+
+Terraform uses YOUR Azure login (Azure CLI token).
+
+Production / Automation
+-----------------------
+Azure DevOps Pipeline
+        │
+        ▼
+Service Principal
+        │
+        ▼
+	  Azure
+
+No human login, browser or MFA required.
+
+==========================================================================================================
+What is App Registration?
+==========================================================================================================
+
+Azure doesn't know the identity of an application.
+
+So first we REGISTER the application inside Microsoft Entra ID.
+
+Microsoft Entra ID
+        │
+        ▼
+App Registrations
+        │
+        ▼
+New Registration
+        │
+        ▼
+Application Registered
+
+Example Names
+-------------
+terraform-prod
+azuredevops-prod
+github-actions
+jenkins-prod
+
+(Name is only a display name.)
+
+==========================================================================================================
+What Happens After Clicking Register?
+==========================================================================================================
+
+App Registration
+        │
+        ├─────────────────────┐
+        │                     │
+        ▼                     ▼
+Application Object      Service Principal
+
+Azure automatically creates the Service Principal.
+
+You DO NOT create the Service Principal manually.
+
+==========================================================================================================
+Credentials Generated
+==========================================================================================================
+
+Application (Client) ID  → Application Username
+Client Secret            → Application Password
+Tenant ID                → Azure Directory Identity
+Subscription ID          → Azure Subscription to access
+
+These credentials are used by automation tools to authenticate with Azure.
+
+==========================================================================================================
+Assign RBAC Permission
+==========================================================================================================
+
+Service Principal
+        │
+        ▼
+Contributor Role
+        │
+        ▼
+Resource Group
+
+Without RBAC → Authentication Success but Authorization Failed.
+
+==========================================================================================================
+Azure DevOps Integration
+==========================================================================================================
+
+Azure DevOps
+      │
+Create Service Connection
+      │
+Provide
+      ├── Client ID
+      ├── Client Secret
+      ├── Tenant ID
+      └── Subscription ID
+      │
+      ▼
+Stored Securely
+
+==========================================================================================================
+Pipeline Execution
+==========================================================================================================
+
+Git Push
+    │
+    ▼
+Azure DevOps Pipeline
+    │
+terraform apply
+    │
+    ▼
+Service Principal
+    │
+Authentication
+    ▼
+Microsoft Entra ID
+    │
+RBAC Check
+    ▼
+Azure Resources
+
+==========================================================================================================
+Complete Flow
+==========================================================================================================
+
+App Registration
+        │
+        ▼
+Azure Creates
+(Application + Service Principal)
+        │
+        ▼
+Generate Client Secret
+        │
+        ▼
+Assign RBAC Role
+        │
+        ▼
+Azure DevOps Service Connection
+        │
+        ▼
+Pipeline Executes Terraform
+        │
+        ▼
+Microsoft Entra ID Authentication
+        │
+        ▼
+Azure Resources
+
+==========================================================================================================
+Important Interview Points
+==========================================================================================================
+
+✔ Service Principal is NOT an Azure Resource.
+✔ Service Principal is an Identity in Microsoft Entra ID.
+✔ Every automation tool should use its own Service Principal.
+✔ RBAC controls what the Service Principal can access.
+✔ Local Terraform usually uses "az login".
+✔ Production CI/CD uses Service Principal.
+
+Interview One-Liner
+-------------------
+A Service Principal is a non-human identity in Microsoft Entra ID that allows applications and automation tools such as Terraform or Azure DevOps to securely authenticate and access Azure resources based on assigned RBAC permissions.
+
+
+
+==========================================================================================================
+Supported Account Types
+==========================================================================================================
+
+1. Single Tenant Only (Default)   ⭐⭐⭐⭐⭐
+------------------------------------------------------------
+Only users/applications from YOUR organization (Tenant) can access the application.
+
+Examples
+--------
+✔ Terraform
+✔ Azure DevOps Pipeline
+✔ GitHub Actions
+✔ Jenkins
+✔ Internal HR Portal
+✔ Employee Management System
+✔ Internal Finance Application
+✔ Internal Inventory Portal
+
+Use Cases
+---------
+• Internal enterprise applications
+• Infrastructure Automation
+• CI/CD Pipelines
+• Company-only web applications
+
+Example
+-------
+ABC Company Tenant
+        │
+        ▼
+Terraform / Azure DevOps
+        │
+        ▼
+Azure Resources
+
+This is the option used in most enterprise environments.
+
+==========================================================================================================
+
+2. Multiple Entra ID Tenants
+------------------------------------------------------------
+Users from MULTIPLE organizations (Tenants) can access the same application.
+
+Examples
+--------
+✔ Salesforce
+✔ ServiceNow
+✔ Atlassian Jira Cloud
+✔ Slack Enterprise
+✔ Zoom for Business
+✔ SaaS CRM Application
+✔ SaaS HR Application
+
+Use Cases
+---------
+• SaaS Products
+• Cloud Platforms
+• Products sold to multiple companies
+
+Example
+-------
+Company A
+     │
+Company B
+     │
+Company C
+     │
+     ▼
+ Same SaaS Application
+
+Each company signs in using its own Microsoft Entra ID.
+
+==========================================================================================================
+
+3. Any Entra ID Tenant + Personal Microsoft Accounts
+------------------------------------------------------------
+Supports both organizational users and personal Microsoft accounts.
+
+Supported Users
+---------------
+✔ Company Employee
+✔ Outlook.com
+✔ Hotmail.com
+✔ Live.com
+
+Examples
+--------
+✔ Microsoft Teams
+✔ Microsoft Whiteboard
+✔ Microsoft Learn
+✔ Developer Community Portals
+✔ Public Business Portals
+
+Use Cases
+---------
+Applications used by both employees and public users.
+
+==========================================================================================================
+
+4. Personal Microsoft Accounts Only
+------------------------------------------------------------
+Only personal Microsoft accounts can access the application.
+
+Supported Users
+---------------
+✔ Outlook.com
+✔ Hotmail.com
+✔ Live.com
+
+Not Supported
+-------------
+❌ Company Entra ID Accounts
+
+Examples
+--------
+✔ Xbox
+✔ Minecraft
+✔ Microsoft Solitaire
+✔ Microsoft Rewards
+✔ Consumer Gaming Services
+
+Use Cases
+---------
+Consumer applications only.
+
+
+==========================================================================================================
+Redirect URI
+==========================================================================================================
+
+Meaning
+-------
+After successful login, Microsoft Entra ID sends the user back to this URL.
+
+
+Flow
+----
+User
+ │
+ ▼
+Application
+ │
+ ▼
+Microsoft Entra ID Login
+ │
+Authentication Success
+ ▼
+Redirect URI
+ │
+ ▼
+Application
+
+Example
+-------
+https://mycompany.com/auth
+
+User logs in
+      │
+      ▼
+Microsoft Entra ID
+      │
+      ▼
+https://mycompany.com/auth
+
+The application receives the authentication response here.
+
+
+==========================================================================================================
+Platform Options
+==========================================================================================================
+
+Web
+----------------------------
+Used by websites.
+
+Example
+-------
+https://company.com/auth
+
+Examples
+--------
+✔ Company Portal
+✔ Internal HR Portal
+✔ Banking Website
+
+==========================================================================================================
+
+Single Page Application (SPA)
+------------------------------
+Used by JavaScript frontend applications.
+
+Examples
+--------
+✔ React
+✔ Angular
+✔ Vue.js
+
+Example
+-------
+React App
+     │
+     ▼
+login.microsoftonline.com
+     │
+     ▼
+React App (/auth)
+
+==========================================================================================================
+
+Public Client / Native
+-----------------------
+Used by Desktop and Mobile Applications.
+
+Examples
+--------
+✔ Windows Desktop App
+✔ Android App
+✔ iOS App
+✔ CLI Applications
+
+==========================================================================================================
+
+Terraform / Azure DevOps
+==========================================================================================================
+
+Need Redirect URI?
+------------------
+❌ No
+
+Need Multiple Tenant?
+---------------------
+❌ No
+
+Need Personal Microsoft Accounts?
+---------------------------------
+❌ No
+
+Typical Configuration
+---------------------
+Application Name        : terraform-prod
+Supported Account Type  : Single Tenant Only
+Redirect URI            : Leave Blank
+
+This is the configuration you'll commonly use for Terraform and Azure DevOps service principals.
+
+
+
+
+==========================================================================================================
+Application (Client) ID vs Object ID vs Tenant ID vs Client Secret
+==========================================================================================================
+
+Application (Client) ID
+-----------------------
+Meaning
+-------
+Unique ID of the registered application.
+
+Think As
+--------
+Application Username
+
+Used By
+-------
+✔ Terraform
+✔ Azure DevOps
+✔ GitHub Actions
+✔ Azure CLI
+
+Example
+-------
+App Name : terraform-prod
+
+Application (Client) ID
+        │
+        ▼
+Used to identify "Which application is requesting access?"
+
+==========================================================================================================
+
+Object ID
+---------
+Meaning
+-------
+Unique ID of the actual object stored inside Microsoft Entra ID.
+
+Think As
+--------
+Internal Database Record ID
+
+Every object has an Object ID.
+
+Examples
+--------
+✔ User
+✔ Group
+✔ Service Principal
+✔ App Registration
+✔ Managed Identity
+
+Interview Point
+---------------
+Object ID identifies the object itself, while Client ID identifies the application.
+
+==========================================================================================================
+
+Tenant ID
+---------
+Meaning
+-------
+Unique ID of your Microsoft Entra ID directory.
+
+Think As
+--------
+Company Identity
+
+Example
+-------
+ABC Company
+      │
+      ▼
+Microsoft Entra ID
+      │
+      ▼
+Tenant ID
+
+Use
+---
+Azure needs to know which tenant should authenticate the request.
+
+==========================================================================================================
+
+Client Secret
+-------------
+Meaning
+-------
+Secret password of the application.
+
+Think As
+--------
+Application Password
+
+Example
+-------
+Application (Client) ID  → Username
+Client Secret            → Password
+
+Never expose or commit the Client Secret to Git repositories.
+
+==========================================================================================================
+
+
+==========================================================================================================
+Application Registration vs Service Principal vs Enterprise Application
+==========================================================================================================
+
+Application Registration
+------------------------
+Meaning
+-------
+Defines the application inside Microsoft Entra ID.
+
+Stores
+------
+✔ Application Name
+✔ Client ID
+✔ Redirect URI
+✔ API Permissions
+✔ Certificates / Client Secret
+
+Think As
+--------
+Blueprint / Definition of the Application.
+
+==========================================================================================================
+
+Service Principal
+-----------------
+Meaning
+-------
+Identity created for the application to authenticate and access Azure resources.
+
+Stores
+------
+✔ Object ID
+✔ RBAC Permissions
+✔ Role Assignments
+
+Think As
+--------
+Identity Card of the Application.
+
+==========================================================================================================
+
+Enterprise Application
+----------------------
+Meaning
+-------
+Enterprise Application is simply the Service Principal shown from the Enterprise Applications blade.
+
+Purpose
+-------
+Used by administrators to manage:
+
+✔ Users & Groups
+✔ Permissions
+✔ SSO
+✔ Conditional Access
+✔ Sign-in Logs
+
+Think As
+--------
+Management View of the Service Principal.
+
+==========================================================================================================
+Relationship
+==========================================================================================================
+
+                    Register Application
+                            │
+                            ▼
+                  Application Registration
+                            │
+                  (Application Definition)
+                            │
+            Azure Automatically Creates
+                            │
+                            ▼
+                    Service Principal
+                   (Application Identity)
+                            │
+                    Assign RBAC Roles
+                            │
+                            ▼
+                 Enterprise Applications
+                  (Management Portal View)
+
+==========================================================================================================
+Real Example
+==========================================================================================================
+
+You Register
+
+Application Name : terraform-prod
+
+Azure Creates
+
+✔ Application Registration
+✔ Service Principal
+
+Then
+
+Service Principal
+        │
+        ▼
+Contributor Role
+        │
+        ▼
+Resource Group
+
+Terraform
+      │
+Uses Client ID + Secret
+      │
+      ▼
+Service Principal
+      │
+      ▼
+Azure Resources
+
+==========================================================================================================
+Simple Analogy
+==========================================================================================================
+
+Application Registration  → Employee Record in HR Database
+Service Principal         → Employee ID Card
+Enterprise Application    → HR Management Portal
+
+==========================================================================================================
+Interview Points
+==========================================================================================================
+
+✔ Application Registration defines the application.
+✔ Service Principal authenticates the application.
+✔ Enterprise Application manages the application's identity.
+✔ Azure automatically creates a Service Principal after App Registration.
+✔ RBAC is assigned to the Service Principal.
+
+==========================================================================================================
+One-Line Summary
+==========================================================================================================
+
+Application Registration defines the application, Service Principal provides its identity, and Enterprise Applications is the portal used to manage that identity.
+
+

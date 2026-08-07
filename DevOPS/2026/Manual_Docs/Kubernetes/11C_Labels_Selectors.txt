@@ -1,0 +1,187 @@
+========================================================================================================================
+Labels & Selectors
+========================================================================================================================
+
+What    : Labels are simple key-value pairs attached to Kubernetes objects like Pods, Deployments and Services.
+          Selectors are used to find or filter objects based on those Labels.
+
+Why     : A Kubernetes cluster may contain hundreds or thousands of Pods. Kubernetes needs an easy way to identify
+          which Pods belong to which application. Labels identify the Pods, while Selectors find the required Pods.
+
+How     : First, Labels are attached to Pods. Then Kubernetes objects like ReplicaSet or Service use Selectors to
+          search for Pods having matching Labels. Only matching Pods are selected and managed.
+
+Think   : Think of Labels as Name Tags on employees and Selectors as the HR filter.
+
+          Employee Name Tag      → DevOps
+          HR Filter             → Show all DevOps employees
+
+          Only matching employees are selected.
+
+Memory  : Label = Identity
+          Selector = Finder
+
+========================================================================================================================
+Label
+========================================================================================================================
+
+What    : A Label is a key-value pair attached to a Kubernetes object.
+
+Memory  : Label tells WHO I am.
+
+Examples
+
+app: nginx
+
+env: production
+
+tier: frontend
+
+version: v1
+
+department: finance
+
+========================================================================================================================
+Selector
+========================================================================================================================
+
+What    : A Selector searches for Kubernetes objects using their Labels.
+
+Memory  : Selector asks,
+          "Show me all Pods having this Label."
+
+========================================================================================================================
+Relationship
+========================================================================================================================
+
+Pod
+ │
+ └── Label
+      │
+      └── app = nginx
+
+ReplicaSet
+ │
+ └── Selector
+      │
+      └── app = nginx
+
+Result
+
+ReplicaSet Finds Pod
+
+========================================================================================================================
+Important Points
+========================================================================================================================
+
+✔ Labels are attached to Objects.
+
+✔ Selectors search using Labels.
+
+✔ ReplicaSet uses Selectors.
+
+✔ Deployment uses Selectors.
+
+✔ Service also uses Selectors.
+
+✔ Labels never search anything.
+
+✔ Selectors never create Labels.
+
+========================================================================================================================
+Interview Questions
+========================================================================================================================
+
+Q. What is a Label?
+
+Ans:
+A Label is a key-value pair attached to a Kubernetes object for identification.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. What is a Selector?
+
+Ans:
+A Selector is used to find Kubernetes objects based on matching Labels.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. Can ReplicaSet work without Labels?
+
+Ans:
+No.
+ReplicaSet depends on Labels and Selectors to identify and manage Pods.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. Does a Label search for Pods?
+
+Ans:
+No.
+Labels only identify objects.
+Selectors perform the search.
+
+========================================================================================================================
+Common Beginner Mistakes
+========================================================================================================================
+
+❌ Labels find Pods.
+
+✔ Selectors find Pods.
+
+------------------------------------------------------------------------------------------------------------------------
+
+❌ Selectors create Pods.
+
+✔ ReplicaSet creates Pods after finding matching Labels.
+
+------------------------------------------------------------------------------------------------------------------------
+
+❌ Labels and Selectors are the same.
+
+✔ Labels identify.
+✔ Selectors search.
+
+========================================================================================================================
+Example
+========================================================================================================================
+
+Pod
+
+labels:
+  app: nginx
+
+ReplicaSet
+
+selector:
+  matchLabels:
+    app: nginx
+
+Meaning
+
+ReplicaSet says,
+
+"Find all Pods whose Label is app=nginx."
+
+========================================================================================================================
+Flow
+========================================================================================================================
+
+                Pod
+                 │
+           Label : app=nginx
+                 │
+                 ▼
+           ReplicaSet
+                 │
+     selector: app=nginx
+                 │
+                 ▼
+          Match Found?
+          ┌─────┴─────┐
+          │           │
+         Yes         No
+          │           │
+ Manage Pod      Ignore Pod
+
+========================================================================================================================

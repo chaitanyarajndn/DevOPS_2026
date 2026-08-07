@@ -1,0 +1,983 @@
+===============================================================================
+CHECKOV
+Infrastructure as Code (IaC) Security Scanner
+===============================================================================
+
+Definition
+----------
+Checkov is an open-source Infrastructure as Code (IaC) security scanning tool developed by Bridgecrew (now part of Prisma Cloud). It scans Infrastructure as Code files to identify security misconfigurations and compliance violations before cloud infrastructure is deployed.
+
+
+Simple Meaning
+--------------
+Checkov automatically checks your Infrastructure as Code files for security mistakes before they are deployed to the cloud.
+
+
+Purpose
+-------
+• Detect security misconfigurations in Infrastructure as Code (IaC).
+• Enforce security and compliance policies.
+• Improve cloud security using Shift Left Security.
+• Reduce deployment risks before infrastructure reaches production.
+
+
+Why was Checkov created?
+------------------------
+Traditionally, cloud infrastructure was deployed first and security checks were performed later. This often resulted in security risks, compliance violations, costly fixes, and deployment delays. Checkov was created to move security checks earlier in the development lifecycle, allowing developers to detect and fix issues before deployment.
+
+
+Problem it solves
+-----------------
+Without Checkov
+---------------
+• Security issues are discovered after deployment.
+• Manual security reviews consume significant time.
+• Misconfigured cloud resources can expose sensitive data.
+• Compliance violations are detected late.
+• Fixing production issues becomes expensive and risky.
+
+With Checkov
+------------
+• Security issues are detected before deployment.
+• Infrastructure is automatically validated against security policies.
+• Compliance checks are performed during development.
+• Developers receive immediate feedback.
+• Secure infrastructure reaches production with lower risk.
+
+
+
+Where is it used?
+-----------------
+• Local Developer Machine
+• Git Repository
+• Pull Request Validation
+• CI/CD Pipelines
+• DevSecOps Workflows
+• Enterprise Cloud Deployments
+
+
+
+Supported Infrastructure as Code
+--------------------------------
+• Terraform
+• Terraform Plan
+• Kubernetes YAML
+• Helm Charts
+• Dockerfile
+• GitHub Actions
+• Azure ARM Templates
+• Azure Bicep
+• AWS CloudFormation
+• Serverless Framework
+
+
+Shift Left Security
+-------------------
+Traditional Approach
+Developer -> Deploy Infrastructure -> Security Scan -> Fix Issues
+
+Shift Left Approach
+Developer -> Checkov Scan -> Fix Issues -> Deploy Infrastructure
+
+
+
+Why Shift Left?
+---------------
+• Security issues are cheaper to fix.
+• Faster development cycles.
+• Reduced deployment failures.
+• Improved compliance.
+• Lower production risk.
+
+
+
+Real Enterprise Workflow
+------------------------
+Developer Writes Terraform
+            │
+            ▼
+      Run Checkov
+            │
+            ▼
+     Review Findings
+            │
+            ▼
+      Fix Misconfigurations
+            │
+            ▼
+        Git Commit
+            │
+            ▼
+       Create Pull Request
+            │
+            ▼
+        CI/CD Pipeline
+            │
+            ▼
+    Checkov Validation
+            │
+     ┌──────┴──────┐
+     │             │
+     ▼             ▼
+ Scan Passed   Scan Failed
+     │             │
+     ▼             ▼
+ Terraform      Fix Code
+   Apply           │
+     │             ▼
+	 │	  Checkov Validation Again
+	 │			   │
+	 │			   ▼
+	 │		  Scan Passed
+	 │			   │
+	 │			   ▼
+	 │			Terraform
+	 │			  Apply
+	 │			   │
+     └──────┬──────┘
+            ▼
+      Production
+
+Architecture / Working
+----------------------
+Step 1 : Developer writes Infrastructure as Code (Terraform, Kubernetes, ARM, etc.).
+Step 2 : Checkov reads every configuration file.
+Step 3 : Built-in security policies are executed.
+Step 4 : Custom policies (if configured) are executed.
+Step 5 : Results are displayed with Pass/Fail status.
+Step 6 : Developer fixes failed checks.
+Step 7 : Infrastructure is deployed only after successful validation.
+
+[Interview]
+
+Q. What is Checkov?
+
+Ans.
+• Checkov is an open-source Infrastructure as Code (IaC) security scanning tool that detects security misconfigurations before cloud infrastructure is deployed.
+• It helps organizations enforce security and compliance policies throughout the development and CI/CD pipeline.
+
+[Interview]
+
+Q. Why do we use Checkov?
+
+Ans.
+• To detect security misconfigurations in Infrastructure as Code (IaC) files before cloud infrastructure is deployed.
+• To enforce security and compliance policies, reduce deployment risks, and prevent insecure infrastructure from reaching production.
+
+
+
+
+===============================================================================
+CHECKOV
+Part-2 : Installation | Configuration | Built-in Rules | Custom Rules
+===============================================================================
+
+Installation
+------------
+Official Source
+---------------
+GitHub Releases
+
+Download Type
+-------------
+• ZIP Package
+• Executable (.exe) (If Available)
+
+Recommended Installation
+------------------------
+Download the latest release and extract/copy the executable file to:
+
+C:\TOOLS
+
+Environment Variable
+--------------------
+Add the following path to the Windows PATH Environment Variable.
+
+C:\TOOLS
+
+Verification
+------------
+Command
+checkov --version
+
+Expected Result
+---------------
+Displays the installed Checkov version.
+
+Alternative Installation
+------------------------
+Checkov can also be installed using pip.
+
+Command
+pip install checkov
+
+Configuration File
+------------------
+Filename
+.checkov.yaml
+
+Purpose
+-------
+Stores default Checkov settings so the same configuration is used for every scan.
+
+Common Configuration Options
+----------------------------
+• Framework Selection
+• Skip Checks
+• Soft Fail
+• Output Format
+• Output Location
+• Download External Modules
+• Quiet Mode
+
+Example
+-------
+skip-check:
+  - CKV_AZURE_35
+framework:
+  - terraform
+output:
+  - cli
+quiet: true
+
+Why use .checkov.yaml?
+----------------------
+• Eliminates repetitive command-line arguments.
+• Standardizes security scanning across teams.
+• Maintains consistent security policies.
+• Simplifies CI/CD integration.
+
+Built-in Rules / Policies
+--------------------------
+Definition
+----------
+Built-in rules are pre-defined security and compliance policies provided by Checkov to detect common Infrastructure as Code (IaC) security misconfigurations.
+
+Purpose
+-------
+Automatically validate Infrastructure as Code against industry security best practices.
+
+Rule Naming Convention
+----------------------
+CKV        = Checkov
+AZURE      = Azure Provider
+AWS        = Amazon Web Services
+GCP        = Google Cloud Platform
+K8S        = Kubernetes
+Number     = Unique Rule ID
+
+Example
+-------
+CKV_AZURE_35
+
+CKV        = Checkov
+AZURE      = Azure
+35         = Rule Number
+
+Common Built-in Rules
+---------------------
+CKV_AZURE_9    : Secure Transfer should be enabled.
+CKV_AZURE_33   : Public Network Access should be restricted.
+CKV_AWS_20     : S3 Bucket security validation.
+CKV_K8S_21     : Kubernetes security validation.
+
+How Built-in Rules Work
+------------------------
+Terraform File
+      │
+      ▼
+Checkov Loads Built-in Rules
+      │
+      ▼
+Validates Resource Configuration
+      │
+      ▼
+PASS or FAIL
+      │
+      ▼
+Displays Scan Report
+
+Benefits
+--------
+• Hundreds of ready-to-use security rules.
+• No manual policy creation required.
+• Regularly updated by Checkov.
+• Supports Azure, AWS, GCP, Kubernetes and other IaC platforms.
+
+Custom Rules / Policies
+------------------------
+Definition
+----------
+Custom rules allow organizations to create their own security and compliance policies based on internal standards and business requirements.
+
+Why create Custom Rules?
+------------------------
+• Organization-specific security standards.
+• Internal compliance requirements.
+• Customer security policies.
+• Regulatory requirements.
+• Governance standards.
+
+Supported Languages
+-------------------
+• Python
+• YAML
+
+Common Enterprise Use Cases
+---------------------------
+• Enforce mandatory resource tags.
+• Restrict specific Azure regions.
+• Allow only approved VM sizes.
+• Block Public IPs in Production.
+• Apply company naming conventions.
+• Enforce Minimum TLS Version.
+
+Enterprise Example
+------------------
+Company Policy
+--------------
+Every Azure Storage Account must have:
+• HTTPS Only Enabled
+• Secure Transfer Enabled
+• Minimum TLS 1.2
+• Mandatory Tags
+
+Result
+------
+Deployment is allowed only when both Built-in Rules and Custom Rules pass successfully.
+
+Built-in vs Custom Rules
+------------------------
+Built-in Rules
+• Developed and maintained by Checkov.
+• Covers common cloud security best practices.
+• Ready to use.
+
+Custom Rules
+• Developed by the organization.
+• Covers internal security and compliance requirements.
+• Fully customizable.
+
+[Interview]
+
+Q. What are Built-in Rules?
+
+Ans.
+• Built-in rules are pre-defined security and compliance policies provided by Checkov to detect common Infrastructure as Code security misconfigurations.
+• They help organizations follow cloud security best practices without creating custom policies.
+
+[Interview]
+
+Q. Why do we create Custom Rules?
+
+Ans.
+• To enforce organization-specific security and compliance requirements that are not covered by built-in rules.
+• To ensure every infrastructure deployment follows internal standards before reaching production.
+
+[Interview]
+
+Q. Can we create our own security policies in Checkov?
+
+Ans.
+• Yes. Checkov supports custom security policies using Python or YAML.
+• Organizations use custom policies to enforce internal security, compliance and governance standards.
+
+
+
+
+
+
+===============================================================================
+CHECKOV
+Part-3 : Important Commands | Scan Output | Report Generation | Corrective Action
+===============================================================================
+
+Important Commands
+------------------
+
+Check Current Version
+---------------------
+checkov --version
+
+Scan Current Directory
+----------------------
+checkov -d .
+
+Purpose
+-------
+Scans all supported Infrastructure as Code (IaC) files in the current directory.
+
+Scan Specific Directory
+-----------------------
+checkov -d C:\Terraform\Project
+
+Purpose
+-------
+Scans Infrastructure as Code files from the specified directory.
+
+Scan Single Terraform File
+--------------------------
+checkov -f main.tf
+
+Purpose
+-------
+Scans only the specified Terraform file.
+
+Scan Terraform Plan
+-------------------
+checkov -f tfplan.json
+
+Purpose
+-------
+Scans a generated Terraform Plan before deployment.
+
+Scan Kubernetes Manifest
+-------------------------
+checkov -f deployment.yaml
+
+Purpose
+-------
+Scans Kubernetes YAML files for security misconfigurations.
+
+Scan Dockerfile
+---------------
+checkov -f Dockerfile
+
+Purpose
+-------
+Scans Dockerfile against container security best practices.
+
+Scan Helm Chart
+---------------
+checkov -d ./helm-chart
+
+Purpose
+-------
+Scans Helm Charts for Kubernetes security issues.
+
+Run Specific Framework
+----------------------
+checkov -d . --framework terraform
+
+Purpose
+-------
+Scans only Terraform files.
+
+Supported Framework Examples
+----------------------------
+terraform
+kubernetes
+dockerfile
+helm
+github_actions
+arm
+bicep
+cloudformation
+
+Run Specific Check
+------------------
+checkov -d . --check CKV_AZURE_35
+
+Purpose
+-------
+Runs only the specified security rule.
+
+Skip Specific Check
+-------------------
+checkov -d . --skip-check CKV_AZURE_35
+
+Purpose
+-------
+Ignores the specified security rule during scanning.
+
+Quiet Mode
+----------
+checkov -d . --quiet
+
+Purpose
+-------
+Displays only failed checks.
+
+Soft Fail
+---------
+checkov -d . --soft-fail
+
+Purpose
+-------
+Displays failed checks but returns Exit Code 0, allowing the CI/CD pipeline to continue.
+
+Hard Fail (Default)
+-------------------
+checkov -d .
+
+Purpose
+-------
+Returns a non-zero Exit Code when security violations are detected, causing the pipeline to fail.
+
+Scan Output
+-----------
+PASS
+----
+The resource satisfies the security policy.
+
+FAIL
+----
+The resource violates the security policy.
+
+SKIPPED
+-------
+The rule was intentionally skipped using --skip-check.
+
+Output Information
+------------------
+• Check ID
+• Check Name
+• Resource Name
+• File Name
+• Line Number
+• PASS / FAIL Status
+• Guideline / Recommendation
+
+Example
+-------
+Check ID      : CKV_AZURE_35
+Resource      : azurerm_storage_account.storage01
+File          : main.tf
+Status        : FAILED
+Reason        : Secure Transfer is Disabled
+
+Report Generation
+-----------------
+
+CLI Report (Default)
+--------------------
+checkov -d .
+
+Purpose
+-------
+Displays results directly in the terminal.
+
+JSON Report
+-----------
+checkov -d . -o json
+
+Purpose
+-------
+Generates machine-readable JSON output.
+
+Save JSON Report
+----------------
+checkov -d . -o json > report.json
+
+Purpose
+-------
+Saves the scan results to a JSON file.
+
+JUnit Report
+------------
+checkov -d . -o junitxml
+
+Purpose
+-------
+Used by CI/CD systems for test reporting.
+
+SARIF Report
+------------
+checkov -d . -o sarif
+
+Purpose
+-------
+Used by GitHub Advanced Security and security dashboards.
+
+Save SARIF Report
+-----------------
+checkov -d . -o sarif > report.sarif
+
+Multiple Output Formats
+-----------------------
+checkov -d . -o cli -o json -o sarif
+
+Purpose
+-------
+Generates multiple reports in a single scan.
+
+Corrective Action
+-----------------
+Step 1
+------
+Review the failed security checks.
+
+Step 2
+------
+Understand the reason for each failure.
+
+Step 3
+------
+Modify the Infrastructure as Code.
+
+Step 4
+------
+Run Checkov again.
+
+Step 5
+------
+Verify all required checks pass.
+
+Step 6
+------
+Commit the updated code.
+
+Step 7
+------
+Push changes to the repository.
+
+Step 8
+------
+Allow the CI/CD pipeline to execute.
+
+Corrective Action Workflow
+--------------------------
+Run Checkov
+      │
+      ▼
+Review Findings
+      │
+      ▼
+Fix IaC Code
+      │
+      ▼
+Re-run Checkov
+      │
+      ▼
+All Checks Passed?
+      │
+ ┌────┴────┐
+ │         │
+ ▼         ▼
+ No       Yes
+ │         │
+ ▼         ▼
+Fix Again  Git Commit
+              │
+              ▼
+         Push Repository
+              │
+              ▼
+        CI/CD Pipeline
+              │
+              ▼
+      Infrastructure Deploy
+
+[Interview]
+
+Q. Which command scans the current directory?
+
+Ans.
+• Use "checkov -d ." to scan all supported Infrastructure as Code files in the current directory.
+• This is the most commonly used command during local development and CI/CD pipelines.
+
+[Interview]
+
+Q. What is the difference between --check and --skip-check?
+
+Ans.
+• --check executes only the specified security rule during the scan.
+• --skip-check ignores the specified security rule while executing all remaining rules.
+
+[Interview]
+
+Q. What is the purpose of --soft-fail?
+
+Ans.
+• It reports security violations but returns Exit Code 0, allowing the CI/CD pipeline to continue.
+• It is commonly used during the initial adoption phase to identify issues without blocking deployments.
+
+[Interview]
+
+Q. Why do we generate JSON or SARIF reports?
+
+Ans.
+• JSON reports are used for automation, integrations and further processing by other tools.
+• SARIF reports integrate with security dashboards and platforms like GitHub Advanced Security.
+
+
+
+
+
+===============================================================================
+CHECKOV
+Part-4 : CI/CD Integration | Enterprise Workflow | Best Practices | Comparison
+===============================================================================
+
+CI/CD Integration
+-----------------
+Purpose
+-------
+Automatically scan Infrastructure as Code before deployment to ensure only secure infrastructure reaches production.
+
+Supported CI/CD Platforms
+-------------------------
+• Azure DevOps
+• GitHub Actions
+• Jenkins
+• GitLab CI/CD
+• Bitbucket Pipelines
+
+Typical CI/CD Flow
+------------------
+Developer
+    │
+    ▼
+Git Commit
+    │
+    ▼
+Push Repository
+    │
+    ▼
+Pull Request
+    │
+    ▼
+CI/CD Pipeline
+    │
+    ▼
+Run Checkov
+    │
+ ┌──┴──┐
+ │     │
+ ▼     ▼
+PASS  FAIL
+ │     │
+ ▼     ▼
+Deploy Fix Issues
+       │
+       ▼
+   Re-run Pipeline
+
+Enterprise Workflow
+-------------------
+Step 1 : Developer writes Infrastructure as Code.
+Step 2 : Code is committed to Git.
+Step 3 : Pull Request is created.
+Step 4 : CI/CD Pipeline starts automatically.
+Step 5 : Checkov scans Infrastructure as Code.
+Step 6 : Scan report is generated.
+Step 7 : Developer reviews failed checks.
+Step 8 : Infrastructure code is corrected.
+Step 9 : Checkov is executed again.
+Step 10 : After successful validation, deployment begins.
+
+Enterprise Workflow (Detailed)
+------------------------------
+Developer
+     │
+     ▼
+Terraform Code
+     │
+     ▼
+Git Commit
+     │
+     ▼
+Push Repository
+     │
+     ▼
+Pull Request
+     │
+     ▼
+Pipeline Triggered
+     │
+     ▼
+Checkov Scan
+     │
+ ┌───┴───────────┐
+ │               │
+ ▼               ▼
+No Issues     Issues Found
+ │               │
+ ▼               ▼
+Terraform      Review Report
+Apply              │
+ │                 ▼
+ ▼            Fix Terraform
+Deployment          │
+ │                 ▼
+ ▼            Re-run Checkov
+Production          │
+                   ▼
+             Pipeline Success
+
+Best Practices
+--------------
+• Scan code before every commit.
+• Integrate Checkov into every CI/CD pipeline.
+• Fix High and Critical findings immediately.
+• Do not ignore security rules without valid business justification.
+• Keep Checkov updated to receive the latest security policies.
+• Store custom policies in version control.
+• Review reports before every production deployment.
+• Re-run scans after every code change.
+
+Advantages
+----------
+• Open Source.
+• Easy to install.
+• Fast security scanning.
+• Supports multiple IaC frameworks.
+• Large collection of built-in security policies.
+• Supports custom policies.
+• Excellent CI/CD integration.
+• Helps implement Shift Left Security.
+• Improves compliance.
+• Reduces deployment risks.
+
+Limitations
+-----------
+• Cannot fix security issues automatically.
+• May produce false positives.
+• Requires developers to understand security recommendations.
+• Custom policy development requires additional effort.
+• Focuses only on Infrastructure as Code security.
+
+Checkov vs tfsec
+----------------
+
+Checkov
+--------
+Purpose          : IaC Security + Compliance Scanner
+Cloud Support    : Azure, AWS, GCP, Kubernetes and more
+Frameworks       : Multiple
+Custom Policies  : Yes
+Compliance        : Yes
+Open Source      : Yes
+
+tfsec
+------
+Purpose          : Terraform Security Scanner
+Cloud Support    : Mainly Terraform
+Frameworks       : Terraform Only
+Custom Policies  : Limited
+Compliance        : Basic
+Open Source      : Yes
+
+When to Use?
+------------
+Choose Checkov when:
+• Working with multiple IaC frameworks.
+• Compliance validation is required.
+• Organization requires custom policies.
+
+Choose tfsec when:
+• Working only with Terraform.
+• Lightweight Terraform security scanning is sufficient.
+
+Troubleshooting
+---------------
+Problem
+-------
+checkov : command not found
+
+Solution
+--------
+• Verify PATH Environment Variable.
+• Restart Terminal.
+• Verify installation using checkov --version.
+
+Problem
+-------
+No files scanned.
+
+Solution
+--------
+• Verify current directory.
+• Verify supported file types.
+• Verify file path.
+
+Problem
+-------
+Large number of failed checks.
+
+Solution
+--------
+• Review report carefully.
+• Fix issues one by one.
+• Re-run the scan after every correction.
+
+Resume Points
+-------------
+• Implemented Checkov to scan Terraform Infrastructure as Code for security misconfigurations.
+• Integrated Checkov into CI/CD pipelines to enforce security validation before deployment.
+• Used built-in and custom security policies to improve cloud security and compliance.
+• Generated JSON and SARIF reports for security auditing and pipeline integration.
+• Followed Shift Left Security practices to identify and fix Infrastructure as Code issues before production deployment.
+
+Advanced Interview Questions
+----------------------------
+
+[Interview]
+
+Q. What is Shift Left Security?
+
+Ans.
+• Shift Left Security means performing security validation early in the Software Development Lifecycle instead of after deployment.
+• Checkov helps implement Shift Left by scanning Infrastructure as Code before cloud resources are deployed.
+
+[Interview]
+
+Q. Does Checkov fix security issues automatically?
+
+Ans.
+• No. Checkov only identifies security misconfigurations and provides recommendations.
+• Developers must update the Infrastructure as Code and run the scan again.
+
+[Interview]
+
+Q. Can Checkov be integrated into CI/CD?
+
+Ans.
+• Yes. Checkov integrates with Azure DevOps, GitHub Actions, Jenkins, GitLab CI/CD and other CI/CD platforms.
+• It automatically validates Infrastructure as Code before deployment.
+
+[Interview]
+
+Q. What happens if Checkov finds security issues?
+
+Ans.
+• Checkov reports the failed security checks along with recommendations.
+• Depending on pipeline configuration, deployment may continue (Soft Fail) or stop (Hard Fail).
+
+Hands-on Lab
+------------
+Lab-1
+------
+• Install Checkov.
+• Verify Installation.
+• Scan a Terraform Project.
+• Review Failed Checks.
+• Fix Misconfigurations.
+• Re-run Scan.
+• Generate JSON Report.
+
+Lab-2
+------
+• Create a custom policy.
+• Execute the custom policy.
+• Validate results.
+• Integrate Checkov into a CI/CD pipeline.
+
+===============================================================================
+END OF CHECKOV
+===============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

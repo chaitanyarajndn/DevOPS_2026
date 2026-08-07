@@ -1,0 +1,164 @@
+===========================
+END_TO_END_DEVOPS_FLOW
+===========================
+
+
+PHASE 1 : INFRASTRUCTURE (Terraform)
+------------------------------------
+
+Terraform Code
+      │
+      ▼
+Resource Group
+      │
+      ▼
+Virtual Network (VNet)
+      │
+      ▼
+Subnets
+      │
+      ▼
+Network Security Groups (NSG)
+      │
+      ▼
+NSG Association
+      │
+      ▼
+Public IP / NAT Gateway
+      │
+      ▼
+Azure Container Registry (ACR)
+      │
+      ▼
+AKS Cluster / Virtual Machines
+      │
+      ▼
+Infrastructure Ready ✅
+
+
+
+PHASE 2 : SOURCE CODE
+---------------------
+
+Developer
+      │
+      ▼
+Git
+      │
+      ▼
+GitHub Repository
+      │
+      ▼
+Push Code
+
+
+
+PHASE 3 : CI PIPELINE
+---------------------
+
+GitHub Push
+      │
+      ▼
+Azure DevOps Trigger
+      │
+      ▼
+Pipeline (azure-pipelines.yml)
+      │
+      ▼
+Agent (Microsoft Hosted / Self Hosted)
+
+
+
+PHASE 4 : VALIDATION
+--------------------
+
+Terraform fmt
+      │
+      ▼
+Terraform validate
+      │
+      ▼
+tfsec (Security Scan)
+      │
+      ▼
+Checkov (Best Practices & Compliance)
+
+
+
+PHASE 5 : INFRASTRUCTURE DEPLOYMENT
+-----------------------------------
+
+Terraform Plan
+      │
+      ▼
+Terraform Apply
+      │
+      ▼
+Azure Infrastructure Updated
+
+
+
+PHASE 6 : APPLICATION BUILD
+---------------------------
+
+Source Code
+      │
+      ▼
+Maven / Gradle Build
+      │
+      ▼
+SonarQube (Code Quality)
+      │
+      ▼
+Application Artifact (.jar)
+
+
+
+PHASE 7 : CONTAINERIZATION
+--------------------------
+
+Dockerfile
+      │
+      ▼
+Docker Build
+      │
+      ▼
+Docker Image
+      │
+      ▼
+Push Image
+      │
+      ▼
+Azure Container Registry (ACR)
+
+
+
+PHASE 8 : DEPLOYMENT
+--------------------
+
+deployment.yaml / Helm
+      │
+      ▼
+kubectl apply
+      │
+      ▼
+AKS API Server
+      │
+      ▼
+Scheduler
+      │
+      ▼
+Worker Nodes
+      │
+      ▼
+Pods
+      │
+      ▼
+Containers
+      │
+      ▼
+Application Running ✅
+
+
+
+

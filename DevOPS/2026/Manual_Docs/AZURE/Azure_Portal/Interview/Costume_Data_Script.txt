@@ -1,0 +1,367 @@
+# Azure VM Custom Data (Cloud-Init) - Complete Notes
+
+================================================================================
+
+1. What is Custom Data?
+   ================================================================================
+   Definition:
+   Custom Data is a startup script that Terraform sends to an Azure Linux VM during VM creation. When the VM starts for the first time, Cloud-Init automatically reads this script and executes all the commands inside it.
+
+Purpose:
+• Automatically configure the VM after deployment without manually logging in through SSH.
+• Install required software like Nginx, Apache, Docker, Git, Java, etc.
+• Save deployment time by removing repetitive manual configuration.
+• Keep VM setup consistent across Dev, QA, and Production environments.
+
+================================================================================
+2. Important Components
+=======================
+
+Terraform
+│
+├── Creates Azure VM
+└── Sends startup script (custom_data)
+
+Azure
+│
+├── Creates Linux VM
+└── Passes startup script to VM
+
+Cloud-Init (Already available in Ubuntu image)
+│
+├── Starts automatically during first boot
+├── Reads Custom Data script
+└── Executes commands one by one
+
+================================================================================
+3. Complete Flow (Easy to Remember)
+===================================
+
+Laptop
+│
+├── cloud-init.sh
+	│
+	▼
+Terraform reads the file
+	│
+	▼
+Terraform converts it into Base64 format
+	│
+	▼
+Terraform sends VM creation request along with the script to Azure
+	│
+	▼
+Azure creates the Linux VM
+	│
+	▼
+VM starts for the first time
+	│
+	▼
+Cloud-Init automatically starts
+	│
+	▼
+Cloud-Init reads the startup script
+	│
+	▼
+Commands execute one by one
+	│
+	▼
+Nginx Installed & Service Started
+
+One Line:
+Terraform creates the VM. Cloud-Init configures the VM.
+
+================================================================================
+4. What is Cloud-Init?
+======================
+
+Definition:
+Cloud-Init is a Linux initialization service already installed in most cloud images (Ubuntu, CentOS, RHEL, etc.). It performs automatic VM configuration during the first boot.
+
+Important Points:
+• Already available in most official Linux cloud images.
+• Starts automatically when the VM boots for the first time.
+• Executes the commands received through Custom Data.
+• Usually runs only once during the initial VM setup.
+• No manual SSH login is required for initial configuration.
+
+================================================================================
+5. Where should cloud-init.sh be stored?
+========================================
+
+Project Structure
+
+azure-terraform-modular-web-infrastructure
+│
+├── environment
+│   ├── dev
+│   ├── qa
+│   └── prod
+│
+└── modules
+└──10-azurerm_linux_virtual_machine
+│
+├──main.tf
+├──variables.tf
+├──outputs.tf
+└──cloud-init.sh        <-- Best Location
+
+Reason:
+• Script belongs only to the Linux VM module.
+• Module becomes reusable in other projects.
+• Everything related to Linux VM stays in one place.
+• No dependency on root project files.
+
+================================================================================
+6. Example cloud-init.sh
+========================
+
+#!/bin/bash
+
+sudo apt update
+
+sudo apt install nginx -y
+
+sudo systemctl enable nginx
+
+sudo systemctl start nginx
+
+Explanation:
+• apt update downloads the latest package information.
+• apt install installs the Nginx package.
+• systemctl enable starts Nginx automatically after every reboot.
+• systemctl start starts the service immediately.
+
+================================================================================
+7. Terraform Configuration
+==========================
+
+resource "azurerm_linux_virtual_machine" "LinxVM" {
+
+```
+...
+
+network_interface_ids = [
+    var.nic_ID[each.value.network_interface_ids]
+]
+
+custom_data = base64encode(
+    file("${path.module}/cloud-init.sh")
+)
+
+os_disk {
+
+}
+
+source_image_reference {
+
+}
+```
+
+}
+
+================================================================================
+8. Understanding file()
+=======================
+
+file()
+
+Purpose:
+Reads the contents of a local file.
+
+Example:
+
+file("${path.module}/cloud-init.sh")
+
+Explanation:
+• Terraform opens the cloud-init.sh file.
+• Reads every line inside it.
+• Stores the content in memory.
+• That content is later sent to Azure.
+
+================================================================================
+9. Understanding base64encode()
+===============================
+
+Purpose:
+Azure expects Custom Data in Base64 encoded format, so Terraform converts the script before sending it.
+
+Flow
+
+cloud-init.sh
+	│
+	▼
+file()
+	│
+	▼
+Reads Script
+	│
+	▼
+base64encode()
+	│
+	▼
+Encoded Text
+	│
+	▼
+Azure
+
+Interview Point:
+We do not manually convert the file. Terraform automatically performs Base64 encoding using base64encode().
+
+================================================================================
+10. path.module vs path.root
+============================
+
+path.module
+
+Current module location
+
+modules
+└──10-azurerm_linux_virtual_machine
+
+Example
+
+file("${path.module}/cloud-init.sh")
+
+---
+
+path.root
+
+Root Terraform project
+
+azure-terraform-modular-web-infrastructure
+
+Example
+
+file("${path.root}/cloud-init.sh")
+
+Best Practice:
+If the script belongs to the Linux VM module, always keep it inside the module and use path.module.
+
+================================================================================
+11. What happens after terraform apply?
+=======================================
+
+terraform apply
+	│
+	▼
+Azure Linux VM Created
+	│
+	▼
+VM Boots First Time
+	│
+	▼
+Cloud-Init Starts
+	│
+	▼
+Reads cloud-init.sh
+	│
+	▼
+Runs Commands
+	│
+	▼
+Nginx Installed
+	│
+	▼
+Nginx Service Started
+
+================================================================================
+12. How to Verify?
+==================
+
+SSH into the VM
+
+Check Nginx version
+
+nginx -v
+
+---
+
+Check Service Status
+
+systemctl status nginx
+
+---
+
+Open Browser
+
+http://<Public-IP>
+
+If successful, the default "Welcome to nginx!" page will appear.
+
+================================================================================
+13. Common Use Cases
+====================
+
+• Install required software automatically before developers access the VM.
+• Configure web servers such as Nginx or Apache during deployment.
+• Install Docker, Git, Java, Python, or monitoring agents automatically.
+• Create users, configure permissions, and prepare the server environment.
+• Execute startup configuration without any manual intervention.
+
+================================================================================
+14. Limitations
+===============
+
+• Cloud-Init generally runs only during the first VM boot.
+• Editing cloud-init.sh later does not update an already running VM.
+• Rebooting the VM does not execute the script again.
+• If changes are needed later, use VM Extensions, Configuration Management tools, or recreate the VM.
+
+================================================================================
+15. Interview Questions
+=======================
+
+Q1. What is Custom Data in Azure VM?
+Ans:
+Custom Data is a startup script sent during VM creation. Cloud-Init automatically executes the script when the Linux VM boots for the first time.
+
+---
+
+Q2. Who executes the commands?
+Ans:
+Cloud-Init executes the commands. Terraform only sends the script while creating the VM.
+
+---
+
+Q3. Why use base64encode()?
+Ans:
+Azure accepts Custom Data in Base64 format, so Terraform encodes the script before sending it.
+
+---
+
+Q4. Why use path.module instead of path.root?
+Ans:
+The startup script belongs to the Linux VM module. Keeping it inside the module makes the module portable, reusable, and self-contained.
+
+---
+
+Q5. Does Cloud-Init run after every reboot?
+Ans:
+No. Cloud-Init is mainly designed for first boot initialization. A normal VM reboot does not execute the startup script again.
+
+================================================================================
+16. Quick Revision
+==================
+
+Terraform
+│
+├── Reads cloud-init.sh
+├── Base64 Encodes Script
+├── Creates Azure VM
+└── Sends Script
+
+Azure
+│
+└── Creates Linux VM
+
+Cloud-Init
+│
+├── Starts Automatically
+├── Reads Startup Script
+├── Executes Commands
+└── Configures VM
+
+Remember:
+Terraform Creates the VM.
+Cloud-Init Configures the VM.

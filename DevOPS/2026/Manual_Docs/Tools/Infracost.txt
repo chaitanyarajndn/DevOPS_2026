@@ -1,0 +1,402 @@
+
+========================================================================================================================
+Infracost (v2.12.2)
+========================================================================================================================
+
+1. Definition
+------------------------------------------------------------------------------------------------------------------------
+• Infracost is an open-source FinOps tool used to estimate cloud infrastructure cost before deployment.
+• It works with Infrastructure as Code (IaC) tools like Terraform.
+• It analyzes the Terraform Plan and estimates the expected cloud cost.
+• It does NOT create, modify or delete cloud resources.
+• It helps engineers understand the financial impact before infrastructure is deployed.
+
+Quick Remember
+Terraform  → What infrastructure will be deployed?
+Infracost  → How much will that infrastructure cost?
+
+------------------------------------------------------------------------------------------------------------------------
+2. Purpose
+------------------------------------------------------------------------------------------------------------------------
+Terraform Shows                                      Infracost Shows
+✔ Resources to Create                                ✔ Hourly Cost
+✔ Resources to Update                                ✔ Monthly Cost
+✔ Resources to Delete                                ✔ Yearly Cost
+                                                     ✔ Cost Difference
+
+In short, Terraform tells WHAT will change, while Infracost tells HOW MUCH those changes will cost.
+
+------------------------------------------------------------------------------------------------------------------------
+3. Why Do We Need Infracost?
+------------------------------------------------------------------------------------------------------------------------
+Problem
+Developer increases infrastructure size without knowing the cost.
+
+Example
+• Standard_D2s_v5 VM  → Standard_D8s_v5 VM
+• Premium SSD added
+• NAT Gateway added
+
+Terraform successfully deploys everything, but the monthly cloud bill increases significantly.
+
+Solution
+Run Infracost before deployment to estimate the cost and review expensive resources before approval.
+
+Workflow
+
+Terraform Code
+      │
+terraform plan
+      │
+terraform show -json
+      │
+infracost scan
+      │
+Review Estimated Cost
+      │
+terraform apply
+
+Benefits
+✔ Prevent unexpected cloud bills.
+✔ Compare infrastructure cost before deployment.
+✔ Choose smaller or cheaper resources if needed.
+✔ Improve cost visibility during code review.
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+8. Commands (v2.12.2)
+------------------------------------------------------------------------------------------------------------------------
+
+General Commands
+
+infracost --version                                            → Display the installed Infracost version.
+infracost setup                                                → Perform first-time CLI setup.
+infracost auth login                                           → Login to your Infracost account.
+infracost auth whoami                                          → Show the currently logged-in user.
+infracost auth logout                                          → Logout from Infracost.
+infracost doctor                                               → Verify CLI configuration and diagnose issues.
+infracost update                                               → Update Infracost to the latest version.
+infracost --help                                               → Display all available commands.
+
+Terraform Workflow
+
+terraform init                                                → Download and initialize Terraform providers.
+terraform validate                                            → Validate Terraform configuration.
+terraform plan                                                → Generate the execution plan.
+
+infracost scan .                                              → Scan the Terraform project and estimate cloud costs.
+infracost scan . --json > infracost-report.json               → Save the scan result as a JSON report.
+
+infracost inspect --summary                                   → Display a summary of the latest scan.
+infracost inspect                                             → View detailed scan results.
+infracost inspect --top 10                                    → Show the top 10 most expensive resources.
+infracost inspect --total-savings                             → Display potential cost savings.
+
+terraform apply                                               → Deploy the reviewed infrastructure.
+
+infracost doctor                                              → Diagnose CLI configuration and installation issues.
+infracost update                                              → Update Infracost to the latest version.
+infracost auth logout                                         → Logout from the current account.
+infracost --help                                              → Display all available commands.
+
+------------------------------------------------------------------------------------------------------------------------
+9. Hands-on Workflow
+------------------------------------------------------------------------------------------------------------------------
+
+Quick Workflow
+
+Sign Up
+   │
+Install Infracost
+   │
+infracost setup
+   │
+infracost auth login
+   │
+terraform init
+   │
+terraform plan
+   │
+terraform show -json
+   │
+infracost scan
+   │
+Review Cost
+   │
+terraform apply
+
+
+------------------------------------------------------------------------------------------------------------------------
+4. Real Enterprise Example
+------------------------------------------------------------------------------------------------------------------------
+Developer modifies a Virtual Machine.
+
+Old VM : Standard_D2s_v5
+New VM : Standard_D8s_v5
+
+Terraform Output
+Plan: 1 Resource to Update
+
+Infracost Output
+Monthly Cost Before : $145
+Monthly Cost After  : $318
+Difference          : +$173/month
+
+Reviewer immediately knows the financial impact and can decide whether the larger VM is really required before approving the deployment.
+
+------------------------------------------------------------------------------------------------------------------------
+5. How Infracost Works
+------------------------------------------------------------------------------------------------------------------------
+
+Terraform Code
+      │
+terraform plan
+      │
+Terraform Binary Plan
+      │
+terraform show -json
+      │
+Terraform Plan JSON
+      │
+infracost scan
+      │
+Reads Resource Configuration
+      │
+Matches Cloud Pricing Database
+      │
+Calculates Estimated Cost
+      │
+Generates Cost Report
+
+The report can include:
+• Hourly Cost
+• Monthly Cost
+• Yearly Cost
+• Cost Breakdown per Resource
+• Total Estimated Infrastructure Cost
+
+------------------------------------------------------------------------------------------------------------------------
+6. What Infracost Can & Cannot Do
+------------------------------------------------------------------------------------------------------------------------
+
+Can Do
+✔ Estimate infrastructure cost.
+✔ Analyze Terraform plans.
+✔ Generate cost reports.
+✔ Compare infrastructure cost before deployment.
+✔ Integrate with CI/CD pipelines.
+
+Cannot Do
+✘ Create cloud resources.
+✘ Modify infrastructure.
+✘ Delete resources.
+✘ Replace Terraform.
+✘ Monitor actual cloud billing.
+
+Quick Remember
+
+Terraform  → Infrastructure Deployment
+Infracost  → Infrastructure Cost Estimation
+
+========================================================================================================================
+
+
+------------------------------------------------------------------------------------------------------------------------
+7. Supported Cloud Providers
+------------------------------------------------------------------------------------------------------------------------
+Infracost supports pricing for infrastructure deployed on:
+
+✔ Microsoft Azure
+✔ Amazon Web Services (AWS)
+✔ Google Cloud Platform (GCP)
+
+Common Supported Resources
+• Virtual Machines
+• Storage Accounts
+• Managed Disks
+• Load Balancers
+• Public IPs
+• NAT Gateways
+• Virtual Networks
+• Databases
+• Kubernetes Clusters
+• Hundreds of other supported Terraform resources
+
+
+------------------------------------------------------------------------------------------------------------------------
+10. CI/CD Integration
+------------------------------------------------------------------------------------------------------------------------
+
+Developer Pushes Code
+        │
+Terraform Plan
+        │
+terraform show -json
+        │
+Infracost Scan
+        │
+Cost Report Generated
+        │
+Pull Request Review
+        │
+Approval
+        │
+terraform apply
+
+Common CI/CD Platforms
+• Azure DevOps
+• GitHub Actions
+• GitLab CI/CD
+• Jenkins
+
+Best Practice
+Run Infracost after "terraform plan" and before "terraform apply" so reviewers can verify the cost impact before approving infrastructure changes.
+
+========================================================================================================================
+
+------------------------------------------------------------------------------------------------------------------------
+11. Enterprise Pull Request Example
+------------------------------------------------------------------------------------------------------------------------
+
+Developer updates Terraform.
+
+Before
+VM Size : Standard_D2s_v5
+
+After
+VM Size : Standard_D8s_v5
+
+Terraform detects the infrastructure change.
+
+Infracost estimates:
+
+Monthly Cost Before : $145
+Monthly Cost After  : $318
+Difference          : +$173/month
+
+The cost report is automatically added to the Pull Request, allowing reviewers to understand the financial impact before approving the deployment.
+
+------------------------------------------------------------------------------------------------------------------------
+12. Where Is Infracost Used?
+------------------------------------------------------------------------------------------------------------------------
+
+• DevOps Teams
+• Cloud Engineering Teams
+• Platform Engineering Teams
+• Infrastructure Teams
+• FinOps Teams
+• Enterprise CI/CD Pipelines
+
+------------------------------------------------------------------------------------------------------------------------
+13. Benefits
+------------------------------------------------------------------------------------------------------------------------
+
+✔ Estimates infrastructure cost before deployment.
+✔ Prevents unexpected cloud bills.
+✔ Improves Pull Request reviews.
+✔ Helps optimize cloud spending.
+✔ Provides better budget visibility.
+✔ Easy integration with Terraform workflows.
+✔ Supports Azure, AWS and GCP.
+✔ Works with popular CI/CD platforms.
+✔ Encourages cost-aware infrastructure design.
+
+------------------------------------------------------------------------------------------------------------------------
+14. Limitations
+------------------------------------------------------------------------------------------------------------------------
+
+• Estimates cost only; it does not calculate the actual cloud bill.
+• Actual billing can vary due to:
+  • Reserved Instances
+  • Savings Plans
+  • Discounts
+  • Data Transfer
+  • Runtime Usage
+  • Taxes
+• Pricing depends on supported Terraform resources.
+
+------------------------------------------------------------------------------------------------------------------------
+15. Terraform vs Infracost
+------------------------------------------------------------------------------------------------------------------------
+
+Terraform                                         Infracost
+-----------------------------------------------   ----------------------------------------------------
+Creates Infrastructure                            Estimates Infrastructure Cost
+Deploys Cloud Resources                           Generates Cost Reports
+Manages Infrastructure as Code                    Provides Cost Visibility
+Runs terraform apply                              Reviews Cost Before Deployment
+Focuses on Infrastructure                         Focuses on Infrastructure Cost
+
+Quick Remember
+
+Terraform + Infracost = Infrastructure + Cost Visibility
+
+------------------------------------------------------------------------------------------------------------------------
+16. Popular Alternatives
+------------------------------------------------------------------------------------------------------------------------
+
+Tool                         Purpose
+---------------------------  -------------------------------------------------------------
+Infracost                    Terraform infrastructure cost estimation
+Azure Cost Management        Monitor and optimize Azure cloud costs
+AWS Cost Explorer            Monitor AWS billing and usage
+Google Cloud Billing         Monitor GCP billing and usage
+CloudHealth                  Multi-cloud cost optimization
+Apptio Cloudability          Enterprise FinOps platform
+
+------------------------------------------------------------------------------------------------------------------------
+17. Common Interview Questions
+------------------------------------------------------------------------------------------------------------------------
+
+Q1. What is Infracost?
+Ans:
+Infracost is an open-source FinOps tool that estimates cloud infrastructure costs from Terraform plans before deployment.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q2. Why do we use Infracost?
+Ans:
+To understand the financial impact of infrastructure changes before deployment and avoid unexpected cloud costs.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q3. Does Infracost replace Terraform?
+Ans:
+No.
+Terraform provisions infrastructure.
+Infracost estimates the infrastructure cost.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q4. Does Infracost create cloud resources?
+Ans:
+No.
+It only reads the Terraform plan and generates cost estimates.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q5. When should Infracost be executed?
+Ans:
+After "terraform plan" (or Terraform Plan JSON) and before "terraform apply".
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q6. Can Infracost be integrated into CI/CD?
+Ans:
+Yes.
+It integrates with Azure DevOps, GitHub Actions, GitLab CI/CD and Jenkins to provide cost visibility before deployment.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q7. Which cloud providers are supported?
+Ans:
+Microsoft Azure, Amazon Web Services (AWS) and Google Cloud Platform (GCP).
+
+------------------------------------------------------------------------------------------------------------------------
+18. One-Minute Interview Answer
+------------------------------------------------------------------------------------------------------------------------
+
+"Infracost is an open-source FinOps tool that estimates cloud infrastructure costs before deployment. It works with Terraform by analyzing the Terraform plan and calculating the expected cloud cost using cloud pricing data. It helps engineers review the financial impact of infrastructure changes before running terraform apply. Infracost is commonly integrated into Azure DevOps, GitHub Actions, GitLab CI/CD and Jenkins to improve cost visibility, prevent unexpected cloud bills and support cost-aware infrastructure decisions."
+
+========================================================================================================================

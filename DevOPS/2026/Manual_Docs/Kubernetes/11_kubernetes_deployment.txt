@@ -1,0 +1,413 @@
+========================================================================================================================
+                                         KUBERNETES DEPLOYMENT
+========================================================================================================================
+
+
+========================
+ WHAT IS DEPLOYMENT?
+========================
+
+Meaning of Deploy
+-----------------
+Deploy means making something ready for use or putting it into operation.
+
+Examples
+--------
+Deploy Soldiers      → Send soldiers to the battlefield.
+Deploy Software      → Release software for users.
+Deploy Virtual Machine → Create and make a VM ready for use.
+Deploy Application   → Make an application available for users.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Why is it called Deployment in Kubernetes?
+-------------------------------------------
+A Deployment is responsible for deploying and managing an application in Kubernetes.
+
+It not only creates Pods, but also manages the complete lifecycle of the application.
+
+Deployment Responsibilities
+---------------------------
+• Create Pods (through ReplicaSet)
+• Maintain desired number of Pods
+• Recover failed Pods (Self-Healing)
+• Scale application up or down
+• Perform Rolling Updates
+• Perform Rollbacks
+
+------------------------------------------------------------------------------------------------------------------------
+
+Easy Analogy
+------------
+
+Container  = Application
+Pod        = Runs the Application
+Deployment = Application Manager
+
+Deployment does NOT run the application.
+Deployment manages how the application should run.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Hierarchy
+---------
+
+Application
+      │
+      ▼
+Container
+      │
+      ▼
+Pod
+      │
+      ▼
+ReplicaSet
+      │
+      ▼
+Deployment
+
+------------------------------------------------------------------------------------------------------------------------
+
+Easy Memory Trick
+-----------------
+
+Deployment = Deploy + Manage Application
+
+Pod        = Runs Application
+
+Container  = Actual Application
+
+------------------------------------------------------------------------------------------------------------------------
+
+One-Line Interview Answer
+-------------------------
+
+"A Deployment is a Kubernetes object that deploys and manages an application by creating and maintaining Pods through a
+ReplicaSet. It provides self-healing, scaling, rolling updates, and rollbacks."
+
+========================================================================================================================
+
+
+Definition
+----------
+Deployment is a Kubernetes object that manages Pods. It ensures the desired number of Pods are always running and provides
+features like scaling, self-healing, rolling updates, and rollbacks. It is the recommended way to deploy stateless
+applications in Kubernetes.
+
+------------------------------------------------------------------------------------------------------------------------
+Why Do We Need Deployment?
+------------------------------------------------------------------------------------------------------------------------
+
+Problem 1 : Pod Failure
+-----------------------
+If a Pod is created directly and it crashes or is deleted, Kubernetes will NOT recreate it automatically.
+
+Example
+-------
+Pod-1
+  │
+  └── Application Running
+
+Pod-1 Crashed ❌
+
+Result
+------
+Application Down
+
+Deployment Solution
+-------------------
+Deployment detects that the required Pod is missing and automatically creates a replacement Pod (through ReplicaSet).
+
+------------------------------------------------------------------------------------------------------------------------
+
+Problem 2 : Scaling
+-------------------
+Suppose one Pod is handling all application traffic.
+
+1000 Users
+     │
+     ▼
+   Pod-1
+
+As traffic increases, one Pod is not enough.
+
+Without Deployment
+------------------
+You must manually create more Pods.
+
+With Deployment
+---------------
+Simply increase the replica count.
+
+replicas = 5
+
+Deployment automatically ensures 5 Pods are running.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Problem 3 : Application Updates
+-------------------------------
+Application Version
+
+v1
+ │
+ ▼
+Need to Upgrade
+ │
+ ▼
+v2
+
+Without Deployment
+------------------
+Delete old Pod manually.
+Create new Pod manually.
+Application downtime is possible.
+
+With Deployment
+---------------
+Deployment performs Rolling Updates by replacing Pods one at a time, reducing or eliminating downtime.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Problem 4 : Desired State
+-------------------------
+Business Requirement
+
+Always Run 3 Pods
+
+Current Situation
+
+Pod-1 ✅
+Pod-2 ✅
+Pod-3 ❌
+
+Current Running = 2 Pods
+
+Deployment continuously ensures the cluster returns to the desired state by creating another Pod.
+
+------------------------------------------------------------------------------------------------------------------------
+Think Like
+------------------------------------------------------------------------------------------------------------------------
+
+Container  = Employee
+Pod        = Team
+Deployment = Project Manager
+
+Employees perform work.
+Teams execute projects.
+Project Manager manages the team.
+
+Similarly,
+
+Containers run applications.
+Pods contain containers.
+Deployment manages Pods.
+
+Deployment never runs the application itself.
+
+------------------------------------------------------------------------------------------------------------------------
+Responsibilities
+------------------------------------------------------------------------------------------------------------------------
+
+Deployment
+├── Creates and manages Pods
+├── Maintains desired number of Pods
+├── Automatically recovers failed Pods
+├── Supports Horizontal Scaling
+├── Performs Rolling Updates
+├── Performs Rollbacks
+├── Maintains Application Availability
+├── Manages Application Lifecycle
+└── Works with ReplicaSet to maintain Pod availability
+
+------------------------------------------------------------------------------------------------------------------------
+Deployment Workflow
+------------------------------------------------------------------------------------------------------------------------
+
+deployment.yaml
+        │
+kubectl apply -f deployment.yaml
+        │
+        ▼
+Deployment
+        │
+        ▼
+ReplicaSet
+        │
+        ▼
+Pods
+        │
+        ▼
+Containers
+        │
+        ▼
+Application Running
+
+------------------------------------------------------------------------------------------------------------------------
+What Actually Happens?
+------------------------------------------------------------------------------------------------------------------------
+
+Step 1 : User creates Deployment YAML.
+
+Step 2 : Kubernetes creates a Deployment object.
+
+Step 3 : Deployment creates a ReplicaSet.
+
+Step 4 : ReplicaSet creates the required number of Pods.
+
+Step 5 : kubelet starts Containers inside each Pod.
+
+Step 6 : Application becomes available.
+
+------------------------------------------------------------------------------------------------------------------------
+What Happens If a Pod Crashes?
+------------------------------------------------------------------------------------------------------------------------
+
+Pod-2 Crashed ❌
+        │
+        ▼
+ReplicaSet detects missing Pod
+        │
+        ▼
+Creates New Pod
+        │
+        ▼
+Deployment still has desired number of Pods
+
+Application remains available.
+
+------------------------------------------------------------------------------------------------------------------------
+Deployment Features
+------------------------------------------------------------------------------------------------------------------------
+
+✔ Self Healing
+    Failed Pods are recreated automatically.
+
+✔ Scaling
+    Increase or decrease the number of Pods.
+
+✔ Rolling Update
+    Update application version with minimal or zero downtime.
+
+✔ Rollback
+    Quickly return to the previous stable version if deployment fails.
+
+✔ Desired State Management
+    Continuously maintains the required number of Pods.
+
+------------------------------------------------------------------------------------------------------------------------
+Real DevOps Example
+------------------------------------------------------------------------------------------------------------------------
+
+An E-Commerce application receives more traffic during a sale.
+
+Normal Days
+------------
+Replicas = 3
+
+Sale Days
+----------
+Replicas = 10
+
+Deployment automatically creates additional Pods without changing the application code.
+
+------------------------------------------------------------------------------------------------------------------------
+Nokia CNF Connection
+------------------------------------------------------------------------------------------------------------------------
+
+During Nokia CNF deployments, engineers usually deploy Helm Charts instead of individual Pods.
+
+Helm Chart
+     │
+     ▼
+Deployment
+     │
+     ▼
+ReplicaSet
+     │
+     ▼
+Pods
+     │
+     ▼
+CNF Containers
+
+For most stateless CNFs, Deployment is the primary Kubernetes workload object responsible for managing Pods.
+
+------------------------------------------------------------------------------------------------------------------------
+Important Interview Points
+------------------------------------------------------------------------------------------------------------------------
+
+• Deployment does NOT run Containers.
+• Deployment does NOT run the application.
+• Deployment manages Pods.
+• Deployment maintains the desired number of Pods.
+• Deployment performs Rolling Updates and Rollbacks.
+• Deployment provides Self-Healing.
+• Deployment is the standard Kubernetes object for deploying stateless applications.
+• Deployment works through ReplicaSet; it does not create Pods directly.
+
+------------------------------------------------------------------------------------------------------------------------
+Interview Questions
+------------------------------------------------------------------------------------------------------------------------
+
+Q. Can we create Pods directly?
+
+Answer:
+Yes. Kubernetes allows direct Pod creation, but it is recommended only for testing or learning.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. Why are Deployments preferred in production?
+
+Answer:
+Deployments provide automatic recovery, scaling, rolling updates, rollbacks, and desired state management. Direct Pods
+cannot provide these production features.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. Does Deployment create Pods directly?
+
+Answer:
+No. Deployment creates and manages a ReplicaSet, and the ReplicaSet creates and maintains the Pods.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Q. Which Kubernetes object should we normally create in production?
+
+Answer:
+Deployment.
+
+------------------------------------------------------------------------------------------------------------------------
+Easy Memory Trick
+------------------------------------------------------------------------------------------------------------------------
+
+Deployment
+      │
+      ▼
+ReplicaSet
+      │
+      ▼
+     Pod
+      │
+      ▼
+Container
+      │
+      ▼
+Application
+
+Remember:
+
+Application Runs Inside Container
+Container Runs Inside Pod
+Pod Is Managed By ReplicaSet
+ReplicaSet Is Managed By Deployment
+
+========================================================================================================================
+One-Line Interview Answer
+========================================================================================================================
+
+"A Deployment is a Kubernetes workload object that manages Pods through a ReplicaSet. It maintains the desired number of
+Pods, provides self-healing, scaling, rolling updates, and rollbacks, making it the standard approach for deploying
+stateless applications in Kubernetes."
+
+========================================================================================================================

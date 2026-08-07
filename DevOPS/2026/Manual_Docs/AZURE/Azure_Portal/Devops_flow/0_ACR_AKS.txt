@@ -1,0 +1,635 @@
+=========================================================
+AZURE CONTAINER REGISTRY (ACR) & AKS CLUSTER NOTES
+=========================================================
+
+#########################################################
+1. AZURE CONTAINER REGISTRY (ACR)
+#########################################################
+
+What is ACR?
+------------
+ACR (Azure Container Registry) is a private repository used to store Docker Images.
+
+Need
+----
+Developer Docker Image bana deta hai.
+Us image ko securely store karne ke liye ACR use hota hai.
+
+Without ACR
+-----------
+Docker Images ko Docker Hub par rakhna padega.
+Enterprise companies apni images public internet par nahi rakhna chahti.
+
+Stores
+------
+Docker Images
+
+Who Uses ACR?
+-------------
+AKS
+Azure Container Apps
+App Service
+Virtual Machines
+Any Docker Host
+
+Terraform Resource
+------------------
+azurerm_container_registry
+
+Simple Flow
+-----------
+Application Code
+        │
+        ▼
+Docker Build
+        │
+        ▼
+Docker Image
+        │
+        ▼
+Push to ACR
+        │
+        ▼
+AKS pulls Image
+        │
+        ▼
+Application Runs
+
+
+Interview Answer
+----------------
+ACR is Azure's private Docker Image Registry. It securely stores container images which are later pulled by AKS or other Azure services for deployment.
+
+
+
+
+
+
+
+
+#########################################################
+2. AKS (Azure Kubernetes Service)
+#########################################################
+
+What is AKS?
+------------
+AKS (Azure Kubernetes Service) is Microsoft's Managed Kubernetes Service.
+
+Need
+----
+Running one container is easy.
+Managing hundreds of containers manually is difficult.
+
+AKS automates deployment, scaling, monitoring and management of containers.
+
+Important
+---------
+AKS is NOT a Virtual Machine.
+
+AKS is NOT just a set of VMs.
+
+AKS is an Azure Service that creates and manages a Kubernetes Cluster.
+
+When we create an AKS Cluster,
+Azure automatically creates
+
+• Kubernetes Control Plane
+• Worker Nodes (Azure Virtual Machines)
+• Kubernetes Cluster
+
+No need to create Worker VMs manually.
+
+Terraform Resource
+------------------
+azurerm_kubernetes_cluster
+
+Example (Standard AKS)
+
+resource "azurerm_kubernetes_cluster" "aks" {
+
+  name                = "aks-demo"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  dns_prefix          = "aksdemo"
+
+  default_node_pool {
+    name       = "system"
+    node_count = 3
+    vm_size    = "Standard_B2s"
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
+
+What happens after Terraform Apply?
+-----------------------------------
+
+Terraform
+      │
+      ▼
+azurerm_kubernetes_cluster
+      │
+      ▼
+Azure creates
+      │
+      ├── Kubernetes Control Plane
+      ├── Worker VM-1
+      ├── Worker VM-2
+      ├── Worker VM-3
+      └── Kubernetes Cluster Ready
+
+Notice
+------
+We never create Worker VMs manually.
+
+Azure creates them automatically based on
+
+• node_count
+• vm_size
+
+defined inside default_node_pool.
+
+
+Standard AKS vs Automatic AKS
+-----------------------------
+
+Standard AKS
+------------
+• Enterprise Standard
+• Most Common
+• Full Control
+• Node Pools configurable
+• VM Size configurable
+• Networking configurable
+• Used with Terraform
+
+Automatic AKS
+-------------
+• More Azure Managed
+• Less Configuration
+• Azure manages most infrastructure automatically
+• Best for simple workloads
+
+
+
+#########################################################
+3. WHAT DOES AZURE MANAGE?
+#########################################################
+
+Azure Manages
+
+✓ API Server
+✓ etcd
+✓ Scheduler
+✓ Controller Manager
+✓ Cloud Controller Manager
+✓ Control Plane Upgrade
+✓ Control Plane Security
+✓ High Availability
+
+We Manage
+
+✓ Node Pools
+✓ Worker Nodes
+✓ Pods
+✓ Deployments
+✓ Services
+✓ ConfigMaps
+✓ Secrets
+✓ Ingress
+✓ Application Scaling
+
+
+
+#########################################################
+4. COMPLETE ARCHITECTURE
+#########################################################
+
+Terraform
+      │
+      ▼
+azurerm_kubernetes_cluster
+      │
+      ▼
+Azure
+      │
+      ├── Control Plane
+      │      ├── API Server
+      │      ├── etcd
+      │      ├── Scheduler
+      │      ├── Controller Manager
+      │      └── Cloud Controller Manager
+      │
+      └── Worker Nodes (Azure VMs)
+             │
+             ├── kubelet
+             ├── kube-proxy
+             ├── containerd
+             └── Pods
+                    │
+                    └── Containers
+
+
+
+#########################################################
+5. INTERVIEW ONE-LINERS
+#########################################################
+
+Q. Do we need to create Worker VMs separately?
+
+Answer
+------
+No.
+
+When we create an AKS Cluster using the
+azurerm_kubernetes_cluster resource,
+Azure automatically provisions the required
+Worker Nodes (Azure Virtual Machines)
+based on the node_count and vm_size.
+
+
+Q. What is the biggest advantage of AKS?
+
+Answer
+------
+Azure manages the entire Kubernetes Control Plane,
+so we can focus on deploying and managing applications
+instead of maintaining Kubernetes infrastructure.
+
+
+Q. Where do our applications actually run?
+
+Answer
+------
+Applications run inside Containers.
+
+Containers run inside Pods.
+
+Pods run on Worker Nodes.
+
+Worker Nodes are Azure Virtual Machines.
+
+
+Q. What is the difference between Kubernetes and AKS?
+
+Answer
+------
+Kubernetes is an open-source container orchestration platform.
+
+AKS is Microsoft's managed Kubernetes service, where Azure manages the Control Plane while we manage the applications and Worker Nodes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#########################################################
+2. AKS (Azure Kubernetes Service)
+#########################################################
+
+What is AKS?
+------------
+AKS is Microsoft's Managed Kubernetes Service.
+
+Need
+----
+Running one container is easy.
+Managing hundreds of containers manually is difficult.
+
+AKS automates deployment, scaling, monitoring and management of containers.
+
+Important
+---------
+AKS is NOT a Virtual Machine.
+
+AKS creates and manages a Kubernetes Cluster.
+
+What actually runs inside AKS?
+------------------------------
+A Kubernetes Cluster.
+
+A Kubernetes Cluster contains
+
+• Control Plane
+• Worker Nodes
+• Pods
+• Containers
+
+Worker Nodes
+------------
+Worker Nodes are Azure Virtual Machines.
+
+These VMs run our application containers.
+
+Control Plane
+-------------
+The Control Plane manages the entire Kubernetes Cluster.
+
+In AKS the Control Plane is fully managed by Microsoft Azure.
+
+We never install or maintain it manually.
+
+
+
+#########################################################
+3. HOW AKS CREATES WORKER NODES
+#########################################################
+
+Normal VM
+
+Terraform
+    │
+    ▼
+azurerm_linux_virtual_machine
+    │
+    ▼
+One VM Created
+
+
+AKS
+
+Terraform
+    │
+    ▼
+azurerm_kubernetes_cluster
+    │
+    ▼
+Azure automatically creates
+
+• Control Plane
+• Worker VM 1
+• Worker VM 2
+• Worker VM 3
+• Kubernetes Cluster
+
+No need to create worker VMs manually.
+
+
+
+#########################################################
+4. KUBERNETES vs AKS
+#########################################################
+
+Self Managed Kubernetes
+
+You manage
+
+• API Server
+• etcd
+• Scheduler
+• Controller Manager
+• Upgrades
+• Backups
+• Patching
+• High Availability
+
+AKS
+
+Azure manages
+
+• API Server
+• etcd
+• Scheduler
+• Controller Manager
+• Cloud Controller Manager
+• Control Plane Upgrades
+• High Availability
+• Security Patching
+
+
+
+#########################################################
+5. CONTROL PLANE COMPONENTS
+#########################################################
+
+API Server
+----------
+Main entry point of Kubernetes.
+
+All kubectl commands go to API Server.
+
+AKS
+----
+Managed by Azure.
+
+
+etcd
+----
+Kubernetes Database.
+
+Stores
+
+• Pods
+• Deployments
+• Services
+• ConfigMaps
+• Secrets
+• Cluster State
+
+AKS
+----
+Managed by Azure.
+
+
+Scheduler
+---------
+Decides on which Worker Node a Pod should run.
+
+AKS
+----
+Managed by Azure.
+
+
+Controller Manager
+------------------
+Continuously checks Desired State vs Current State.
+
+Example
+
+Desired Pods = 3
+
+Current Pods = 2
+
+Controller automatically creates one more Pod.
+
+AKS
+----
+Managed by Azure.
+
+
+Cloud Controller Manager
+------------------------
+Connects Kubernetes with Azure Services.
+
+Example
+
+Load Balancer
+Public IP
+Disks
+Routes
+Availability Zones
+
+AKS
+----
+Managed by Azure.
+
+
+
+#########################################################
+6. WORKER NODE COMPONENTS
+#########################################################
+
+Worker Node
+-----------
+An Azure Virtual Machine.
+
+Runs application containers.
+
+
+kubelet
+--------
+Agent running on every Worker Node.
+
+Receives instructions from API Server.
+
+Starts and monitors Pods.
+
+
+kube-proxy
+-----------
+Handles Pod Networking and Service Routing.
+
+
+containerd
+----------
+Container Runtime.
+
+Runs Docker Images as Containers.
+
+
+Pods
+----
+Smallest deployable unit in Kubernetes.
+
+Contains one or more Containers.
+
+
+Containers
+----------
+Actual running application.
+
+
+
+#########################################################
+7. WHO MANAGES WHAT?
+#########################################################
+
+Azure Manages
+
+✓ API Server
+✓ etcd
+✓ Scheduler
+✓ Controller Manager
+✓ Cloud Controller Manager
+✓ Control Plane Upgrade
+✓ Control Plane Security
+✓ High Availability
+
+
+We Manage
+
+✓ Node Pools
+✓ Worker Nodes
+✓ Pods
+✓ Deployments
+✓ Services
+✓ ConfigMaps
+✓ Secrets
+✓ Ingress
+✓ Application Scaling
+
+
+
+#########################################################
+8. COMPLETE FLOW
+#########################################################
+
+Application Code
+        │
+        ▼
+Docker Build
+        │
+        ▼
+Docker Image
+        │
+        ▼
+Push to ACR
+        │
+        ▼
+AKS pulls Image
+        │
+        ▼
+Worker Node (Azure VM)
+        │
+        ▼
+Pod
+        │
+        ▼
+Container
+        │
+        ▼
+Application Running
+
+
+
+#########################################################
+9. INTERVIEW ONE-LINERS
+#########################################################
+
+ACR
+---
+ACR is Azure's private Docker Image Registry used to securely store container images.
+
+
+AKS
+---
+AKS is Microsoft's managed Kubernetes service that creates and manages a Kubernetes Cluster.
+
+
+Worker Node
+-----------
+Worker Nodes are Azure Virtual Machines where Pods and Containers run.
+
+
+Control Plane
+-------------
+The Control Plane manages the Kubernetes Cluster and is fully managed by Azure in AKS.
+
+
+Biggest Difference
+------------------
+In Self Managed Kubernetes we manage the Control Plane ourselves.
+
+In AKS Azure manages the Control Plane, while we focus on deploying and managing applications.
+
+
+
+
+
+
+
+
+
+

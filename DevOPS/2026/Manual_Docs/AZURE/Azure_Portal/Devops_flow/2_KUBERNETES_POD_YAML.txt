@@ -1,0 +1,710 @@
+
+
+####################################################################################################
+                                   KUBERNETES POD YAML - PART 1
+####################################################################################################
+
+====================================================================================================
+1. WHAT IS A POD?
+====================================================================================================
+
+Definition
+----------
+A Pod is the smallest deployable unit in Kubernetes. It is a logical wrapper that contains one or
+more containers which always run together on the same Worker Node.
+
+Why Kubernetes Uses Pods?
+-------------------------
+Kubernetes does not manage containers directly. Instead, it manages Pods because a Pod provides
+networking, storage, lifecycle management and scheduling for the containers inside it.
+
+Think Like This
+---------------
+Docker      → Runs Containers
+Kubernetes  → Runs Pods
+Pod         → Runs Containers
+
+Flow
+----
+Application Code
+       │
+Docker Image
+       │
+Container
+       │
+Pod
+       │
+Worker Node
+       │
+Kubernetes Cluster
+
+Interview Answer
+----------------
+"A Pod is the smallest deployment unit in Kubernetes. It acts as a wrapper around one or more
+containers and provides networking, storage and lifecycle management."
+
+====================================================================================================
+2. LEVEL-1 (MINIMUM POD YAML)
+====================================================================================================
+
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: nginx-pod
+
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+
+
+====================================================================================================
+3. LEVEL-1 YAML BREAKDOWN
+====================================================================================================
+
+apiVersion
+----------
+Purpose      : Defines which Kubernetes API should process this resource.
+Value        : Pods always use v1.
+Need         : Kubernetes supports many resource versions. apiVersion tells the API Server which
+               version to use while creating the object.
+Example      : apiVersion: v1
+
+Real Example
+------------
+Pod           → v1
+Service       → v1
+ConfigMap     → v1
+Deployment    → apps/v1
+DaemonSet     → apps/v1
+
+Interview
+---------
+Every Kubernetes object starts with apiVersion. Without it, Kubernetes does not know how to
+interpret the resource definition.
+
+
+----------------------------------------------------------------------------------------------------
+
+kind
+----
+Purpose      : Defines the type of Kubernetes object to create.
+Need         : Kubernetes manages many object types. The kind field tells Kubernetes exactly what
+               should be created.
+
+Examples
+
+kind: Pod
+kind: Service
+kind: Deployment
+kind: Secret
+kind: ConfigMap
+kind: Job
+
+Real Scenario
+-------------
+Suppose two YAML files are exactly the same.
+
+File-1
+
+kind: Pod
+
+→ Creates only one Pod.
+
+File-2
+
+kind: Deployment
+
+→ Creates a Deployment which automatically manages Pods.
+
+Interview
+---------
+Changing only the "kind" field completely changes the Kubernetes resource that gets created.
+
+
+----------------------------------------------------------------------------------------------------
+
+metadata
+--------
+Purpose      : Stores information about the Kubernetes object.
+Need         : Kubernetes needs basic information to identify and manage the resource.
+Contains     : name, namespace, labels, annotations, owner references, etc.
+
+Current YAML
+
+metadata:
+  name: nginx-pod
+
+Think of metadata like an Identity Card.
+
+-------------------------------
+Object Name    nginx-pod
+Namespace      default
+Labels         app=nginx
+UID            Auto Generated
+-------------------------------
+
+Interview
+---------
+Metadata does not define how the application runs.
+It only stores information about the Kubernetes object.
+
+
+----------------------------------------------------------------------------------------------------
+
+name
+----
+Purpose      : Unique name of the Pod.
+Need         : Every Pod must have a unique name inside its namespace.
+Used By       : kubectl, API Server, Scheduler, Logs, Monitoring tools.
+
+Examples
+
+kubectl get pod nginx-pod
+
+kubectl describe pod nginx-pod
+
+kubectl logs nginx-pod
+
+Real Scenario
+-------------
+Without a unique name, Kubernetes would not know which Pod you want to inspect or manage.
+
+Interview
+---------
+Pod names can change when managed by Deployments.
+Labels are preferred for selecting Pods.
+
+
+----------------------------------------------------------------------------------------------------
+
+spec
+----
+Purpose      : Defines the desired state of the Pod.
+Need         : Kubernetes must know HOW the Pod should run.
+Contains     : Containers, Volumes, Environment Variables, Resources, Scheduling Rules and much more.
+
+Simple View
+
+metadata
+    │
+Object Information
+
+spec
+    │
+How the Pod should actually run
+
+Interview
+---------
+metadata identifies the object.
+spec defines the object's configuration.
+
+
+----------------------------------------------------------------------------------------------------
+
+containers
+----------
+Purpose      : Defines the containers that will run inside the Pod.
+Need         : A Pod itself cannot execute code. Containers actually run the application.
+
+Current YAML
+
+containers:
+- name: nginx
+  image: nginx:latest
+
+Can a Pod have multiple containers?
+
+YES
+
+Example
+
+Pod
+├── nginx
+├── log-agent
+└── monitoring-agent
+
+All containers
+
+✓ Share Network
+✓ Share Storage (if configured)
+✓ Run on same Worker Node
+✓ Start and stop together
+
+Interview
+---------
+Containers inside the same Pod should be closely related and work together.
+
+
+----------------------------------------------------------------------------------------------------
+
+container name
+--------------
+Purpose      : Identifies the container inside the Pod.
+Need         : One Pod can contain multiple containers, so each container requires a unique name.
+
+Example
+
+containers:
+- name: nginx
+
+Difference
+
+Pod Name         → nginx-pod
+Container Name   → nginx
+
+Interview
+---------
+Pod name and Container name are different objects.
+
+
+----------------------------------------------------------------------------------------------------
+
+image
+-----
+Purpose      : Specifies which Docker image should be used.
+Need         : Kubernetes does not build applications. It only pulls an existing image and starts
+               the container.
+
+Example
+
+image: nginx:latest
+
+Image Format
+
+Repository : nginx
+Tag        : latest
+
+Image Sources
+
+✓ Docker Hub
+✓ Azure Container Registry (ACR)
+✓ Amazon ECR
+✓ Google Artifact Registry
+✓ Private Registry
+
+Real Flow
+
+Pod YAML
+    │
+API Server
+    │
+Scheduler
+    │
+Worker Node
+    │
+containerd
+    │
+Pull Image
+    │
+Create Container
+    │
+Running Pod
+
+Interview
+---------
+If the image is unavailable or Kubernetes cannot pull it, the Pod will remain in ImagePullBackOff
+or ErrImagePull state.
+
+
+====================================================================================================
+4. COMPLETE POD CREATION FLOW
+====================================================================================================
+
+Developer writes pod.yaml
+             │
+kubectl apply -f pod.yaml
+             │
+API Server validates YAML
+             │
+Scheduler selects a Worker Node
+             │
+kubelet receives instructions
+             │
+containerd pulls Docker image
+             │
+Container is created
+             │
+Pod status becomes Running
+
+
+====================================================================================================
+5. INTERVIEW QUICK REVISION
+====================================================================================================
+
+apiVersion      → Kubernetes API version.
+kind            → Type of Kubernetes object.
+metadata        → Object information.
+name            → Unique Pod name.
+spec            → Desired configuration.
+containers      → Applications running inside Pod.
+image           → Docker image to execute.
+
+Remember
+
+metadata = WHO the object is.
+spec     = HOW the object should run.
+
+
+####################################################################################################
+End of Part-1
+Next Part : Level-3 Production YAML (Labels, Ports, Resources, Environment Variables)
+Filename : KubernetesPodYAML
+####################################################################################################
+
+
+
+
+
+####################################################################################################
+                          KUBERNETES POD YAML - PART 2 (LEVEL-3)
+####################################################################################################
+
+====================================================================================================
+LEVEL-3 (COMMON PRODUCTION POD YAML)
+====================================================================================================
+
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: nginx-pod
+  labels:
+    app: nginx
+
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+
+    ports:
+    - containerPort: 80
+
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+
+    env:
+    - name: ENV
+      value: Production
+
+
+====================================================================================================
+LABELS
+====================================================================================================
+
+Purpose    : Labels are key-value pairs attached to Kubernetes resources.
+Need       : Used to group, identify and select related resources.
+Used By    : Service | Deployment | ReplicaSet | NetworkPolicy | kubectl selectors
+Syntax     : key=value
+
+Example
+-------
+app=nginx
+env=production
+tier=frontend
+version=v1
+
+Real Scenario
+-------------
+Assume three Pods are running.
+
+Pod Name                  Label
+-----------------------   -----------------
+nginx-a1                  app=nginx
+nginx-b2                  app=nginx
+apache-c3                 app=apache
+
+A Service contains
+
+selector:
+  app: nginx
+
+Result
+------
+✓ nginx-a1 receives traffic.
+✓ nginx-b2 receives traffic.
+✗ apache-c3 is ignored.
+
+Why Labels Instead of Pod Names?
+--------------------------------
+Pod names are temporary. During an update, Deployment may delete
+
+nginx-a1
+
+and create
+
+nginx-x9
+
+The Service continues working because the Label remains
+
+app=nginx
+
+Interview
+---------
+Pod names identify a single Pod.
+Labels identify a group of Pods.
+
+
+====================================================================================================
+PORTS
+====================================================================================================
+
+Purpose    : Defines the port where the application listens inside the container.
+Need       : Helps Kubernetes components know where the application is running.
+Field      : containerPort
+
+Example
+-------
+ports:
+- containerPort: 80
+
+Meaning
+-------
+Container
+     │
+Application
+     │
+Listening on Port 80
+
+Important
+---------
+containerPort DOES NOT expose the application outside the cluster.
+It only tells Kubernetes which port the application is using.
+
+Who Uses It?
+------------
+✓ Service
+✓ Liveness Probe
+✓ Readiness Probe
+✓ Monitoring tools
+
+Common Mistake
+--------------
+containerPort ≠ NodePort
+
+containerPort → Internal application port
+NodePort      → External port on Worker Node
+
+Interview
+---------
+To access an application from outside the Pod, create a Service.
+containerPort alone cannot expose the application.
+
+
+====================================================================================================
+RESOURCES
+====================================================================================================
+
+Purpose    : Defines CPU and Memory requirements for a container.
+Need       : Prevents one application from consuming all Worker Node resources.
+Contains   : requests + limits
+
+Think Like This
+---------------
+Worker Node
+
+CPU    = 4 Core
+Memory = 8 GB
+
+Five Pods are running.
+
+If one Pod consumes everything,
+
+• Other Pods become slow.
+• New Pods cannot be scheduled.
+• Applications may fail.
+
+Resources solve this problem.
+
+
+----------------------------------------------------------------------------------------------------
+REQUESTS
+----------------------------------------------------------------------------------------------------
+
+Purpose    : Minimum CPU & Memory guaranteed for the container.
+Used By    : Kubernetes Scheduler.
+
+Example
+-------
+requests:
+  cpu: "100m"
+  memory: "128Mi"
+
+Meaning
+-------
+Container requires at least
+
+CPU    = 100 millicpu
+Memory = 128Mi
+
+Scheduler Decision
+------------------
+Worker-1
+
+Available CPU = 50m
+
+↓
+
+Pod Request = 100m
+
+↓
+
+❌ Scheduler skips this Worker.
+
+Worker-2
+
+Available CPU = 2 Core
+
+↓
+
+✅ Pod gets scheduled.
+
+Remember
+--------
+Requests are checked BEFORE the Pod is placed on a Worker Node.
+
+Interview
+---------
+Requests help Kubernetes decide WHERE a Pod should run.
+
+
+----------------------------------------------------------------------------------------------------
+LIMITS
+----------------------------------------------------------------------------------------------------
+
+Purpose    : Maximum CPU & Memory a container can use.
+Need       : Prevents one application from consuming all Worker Node resources.
+Used By    : Linux Kernel (cgroups) + Kubernetes.
+
+Example
+-------
+limits:
+  cpu: "500m"
+  memory: "512Mi"
+
+Meaning
+-------
+• CPU usage cannot exceed 500m.
+• Memory usage cannot exceed 512Mi.
+
+If Limit is Reached
+-------------------
+CPU    → Container is throttled (runs slower).
+Memory → Container may be killed (OOMKilled).
+
+Remember
+--------
+requests = Minimum Guaranteed
+limits   = Maximum Allowed
+
+Interview
+---------
+Requests help the Scheduler choose a Worker Node.
+Limits protect the Worker Node from resource exhaustion.
+
+
+====================================================================================================
+ENVIRONMENT VARIABLES
+====================================================================================================
+
+Purpose    : Pass runtime configuration to the application.
+Need       : Avoid hardcoding configuration inside application code.
+Field      : env
+
+Example
+-------
+env:
+- name: ENV
+  value: Production
+
+Common Variables
+----------------
+ENV
+DB_HOST
+DB_PORT
+API_URL
+LOG_LEVEL
+REDIS_HOST
+
+Real Scenario
+-------------
+Development
+
+ENV=Dev
+
+Production
+
+ENV=Production
+
+The Docker image remains exactly the same.
+
+Only the YAML changes.
+
+Benefits
+--------
+✓ Same image for every environment.
+✓ No code modification.
+✓ Easy deployment.
+✓ Better configuration management.
+
+Interview
+---------
+Environment variables separate application configuration from application code.
+
+
+====================================================================================================
+HOW EVERYTHING WORKS TOGETHER
+====================================================================================================
+
+Pod YAML
+    │
+API Server validates YAML
+    │
+Scheduler selects a Worker Node using Requests
+    │
+kubelet receives instructions
+    │
+containerd pulls the Docker Image
+    │
+Environment Variables are injected
+    │
+CPU & Memory Limits are applied
+    │
+Application starts on containerPort
+    │
+Service uses Labels to locate the Pod
+    │
+Pod Status = Running
+
+
+====================================================================================================
+INTERVIEW REVISION
+====================================================================================================
+
+labels     → Group and identify Kubernetes resources.
+ports      → Application listening port inside the container.
+requests   → Minimum CPU & Memory required for scheduling.
+limits     → Maximum CPU & Memory allowed for the container.
+env         → Runtime configuration without changing application code.
+
+Easy Remember
+-------------
+Labels     → Who am I?
+Ports      → Where am I listening?
+Requests   → Minimum I need.
+Limits     → Maximum I can use.
+Env         → My runtime configuration.
+
+####################################################################################################
+End of Part-2
+Next Part : Enterprise Pod YAML (Volumes, Probes, ServiceAccount, imagePullPolicy,
+NodeSelector, Affinity, Tolerations, imagePullSecrets)
+####################################################################################################
+
+

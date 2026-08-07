@@ -16,6 +16,7 @@ After completing this chapter, you will be able to:
 1. What is a Pod?
 =========================================================
 
+
 A Pod is the smallest unit that Kubernetes creates and manages.
 
 Whenever you deploy an application in Kubernetes, Kubernetes creates a Pod first.
@@ -24,9 +25,11 @@ The Pod then runs one or more Containers.
 
 In most real-world applications, one Pod usually contains one Container.
 
+
 =========================================================
 2. Pod vs Container
 =========================================================
+
 
 Docker
 
@@ -56,9 +59,11 @@ The only difference is that Kubernetes does not work directly with Containers.
 
 It works with Pods.
 
+
 =========================================================
 3. Why Did Kubernetes Introduce Pods?
 =========================================================
+
 
 This is one of the most common interview questions.
 
@@ -76,9 +81,11 @@ Instead of managing thousands of individual Containers, Kubernetes manages Pods.
 
 This keeps the platform simple and consistent.
 
+
 =========================================================
 4. Why is a Pod Better than Managing Containers Directly?
 =========================================================
+
 
 Imagine Kubernetes had to manage Containers directly.
 
@@ -97,6 +104,7 @@ Instead, Kubernetes always works with Pods.
 The Container Runtime only receives the instruction to run the Container.
 
 This keeps Kubernetes independent of the underlying runtime.
+
 
 =========================================================
 5. Other Advantages of Pods

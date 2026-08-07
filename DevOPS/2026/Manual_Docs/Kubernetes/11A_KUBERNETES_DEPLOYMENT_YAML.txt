@@ -1,0 +1,1349 @@
+========================================================================================================================
+                                         KUBERNETES DEPLOYMENT YAML
+========================================================================================================================
+
+What is Deployment YAML?
+------------------------
+
+What    : Deployment YAML is a configuration file that tells Kubernetes how an application should be deployed,
+          managed and kept running inside the cluster.
+
+Why     : Instead of manually creating Pods every time, we describe our desired application once inside a YAML file.
+          Kubernetes continuously compares the actual cluster with this YAML and automatically creates, deletes,
+          replaces or updates Pods until the cluster matches the desired state.
+
+How     : When we run "kubectl apply -f deployment.yaml", Kubernetes reads the YAML, creates a Deployment Object,
+          stores it in etcd and starts managing the application through Deployment Controller and ReplicaSet.
+
+Think   : Like giving a Project Manager a written project plan instead of verbally explaining every task every day.
+
+Memory  : Deployment YAML = Desired State of your Application.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: web-deployment
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: nginx
+
+  template:
+    metadata:
+      labels:
+        app: nginx
+
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+deployment.yaml
+       │
+kubectl apply
+       │
+API Server
+       │
+Deployment Object
+       │
+Deployment Controller
+       │
+ReplicaSet
+       │
+Pods
+       │
+kubelet
+       │
+Container Runtime
+       │
+Running Application
+
+========================================================================================================================
+HOW TO READ A DEPLOYMENT YAML
+========================================================================================================================
+
+Never read a Deployment YAML randomly.
+
+Always read it from top to bottom because every section answers one question, and the next section depends on the
+previous one.
+
+Question 1 → Which Kubernetes API should understand this file?
+Question 2 → Which Kubernetes object should be created?
+Question 3 → What should this object be called?
+Question 4 → How should this object behave?
+Question 5 → How many Pods should always run?
+Question 6 → Which Pods belong to this Deployment?
+Question 7 → How should every new Pod be created?
+Question 8 → Which container should run inside every Pod?
+
+Reading Order
+-------------
+
+apiVersion
+      │
+kind
+      │
+metadata
+      │
+spec
+ ├──── replicas
+ ├──── selector
+ └──── template
+          ├──── metadata
+          │       └──── labels
+          └──── spec
+                   └──── containers
+
+Memory : YAML should always be read from TOP → BOTTOM.
+
+========================================================================================================================
+apiVersion
+========================================================================================================================
+
+What    : apiVersion tells Kubernetes which API Group and API Version should be used to understand this object.
+
+Why     : Kubernetes contains many APIs and every Kubernetes object belongs to one of those APIs. Before Kubernetes
+          reads the YAML, it must know which API understands this object; otherwise it cannot validate or process the
+          configuration correctly.
+
+How     : Kubernetes reads "apps/v1", loads the Deployment API from the Apps API Group and then validates every field
+          written inside this Deployment YAML according to that API version.
+
+Think   : Like opening a Microsoft Word document using Microsoft Word instead of Photoshop. The correct application
+          understands the file format.
+
+Memory  : apiVersion = Which Kubernetes API should read this object?
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+apiVersion: apps/v1
+
+Breakdown
+
+apps = API Group
+v1   = API Version
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+Deployment YAML
+       │
+Read apiVersion
+       │
+Load Apps API
+       │
+Validate Deployment Object
+       │
+Continue Reading YAML
+
+Interview Questions
+-------------------
+
+Q. Is apiVersion the Kubernetes Version?
+Ans. No.
+
+Q. Then what is it?
+Ans. It is the API Version of the Kubernetes Object.
+
+========================================================================================================================
+kind
+========================================================================================================================
+
+What    : kind tells Kubernetes which type of object should be created.
+
+Why     : Kubernetes can create many different objects like Pods, Deployments, Services, ConfigMaps and Secrets.
+          Before creating anything, Kubernetes must know exactly which object this YAML represents.
+
+How     : Kubernetes reads the value of "kind", creates the corresponding object and applies the remaining YAML
+          according to that object's behaviour.
+
+Think   : Like selecting "Car", "Bike" or "Truck" before starting the manufacturing process.
+
+Memory  : kind = Which Kubernetes Object should be created?
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+kind: Deployment
+
+Other Examples
+
+kind: Pod
+kind: Service
+kind: ConfigMap
+kind: Secret
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+Read kind
+     │
+Deployment
+     │
+Create Deployment Object
+     │
+Read Remaining Configuration
+
+Interview Questions
+-------------------
+
+Q. Can the same YAML become a Pod by changing only kind?
+Ans. Yes, but the remaining fields must also match the Pod specification.
+
+========================================================================================================================
+
+
+
+========================================================================================================================
+metadata
+========================================================================================================================
+
+What    : metadata stores the identity of the Deployment object. It tells Kubernetes "Who am I?" before describing
+          "What should I do?"
+
+Why     : A Kubernetes cluster may contain thousands of Deployments. Kubernetes needs a unique identity to locate,
+          update, delete, monitor and manage the correct Deployment. Without metadata, Kubernetes would not know
+          which Deployment you are referring to during operations like kubectl get, edit, delete or scale.
+
+How     : Kubernetes reads the metadata first and registers this Deployment with its unique name. Later whenever you
+          run commands like "kubectl get deployment" or "kubectl delete deployment", Kubernetes uses this metadata
+          to identify the correct object.
+
+Think   : Like creating an employee record before assigning work. HR first records Name, Employee ID and Department,
+          then the employee starts working.
+
+Memory  : metadata = Identity of the Kubernetes Object.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+metadata:
+  name: web-deployment
+
+Other Common Fields
+-------------------
+
+metadata:
+  name: web-deployment
+  namespace: production
+  labels:
+    app: nginx
+  annotations:
+    owner: devops-team
+
+(Currently we are only using "name". Namespace, Labels and Annotations will be covered later.)
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+Read metadata
+      │
+Store Object Identity
+      │
+Register Deployment
+      │
+Deployment can now be managed by Kubernetes
+
+Interview Questions
+-------------------
+
+Q. Does metadata create Pods?
+Ans. No.
+
+Q. What is the purpose of metadata?
+Ans. It gives identity to the Kubernetes object.
+
+Q. Is "web-deployment" the Pod name?
+Ans. No. It is the Deployment name.
+
+========================================================================================================================
+spec (Deployment Specification)
+========================================================================================================================
+
+What    : spec defines how the Deployment should behave after it is created. Everything related to managing the
+          application is written inside the Deployment Specification.
+
+Why     : Creating a Deployment object is not enough. Kubernetes must also know how many Pods should run, which Pods
+          belong to this Deployment and how every new Pod should be created. All these instructions are written inside
+          the spec section.
+
+How     : After creating the Deployment object, Kubernetes reads everything inside spec one section at a time.
+          It first checks the required number of Pods, then identifies matching Pods using Selector and finally uses
+          the Template whenever a new Pod needs to be created.
+
+Think   : metadata answers "Who am I?" while spec answers "What should I do?"
+
+Memory  : spec = Behaviour of the Deployment.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: nginx
+
+  template:
+    ...
+
+Deployment Specification contains three important sections
+
+• replicas  → Desired number of Pods
+• selector  → Find my Pods
+• template  → Blueprint for creating new Pods
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+Deployment Spec
+        │
+        ├──────── replicas
+        ├──────── selector
+        └──────── template
+
+Everything related to Deployment behaviour starts from here.
+
+Interview Questions
+-------------------
+
+Q. What is written inside Deployment spec?
+Ans. replicas, selector and template.
+
+Q. Is Deployment spec same as Pod spec?
+Ans. No.
+
+Deployment Spec manages the Deployment.
+Pod Spec manages the Pod.
+
+========================================================================================================================
+Deployment Spec vs Pod Spec
+========================================================================================================================
+
+One of the biggest beginner mistakes is assuming there is only one "spec".
+
+Actually there are TWO different specifications.
+
+1. Deployment Specification
+2. Pod Specification
+
+They have different responsibilities.
+
+Deployment
+│
+├── metadata
+└── spec                         ← Deployment Spec
+      │
+      ├── replicas
+      ├── selector
+      └── template
+             │
+             ├── metadata
+             └── spec            ← Pod Spec
+                     │
+                     ├── containers
+                     ├── volumes
+                     ├── ports
+                     ├── env
+                     └── restartPolicy
+
+Difference
+----------
+
+Deployment Spec
+---------------
+Controls the Deployment.
+
+Examples
+replicas
+selector
+template
+
+Pod Spec
+---------
+Controls the Pod.
+
+Examples
+containers
+volumes
+ports
+environment variables
+resource limits
+restart policy
+
+Memory
+------
+
+Deployment Spec → Manages the Application
+Pod Spec        → Defines the Pod
+
+========================================================================================================================
+replicas
+========================================================================================================================
+
+What    : replicas defines the desired number of Pod copies that Kubernetes should always keep running.
+
+Why     : Applications must remain available even if Pods crash, Nodes fail or user traffic increases. Instead of
+          manually creating replacement Pods every time, we simply declare the desired number once and Kubernetes
+          continuously works to maintain that number automatically.
+
+How     : ReplicaSet continuously compares the Desired State (replicas) with the Current State (running Pods). If the
+          current number becomes smaller, new Pods are created. If it becomes larger, extra Pods are removed until
+          both values become equal again.
+
+Think   : Like a restaurant manager who always wants exactly three chefs on duty. If one chef leaves, another chef is
+          immediately called. If five chefs arrive, two are sent back home.
+
+Memory  : replicas = Desired Running Pods (NOT Maximum Pods).
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+replicas: 3
+
+Scenario 1
+
+Desired Pods = 3
+Current Pods = 3
+
+Action
+------
+Nothing changes.
+
+------------------------------------------------------------
+
+Scenario 2
+
+Desired Pods = 3
+Current Pods = 2
+
+Action
+------
+ReplicaSet creates 1 new Pod.
+
+------------------------------------------------------------
+
+Scenario 3
+
+Desired Pods = 3
+Current Pods = 5
+
+Action
+------
+ReplicaSet deletes 2 extra Pods.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+Deployment
+      │
+replicas = 3
+      │
+ReplicaSet
+      │
+Current Pods = ?
+      │
+Desired == Current ?
+      │
+YES ─────────────► Do Nothing
+NO
+│
+├── Current < Desired ─────► Create New Pods
+└── Current > Desired ─────► Delete Extra Pods
+
+Interview Questions
+-------------------
+
+Q. Does replicas mean maximum Pods?
+Ans. No.
+
+Q. What does replicas actually mean?
+Ans. Desired number of Pods Kubernetes should always maintain.
+
+Q. Who maintains the replica count?
+Ans. ReplicaSet.
+
+========================================================================================================================
+
+
+
+========================================================================================================================
+selector
+========================================================================================================================
+
+What    : selector tells ReplicaSet which Pods belong to this Deployment by matching Pod Labels.
+
+Why     : A Kubernetes cluster may have hundreds of Pods running different applications like Nginx, Apache, MySQL,
+          Redis and Jenkins. ReplicaSet must know exactly which Pods it is responsible for; otherwise it may count,
+          delete or replace the wrong Pods. Selector solves this problem by filtering Pods using Labels.
+
+How     : ReplicaSet reads selector.matchLabels, searches every Pod in the cluster and compares the Pod Labels with
+          the selector. Only Pods having matching labels are considered part of this Deployment. All operations like
+          scaling, self-healing and rolling updates happen only on these matching Pods.
+
+Think   : Imagine a company having 5,000 employees. HR wants only DevOps engineers. Instead of checking every
+          employee manually, HR filters employees where Department = DevOps. Selector works exactly the same way.
+
+Memory  : Selector searches Pods. It never creates Pods.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+selector:
+  matchLabels:
+    app: nginx
+
+Meaning
+-------
+
+Selector searches only Pods having
+
+app=nginx
+
+Pods like these will MATCH
+
+Pod-A   app=nginx
+Pod-B   app=nginx
+Pod-C   app=nginx
+
+Pods like these will be IGNORED
+
+Pod-D   app=mysql
+Pod-E   app=redis
+Pod-F   app=apache
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+ReplicaSet
+      │
+Read Selector
+      │
+Search All Pods
+      │
+Compare Labels
+      │
+Matching Pods Found
+      │
+Count Matching Pods
+      │
+Manage Only Those Pods
+
+------------------------------------------------------------------------------------------------------------------------
+
+Interview Questions
+-------------------
+
+Q. Does Selector create Pods?
+Ans. No.
+
+Q. What does Selector read?
+Ans. Pod Labels.
+
+Q. Who uses the Selector?
+Ans. ReplicaSet.
+
+========================================================================================================================
+template
+========================================================================================================================
+
+What    : template is the complete blueprint used to create every new Pod.
+
+Why     : ReplicaSet knows HOW MANY Pods should run, but it does not know HOW a Pod should look. Whenever a Pod
+          crashes or scaling creates a new Pod, ReplicaSet needs complete instructions like container image, labels,
+          ports, volumes and environment variables. Template provides all these instructions.
+
+How     : Whenever ReplicaSet creates a new Pod, it simply copies everything written inside template. Every Pod
+          created from the same template will have the same configuration unless the template itself is changed.
+
+Think   : Like a house blueprint. One blueprint can be used to build hundreds of identical houses. Builders don't
+          redesign the house every time; they simply follow the same blueprint.
+
+Memory  : Template creates future Pods.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+template:
+  metadata:
+    labels:
+      app: nginx
+
+  spec:
+    containers:
+    - name: nginx-container
+      image: nginx:latest
+
+Meaning
+-------
+
+Every Pod created from this template will have
+
+• Label      : app=nginx
+• Container  : nginx-container
+• Image      : nginx:latest
+
+If ReplicaSet creates 100 Pods, all 100 Pods will be copied from this template.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+ReplicaSet
+      │
+Need New Pod?
+      │
+YES
+      │
+Copy Template
+      │
+Create New Pod
+      │
+Apply Labels
+      │
+Start Containers
+      │
+Running Pod
+
+------------------------------------------------------------------------------------------------------------------------
+
+Interview Questions
+-------------------
+
+Q. Who uses Template?
+Ans. ReplicaSet.
+
+Q. Does Template manage existing Pods?
+Ans. No.
+
+Q. Then what does it do?
+Ans. It is used only while creating new Pods.
+
+========================================================================================================================
+Selector vs Template
+========================================================================================================================
+
+Many beginners think Selector and Template perform the same job.
+
+They don't.
+
+Their responsibilities are completely different.
+
+Selector
+--------
+What   : Finds existing Pods.
+Reads  : Labels.
+Used By: ReplicaSet.
+Works On : Existing Pods.
+
+Template
+--------
+What   : Creates new Pods.
+Writes : Labels.
+Used By: ReplicaSet.
+Works On : Future Pods.
+
+Golden Rule
+-----------
+
+Template WRITES Labels.
+Selector READS Labels.
+
+Template creates Pods.
+Selector finds Pods.
+
+Without Template
+----------------
+
+ReplicaSet knows HOW MANY Pods are needed,
+but has no idea HOW to create them.
+
+Without Selector
+----------------
+
+ReplicaSet can create Pods,
+but cannot identify which Pods belong to it.
+
+Memory
+------
+
+Template → Create Pods
+Labels   → Identity
+Selector → Find Pods
+ReplicaSet → Manage Pods
+
+========================================================================================================================
+template.metadata.labels
+========================================================================================================================
+
+What    : template.metadata.labels assigns Labels to every Pod created from the Template.
+
+Why     : Selector can only find Pods if those Pods already have Labels. Without Labels, Selector has nothing to
+          compare, so ReplicaSet cannot identify its own Pods. These Labels become the identity of every Pod.
+
+How     : Whenever ReplicaSet creates a new Pod, Kubernetes automatically copies every label written inside
+          template.metadata.labels and attaches them to the Pod before it starts running.
+
+Think   : Like attaching an Employee ID card before an employee enters the office. Without the ID card, HR cannot
+          identify which department the employee belongs to.
+
+Memory  : Template writes Labels. Selector reads Labels.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+template:
+  metadata:
+    labels:
+      app: nginx
+      env: prod
+
+Every Pod created will automatically receive
+
+Pod-1 → app=nginx | env=prod
+Pod-2 → app=nginx | env=prod
+Pod-3 → app=nginx | env=prod
+
+Important
+---------
+
+selector.matchLabels
+
+MUST MATCH
+
+template.metadata.labels
+
+Otherwise ReplicaSet will not recognize its own Pods.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+Template
+     │
+Write Labels
+     │
+Create Pod
+     │
+Pod Gets Labels
+     │
+Selector Reads Labels
+     │
+ReplicaSet Finds Pod
+
+========================================================================================================================
+
+
+
+========================================================================================================================
+template.spec
+========================================================================================================================
+
+What    : template.spec defines HOW every Pod should run after it is created. It contains all Pod-level configuration
+          like containers, images, ports, volumes, environment variables, resource limits and many other settings.
+
+Why     : Creating a Pod is not enough. Kubernetes must also know what should run inside the Pod, which container
+          image should be pulled, which ports should be opened, how much CPU/Memory should be allocated and how the
+          application should behave. All these runtime instructions are written inside template.spec.
+
+How     : Whenever ReplicaSet creates a new Pod, Kubernetes copies template.spec into the Pod. The kubelet running
+          on the Worker Node then reads this Pod Specification and starts the required containers using the Container
+          Runtime (containerd, CRI-O etc.).
+
+Think   : Building a new house is not enough. The house also needs furniture, electricity, doors, windows and water
+          connections before someone can live in it. template.spec is like the complete interior plan of the house.
+
+Memory  : template.spec = Runtime Configuration of the Pod.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+template:
+  spec:
+    containers:
+    - name: nginx-container
+      image: nginx:latest
+      ports:
+      - containerPort: 80
+
+Meaning
+-------
+
+This Pod will
+
+• Create one container
+• Name it nginx-container
+• Pull nginx:latest image
+• Start the container
+• Expose Port 80 inside the Pod
+
+------------------------------------------------------------------------------------------------------------------------
+
+Common Fields Inside template.spec
+----------------------------------
+
+containers        → Which containers should run
+image             → Which Docker Image should be pulled
+ports             → Which application ports should be exposed
+env               → Environment Variables
+resources         → CPU & Memory Requests/Limits
+volumeMounts      → Mount Storage inside Container
+volumes           → Storage available to the Pod
+restartPolicy     → What happens if a Container exits
+livenessProbe     → Is the application still healthy?
+readinessProbe    → Is the application ready to receive traffic?
+startupProbe      → Has the application finished starting?
+
+(Each of these topics will be covered separately.)
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+Deployment
+      │
+Template
+      │
+template.spec
+      │
+Create Pod
+      │
+kubelet Reads Pod Spec
+      │
+Container Runtime Pulls Image
+      │
+Container Starts
+      │
+Application Running
+
+------------------------------------------------------------------------------------------------------------------------
+
+Interview Questions
+-------------------
+
+Q. Does template.spec belong to Deployment or Pod?
+
+Ans. It is written inside the Deployment YAML, but it actually becomes the Pod Specification after the Pod is created.
+
+------------------------------------------------------------
+
+Q. Who reads template.spec first?
+
+Ans. ReplicaSet copies it while creating the Pod.
+     kubelet reads it again on the Worker Node to start the containers.
+
+------------------------------------------------------------
+
+Q. Where are containers defined?
+
+Ans. Inside template.spec.
+
+========================================================================================================================
+Complete Deployment Internal Flow
+========================================================================================================================
+
+deployment.yaml
+      │
+kubectl apply
+      │
+API Server
+      │
+Store Object in etcd
+      │
+Deployment Controller
+      │
+Create ReplicaSet
+      │
+ReplicaSet Reads replicas
+      │
+ReplicaSet Reads selector
+      │
+Find Existing Pods
+      │
+Desired == Current ?
+      │
+YES ─────────────────────────────► Nothing to do
+NO
+│
+├── Need More Pods
+│        │
+│        ▼
+│   Read Template
+│        │
+│   Read template.metadata.labels
+│        │
+│   Read template.spec
+│        │
+│   Create New Pod
+│        │
+│   Scheduler Selects Worker Node
+│        │
+│   kubelet Receives Pod
+│        │
+│   containerd Pulls Image
+│        │
+│   Starts Container
+│        │
+│   Running Application
+│
+└── Too Many Pods
+         │
+         ▼
+     Delete Extra Pods
+
+========================================================================================================================
+Deployment YAML Relationship
+========================================================================================================================
+
+Deployment YAML
+│
+├── apiVersion ----------------► Which API should read this object?
+│
+├── kind ----------------------► Which Kubernetes object should be created?
+│
+├── metadata ------------------> Identity of the Deployment
+│
+└── spec
+     │
+     ├── replicas -------------> How many Pods should always run?
+     │
+     ├── selector -------------> Which Pods belong to this Deployment?
+     │
+     └── template
+            │
+            ├── metadata.labels -> Identity of every new Pod
+            │
+            └── spec -----------> How every Pod should run
+
+========================================================================================================================
+Deployment YAML - One Page Revision
+========================================================================================================================
+
+apiVersion              → Which API should understand this object?
+
+kind                    → Which Kubernetes object should be created?
+
+metadata                → Identity of the Deployment.
+
+spec                    → Behaviour of the Deployment.
+
+replicas                → Desired number of Pods.
+
+selector                → Finds Pods using Labels.
+
+template                → Blueprint for creating Pods.
+
+template.metadata       → Gives Labels to every new Pod.
+
+template.spec           → Defines how every Pod should run.
+
+Deployment              → Manages the Application.
+
+ReplicaSet              → Maintains Desired Number of Pods.
+
+Labels                  → Identity of Pods.
+
+Selector                → Reads Labels.
+
+Template                → Writes Labels.
+
+Pod                     → Runs Containers.
+
+Container               → Runs the Application.
+
+========================================================================================================================
+Golden Interview Memories
+========================================================================================================================
+
+✔ Deployment never creates containers directly.
+
+✔ Deployment creates and manages ReplicaSets.
+
+✔ ReplicaSet creates and maintains Pods.
+
+✔ Template creates Pods.
+
+✔ Selector identifies Pods.
+
+✔ Labels identify Pods.
+
+✔ template.metadata.labels MUST match selector.matchLabels.
+
+✔ template.spec becomes the Pod Specification.
+
+✔ kubelet starts the Pod on the Worker Node.
+
+✔ containerd starts the Containers.
+
+
+
+Final Memory Flow
+-----------------
+
+Deployment
+      │
+ReplicaSet
+      │
+Selector ───────► Find Existing Pods
+      │
+Template ───────► Create New Pods
+      │
+Pod
+      │
+Container
+      │
+Application
+
+========================================================================================================================
+
+
+
+========================================================================================================================
+template.spec
+========================================================================================================================
+
+What    : template.spec defines how every new Pod should run after it is created. It contains the complete runtime
+          configuration of the Pod like containers, images, ports, environment variables, storage, resources and
+          many other Pod settings.
+
+Why     : ReplicaSet knows WHEN to create a Pod, but it does not know WHAT should be inside that Pod. Kubernetes
+          needs complete instructions such as which image to pull, which containers to start, which ports to expose
+          and how the application should run. All these runtime instructions are written inside template.spec.
+
+How     : Whenever ReplicaSet creates a new Pod, it copies everything written inside template.spec into the Pod.
+          The kubelet running on the selected Worker Node reads this Pod Specification and asks the Container
+          Runtime (containerd/CRI-O) to create the required containers.
+
+Think   : A building blueprint tells workers how to build the structure, but the interior plan tells them where to
+          install doors, windows, electricity and furniture. template.spec is that interior plan.
+
+Memory  : template.spec = Complete Runtime Configuration of the Pod.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+template:
+  spec:
+    containers:
+    - name: nginx-container
+      image: nginx:latest
+      ports:
+      - containerPort: 80
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+ReplicaSet
+      │
+Need New Pod
+      │
+Copy template.spec
+      │
+Create Pod
+      │
+kubelet Reads Pod Spec
+      │
+Container Runtime Starts Containers
+      │
+Running Application
+
+========================================================================================================================
+containers
+========================================================================================================================
+
+What    : containers is a list of all containers that should run inside the Pod.
+
+Why     : A Pod may contain one container or multiple containers. Kubernetes therefore uses "containers" (plural)
+          instead of "container" because every Pod is capable of running multiple containers whenever required.
+
+How     : Kubernetes reads every container definition one by one and asks the Container Runtime to create each
+          container inside the same Pod. All containers share the same Pod Network and can communicate using
+          localhost.
+
+Think   : Think of a house. A house can have one person or multiple family members living together. Similarly,
+          one Pod can have one or multiple containers sharing the same home.
+
+Memory  : Pod = House | Containers = People living inside the house.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+containers:
+- name: nginx-container
+  image: nginx:latest
+
+------------------------------------------------------------------------------------------------------------------------
+
+One Container Pod
+
+Pod
+└── nginx-container
+
+------------------------------------------------------------------------------------------------------------------------
+
+Multiple Container Pod
+
+Pod
+├── application-container
+├── logging-sidecar
+└── monitoring-sidecar
+
+------------------------------------------------------------------------------------------------------------------------
+
+Why Multiple Containers?
+
+• Main Application
+• Log Collection (Fluent Bit / Fluentd)
+• Monitoring Agent
+• Service Mesh Proxy (Istio Envoy)
+• Authentication Sidecar
+
+All these containers share
+
+✔ Same Pod IP
+✔ Same Network Namespace
+✔ Same localhost
+✔ Optional Shared Volumes
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+Pod
+ │
+ ├── Container-1
+ ├── Container-2
+ └── Container-3
+
+========================================================================================================================
+name
+========================================================================================================================
+
+What    : name gives a unique name to the container inside the Pod.
+
+Why     : A Pod may contain multiple containers. Kubernetes needs a unique name so it can identify the correct
+          container while collecting logs, executing commands, checking health probes or troubleshooting issues.
+
+How     : Kubernetes stores this name as part of the Pod Specification. Commands like "kubectl logs" and
+          "kubectl exec" use this container name whenever multiple containers exist inside the Pod.
+
+Think   : Like assigning names to roommates living in the same apartment.
+
+Memory  : Container Name identifies a container inside a Pod.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+containers:
+- name: nginx-container
+
+Single Container Pod
+
+Pod
+└── nginx-container
+
+Multi Container Pod
+
+Pod
+├── app-container
+├── fluentbit-sidecar
+└── envoy-proxy
+
+========================================================================================================================
+image
+========================================================================================================================
+
+What    : image specifies which Container Image Kubernetes should use to create the container.
+
+Why     : Kubernetes cannot create a container from nothing. It needs an Image that already contains the application,
+          operating system libraries, binaries and startup instructions. Without an Image there is nothing to run.
+
+How     : kubelet asks the Container Runtime to pull the specified Image (if not already available locally) and then
+          creates the container from that Image.
+
+Think   : Like baking multiple cakes from the same cake mould. The Image is the mould; every container is a new cake
+          created from it.
+
+Memory  : Image = Blueprint of the Container.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+image: nginx:latest
+
+Breakdown
+
+nginx   → Image Name
+latest  → Image Tag
+
+Other Examples
+
+image: ubuntu:24.04
+image: redis:8
+image: mysql:9
+
+------------------------------------------------------------------------------------------------------------------------
+
+Flow
+----
+
+Read Image
+      │
+Check Local Image
+      │
+Found?
+│
+├── Yes → Use Local Image
+│
+└── No
+      │
+Pull Image
+      │
+Create Container
+
+Interview Questions
+-------------------
+
+Q. Does Kubernetes create Images?
+
+Ans. No.
+
+Kubernetes only uses Images to create Containers.
+
+========================================================================================================================
+ports
+========================================================================================================================
+
+What    : ports is used to describe which application ports are being used by the container.
+
+Why     : Applications running inside containers listen on specific ports like 80, 443 or 8080. Kubernetes stores
+          this information so other resources (like Services) and administrators can easily understand how the
+          application communicates.
+
+How     : The ports section contains one or more containerPort entries describing the listening ports of the
+          application running inside the container.
+
+Think   : Like writing room numbers on office doors so everyone knows where each department is located.
+
+Memory  : ports describe the application's listening ports.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+ports:
+- containerPort: 80
+
+========================================================================================================================
+containerPort
+========================================================================================================================
+
+What    : containerPort specifies the port number on which the application is listening inside the container.
+
+Why     : Applications like Nginx, Apache, Tomcat or Node.js all listen on different ports. Declaring the port makes
+          the Pod Specification easier to understand and helps Kubernetes resources like Services target the correct
+          application port.
+
+How     : Kubernetes records this value as part of the Pod Specification. The application itself must already be
+          listening on this port. Kubernetes does NOT force the application to listen on this port.
+
+Think   : Your house address doesn't create your house; it only tells visitors where to find you.
+
+Memory  : containerPort documents where the application is listening inside the container.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Example
+-------
+
+ports:
+- containerPort: 80
+
+Meaning
+
+Container
+     │
+Application (Nginx)
+     │
+Listening on Port 80
+
+------------------------------------------------------------------------------------------------------------------------
+
+Important
+
+✔ containerPort does NOT expose the application outside the Pod.
+
+✔ containerPort does NOT publish the port.
+
+✔ containerPort does NOT make the application accessible from outside the cluster.
+
+For external communication you still need
+
+Service
+   │
+NodePort / LoadBalancer / Ingress
+
+========================================================================================================================

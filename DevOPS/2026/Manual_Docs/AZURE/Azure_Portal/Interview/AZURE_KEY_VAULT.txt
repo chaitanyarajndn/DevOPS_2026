@@ -1,0 +1,292 @@
+
+
+========================================
+AZURE_KEY_VAULT + TERRAFORM (PROJECT NOTES)
+========================================
+
+1. What is Azure Key Vault?
+- Azure service used to securely store Secrets, Keys and Certificates.
+- Commonly stores passwords, connection strings, API keys, SSH keys and certificates.
+- Prevents sensitive data from being stored inside Terraform code or Git repositories.
+
+2. Why Use Azure Key Vault?
+- Protect sensitive information.
+- Avoid hardcoding credentials in Terraform.
+- Keep secrets outside source code and terraform.tfvars.
+- Production security best practice.
+
+
+
+AZURE KEY VAULT (RBAC MODEL)
+--------------------------------
+Purpose
+- Securely store passwords, API keys, connection strings, certificates and other secrets.
+- Terraform reads secrets from Key Vault instead of hardcoding them in code or terraform.tfvars.
+
+
+
+====================================================
+CREATE AZURE KEY VAULT
+====================================================
+
+Azure Portal
+→ Search "Key Vault"
+→ Key Vaults
+→ + Create
+
+Basics
+Subscription     : Chaitanya_Raj
+Resource Group   : Same RG OR Separate RG (Both Supported)
+                  - Learning/Lab  : Same RG ✔
+                  - Production    : Separate Dedicated RG ✔ (Recommended)
+Key Vault Name   : kv-web-security
+Region           : Same as Infrastructure
+Pricing Tier     : Standard
+
+Access Configuration
+→ Azure Role-Based Access Control (RBAC)
+
+Networking
+→ Public Endpoint
+→ Allow Public Access
+
+Review + Create
+→ Create
+
+
+
+
+====================================================
+GRANT ACCESS (IAM)
+====================================================
+
+Key Vault
+→ Access Control (IAM)
+→ Add Role Assignment
+→ Role                 : Key Vault Administrator
+→ Assign Access To     : User, Group or Service Principal
+→ Select Member        : Your Azure User
+→ Review + Assign
+
+
+
+====================================================
+CREATE SECRETS
+====================================================
+
+Key Vault
+→ Secrets
+→ Generate / Import
+
+Name : vm-admin-username    Value : azureuser
+Name : vm-admin-password    Value : YourStrongPassword@123
+
+
+
+
+====================================================
+TERRAFORM FLOW
+====================================================
+
+Azure Key Vault
+      │
+      ▼
+Terraform Data Sources
+      │
+      ▼
+Parent Module (environment/dev)
+      │
+      ▼
+Child Module (Linux VM)
+      │
+      ▼
+Azure Linux VM
+
+
+
+====================================================
+WHY USE KEY VAULT?
+====================================================
+
+❌ terraform.tfvars
+- Password stored in code
+- Can be pushed to GitHub
+- Security Risk
+
+✅ Azure Key Vault
+- Password stored securely in Azure
+- Terraform fetches secrets during deployment
+- No hardcoded credentials
+- Production Best Practice
+
+
+
+====================================================
+CI/CD
+====================================================
+
+Local Deployment
+Your Azure User ──► IAM ──► Read Secrets
+
+GitLab CI/CD
+GitLab Service Principal ──► IAM ──► Read Secrets
+
+
+
+=========================================================
+================ Azure Key Vault - Soft Delete =================
+=========================================================
+
+
+Example:
+az keyvault list-deleted --output table
+
+Name
+---------------
+kv-web-security
+
+Problem:
+- I deleted the Key Vault "kv-web-security".
+- When I tried to create a new Key Vault with the same name, Azure did not allow it.
+
+Reason:
+- Azure Key Vault uses Soft Delete.
+- A deleted Key Vault stays in a soft-deleted state for the retention period.
+- During this time, the Key Vault name remains reserved.
+- The same name cannot be used until the Key Vault is Recovered or Purged.
+
+Recover the Key Vault:
+az keyvault recover --name kv-web-security
+
+Permanently Delete the Key Vault:
+az keyvault purge --name kv-web-security
+
+Verify:
+az keyvault list-deleted --output table
+
+If no output is returned:
+- The Key Vault has been permanently removed.
+- The same Key Vault name can be used again.
+- If the name is still unavailable, wait a few minutes for Azure to complete the purge.
+
+Flow:
+Create Key Vault
+      ↓
+Delete Key Vault
+      ↓
+Soft Deleted (Name Reserved)
+      ↓
+Recover  OR  Purge
+      ↓
+Name Available Again
+
+
+
+=========================================================
+PART 2 - USE KEY VAULT IN TERRAFORM
+=========================================================
+
+Step 1 - Read Existing Key Vault
+
+data "azurerm_key_vault" "kv" {
+  name                = "kv-terraform-dev"
+  resource_group_name = "Terraform-RG"
+}
+
+---------------------------------------------------------
+Step 2 - Read Secrets
+---------------------------------------------------------
+
+data "azurerm_key_vault_secret" "admin_username" {
+  name         = "vm-admin-username"
+  key_vault_id = data.azurerm_key_vault.kv.id
+}
+
+data "azurerm_key_vault_secret" "admin_password" {
+  name         = "vm-admin-password"
+  key_vault_id = data.azurerm_key_vault.kv.id
+}
+
+---------------------------------------------------------
+Step 3 - Pass Secrets to Child Module
+---------------------------------------------------------
+
+module "linux_vm" {
+  source           = "../../modules/10-azurerm_linux_virtual_machine"
+  admin_username   = data.azurerm_key_vault_secret.admin_username.value
+  admin_password   = data.azurerm_key_vault_secret.admin_password.value
+}
+
+---------------------------------------------------------
+Step 4 - Child Module Variables
+---------------------------------------------------------
+
+variable "admin_username" {
+  type = string
+}
+
+variable "admin_password" {
+  type      = string
+  sensitive = true
+}
+
+---------------------------------------------------------
+Step 5 - Use Variables Inside VM Resource
+---------------------------------------------------------
+
+admin_username = var.admin_username
+admin_password = var.admin_password
+
+
+
+=========================================================
+COMPLETE FLOW
+=========================================================
+
+Azure Key Vault
+      │
+      ├── vm-admin-username
+      ├── vm-admin-password
+      ▼
+Terraform Data Sources
+      ▼
+Parent Module (environment/dev)
+      ▼
+Child Module (Linux VM)
+      ▼
+Azure Linux Virtual Machine
+
+
+
+=========================================================
+WHY THIS APPROACH?
+=========================================================
+
+❌ Store Password in terraform.tfvars
+- Password may be committed to GitHub.
+- Credentials become visible to anyone with repository access.
+- Not recommended for production.
+
+✅ Store Password in Azure Key Vault
+- Password remains inside Azure.
+- Terraform reads secrets securely during deployment.
+- No hardcoded credentials in Terraform code.
+- No secrets inside Git repositories.
+- Recommended production practice.
+
+
+
+=========================================================
+INTERVIEW ANSWER
+=========================================================
+
+"I stored sensitive values such as the VM administrator username and password in Azure Key Vault instead of keeping them in Terraform code or terraform.tfvars. 
+Terraform retrieved these secrets using Azure Key Vault data sources and passed them to the Linux VM module. 
+This approach keeps credentials secure, prevents secrets from being stored in source control, and follows production security best practices."
+
+
+===========================================================================================================================================================================
+===========================================================================================================================================================================
+
+
+

@@ -1,0 +1,334 @@
+
+
+=========================================================
+AKS ACR Authentication & Managed Identity
+=========================================================
+
+#########################################################
+1. WHY DOES AKS NEED ACCESS TO ACR?
+#########################################################
+
+Problem
+-------
+• Docker Images are stored inside ACR.
+• ACR is a private Azure service.
+• AKS cannot download images without permission.
+
+Simple Flow
+-----------
+Developer → Docker Build → Push Image → ACR
+                                       ▲
+                                       │ Permission Required
+                                       ▼
+                                      AKS
+
+Interview
+---------
+"ACR is private by default. AKS must be authenticated before it can pull container images."
+
+
+
+#########################################################
+2. HOW DOES AKS PROVE ITS IDENTITY?
+#########################################################
+
+Azure provides two authentication methods.
+
+Method                     Status
+-------------------------  -----------------------
+Managed Identity           Recommended (Current)
+Service Principal          Legacy (Old Method)
+
+Enterprise projects mostly use Managed Identity.
+
+
+
+#########################################################
+3. WHAT IS MANAGED IDENTITY?
+#########################################################
+
+Definition
+----------
+• Managed Identity is an Azure-generated identity.
+• Azure creates and manages it automatically.
+• No username, password or secret is required.
+
+Purpose
+-------
+Allows Azure resources to securely access other Azure resources.
+
+Example
+-------
+AKS → ACR
+VM  → Key Vault
+App Service → Storage Account
+
+Interview
+---------
+"A Managed Identity is a secure Azure identity that allows Azure services to authenticate with other Azure services without storing credentials."
+
+
+
+#########################################################
+4. TYPES OF MANAGED IDENTITY
+#########################################################
+
+System Assigned                     User Assigned
+----------------------------        ----------------------------
+Created automatically               Created manually
+Linked to one resource              Can be shared by many resources
+Deleted with resource               Exists independently
+Most common for AKS                 Used when multiple resources
+                                    need the same identity
+
+
+
+#########################################################
+5. HOW TO CREATE IN AZURE PORTAL
+#########################################################
+
+System Assigned (AKS)
+---------------------
+
+Azure Portal
+    ↓
+Create
+    ↓
+Azure Kubernetes Service
+    ↓
+Identity
+    ↓
+System Assigned = Enabled
+    ↓
+Create
+
+Azure automatically
+-------------------
+✓ Creates Managed Identity
+✓ Registers it in Microsoft Entra ID
+✓ Attaches it to AKS
+
+View Identity
+-------------
+AKS
+ ↓
+Identity
+ ↓
+System Assigned
+
+You'll see
+-----------
+Status
+Principal ID
+Object ID
+
+---------------------------------------------------------
+
+User Assigned
+-------------
+
+Azure Portal
+ ↓
+Create Resource
+ ↓
+Managed Identity
+ ↓
+User Assigned
+ ↓
+Give Name
+ ↓
+Create
+
+Later attach it to
+------------------
+• AKS
+• VM
+• App Service
+• Function App
+
+
+
+
+#########################################################
+6. HOW DOES AKS ACCESS ACR?
+#########################################################
+
+AKS
+ │
+ ▼
+Managed Identity
+ │
+ ▼
+AcrPull Role
+ │
+ ▼
+ACR
+ │
+ ▼
+Docker Image
+
+Important
+---------
+Identity alone is NOT enough.
+The identity must also have permission.
+
+
+
+
+#########################################################
+7. WHAT IS ACRPULL ROLE?
+#########################################################
+
+Purpose
+-------
+Allows AKS to download container images.
+
+Permissions
+-----------
+✓ Pull Images
+✗ Push Images
+✗ Delete Images
+
+Reason
+------
+Only the minimum required permission is granted.
+
+
+
+
+#########################################################
+8. TERRAFORM EXAMPLE
+#########################################################
+
+Create AKS
+
+resource "azurerm_kubernetes_cluster" "aks" {
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+}
+
+Grant ACR Permission
+
+resource "azurerm_role_assignment" "acr_pull" {
+
+  scope                = azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+
+  principal_id = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
+}
+
+
+
+
+#########################################################
+9. COMPLETE FLOW
+#########################################################
+
+Application Code
+        │
+Docker Build
+        │
+Docker Image
+        │
+Push
+        ▼
+Azure Container Registry (ACR)
+        ▲
+        │ AcrPull Role
+Managed Identity
+        ▲
+        │
+AKS
+        │
+Worker Node
+        │
+Pod
+        │
+Container
+        │
+Application Running
+
+
+
+
+#########################################################
+10. INTERVIEW QUESTIONS
+#########################################################
+
+Q. Can AKS pull images from ACR without authentication?
+
+A.
+No. ACR is private. AKS must authenticate before pulling images.
+
+---------------------------------------------------------
+
+Q. Why do we use Managed Identity?
+
+A.
+It removes the need to store usernames, passwords or secrets.
+Azure manages the identity automatically.
+
+---------------------------------------------------------
+
+Q. Why is AcrPull role required?
+
+A.
+Managed Identity provides identity.
+AcrPull provides permission to download images from ACR.
+
+---------------------------------------------------------
+
+Q. Which Managed Identity is commonly used with AKS?
+
+A.
+System Assigned Managed Identity.
+
+---------------------------------------------------------
+
+Q. What is the difference between System Assigned and User Assigned?
+
+A.
+
+System Assigned
+• Auto-created
+• One resource only
+• Deleted with resource
+
+User Assigned
+• Created manually
+• Reusable
+• Independent lifecycle
+
+
+
+
+#########################################################
+11. KEY INTERVIEW POINTS
+#########################################################
+
+✓ ACR is private by default.
+✓ AKS must authenticate before pulling images.
+✓ Managed Identity provides authentication.
+✓ AcrPull role provides authorization.
+✓ Identity without permission cannot access ACR.
+✓ System Assigned Managed Identity is the most common option for AKS.
+✓ Azure creates the Managed Identity automatically when System Assigned is enabled.
+✓ Azure registers the identity in Microsoft Entra ID.
+✓ Terraform uses "identity" to create the Managed Identity.
+✓ Terraform uses "azurerm_role_assignment" to grant the AcrPull permission.
+
+=========================================================
+Filename : AKSACRAuthentication
+=========================================================
+
+
+
+
+
+
+
+
+

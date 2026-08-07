@@ -1,0 +1,963 @@
+==============================================================================================================
+AZURE LOAD BALANCER vs AZURE APPLICATION GATEWAY
+================================================
+
+1. OSI Layer (Traffic Processing Level)
+
+---
+
+Meaning:
+Defines how deeply a service can inspect and process incoming network traffic before forwarding it to the backend servers.
+
+• Layer 4 (Transport Layer)   → Understands only IP Address, Port and Protocol.
+• Layer 7 (Application Layer) → Understands the complete HTTP/HTTPS request (URL, Path, Headers, Cookies, etc.).
+
+Azure Load Balancer
+• Works at Layer 4 (Transport Layer).
+• Makes routing decisions using only IP Address, Port and Protocol.
+
+Azure Application Gateway
+• Works at Layer 7 (Application Layer).
+• Inspects the complete HTTP/HTTPS request before forwarding traffic.
+
+==============================================================================================================
+
+2. Supported Protocols
+
+---
+
+Meaning:
+A protocol is a communication rule that defines how data is exchanged between a client and a server.
+This parameter tells us which communication protocols the service can understand.
+
+Azure Load Balancer
+• Supports TCP and UDP.
+
+Azure Application Gateway
+• Supports HTTP, HTTPS, WebSocket and HTTP/2.
+
+==============================================================================================================
+
+3. Supported Traffic
+
+---
+
+Meaning:
+Indicates the type of traffic the service is designed to handle.
+
+Azure Load Balancer
+• Handles any TCP/UDP based network traffic.
+• Examples: SSH, RDP, SQL, DNS, Gaming, Custom TCP/UDP Applications.
+
+Azure Application Gateway
+• Handles only HTTP/HTTPS based web traffic.
+• Examples: Websites, REST APIs, Web Portals, E-commerce Applications.
+
+==============================================================================================================
+
+4. HTTP Request Inspection
+
+---
+
+Meaning:
+Request inspection means opening and analyzing an incoming HTTP request before forwarding it to a backend server.
+
+The request may contain:
+• URL
+• Request Path
+• Host Name
+• HTTP Headers
+• Cookies
+
+Azure Load Balancer
+• Cannot inspect HTTP requests.
+• Simply forwards traffic based on network information.
+
+Azure Application Gateway
+• Can inspect the complete HTTP/HTTPS request before forwarding traffic.
+
+==============================================================================================================
+
+5. Routing Decision
+
+---
+
+Meaning:
+Defines which information the service uses to decide where the client request should be sent.
+
+Azure Load Balancer
+Uses:
+• Source IP Address
+• Destination IP Address
+• Port Number
+• Protocol (TCP/UDP)
+
+Azure Application Gateway
+Uses:
+• URL
+• Request Path
+• Host Header
+• HTTP Headers
+• Cookies
+
+==============================================================================================================
+
+6. URL-Based Routing
+
+---
+
+Meaning:
+Routes requests to different backend servers based on the requested URL.
+
+Example:
+example.com/api
+example.com/images
+example.com/payment
+
+Azure Load Balancer
+• Not Supported.
+
+Azure Application Gateway
+• Supported.
+• Different URLs can be routed to different backend pools.
+
+==============================================================================================================
+
+7. Path-Based Routing
+
+---
+
+Meaning:
+Routes requests according to the path portion of the URL.
+
+Example:
+/api
+/images
+/admin
+/payment
+
+Azure Load Balancer
+• Not Supported.
+
+Azure Application Gateway
+• Supported.
+
+==============================================================================================================
+  
+8. Host-Based Routing
+
+---
+
+Meaning:
+Routes requests based on the Host Name (Domain Name) requested by the client.
+
+Example:
+api.company.com
+shop.company.com
+portal.company.com
+
+Azure Load Balancer
+• Not Supported.
+
+Azure Application Gateway
+• Supported.
+
+==============================================================================================================
+
+9. SSL/TLS Termination (SSL Offloading)
+
+---
+
+Meaning:
+The service decrypts HTTPS traffic and forwards the request to backend servers.
+This removes SSL processing overhead from backend servers.
+
+
+==============================================================================================================
+9. SSL/TLS Termination (SSL Offloading)
+---------------------------------------
+
+Meaning:
+
+When a client sends an HTTPS request, the data is encrypted for secure communication.
+Before the backend server can process the request, it must first decrypt the HTTPS traffic.
+
+Decrypting HTTPS requests consumes CPU and memory on the backend server.
+If thousands of users send HTTPS requests simultaneously, a significant portion of the server's CPU is spent only on encryption and decryption instead of processing the actual application.
+
+SSL/TLS Termination solves this problem.
+
+In SSL Termination, the Application Gateway decrypts the incoming HTTPS request and forwards the request to the backend server.
+
+As a result:
+• Backend servers no longer spend CPU resources decrypting HTTPS traffic.
+• Backend servers can use more CPU for processing application requests.
+• Overall application performance improves.
+
+
+Traffic Flow:
+
+  Client
+	│
+HTTPS (Encrypted)
+	│
+Application Gateway
+	│  (Decrypts HTTPS)
+	▼
+  HTTP
+	│
+Backend Server
+
+
+Azure Load Balancer
+• Does not perform SSL/TLS Termination.
+• It cannot decrypt HTTPS traffic because it works at Layer 4.
+
+Azure Application Gateway
+• Supports SSL/TLS Termination.
+• Decrypts HTTPS requests before forwarding them to backend servers, reducing CPU overhead on backend servers.
+
+Interview One-Liner:
+
+"SSL/TLS Termination means the Application Gateway decrypts HTTPS traffic before sending it to the backend server, reducing the SSL processing load on backend servers and improving application performance."
+
+
+==============================================================================================================
+
+10. End-to-End SSL Encryption
+
+---
+
+==============================================================================================================
+10. End-to-End SSL Encryption
+-----------------------------
+
+Meaning:
+
+In End-to-End SSL Encryption, the data remains encrypted throughout the entire journey—from the client to the backend server.
+
+Unlike SSL Termination, the Application Gateway does not send plain HTTP traffic to the backend server.
+Instead, after inspecting the request, it establishes another HTTPS connection with the backend server.
+
+As a result:
+• Data remains encrypted over the entire communication path.
+• Even if someone intercepts the traffic inside the network, the data cannot be read.
+• This provides a higher level of security for sensitive applications.
+
+Traffic Flow:
+
+Client
+│
+HTTPS (Encrypted)
+│
+Application Gateway
+│ (Decrypts → Inspects → Encrypts Again)
+▼
+HTTPS (Encrypted)
+│
+Backend Server
+
+Azure Load Balancer
+• Does not provide End-to-End SSL as an application-layer feature.
+• It simply forwards TCP packets without decrypting or re-encrypting HTTPS traffic.
+
+Azure Application Gateway
+• Supports End-to-End SSL Encryption.
+• Decrypts the client request for inspection and establishes another HTTPS connection with the backend server.
+
+When to Use:
+• Banking Applications
+• Payment Gateways
+• Healthcare Systems
+• Government Applications
+• Any application where sensitive data must remain encrypted throughout the communication.
+
+Interview One-Liner:
+
+"End-to-End SSL Encryption ensures that data remains encrypted from the client to the backend server. Application Gateway decrypts the client request for inspection and then re-encrypts it before forwarding it to the backend server."
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+| SSL Termination                                           | End-to-End SSL                                         |
+| --------------------------------------------------------- | ------------------------------------------------------ |
+| Client → **HTTPS** → App Gateway → **HTTP** → Backend     | Client → **HTTPS** → App Gateway → **HTTPS** → Backend |
+| Backend par SSL certificate ki zarurat nahi (basic setup) | Backend par bhi SSL certificate required               |
+| Better performance                                        | Better security                                        |
+| Internal network me data plain HTTP ho sakta hai          | Internal network me bhi data encrypted rehta hai       |
+-------------------------------------------------------------------------------------------------------------------------
+Ek line me yaad rakh:
+
+SSL Termination → Gateway decrypt karta hai aur backend ko HTTP bhej sakta hai.
+End-to-End SSL → Gateway decrypt karta hai, inspect karta hai, fir dobara encrypt karke backend ko HTTPS bhejta hai.
+
+-------------------------------------------------------------------------------------------------------------------------
+
+
+
+==============================================================================================================
+
+11. Web Application Firewall (WAF)
+
+---
+
+==============================================================================================================
+11. Web Application Firewall (WAF)
+----------------------------------
+
+Meaning:
+
+A Web Application Firewall (WAF) is a security feature that protects web applications from malicious HTTP/HTTPS requests.
+
+Unlike a traditional firewall, which protects the network, WAF protects the web application itself by inspecting every HTTP/HTTPS request before it reaches the backend server.
+
+It identifies malicious requests and blocks them before they can reach the application.
+
+Why is WAF Needed?
+
+Imagine your website is publicly accessible on the Internet.
+
+Client
+│
+HTTP/HTTPS Request
+│
+Backend Server
+
+Most users send legitimate requests.
+
+Examples:
+• Open Homepage
+• Login
+• View Products
+• Make Payment
+
+However, attackers may send specially crafted requests to exploit vulnerabilities in your application.
+
+Examples:
+• SQL Injection
+• Cross-Site Scripting (XSS)
+• Command Injection
+• File Inclusion Attacks
+• OWASP Top 10 Web Attacks
+
+Without WAF:
+
+Internet
+│
+Malicious Request
+│
+Backend Server
+│
+Application may be compromised.
+
+With WAF:
+
+Internet
+│
+Malicious Request
+│
+Application Gateway + WAF
+│
+Request Inspected
+│
+Attack Blocked
+│
+Backend Server
+
+The malicious request never reaches the application.
+
+Common Attacks Blocked by WAF
+
+Common Attacks Blocked by WAF
+
+• SQL Injection (SQLi)
+  → Attacker injects malicious SQL queries to read, modify or delete data from the database.
+
+• Cross-Site Scripting (XSS)
+  → Attacker injects malicious JavaScript code that executes in a user's browser.
+
+• Command Injection
+  → Attacker attempts to execute unauthorized operating system commands on the server.
+
+• File Inclusion Attacks (LFI/RFI)
+  → Attacker tries to access or execute unauthorized local or remote files on the server.
+
+• OWASP Top 10 Web Attacks
+  → WAF helps protect against the most common and critical web application security vulnerabilities identified by OWASP.
+  
+
+Azure Load Balancer
+
+• Does not provide Web Application Firewall.
+• It forwards network traffic without inspecting HTTP requests for web attacks.
+
+Azure Application Gateway
+
+• Supports built-in Web Application Firewall (WAF).
+• Inspects every HTTP/HTTPS request.
+• Detects malicious requests.
+• Blocks web attacks before they reach the backend application.
+
+Benefits
+
+• Protects web applications from common attacks.
+• Improves application security.
+• Reduces the risk of data breaches.
+• Automatically blocks many known attack patterns.
+
+Interview One-Liner:
+
+"Web Application Firewall (WAF) protects web applications by inspecting incoming HTTP/HTTPS requests and blocking malicious web attacks such as SQL Injection and Cross-Site Scripting before they reach the backend server."
+
+
+==============================================================================================================
+
+12. Cookie-Based Session Affinity
+
+---
+
+==============================================================================================================
+12. Cookie-Based Session Affinity
+---------------------------------
+
+Meaning:
+
+Cookie-Based Session Affinity ensures that all requests from the same user are always routed to the same backend server during a session.
+
+When a user first connects, the Application Gateway selects a backend server and stores this information in a cookie.
+For all subsequent requests, the cookie is used to route the user back to the same backend server.
+
+Why is it Needed?
+
+Some web applications store user session data locally on a specific backend server.
+
+Examples:
+• User Login Session
+• Shopping Cart
+• Banking Portal
+• Multi-Step Forms
+
+If the user's requests are sent to different backend servers, the session information may not be available, causing the user to log in again or lose session data.
+
+Without Session Affinity
+
+User
+│
+Request 1 ─────► Backend Server 1
+Request 2 ─────► Backend Server 2
+Request 3 ─────► Backend Server 3
+
+Result:
+• User session may be lost.
+• Shopping cart or login information may disappear.
+
+With Cookie-Based Session Affinity
+
+User
+│
+Request 1 ─────► Backend Server 2
+│
+Cookie Created
+│
+Request 2 ─────► Backend Server 2
+Request 3 ─────► Backend Server 2
+
+Result:
+• User always reaches the same backend server.
+• Session data remains available throughout the session.
+
+Azure Load Balancer
+
+• Does not support Cookie-Based Session Affinity.
+• It distributes traffic based on Layer-4 networking rules.
+
+Azure Application Gateway
+
+• Supports Cookie-Based Session Affinity.
+• Uses cookies to ensure that all requests from the same user are routed to the same backend server.
+
+Interview One-Liner:
+
+"Cookie-Based Session Affinity ensures that all requests from the same user are consistently routed to the same backend server by using a cookie, helping maintain user session information."
+
+
+==============================================================================================================
+
+13. HTTP to HTTPS Redirection
+
+---
+
+==============================================================================================================
+13. HTTP to HTTPS Redirection
+-----------------------------
+
+Meaning:
+
+HTTP to HTTPS Redirection automatically redirects users from an unsecured HTTP connection to a secure HTTPS connection.
+
+This ensures that all communication between the client and the web application is encrypted, improving security and protecting sensitive data.
+
+Why is it Needed?
+
+Users may manually enter an HTTP URL or click an old bookmark that uses HTTP.
+
+Example:
+
+http://company.com
+
+Since HTTP does not encrypt data, sensitive information such as usernames, passwords and payment details can be intercepted.
+
+Instead of allowing an insecure connection, the Application Gateway automatically redirects the user to the secure HTTPS version.
+
+Traffic Flow:
+
+User
+│
+http://company.com
+│
+Application Gateway
+│
+301 / 302 Redirect
+▼
+https://company.com
+│
+Secure HTTPS Connection
+▼
+Backend Server
+
+Benefits
+
+• Ensures all users access the application over HTTPS.
+• Encrypts data exchanged between client and server.
+• Improves application security.
+• Prevents accidental use of insecure HTTP connections.
+
+Azure Load Balancer
+
+• Does not support HTTP to HTTPS Redirection.
+• It cannot inspect HTTP requests because it works at Layer 4.
+
+Azure Application Gateway
+
+• Supports HTTP to HTTPS Redirection.
+• Automatically redirects HTTP requests to HTTPS before forwarding them to the backend.
+
+Interview One-Liner:
+
+"HTTP to HTTPS Redirection automatically redirects users from an insecure HTTP connection to a secure HTTPS connection, ensuring encrypted communication and improving application security."
+
+
+==============================================================================================================
+
+14. URL Rewrite
+---------------
+
+Meaning:
+
+URL Rewrite allows the Application Gateway to modify an incoming request or an outgoing response before it reaches the backend server or the client.
+
+It can change the URL, add/remove HTTP headers, or modify request information without requiring any changes to the backend application.
+
+Why is it Needed?
+
+Sometimes backend applications expect requests in a different format, or organizations want to hide internal URL structures from users.
+
+Instead of modifying the application code, the Application Gateway rewrites the request automatically.
+
+Examples
+
+Example 1 - Rewrite URL
+
+Client Request:
+https://company.com/products
+
+Application Gateway Rewrites To:
+https://company.com/store/products
+
+Backend Server receives:
+/store/products
+
+---
+
+Example 2 - Add HTTP Header
+
+Client Request:
+GET /api/users
+
+Application Gateway adds:
+X-Forwarded-For: Client-IP
+X-Forwarded-Proto: HTTPS
+
+Backend Server receives the additional headers automatically.
+
+---
+
+Example 3 - Remove Internal Information
+
+Client sees:
+https://company.com/profile
+
+Backend application internally uses:
+/v2/user/profile
+
+The Application Gateway rewrites the URL so the user never sees the internal path.
+
+Benefits
+
+• Provides clean and user-friendly URLs.
+• Hides internal application structure.
+• Adds or modifies HTTP headers.
+• Reduces the need to change application code.
+• Simplifies application migration and maintenance.
+
+Azure Load Balancer
+
+• Does not support URL Rewrite.
+• It cannot inspect or modify HTTP requests because it works at Layer 4.
+
+Azure Application Gateway
+
+• Supports URL Rewrite.
+• Can rewrite URLs and modify HTTP request/response headers before forwarding traffic.
+
+Interview One-Liner:
+
+"URL Rewrite allows Azure Application Gateway to modify URLs or HTTP headers before forwarding requests to the backend server, enabling clean URLs, header manipulation and better application flexibility without changing the application code."
+
+
+==============================================================================================================
+
+15. Custom Error Pages
+
+---
+
+Meaning:
+Displays customized error pages instead of default server error messages.
+
+==============================================================================================================
+Common HTTP Status Codes
+========================
+
+## 1xx - Informational (Request Received)
+
+100 Continue
+→ Server has received the request and the client can continue sending the remaining data.
+
+101 Switching Protocols
+→ Server is switching to a different protocol (e.g., HTTP → WebSocket).
+
+==============================================================================================================
+
+## 2xx - Success
+
+200 OK
+→ Request completed successfully.
+
+201 Created
+→ A new resource was created successfully.
+
+202 Accepted
+→ Request accepted but processing is still in progress.
+
+204 No Content
+→ Request successful, but no content is returned.
+
+==============================================================================================================
+
+## 3xx - Redirection
+
+301 Moved Permanently
+→ Resource has been permanently moved to a new URL.
+
+302 Found (Temporary Redirect)
+→ Resource is temporarily available at another URL.
+
+304 Not Modified
+→ Cached version is still valid; resource has not changed.
+
+307 Temporary Redirect
+→ Temporary redirect while preserving the original HTTP method.
+
+308 Permanent Redirect
+→ Permanent redirect while preserving the original HTTP method.
+
+==============================================================================================================
+
+## 4xx - Client Errors
+
+400 Bad Request
+→ Invalid or malformed request.
+
+401 Unauthorized
+→ Authentication is required or credentials are invalid.
+
+403 Forbidden
+→ User is authenticated but does not have permission to access the resource.
+
+404 Not Found
+→ Requested resource or page does not exist.
+
+405 Method Not Allowed
+→ HTTP method (GET, POST, PUT, DELETE, etc.) is not allowed.
+
+408 Request Timeout
+→ Client took too long to send the request.
+
+409 Conflict
+→ Request conflicts with the current state of the resource.
+
+410 Gone
+→ Resource has been permanently removed.
+
+413 Payload Too Large
+→ Request body exceeds the allowed size.
+
+415 Unsupported Media Type
+→ Server does not support the request's content type.
+
+429 Too Many Requests
+→ Too many requests received in a short period (Rate Limiting).
+
+==============================================================================================================
+
+## 5xx - Server Errors
+
+500 Internal Server Error
+→ Unexpected server-side error.
+
+501 Not Implemented
+→ Server does not support the requested functionality.
+
+502 Bad Gateway
+→ Gateway or proxy received an invalid response from the backend server.
+
+503 Service Unavailable
+→ Server is temporarily unavailable or overloaded.
+
+504 Gateway Timeout
+→ Gateway or proxy did not receive a response from the backend server in time.
+
+505 HTTP Version Not Supported
+→ Server does not support the HTTP version used by the client.
+
+==============================================================================================================
+Most Important Interview Codes
+==============================
+
+200 → Success
+201 → Resource Created
+301 → Permanent Redirect
+302 → Temporary Redirect
+400 → Bad Request
+401 → Authentication Required
+403 → Permission Denied
+404 → Resource Not Found
+405 → HTTP Method Not Allowed
+429 → Too Many Requests
+500 → Internal Server Error
+502 → Bad Gateway
+503 → Service Unavailable
+504 → Gateway Timeout
+
+
+Azure Load Balancer
+• Not Supported.
+
+Azure Application Gateway
+• Supported.
+
+==============================================================================================================
+
+16. Health Probes (Backend Health Monitoring)
+
+---
+
+Meaning:
+Continuously checks whether backend servers are healthy.
+Traffic is sent only to healthy backend instances.
+
+Azure Load Balancer
+• Supported.
+
+Azure Application Gateway
+• Supported.
+
+==============================================================================================================
+
+17. Backend Pool
+
+---
+
+Meaning:
+A logical group of backend resources that receive incoming traffic.
+
+Backend resources may include:
+• Virtual Machines
+• VM Scale Sets
+• IP Addresses
+• NICs
+
+Azure Load Balancer
+• Supported.
+
+Azure Application Gateway
+• Supported.
+
+==============================================================================================================
+
+18. Public and Private Deployment
+
+---
+
+Meaning:
+Determines whether the service is exposed to the Internet or only available inside a private network.
+
+Azure Load Balancer
+• Public Load Balancer
+• Internal Load Balancer
+
+Azure Application Gateway
+• Public Application Gateway
+• Private Application Gateway
+
+==============================================================================================================
+
+19. VM Scale Set Integration
+
+---
+
+Meaning:
+Automatically distributes traffic across Virtual Machine Scale Set instances.
+
+Azure Load Balancer
+• Supported.
+
+Azure Application Gateway
+• Supported.
+
+==============================================================================================================
+
+20. AKS (Azure Kubernetes Service) Integration
+
+---
+
+Meaning:
+Allows Kubernetes workloads to receive external traffic.
+
+Azure Load Balancer
+• Commonly used to expose Kubernetes Services.
+
+Azure Application Gateway
+• Used with Application Gateway Ingress Controller (AGIC) for Layer-7 routing.
+
+==============================================================================================================
+
+21. Performance
+
+---
+
+Meaning:
+Represents how quickly the service processes incoming traffic.
+
+Azure Load Balancer
+• Very High Performance.
+• Minimal packet processing.
+
+Azure Application Gateway
+• Slightly slower because every HTTP request is inspected.
+
+==============================================================================================================
+
+22. Latency
+
+---
+
+Meaning:
+The time taken for a request to reach the backend server.
+
+Azure Load Balancer
+• Lower latency.
+
+Azure Application Gateway
+• Slightly higher latency due to request inspection.
+
+==============================================================================================================
+
+23. Pricing
+
+---
+
+Meaning:
+Represents the operational cost of using the service.
+
+Azure Load Balancer
+• Lower cost.
+
+Azure Application Gateway
+• Higher cost because of advanced Layer-7 features.
+
+==============================================================================================================
+
+24. Configuration Complexity
+
+---
+
+Meaning:
+Indicates how easy or difficult the service is to configure and manage.
+
+Azure Load Balancer
+• Simple configuration.
+
+Azure Application Gateway
+• More advanced configuration due to routing rules, listeners, certificates and WAF.
+
+==============================================================================================================
+
+25. Primary Use Cases
+
+---
+
+Azure Load Balancer
+• SSH
+• RDP
+• SQL Server
+• DNS
+• Gaming
+• Custom TCP/UDP Applications
+• High-performance network traffic distribution
+
+Azure Application Gateway
+• Websites
+• REST APIs
+• Web Portals
+• E-commerce Applications
+• Microservices
+• SSL Offloading
+• WAF Protection
+• URL-Based Routing
+• Reverse Proxy for Web Applications
+
+==============================================================================================================
+
+26. Primary Purpose
+
+---
+
+Meaning:
+Describes the main reason for using the service.
+
+Azure Load Balancer
+• Distributes Layer-4 network traffic across multiple backend servers.
+
+Azure Application Gateway
+• Provides intelligent Layer-7 routing, security and traffic management for web applications.
+
+==============================================================================================================
+INTERVIEW ONE-LINER
+===================
+
+Azure Load Balancer
+→ Best choice for distributing TCP/UDP network traffic with high performance and low latency.
+
+Azure Application Gateway
+→ Best choice for HTTP/HTTPS web applications that require URL-based routing, SSL termination and Web Application Firewall (WAF).

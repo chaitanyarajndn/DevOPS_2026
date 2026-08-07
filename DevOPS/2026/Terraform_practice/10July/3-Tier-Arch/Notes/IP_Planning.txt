@@ -1,0 +1,237 @@
+===============================================================================
+PROJECT : NOVA 3-TIER APPLICATION (UPDATED)
+===============================================================================
+
+Company
+-------
+NOVA
+
+Location
+--------
+East US
+
+===============================================================================
+NETWORK PLAN
+===============================================================================
+
+VNET-MGMT
+---------
+CIDR                    : 10.34.41.0/26
+Subnet                  : AzureBastionSubnet      10.34.41.0/27
+
+VNET-APP
+--------
+CIDR                    : 10.34.41.64/26
+
+Subnets
+--------
+frontend-snet           : 10.34.41.64/28
+backend-snet            : 10.34.41.80/28
+database-snet           : 10.34.41.96/28
+Reserved                : 10.34.41.112/28
+
+===============================================================================
+RESOURCE NAMES
+===============================================================================
+
+Resource Group
+--------------
+nova-rg
+
+Virtual Network
+---------------
+nova-mgmt-vnet
+nova-app-vnet
+
+Subnets
+--------
+AzureBastionSubnet
+frontend-snet
+backend-snet
+database-snet
+
+Public IP
+----------
+nova-bas-pip
+
+Azure Bastion
+-------------
+nova-bastion
+
+Network Security Groups
+-----------------------
+frontend-nsg
+backend-nsg
+
+Network Interfaces
+------------------
+frontend-nic
+backend-nic
+database-nic
+
+Linux Virtual Machines
+----------------------
+frontend-vm
+backend-vm
+database-vm
+
+VNet Peering
+------------
+mgmt-to-app-peer
+app-to-mgmt-peer
+
+===============================================================================
+ACCESS FLOW
+===============================================================================
+
+Internet
+    │
+    ▼
+Frontend VM
+    │
+    ▼
+Backend VM
+
+Admin
+    │
+    ▼
+Azure Bastion
+    ├── Frontend VM (SSH)
+    ├── Backend VM (SSH)
+    └── Database VM (SSH)
+
+===============================================================================
+NSG PLAN
+===============================================================================
+
+frontend-nsg
+├── frontend-snet
+└── frontend-nic
+
+backend-nsg
+├── backend-snet
+└── backend-nic
+
+database
+--------
+No NSG
+No NIC-NSG Association
+
+===============================================================================
+CHILD MODULES
+===============================================================================
+
+01-azurerm_resource_group
+02-azurerm_virtual_network
+03-azurerm_subnet
+04-azurerm_network_security_group
+05-azurerm_subnet_network_security_group_association
+06-azurerm_network_interface
+07-azurerm_network_interface_security_group_association
+08-azurerm_public_ip
+09-azurerm_bastion_host
+10-azurerm_virtual_network_peering
+11-azurerm_linux_virtual_machine
+
+===============================================================================
+TERRAFORM MAPS
+===============================================================================
+
+rg_map
+vn_map
+sbn_map
+nsg_map
+nic_map
+linuxvm_map
+peer_map
+bastion_map
+pip_map
+
+Relationship Maps
+-----------------
+subnet_nsgas_map
+nic_nsgas_map
+
+===============================================================================
+FINAL RESOURCE COUNT
+===============================================================================
+
+Resource Group                         : 1
+Virtual Network                        : 2
+Subnet                                 : 4
+Public IP                              : 1
+Azure Bastion                          : 1
+Network Security Group                 : 2
+Subnet NSG Association                 : 2
+Network Interface                      : 3
+NIC NSG Association                    : 2
+Linux Virtual Machine                  : 3
+VNet Peering                           : 2
+
+
+
+
+
+
+
+linx_vm = {
+
+  linx_vma = {
+    name                            = "FrontendVM"
+    resource_group_name             = "rga"
+    location                        = "rga"
+    size                            = "Standard_D2s_v3"
+    admin_username                  = "adminuser"
+    admin_password                  = "Xolouser@8674"
+    disable_password_authentication = false
+    network_interface_ids           = "nica"
+
+  }
+
+  linx_vmb = {
+    name                            = "DatabaseVM"
+    resource_group_name             = "rga"
+    location                        = "rga"
+    size                            = "Standard_D2s_v3"
+    admin_username                  = "adminuser"
+    admin_password                  = "Xolouser@8674"
+    disable_password_authentication = false
+    network_interface_ids           = "nicc"
+
+  }
+
+}
+
+
+
+resource "azurerm_linux_virtual_machine" "LINUXVM" {
+  for_each                        = var.linx_vm
+  name                            = each.value.name
+  resource_group_name             = azurerm_resource_group.RG[each.value.resource_group_name].name
+  location                        = azurerm_resource_group.RG[each.value.location].location
+  size                            = each.value.size
+  admin_username                  = each.value.admin_username
+  admin_password                  = each.value.admin_password
+  disable_password_authentication = false
+  network_interface_ids           = [azurerm_network_interface.NIC[each.value.network_interface_ids].id]
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
+    version   = "latest"
+  }
+}
+
+
+
+
+
+
+
+

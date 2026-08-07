@@ -1,0 +1,73 @@
+IaC Security
+│
+├── Definition
+│   Infrastructure as Code (IaC) Security is the process of scanning Terraform,
+│   Kubernetes YAML, CloudFormation, ARM/Bicep, etc. to identify security
+│   misconfigurations before infrastructure is deployed.
+│
+├── Purpose
+│   Prevent insecure infrastructure from reaching production. Terraform can
+│   successfully create resources even if they violate security best practices.
+│   IaC security tools detect these issues early so they can be fixed before
+│   deployment.
+│
+├── Why Needed
+│   ├── Terraform checks syntax, not security.
+│   ├── Prevents accidental exposure of cloud resources.
+│   ├── Reduces security risks before deployment.
+│   └── Helps enforce organization security policies.
+│
+├── Common Security Issues
+│   ├── Public Storage Account
+│   │   Storage account allows public access, making sensitive files
+│   │   accessible over the Internet.
+│   │
+│   ├── SSH (22) Open to Internet
+│   │   NSG allows 0.0.0.0/0 on port 22, enabling anyone on the Internet
+│   │   to attempt SSH access.
+│   │
+│   ├── RDP (3389) Open to Internet
+│   │   Windows VM is directly exposed to the Internet, increasing the
+│   │   risk of brute-force attacks.
+│   │
+│   ├── Encryption Disabled
+│   │   Data is stored without encryption, increasing the risk of data
+│   │   exposure if storage is compromised.
+│   │
+│   ├── Logging Disabled
+│   │   No activity logs are collected, making troubleshooting and
+│   │   security investigations difficult.
+│   │
+│   └── Hardcoded Passwords
+│       Passwords or API keys are written directly in Terraform code,
+│       allowing anyone with repository access to view them.
+│
+├── Popular Tools
+│   ├── Checkov
+│   │   Open-source IaC security scanner from Bridgecrew (Palo Alto).
+│   │   Supports Terraform, Kubernetes YAML, CloudFormation, ARM/Bicep,
+│   │   Azure, AWS and GCP.
+│   │
+│   ├── Trivy
+│   │   Open-source security scanner from Aqua Security. Supports IaC,
+│   │   containers, Kubernetes, secrets, SBOM and vulnerability scanning
+│   │   across Azure, AWS and GCP.
+│   │
+│   ├── KICS
+│   │   Open-source IaC scanner from Checkmarx. Supports multiple cloud
+│   │   platforms and IaC formats.
+│   │
+│   └── Regula
+│       Policy-based IaC scanner focused on Terraform and cloud compliance.
+│
+└── Interview Remember
+    Terraform creates infrastructure.
+    IaC Security verifies that the infrastructure is secure before deployment.
+
+
+
+
+
+
+
+

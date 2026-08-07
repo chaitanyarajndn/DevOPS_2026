@@ -1,0 +1,185 @@
+===================================================================================================
+subnet_network_security_group_association-MAP-TO-MAP_MAPPING (MODULE OUTPUT TO MODULE OUTPUT)
+===================================================================================================
+
+PROBLEM
+-------
+Output-1 (Subnet Module)                    Output-2 (NSG Module)
+
+subnet_ids = {                              nsg_ids = {
+  frontend-sbn = "id1"                        fend-nsg  = "idA"
+  backend-sbn  = "id2"                        bkend-nsg = "idB"
+  database-sbn = "id3"                        data-nsg  = "idC"
+  bastion-sbn  = "id4"                      }
+}
+
+Terraform NEVER guesses the relationship.
+
+Wrong Guess
+-----------
+frontend-sbn ---> data-nsg      ❌
+backend-sbn  ---> fend-nsg      ❌
+
+Correct Relationship
+--------------------
+frontend-sbn ---> fend-nsg      ✔
+backend-sbn  ---> bkend-nsg     ✔
+database-sbn ---> data-nsg      ✔
+
+
+Relationship Map (terraform.tfvars)
+-----------------------------------
+
+nsgas_map = {
+
+  fe = {
+    subnet_id                 = "frontend-sbn"
+    network_security_group_id = "fend-nsg"
+  }
+
+  bk = {
+    subnet_id                 = "backend-sbn"
+    network_security_group_id = "bkend-nsg"
+  }
+
+  db = {
+    subnet_id                 = "database-sbn"
+    network_security_group_id = "data-nsg"
+  }
+
+}
+
+
+===============================================================================
+APPROACH-1 : PARENT MODULE (for_each)
+===============================================================================
+
+terraform.tfvars
+        │
+        ▼
+Parent Module (for_each)
+        │
+        ▼
+Child Module (Single Resource)
+
+Parent main.tf
+--------------
+
+module "subnet_network_security_group_association" {
+
+  source   = "../../modules/05-azurerm_subnet_network_security_group_association"
+
+  for_each = var.nsgas_map
+
+  subnet_id = module.subnet.subnet_ids[
+                each.value.subnet_id
+              ]
+
+  network_security_group_id =
+              module.network_security_group.nsg_ids[
+                each.value.network_security_group_id
+              ]
+}
+
+Child main.tf
+-------------
+
+resource "azurerm_subnet_network_security_group_association" "NSGASC" {
+
+  subnet_id                 = var.subnet_id
+
+  network_security_group_id = var.network_security_group_id
+
+}
+
+Advantages
+----------
+✔ Child module simple
+✔ Parent controls iteration
+✔ Easy debugging
+✔ One Module = One Association
+
+
+===============================================================================
+APPROACH-2 : CHILD MODULE (for_each)
+===============================================================================
+
+terraform.tfvars
+        │
+        ▼
+Parent Module
+(Pass Complete Maps)
+        │
+        ▼
+Child Module (for_each)
+        │
+        ▼
+Association Resource
+
+Parent main.tf
+--------------
+
+module "subnet_network_security_group_association" {
+
+  source = "../../modules/05-azurerm_subnet_network_security_group_association"
+
+  nsgas      = var.nsgas_map
+
+  subnet_ids = module.subnet.subnet_ids
+
+  nsg_ids    = module.network_security_group.nsg_ids
+
+}
+
+Child main.tf
+-------------
+
+resource "azurerm_subnet_network_security_group_association" "NSGASC" {
+
+  for_each = var.nsgas
+
+  subnet_id =
+      var.subnet_ids[
+        each.value.subnet_id
+      ]
+
+  network_security_group_id =
+      var.nsg_ids[
+        each.value.network_security_group_id
+      ]
+
+}
+
+Advantages
+----------
+✔ Parent clean
+✔ Child reusable
+✔ Best for reusable modules
+✔ Multiple associations handled inside child
+
+
+===============================================================================
+INTERVIEW RULE
+===============================================================================
+
+One Output Map                  ---> Direct Use
+
+Two Output Maps                 ---> Relationship Map Required
+
+Relationship Map                ---> terraform.tfvars
+
+Parent for_each                 ---> Simple Child Module
+
+Child for_each                  ---> Reusable Child Module
+
+Both Approaches                 ---> 100% Correct ✔
+Terraform NEVER guesses relationship between two output maps.
+===============================================================================
+
+
+
+
+
+
+
+
