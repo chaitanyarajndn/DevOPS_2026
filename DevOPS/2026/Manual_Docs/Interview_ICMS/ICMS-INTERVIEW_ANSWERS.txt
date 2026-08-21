@@ -1,0 +1,314 @@
+ICMS-INTERVIEW_ANSWERS
+============================================================
+
+3. CURRENTLY WORKING ON
+------------------------------------------------------------
+
+"I’m currently working on the implementation and deployment side of
+the Azure infrastructure for the ICMS environment. The architecture
+and network design are provided by our Architect and DevOps Architect
+team through the approved HLD, LLD and IP planning. My responsibility
+is to take those requirements and implement them correctly in the
+target Azure environment.
+
+A major part of my work is around the Azure infrastructure required
+for the environment. I work with the required networking, security,
+connectivity and other Azure resources, and I make sure the deployment
+matches the approved design.
+
+For infrastructure provisioning, I use Terraform and maintain the
+code in GitHub. Before deployment, I validate the Terraform
+configuration, run the required linting and security checks, review
+the Terraform Plan and then use Deployment Automation using GitHub
+Actions to deploy the approved changes.
+
+After deployment, I validate the environment and troubleshoot any
+resource or connectivity issues before the environment is handed over
+for the next stage.
+
+So my current role is mainly focused on implementation, deployment,
+validation and troubleshooting of Azure infrastructure based on the
+approved architecture."
+------------------------------------------------------------
+
+4. WORK DONE IN THE LAST ONE OR TWO YEARS
+------------------------------------------------------------
+
+"Over the last one to two years, my work has mainly been around
+Azure infrastructure implementation and deployment. I have worked
+from the approved HLD, LLD and IP planning provided by the
+architecture team and converted those requirements into actual
+Azure environments.
+
+My work has covered different stages of the infrastructure lifecycle.
+I have worked on the Terraform code, reusable modules, environment
+configuration and the deployment process. Before applying changes,
+I validate the Terraform code, run TFLint for Terraform linting and
+Checkov for IaC security scanning, and then review the Terraform Plan.
+
+I have also worked across Dev, QA and Production environments, so
+environment-specific deployment and validation is an important part
+of my work. After the infrastructure is deployed, I validate the
+resources, connectivity and required dependencies and troubleshoot
+issues when the actual environment does not behave as expected.
+
+On the automation side, we use GitHub Actions for Deployment
+Automation, so infrastructure changes follow a controlled workflow
+instead of being handled manually from the Azure Portal.
+
+Over this period, my experience has mainly grown around Azure
+infrastructure implementation, networking and security controls,
+Terraform, infrastructure validation, deployment automation and
+environment-level troubleshooting.
+
+I have also supported the application deployment side once the
+infrastructure is ready, because the application depends on the
+environment that I deploy and validate. That has given me good
+exposure to how the application fits on top of the Azure environment."
+
+
+5. EXPLAIN THE DATA FLOW IN YOUR PROJECT
+------------------------------------------------------------
+
+USER
+  |
+  v
+INTERNET
+  |
+  v
+APPLICATION GATEWAY
+  |
+  v
+AKS
+  |
+  +-----------------------+
+  |                       |
+  v                       v
+NODE 1                  NODE 2
+  |                       |
+  +---------+---------+   +---------+---------+
+  |                   |   |                   |
+  v                   v   v                   v
+Angular Pod        .NET Pod  Angular Pod     .NET Pod
+                           |
+                           v
+                    KUBERNETES SERVICE
+                           |
+                           v
+                 INTERNAL LOAD BALANCER
+                           |
+                           v
+                       DATABASE
+
+"At a high level, the request starts when a user accesses the ICMS
+application through the internet. The request reaches Application
+Gateway, which acts as the main entry point for the application.
+
+From there, the request reaches the application running on AKS.
+In our environment, the application workloads are running across
+Node 1 and Node 2, with Angular and .NET workloads running as Pods.
+
+The Angular frontend handles the user interaction. When the frontend
+needs information from the application, it communicates with the
+.NET backend through the required API. The backend processes the
+request and communicates with the database.
+
+For the internal backend path, the required service can use the
+Kubernetes Service and Internal Load Balancer so that the backend
+service remains privately accessible.
+
+The response then comes back from the backend to the frontend and
+is presented to the user.
+
+So the basic flow is User -> Internet -> Application Gateway ->
+AKS -> Angular / .NET -> Database, with the internal service path
+remaining private."
+
+
+6. EXPLAIN YOUR AZURE ARCHITECTURE AT A HIGH LEVEL
+------------------------------------------------------------
+
+                              AZURE
+                                |
+                +---------------+---------------+
+                |                               |
+                v                               v
+             HUB VNET                       SPOKE VNET
+                |                               |
+        +-------+-------+             +---------+---------+
+        |       |       |             |         |         |
+        v       v       v             v         v         v
+     Bastion Firewall  VPN      App Gateway    AKS   Private Endpoints
+                                      |          |
+                                      |          |
+                                      |      +---+---+
+                                      |      |       |
+                                      |      v       v
+                                      |    NODE 1  NODE 2
+                                      |      |       |
+                                      |   +--+--+  +--+--+
+                                      |   |     |  |     |
+                                      |   v     v  v     v
+                                      | Angular .NET Angular .NET
+                                      |
+                              Separate Subnets:
+                              App Gateway
+                              AKS
+                              Private Endpoints
+
+"At a high level, the Azure environment is implemented from the
+approved HLD, LLD and IP planning provided by our Architect and
+DevOps Architect team. My responsibility is to take that design and
+deploy it correctly in the target Azure environment.
+
+The overall network follows a Hub-Spoke model. The Hub VNet contains
+the common connectivity and security components such as Azure Bastion,
+Azure Firewall and VPN Gateway. The ICMS workload is maintained in
+the Spoke VNet.
+
+Inside the Spoke, the components are placed according to the
+approved network design. Application Gateway has its own subnet,
+AKS has its own subnet and Private Endpoints have their required
+subnet. So Application Gateway and AKS are not placed inside the
+same subnet.
+
+The Hub and Spoke are connected through VNet Peering. From my side,
+I take care of the implementation details such as the resource
+configuration, network addressing from the IP planning, subnet
+configuration, security controls and connectivity.
+
+Once the infrastructure is deployed, I validate that the environment
+matches the HLD and LLD and that the required connectivity is working
+as expected.
+
+So I would describe my role here as the implementation and deployment
+of the approved Azure architecture. The architecture itself is
+provided by the architecture team, and I make sure that the design
+is correctly translated into a working Azure environment."
+
+
+7. WHICH CLOUD ARE YOU CURRENTLY WORKING ON?
+------------------------------------------------------------
+
+"Microsoft Azure is my primary cloud platform. Most of my recent
+hands-on work is around Azure infrastructure implementation and
+deployment.
+
+My stronger areas are Azure networking, security, connectivity,
+Infrastructure as Code and deployment automation. I use Terraform
+for infrastructure provisioning and GitHub Actions for Deployment
+Automation.
+
+So Azure is the cloud platform where I have the strongest practical
+exposure, especially from the infrastructure implementation and
+environment deployment side."
+
+
+8. WHAT APPLICATION STACKS ARE RUNNING IN YOUR PROJECT?
+------------------------------------------------------------
+
+"The ICMS application has three main layers. The frontend is built
+using Angular, the backend is developed using .NET and ASP.NET Core,
+and then we have the database layer.
+
+Angular handles the user-facing part of the application, while the
+.NET backend provides the APIs and application service layer. The
+backend communicates with the database, so the frontend does not
+directly access the database.
+
+From my side, I mainly work on the Azure environment in which these
+application components are deployed. Once the infrastructure is
+implemented and validated, the application components are deployed
+on top of that environment.
+
+So at a high level, the application stack is Angular for the frontend,
+.NET / ASP.NET Core for the backend and the database as the data
+layer."
+
+
+============================================================
+INTERVIEW DEPTH
+============================================================
+
+Q3 - CURRENT WORK
+    Main answer
+        |
+        +--> Architecture input
+        +--> Azure implementation
+        +--> Terraform
+        +--> Validation
+        +--> Deployment Automation
+        +--> Post-deployment validation
+        |
+        +--> Can naturally continue for 8+ minutes
+
+Q4 - LAST 1-2 YEARS
+    Main answer
+        |
+        +--> Role and responsibility
+        +--> HLD / LLD / IP Planning
+        +--> Azure implementation
+        +--> Networking
+        +--> Security
+        +--> Terraform
+        +--> Modules
+        +--> Backend / State
+        +--> TFLint
+        +--> Checkov
+        +--> Terraform Plan
+        +--> GitHub Actions
+        +--> Environment deployment
+        +--> Validation
+        +--> Troubleshooting
+        +--> Application deployment support
+        |
+        +--> Can naturally expand into a 20-30 minute discussion
+
+Q5 - DATA FLOW
+    Main answer
+        |
+        +--> User
+        +--> Application Gateway
+        +--> AKS
+        +--> Node 1 / Node 2
+        +--> Angular / .NET
+        +--> Kubernetes Service
+        +--> Internal Load Balancer
+        +--> Database
+        |
+        +--> Can naturally continue into Login / Claim Status later
+
+Q6 - AZURE ARCHITECTURE
+    Main answer
+        |
+        +--> HLD / LLD
+        +--> IP Planning
+        +--> Hub-Spoke
+        +--> Hub services
+        +--> Spoke services
+        +--> Separate subnets
+        +--> VNet Peering
+        +--> Implementation responsibility
+        |
+        +--> Can naturally continue into individual Azure services
+
+Q7 - CLOUD
+    Azure
+        |
+        +--> Strongest practical exposure
+        |
+        +--> Stop unless interviewer continues
+
+Q8 - APPLICATION STACK
+    Angular
+        |
+        v
+    .NET / ASP.NET Core
+        |
+        v
+    Database
+        |
+        +--> Deployment environment
+        |
+        +--> Stop unless interviewer asks about deployment
+============================================================

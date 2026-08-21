@@ -1,0 +1,796 @@
+
+
+PROJECT: INSURANCE_CLAIMS_MANAGEMENT_SYSTEM (ICMS)
+============================================================
+1. PROJECT OVERVIEW — WHAT I WILL SAY IN INTERVIEW
+------------------------------------------------------------
+"I worked on an Insurance Claims Management System for a US-based insurance client. It was a .NET-based enterprise application used to manage the insurance claim lifecycle, starting from customer and policy information through claim registration, assessment and finally settlement or closure.
+
+The project followed Agile methodology with two-week sprints. There were separate development, QA and DevOps teams. The development team was responsible for the application and database development, while my responsibility as a DevOps Engineer was mainly around Azure infrastructure, infrastructure automation, CI/CD and application deployments.
+
+I worked on provisioning and managing Azure infrastructure using Terraform, maintaining Azure DevOps YAML pipelines, containerizing the application using Docker, storing images in Azure Container Registry and deploying the application workloads to Kubernetes. I was also involved in environment management, deployment validation, production troubleshooting, rollback activities and post-deployment support."
+
+
+
+WHAT I WILL SAY:
+"When a user accesses the application, the request first reaches the DNS endpoint and then comes through the application gateway. The gateway handles the incoming traffic and routes it towards the Kubernetes environment. Inside AKS, the request reaches the appropriate Kubernetes service and then the application pod. The backend then communicates with the required database or storage services."
+IF INTERVIEWER ASKS "WHY APPLICATION GATEWAY?"
+"Its role is to provide the application entry point and route HTTP or HTTPS traffic to the appropriate backend while providing features such as Web Application Firewall protection."
+
+TEAM SIZE — ICMS
+├── 1 Project Manager
+├── 1 Scrum Master
+├── 1 Solution Architect
+├── 5 .NET Developers
+├── 2 QA Engineers
+└── 2 DevOps Engineers (including me)
+──────────────────────────────
+TOTAL → 12 MEMBERS
+
+
+ICMS — INSURANCE CLAIMS MANAGEMENT SYSTEM
+==================================================================================================================
+1. PROJECT OVERVIEW
+==================================================================================================================
+Project              → Insurance Claims Management System (ICMS)
+Client               → US-based Insurance Company
+Application          → Enterprise insurance claims application
+Backend              → .NET-based application
+Methodology          → Agile | 2-week Sprint
+Development Team     → 5 .NET Developers
+QA Team              → 2 QA Engineers
+DevOps Team          → 2 DevOps Engineers
+My Role              → DevOps Engineer
+My Focus             → Azure Infrastructure + Terraform + CI/CD + Docker + ACR + AKS + Deployment + Production Support
+IMPORTANT            → Development team handles application/business logic; my responsibility is application deployment and
+                        the infrastructure/platform required to run it.
+==================================================================================================================
+2. BUSINESS FLOW — WHAT THE APPLICATION DOES
+==================================================================================================================
+FLOW 1 — CUSTOMER / USER ACCESS
+Customer
+   ↓
+Registration
+   ↓
+Verification
+   ↓
+Account Created
+   ↓
+Login
+   ↓
+Application Dashboard
+   ↓
+Access Insurance Services
+PURPOSE → This is how a user enters and accesses the insurance application.
+DEVOPS CONNECTION → I don't develop the registration/login functionality; I deploy and maintain the application components
+                    required to make this functionality available.
+------------------------------------------------------------------------------------------------------------------
+FLOW 2 — MAIN CLAIM LIFECYCLE ⭐
+Policyholder
+   ↓
+Incident / Loss Occurs
+   ↓
+Report Incident
+   ↓
+Submit Claim
+   ↓
+Claim Registered
+   ↓
+Policy / Coverage Validation
+   ↓
+Claim Processing / Assessment
+   ↓
+Claim Decision
+   ↓
+┌──────────────────────────────┴──────────────────────────────┐
+↓                                                             ↓
+APPROVED                                                      REJECTED / CLOSED
+↓                                                             ↓
+Settlement                                                    Claim Closed
+↓
+Payment
+↓
+Claim Closed
+PURPOSE → This is the main business flow supported by the ICMS application.
+DEVOPS CONNECTION → My responsibility is to ensure the application and infrastructure supporting this workflow are
+                    deployed, available and functioning correctly.
+------------------------------------------------------------------------------------------------------------------
+FLOW 3 — CLAIM DOCUMENT FLOW
+Customer / Claim Handler
+   ↓
+Open Claim
+   ↓
+Upload Supporting Document
+   ↓
+Application
+   ↓
+Storage
+   ↓
+Document Available for Claim Processing
+PURPOSE → Claims may require supporting documents during processing.
+DEVOPS CONNECTION → I manage/provision the required infrastructure, configuration, connectivity and deployment required
+                    for the application to use the storage service.
+==================================================================================================================
+3. BUSINESS FLOW — WHAT I NEED TO KNOW AS DEVOPS
+==================================================================================================================
+Customer
+   ↓
+Application
+   ↓
+Claim Submitted
+   ↓
+Claim Processed
+   ↓
+Settlement / Closure
+        ↓
+This is enough business understanding for my DevOps role.
+I DO NOT need to know:
+├── Claim calculation/business rules
+├── Frontend implementation
+├── Backend business logic
+├── Database schema/design
+├── Stored procedures
+└── Internal application code
+I DO need to understand:
+├── What the application does
+├── The main business flow
+├── Which application functionality is affected during a deployment issue
+└── The basic application dependencies required for deployment/runtime
+
+
+==================================================================================================================
+4. APPLICATION FLOW
+==================================================================================================================
+                         USERS
+                           ↓
+                          DNS
+                           ↓
+                 Application Entry Point
+                           ↓
+                    AKS / Kubernetes
+                           ↓
+                ┌──────────┴──────────┐
+                ↓                     ↓
+           Application             Backend
+           Workload                .NET API
+                                      ↓
+                           Required Dependencies
+                           ├── Database
+                           ├── Storage
+                           └── Other Services
+
+NOTE → Exact frontend/database/other application technologies should only be stated after confirming the actual project
+       documentation. My DevOps responsibility is deployment and runtime support, not application development.
+	   
+	   
+==================================================================================================================
+5. TRAFFIC FLOW — USER REQUEST
+==================================================================================================================
+			USER
+			 ↓
+			DNS
+			 ↓
+			Application Gateway / WAF
+			 ↓
+			AKS Ingress
+			 ↓
+			Kubernetes Service
+			 ↓
+			Application Pod
+			 ↓
+		.NET Application
+			 ↓
+	Required Database / Storage / Services
+
+WHAT THIS MEANS → User traffic enters through the application endpoint, is routed towards AKS and reaches the required
+                  application workload, which then communicates with its required dependencies.
+NOTE → Application Gateway/WAF must be confirmed against the actual project architecture before presenting it as a project fact.
+
+
+==================================================================================================================
+6. DEVOPS APPLICATION DEPLOYMENT FLOW ⭐
+==================================================================================================================
+DEVELOPER
+   ↓
+Application Code Change
+   ↓
+Feature / Developer Branch
+   ↓
+PULL REQUEST (PR)
+   ↓
+Code Review
+   ↓
+PR Approval
+   ↓
+Merge to Target Branch
+   ↓
+AZURE DEVOPS PIPELINE
+   ↓
+Build
+   ↓
+Tests / Quality Checks
+   ↓
+Security Validation
+   ↓
+Docker Build
+   ↓
+Container Image
+   ↓
+Container Scan
+   ↓
+Push Image → ACR
+   ↓
+Deploy → AKS
+   ↓
+Post-Deployment Validation
+   ↓
+DEV
+   ↓
+QA
+   ↓
+UAT
+   ↓
+Production Approval
+   ↓
+PROD
+   ↓
+Post-Deployment Validation
+
+
+==================================================================================================================
+7. WHAT HAPPENS IN THE CI/CD PIPELINE
+==================================================================================================================
+SOURCE
+Developer → Git → Pull Request → Review → Approval → Merge
+   ↓
+CI
+├── Checkout Code
+├── Restore Dependencies
+├── Build Application
+├── Run Tests
+├── Code Quality Check
+├── Security Validation
+└── Docker Build
+   ↓
+CONTAINER
+Docker Image
+   ↓
+Container Security Scan
+   ↓
+ACR — Azure Container Registry
+   ↓
+CD
+├── Deploy to Environment
+├── Update Kubernetes Workload
+├── Validate Deployment
+└── Promote to Next Environment
+
+
+==================================================================================================================
+8. DOCKER → ACR → AKS
+==================================================================================================================
+Application Code
+      ↓
+Dockerfile
+      ↓
+Docker Build
+      ↓
+Docker Image
+      ↓
+ACR — Azure Container Registry
+      ↓
+Helm / Kubernetes Deployment
+      ↓
+AKS — Azure Kubernetes Service
+      ↓
+Kubernetes Pods
+      ↓
+Application Running
+WHAT I DO → I take the application code provided by the development team, build/package it into a Docker image through
+            the pipeline, push the image to ACR and deploy the required image version to AKS.
+			
+
+==================================================================================================================
+9. HELM DEPLOYMENT
+==================================================================================================================
+Helm Chart
+├── Deployment
+├── Service
+├── ConfigMap
+├── Secret
+└── values.yaml
+        ↓
+Environment-Specific Configuration
+├── DEV
+├── QA
+├── UAT
+└── PROD
+        ↓
+AKS Deployment
+PURPOSE → Helm provides a consistent way to manage Kubernetes deployment configuration across environments.
+
+==================================================================================================================
+10. INFRASTRUCTURE PROVISIONING — TERRAFORM
+==================================================================================================================
+Requirement
+   ↓
+Terraform Code
+   ↓
+Git
+   ↓
+Pull Request / Review
+   ↓
+Azure DevOps Pipeline
+   ↓
+terraform init
+   ↓
+terraform validate
+   ↓
+Security Scan
+   ↓
+terraform plan
+   ↓
+Plan Review / Approval
+   ↓
+terraform apply
+   ↓
+AZURE INFRASTRUCTURE
+   ├── Resource Groups
+   ├── VNet
+   ├── Subnets
+   ├── NSGs
+   ├── AKS
+   ├── ACR
+   ├── Key Vault
+   ├── Storage / Required Resources
+   └── Other Project Resources
+   
+
+==================================================================================================================
+11. TERRAFORM REMOTE STATE
+==================================================================================================================
+Terraform
+   ↓
+Azure Storage Account
+   ↓
+Remote Terraform State
+PURPOSE → Centralized remote state allows the team to manage Terraform state safely instead of keeping state only on
+          an individual developer's machine.
+
+
+==================================================================================================================
+12. SECRETS / CONFIGURATION
+==================================================================================================================
+Application / Deployment
+        ↓
+Azure Key Vault
+        ↓
+Secrets / Sensitive Configuration
+        ↓
+Managed Identity / RBAC
+        ↓
+Application / Kubernetes Workload
+DO NOT → Hardcode credentials in source code, pipeline YAML or Dockerfile.
+MY ROLE → Integrate the required secrets/configuration into the deployment process and ensure the workload has the
+          required access.
+
+
+
+==================================================================================================================
+13. ENVIRONMENT FLOW
+==================================================================================================================
+                    APPLICATION RELEASE
+                           ↓
+                          DEV
+                           ↓
+                          QA
+                           ↓
+                          UAT
+                           ↓
+                   PRODUCTION APPROVAL
+                           ↓
+                          PROD
+                           ↓
+                POST-DEPLOYMENT VALIDATION
+IMPORTANT → Application is promoted through environments instead of directly deploying every change to production.
+
+
+==================================================================================================================
+14. PRODUCTION VALIDATION
+==================================================================================================================
+Deployment Completed
+      ↓
+Check Pipeline Status
+      ↓
+Check Kubernetes Deployment
+      ↓
+Check Pod Health
+      ↓
+Check Application Availability
+      ↓
+Check Logs / Events
+      ↓
+Validate Key Application Functionality
+      ↓
+Release Confirmed
+
+
+==================================================================================================================
+15. PRODUCTION TROUBLESHOOTING FLOW
+==================================================================================================================
+Issue Reported
+     ↓
+Check Deployment / Pipeline
+     ↓
+Check Application Availability
+     ↓
+Check AKS
+     ↓
+kubectl get pods
+     ↓
+kubectl describe pod
+     ↓
+kubectl logs
+     ↓
+Check Kubernetes Events
+     ↓
+Check Application / Azure Logs
+     ↓
+Check Configuration / Secrets
+     ↓
+Identify Root Cause
+     ↓
+FIX + REDEPLOY
+        OR
+ROLLBACK
+     ↓
+Post-Fix Validation
+
+
+==================================================================================================================
+16. ROLLBACK FLOW
+==================================================================================================================
+New Release
+   ↓
+Production Deployment
+   ↓
+Issue Detected
+   ↓
+Assess Impact
+   ↓
+Rollback to Previous Stable Version
+   ↓
+Validate Pods / Application
+   ↓
+Confirm Application Availability
+   ↓
+Production Restored
+
+
+==================================================================================================================
+17. MONITORING / PRODUCTION SUPPORT
+==================================================================================================================
+Application / AKS
+      ↓
+Logs / Metrics / Health
+      ↓
+Azure Monitor / Log Analytics / Application Monitoring
+      ↓
+DevOps Investigation
+MY FOCUS
+├── Deployment Health
+├── Pod / Container Health
+├── Application Availability
+├── Pipeline Failures
+├── Configuration Issues
+├── Infrastructure Issues
+└── Production Release Issues
+
+
+==================================================================================================================
+18. TECHNOLOGY STACK — ONLY FROM DEVOPS PERSPECTIVE
+==================================================================================================================
+
+
+APPLICATION STACK
+├── Frontend              → Angular
+├── Backend               → .NET / ASP.NET Core
+└── Database              → Azure SQL Database                 
+APPLICATION DELIVERY
+├── Source Code           → Git
+├── Source Repository     → GitHub
+├── CI/CD                 → Azure DevOps YAML Pipelines
+├── Containerization      → Docker
+├── Container Registry    → Azure Container Registry (ACR)
+├── Container Orchestration → Azure Kubernetes Service (AKS)
+├── Kubernetes Deployment → Helm
+└── Application Deployment → Azure DevOps → Docker → ACR → AKS
+INFRASTRUCTURE / IaC
+├── Cloud Platform        → Microsoft Azure
+├── Infrastructure as Code → Terraform
+├── Terraform Backend     → Azure Storage Account
+├── Terraform Modules     → Reusable Azure Infrastructure Modules
+└── Environments          → DEV → QA → UAT → PROD
+AZURE COMPUTE / PLATFORM
+├── AKS                   → Application Container Orchestration
+├── ACR                   → Private Container Image Registry
+└── Azure Storage         → Terraform State / Application Storage
+AZURE NETWORKING
+├── Virtual Network (VNet)
+├── Subnets
+├── Network Security Groups (NSGs)
+├── Private Endpoints
+├── Public / Private IPs
+├── Application Gateway    → Application Traffic Routing
+├── Web Application Firewall (WAF) → Web Traffic Protection
+└── DNS                    → Application Name Resolution
+SECURITY / ACCESS
+├── Azure Key Vault        → Secrets / Certificates / Sensitive Configuration
+├── Azure RBAC             → Resource Access Control
+├── Managed Identity       → Passwordless Azure Resource Authentication
+├── TFLint                 → Terraform / Azure provider linting
+└── Checkov                → Terraform / IaC security & compliance scanning
+QUALITY / VALIDATION
+├── SonarQube              → Code Quality / Static Analysis
+├── Terraform Validate     → Terraform Syntax / Configuration Validation
+├── Terraform Plan         → Infrastructure Change Review
+└── Pull Request (PR)     → Code Review / Change Approval
+MONITORING / OPERATIONS
+├── Azure Monitor          → Azure Resource Monitoring
+├── Log Analytics          → Centralized Log Analysis
+├── Application Insights   → Application Performance / Error Monitoring
+├── Kubernetes Logs        → Container / Pod Troubleshooting
+└── Kubernetes Events      → Deployment / Runtime Troubleshooting
+OPERATING / DEPLOYMENT TOOLS
+├── Linux                  → Container / Server Operating Environment
+├── kubectl                → Kubernetes Administration / Troubleshooting
+├── Helm                   → Kubernetes Application Deployment
+├── Azure CLI              → Azure Resource / Deployment Operations
+└── PowerShell             → Automation / Azure Administration
+
+
+==================================================================================================================
+CORE DEVOPS FLOW
+==================================================================================================================
+Developer
+   ↓
+Git / GitHub
+   ↓
+Feature Branch
+   ↓
+Pull Request
+   ↓
+Code Review / Approval
+   ↓
+Merge
+   ↓
+Azure DevOps Pipeline
+   ↓
+Build / Test / SonarQube
+   ↓
+Security Validation
+   ↓
+Docker Build
+   ↓
+Trivy Scan
+   ↓
+Push Image → ACR
+   ↓
+Helm
+   ↓
+AKS
+   ↓
+Application Deployment
+   ↓
+Validation
+   ↓
+DEV → QA → UAT → PROD
+
+
+==================================================================================================================
+INFRASTRUCTURE FLOW
+==================================================================================================================
+Terraform Code
+   ↓
+Git / GitHub
+   ↓
+Pull Request
+   ↓
+Code Review
+   ↓
+Azure DevOps Pipeline
+   ↓
+terraform init
+   ↓
+terraform validate
+   ↓
+Checkov / tfsec
+   ↓
+terraform plan
+   ↓
+Plan Review / Approval
+   ↓
+terraform apply
+   ↓
+Azure Infrastructure
+
+
+==================================================================================================================
+IMPORTANT — TECHNOLOGY KNOWLEDGE BOUNDARY
+==================================================================================================================
+I need to know:
+├── What application I am deploying
+├── What build/package process is required
+├── How the Docker image is created
+├── Where the image is stored
+├── How the application is deployed to AKS
+├── What configuration/secrets are required
+├── What Azure infrastructure the application depends on
+└── How to validate and troubleshoot the deployment
+I do NOT need to know:
+├── How Angular application code is developed
+├── How .NET business logic is written
+├── How database schemas are designed
+├── How claims are calculated
+└── How application features are internally implemented          
+
+
+IMPORTANT → I don't need frontend/backend/database development knowledge to perform my DevOps role. I only need to
+            understand the application enough to build, package, deploy, configure, monitor and troubleshoot it.
+
+
+==================================================================================================================
+19. MY ACTUAL DEVOPS RESPONSIBILITY
+==================================================================================================================
+Developer
+   ↓
+Provides Application Code
+   ↓
+I / DEVOPS
+├── Manage Git / Deployment Workflow
+├── Maintain CI/CD Pipeline
+├── Build Docker Image
+├── Scan Image
+├── Push Image to ACR
+├── Deploy Image to AKS
+├── Manage Helm Deployment
+├── Manage Environment Configuration
+├── Integrate Secrets
+├── Provision Azure Infrastructure using Terraform
+├── Validate Deployments
+├── Monitor Runtime / Deployment Health
+├── Troubleshoot Infrastructure / Deployment Issues
+└── Support Production Releases / Rollbacks
+
+
+==================================================================================================================
+20. WHAT IS OUT OF MY ROLE
+==================================================================================================================
+Development Team
+├── Frontend Code Development
+├── Backend Code Development
+├── Business Logic
+├── Claim Processing Logic
+└── Application Code Changes
+Database / Application Team
+├── Database Design
+├── Schema Development
+├── Stored Procedures
+└── Application-Level Data Logic
+MY ROLE
+└── Deploy + Automate + Maintain Infrastructure + Support Runtime / Releases
+
+
+==================================================================================================================
+21. INTERVIEW STATEMENTS — ALL TOGETHER
+==================================================================================================================
+Q: "Tell me about your project."
+A:
+"I worked on an Insurance Claims Management System for a US-based insurance client. It is an enterprise .NET-based
+application used to manage the insurance claim lifecycle. The project followed Agile methodology with two-week sprints,
+and there were separate development, QA and DevOps teams.
+
+The development team was responsible for application development, while I worked on the DevOps side. My responsibility
+was mainly around Azure infrastructure provisioning, CI/CD automation, containerization, application deployment and
+production support.
+
+I used Terraform to provision and manage the required Azure infrastructure and Azure DevOps YAML pipelines to automate
+the deployment process. For application deployment, I worked with Docker, Azure Container Registry and Kubernetes. I was
+also involved in environment promotion, deployment validation, troubleshooting and rollback activities during releases."
+------------------------------------------------------------------------------------------------------------------
+Q: "What does your application do?"
+A:
+"The application is an Insurance Claims Management System used to manage the insurance claim lifecycle. At a high level,
+a customer can access the system, submit an insurance claim and provide the required information and documents. The claim
+then goes through validation and processing, and based on the outcome it moves towards settlement or closure."
+------------------------------------------------------------------------------------------------------------------
+Q: "What was your role in the project?"
+A:
+"I was responsible for the DevOps side of the application. The development team provided the application code, and my
+responsibility was to build, package and deploy that application along with managing the Azure infrastructure required to
+run it. I worked with Terraform, Azure DevOps, Docker, ACR and Kubernetes, and I was also involved in deployment
+validation, production troubleshooting and rollback activities."
+------------------------------------------------------------------------------------------------------------------
+Q: "Did you develop the frontend or backend?"
+A:
+"No. The development team handled the application development. My responsibility started from the DevOps side, where I
+worked on the CI/CD process, containerization, infrastructure and deployment of the application."
+------------------------------------------------------------------------------------------------------------------
+Q: "Explain your application deployment process."
+A:
+"Developers first raise a Pull Request for their application changes. After code review and approval, the changes are
+merged into the target branch. This triggers the Azure DevOps pipeline, where we build and validate the application,
+perform the required quality and security checks, create the Docker image and push it to Azure Container Registry. The
+deployment stage then uses the required Kubernetes deployment configuration to deploy the image to AKS. After deployment,
+we validate the application before promoting the release to the next environment."
+------------------------------------------------------------------------------------------------------------------
+Q: "Why is Pull Request part of your process?"
+A:
+"We don't directly deploy unreviewed application changes. Developers raise a Pull Request, the required code review and
+approval takes place, and only after the changes are merged does the deployment pipeline proceed. This gives us a
+controlled and traceable release process."
+------------------------------------------------------------------------------------------------------------------
+Q: "Explain Docker, ACR and AKS in your project."
+A:
+"We used Docker to package the application into a container image. Azure Container Registry was used as the private
+registry to store those images, and Azure Kubernetes Service was used to run and orchestrate the containers. The pipeline
+builds the image, pushes it to ACR and then deploys the required image version to AKS."
+------------------------------------------------------------------------------------------------------------------
+Q: "How did you provision the Azure infrastructure?"
+A:
+"We used Terraform for infrastructure provisioning. The Terraform code was maintained in Git and executed through Azure
+DevOps pipelines. We validated the code, performed security checks, reviewed the Terraform plan and then applied the
+approved changes to the required environment."
+------------------------------------------------------------------------------------------------------------------
+Q: "How did you deploy the same application across multiple environments?"
+A:
+"We maintained environment-specific deployment configuration while keeping the overall deployment process consistent.
+The release was promoted through DEV, QA and UAT, followed by the required production approval before deploying to PROD."
+------------------------------------------------------------------------------------------------------------------
+Q: "What did you do after deployment?"
+A:
+"After deployment, I validated the pipeline status, Kubernetes deployment, pod health and application availability. If
+there was an issue, I checked the deployment logs, pod status, container logs and Kubernetes events and worked with the
+application team when the issue was application-related."
+------------------------------------------------------------------------------------------------------------------
+Q: "How did you troubleshoot a failed deployment?"
+A:
+"I first identified which layer was failing. I checked the pipeline logs, Kubernetes deployment status, pod status,
+container logs and Kubernetes events. I also checked configuration or secret-related issues. Once the root cause was
+identified, we either corrected the issue and redeployed or rolled back to the previous stable version."
+------------------------------------------------------------------------------------------------------------------
+Q: "What happens if a production deployment fails?"
+A:
+"We first assess the impact and identify the root cause. If the issue can be safely corrected, we fix the configuration
+or deployment and redeploy. If the release cannot be safely fixed within the release window, we roll back to the previous
+stable version and validate the application before considering the production issue resolved."
+------------------------------------------------------------------------------------------------------------------
+Q: "How much do you understand about the application?"
+A:
+"I understand the application from the deployment and runtime perspective. I know what the application does, what
+components I need to deploy, how those components are packaged and deployed, and what dependencies or configuration are
+required for the application to run. The detailed application business logic and development are handled by the
+development team."
+------------------------------------------------------------------------------------------------------------------
+Q: "Why do you need to understand the business flow as a DevOps Engineer?"
+A:
+"I don't need to understand the business logic at the developer level, but I need to understand the high-level business
+flow because it helps me understand what the application is doing, what functionality is affected during an incident and
+what needs to be validated after a deployment. It also helps me communicate effectively with developers and QA during
+production issues."
+------------------------------------------------------------------------------------------------------------------
+Q: "What is the main business flow?"
+A:
+"At a high level, a policyholder reports an incident and submits a claim. The application registers the claim and performs
+the required validation and processing. Based on the claim decision, it moves towards settlement if approved or closure if
+it is not approved. My responsibility is to deploy and maintain the application infrastructure supporting this workflow."
+
+
+
+==================================================================================================================
+
+
+
+
+
+

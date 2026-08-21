@@ -321,6 +321,212 @@ Use Cases
 Consumer applications only.
 
 
+
+
+
+
+
+=========================================
+AZURE SERVICE PRINCIPAL (AZURE CLI)
+=========================================
+
+Create Service Principal
+
+az ad sp create-for-rbac --name "gitlab-terraform-sp" --role Contributor --scopes /subscriptions/<SUBSCRIPTION_ID>
+
+Example
+
+az ad sp create-for-rbac --name "gitlab-terraform-sp" --role Contributor --scopes /subscriptions/a8c86d5d-e77e-4744-9758-f7cc3b1f2f9b
+
+---------------------------------------------------------
+Output
+---------------------------------------------------------
+
+appId        → ARM_CLIENT_ID
+password     → ARM_CLIENT_SECRET
+tenant       → ARM_TENANT_ID
+Subscription → ARM_SUBSCRIPTION_ID
+
+---------------------------------------------------------
+Verify Service Principal
+---------------------------------------------------------
+
+az ad sp list --display-name "gitlab-terraform-sp" --output table
+
+---------------------------------------------------------
+Generate New Client Secret (Rotate Secret)
+---------------------------------------------------------
+
+az ad app credential reset --id <APP_ID>
+
+Example
+
+az ad app credential reset --id 110ad3bf-ffed-4a06-948b-0a629d0ead83
+
+---------------------------------------------------------
+Delete Service Principal
+---------------------------------------------------------
+
+az ad sp delete --id <APP_ID>
+
+Example
+
+az ad sp delete --id 110ad3bf-ffed-4a06-948b-0a629d0ead83
+
+---------------------------------------------------------
+GitLab CI/CD Variables
+---------------------------------------------------------
+
+ARM_CLIENT_ID         = appId
+ARM_CLIENT_SECRET     = password
+ARM_TENANT_ID         = tenant
+ARM_SUBSCRIPTION_ID   = Azure Subscription ID
+
+
+
+
+
+=========================================
+GITLAB SERVICE PRINCIPAL - REQUIRED ROLES
+=========================================
+
+1. Contributor
+---------------------------------------------------------
+Scope : Subscription / Resource Group
+
+Purpose
+- Create, Update and Delete Azure Resources
+- Resource Group
+- Virtual Network
+- Subnet
+- NSG
+- Public IP
+- NIC
+- Virtual Machine
+- Load Balancer
+- etc.
+
+Azure CLI
+
+az ad sp create-for-rbac --name "gitlab-terraform-sp" --role Contributor --scopes /subscriptions/<SUBSCRIPTION_ID>
+
+=========================================================
+
+2. Key Vault Secrets User (Recommended)
+---------------------------------------------------------
+Scope : Azure Key Vault
+
+Purpose
+- Read Secrets from Azure Key Vault
+- Required when Terraform uses data.azurerm_key_vault_secret
+
+Permissions
+✔ Get Secrets
+✔ List Secrets
+✖ Cannot Create/Delete Secrets
+
+Azure Portal
+
+Key Vault
+→ Access Control (IAM)
+→ Add Role Assignment
+→ Role : Key Vault Secrets User
+→ Member : gitlab-terraform-sp
+
+=========================================================
+
+Learning/Lab
+---------------------------------------------------------
+Role : Key Vault Administrator
+
+Purpose
+- Full access to Key Vault
+- Can Read, Create, Update and Delete Secrets
+
+⚠ Good for Learning
+❌ Not Recommended for Production
+
+=========================================================
+
+Production Best Practice
+---------------------------------------------------------
+Subscription / Resource Group
+→ Contributor
+
+Key Vault
+→ Key Vault Secrets User
+
+(Least Privilege Principle)
+
+
+
+=========================================
+AZURE SERVICE PRINCIPAL - ROLE ASSIGNMENTS
+=========================================
+
+1. Create Service Principal (Contributor)
+
+az ad sp create-for-rbac --name "gitlab-terraform-sp" --role "Contributor" --scopes /subscriptions/<SUBSCRIPTION_ID>
+
+Example
+
+az ad sp create-for-rbac --name "gitlab-terraform-sp" --role "Contributor" --scopes /subscriptions/a8c86d5d-e77e-4744-9758-f7cc3b1f2f9b
+
+=========================================================
+KEY VAULT ACCESS (For Terraform / GitLab CI/CD)
+=========================================================
+
+Production Recommended Role
+
+Role : Key Vault Secrets User
+
+Purpose
+- Read Secrets from Azure Key Vault
+- Required when Terraform uses data.azurerm_key_vault_secret
+- Follows Least Privilege Principle
+
+Azure CLI
+
+az role assignment create --assignee <APP_ID> --role "Key Vault Secrets User" --scope <KEY_VAULT_RESOURCE_ID>
+
+Example
+
+az role assignment create --assignee 110ad3bf-ffed-4a06-948b-0a629d0ead83 --role "Key Vault Secrets User" --scope "/subscriptions/a8c86d5d-e77e-4744-9758-f7cc3b1f2f9b/resourceGroups/Terraform-RG/providers/Microsoft.KeyVault/vaults/kv-web-security"
+
+=========================================================
+LEARNING / LAB
+=========================================================
+
+Role : Key Vault Administrator
+
+Purpose
+- Full access to Azure Key Vault
+- Can Read, Create, Update and Delete Secrets
+
+Azure CLI
+
+az role assignment create --assignee <APP_ID> --role "Key Vault Administrator" --scope <KEY_VAULT_RESOURCE_ID>
+
+Example
+
+az role assignment create --assignee 110ad3bf-ffed-4a06-948b-0a629d0ead83 --role "Key Vault Administrator" --scope "/subscriptions/a8c86d5d-e77e-4744-9758-f7cc3b1f2f9b/resourceGroups/Terraform-RG/providers/Microsoft.KeyVault/vaults/kv-web-security"
+
+=========================================================
+PRODUCTION BEST PRACTICE
+=========================================================
+
+Subscription / Resource Group
+→ Contributor
+
+Azure Key Vault
+→ Key Vault Secrets User
+
+Learning / Lab
+→ Contributor
+→ Key Vault Administrator
+
+
+
 ==========================================================================================================
 Redirect URI
 ==========================================================================================================

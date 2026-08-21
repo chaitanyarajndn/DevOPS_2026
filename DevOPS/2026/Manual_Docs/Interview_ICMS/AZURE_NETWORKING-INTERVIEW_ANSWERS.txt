@@ -1,0 +1,445 @@
+============================================================
+AZURE_NETWORKING-INTERVIEW_ANSWERS
+============================================================
+
+01. AZURE VIRTUAL NETWORK (VNET)
+------------------------------------------------------------
+What    : Azure VNet is my private network boundary in Azure.
+Why     : Used to define IP ranges, subnets and communication
+          between Azure resources.
+Example : Web, App and DB resources can be placed inside a VNet.
+
+INTERVIEW LINE:
+"VNet is basically the network foundation of my Azure environment."
+
+
+02. SUBNET
+------------------------------------------------------------
+What    : A subnet is a logical segment inside a VNet.
+Why     : Used to separate different workloads and apply
+          different network controls.
+Example : Web subnet, App subnet, DB subnet, Management subnet.
+
+INTERVIEW LINE:
+"VNet is the overall network, while subnets divide it into
+logical sections."
+
+
+03. IP ADDRESSING
+------------------------------------------------------------
+What    : IP addressing gives a resource its network identity.
+Types   : Private IP / Public IP
+Why     : Determines how a resource communicates and is reached.
+
+INTERVIEW LINE:
+"IP addressing defines how an Azure resource is identified
+and reached over the network."
+
+
+04. PUBLIC IP
+------------------------------------------------------------
+What    : Internet-routable IP address.
+Why     : Used when a resource needs internet-facing connectivity.
+Example : Load Balancer, Application Gateway, VPN Gateway,
+          Bastion.
+
+INTERVIEW LINE:
+"I use a Public IP when a resource needs an internet-reachable
+access path."
+
+
+05. PRIVATE IP
+------------------------------------------------------------
+What    : IP used for private network communication.
+Why     : Allows resources to communicate without exposing
+          them directly to the internet.
+Example : VM-to-VM communication inside a VNet.
+
+INTERVIEW LINE:
+"Private IP keeps the communication within the private network
+path."
+
+
+06. NETWORK INTERFACE (NIC)
+------------------------------------------------------------
+What    : Network Interface Card is the networking interface
+          attached to a VM.
+Why     : Connects the VM to a subnet and holds network settings.
+Contains: Private IP, Public IP association, NSG association etc.
+
+INTERVIEW LINE:
+"NIC is basically the network connection point of an Azure VM."
+
+
+07. NETWORK SECURITY GROUP (NSG)
+------------------------------------------------------------
+What    : NSG is a traffic filtering mechanism.
+Why     : Controls inbound and outbound network traffic.
+Applied : Subnet level / NIC level
+Works   : Mainly Layer 3 and Layer 4 traffic filtering.
+
+INTERVIEW LINE:
+"NSG provides basic network-level traffic control by allowing
+or denying inbound and outbound traffic."
+
+
+08. AZURE BASTION
+------------------------------------------------------------
+What    : Managed service for secure RDP/SSH access to VMs.
+Why     : Allows VM administration without exposing the VM
+          with its own Public IP.
+Used for: Secure VM management.
+
+INTERVIEW LINE:
+"Bastion gives me secure RDP or SSH access to private VMs
+without exposing those VMs directly to the internet."
+
+
+09. VNET PEERING
+------------------------------------------------------------
+What    : Connects two Azure VNets using private connectivity.
+Why     : Allows resources in different VNets to communicate.
+Example : Hub VNet ↔ Spoke VNet
+
+INTERVIEW LINE:
+"VNet Peering allows separate VNets to communicate using
+private network connectivity."
+
+
+10. AZURE LOAD BALANCER
+------------------------------------------------------------
+What    : Layer 4 load balancing service.
+Why     : Distributes TCP/UDP traffic across backend resources.
+Focus   : High availability + traffic distribution.
+
+INTERVIEW LINE:
+"Azure Load Balancer distributes network-level traffic across
+healthy backend instances."
+
+
+11. APPLICATION GATEWAY
+------------------------------------------------------------
+What    : Layer 7 web traffic load balancer.
+Why     : Routes HTTP/HTTPS traffic based on application-level
+          information.
+Features: URL-based routing, host-based routing, TLS termination,
+          WAF integration.
+
+INTERVIEW LINE:
+"Application Gateway understands web traffic, so I can route
+HTTP/HTTPS requests based on application-level rules."
+
+
+12. NAT GATEWAY
+------------------------------------------------------------
+What    : Managed outbound Network Address Translation service.
+Why     : Provides outbound internet access to private resources.
+Important:
+          Individual VMs do not need Public IPs for outbound access.
+Focus   : OUTBOUND connectivity.
+
+INTERVIEW LINE:
+"NAT Gateway provides controlled and predictable outbound
+internet connectivity for resources in a subnet."
+
+
+13. VPN GATEWAY
+------------------------------------------------------------
+What    : Managed VPN gateway for encrypted connectivity.
+Why     : Connects Azure with on-premises or other networks
+          over the internet.
+Example : Site-to-Site VPN
+
+INTERVIEW LINE:
+"VPN Gateway creates an encrypted tunnel between Azure and
+an external network over the internet."
+
+
+14. EXPRESSROUTE
+------------------------------------------------------------
+What    : Private connectivity between on-premises and Azure.
+Why     : Used when organizations need private, predictable
+          and reliable connectivity.
+Difference:
+          VPN Gateway     → Internet-based encrypted connection
+          ExpressRoute    → Private connectivity
+
+INTERVIEW LINE:
+"ExpressRoute provides private connectivity to Azure without
+sending the organization's traffic over the public internet."
+
+
+15. GATEWAY TRANSIT
+------------------------------------------------------------
+What    : Allows a peered VNet to use the gateway of another VNet.
+Common  : Hub-and-Spoke architecture.
+
+Example:
+
+ON-PREM
+   |
+VPN / EXPRESSROUTE
+   |
+HUB VNET
+   |
+VNET PEERING
+   |
+SPOKE VNET
+
+INTERVIEW LINE:
+"Gateway Transit allows spoke VNets to use the connectivity
+gateway deployed in the hub."
+
+
+16. USER DEFINED ROUTES (UDR)
+------------------------------------------------------------
+What    : Custom routes created by the administrator.
+Why     : Controls where network traffic should go.
+Example : Force traffic through Azure Firewall.
+
+Flow:
+
+APP SUBNET
+    |
+   UDR
+    |
+AZURE FIREWALL
+    |
+ INTERNET / OTHER NETWORK
+
+INTERVIEW LINE:
+"UDR allows me to define a custom traffic path instead of
+relying only on Azure's default routing."
+
+
+17. AZURE FIREWALL
+------------------------------------------------------------
+What    : Managed, centralized network security service.
+Why     : Controls and inspects network traffic.
+Used for: Centralized security, outbound control, network
+          segmentation and traffic inspection.
+
+INTERVIEW LINE:
+"Azure Firewall acts as a centralized security checkpoint
+for network traffic."
+
+
+18. AZURE DNS
+------------------------------------------------------------
+What    : DNS hosting service in Azure.
+Why     : Resolves domain names to IP addresses.
+Example : app.company.com → IP address
+
+INTERVIEW LINE:
+"Azure DNS allows applications and users to reach resources
+using names instead of directly using IP addresses."
+
+
+19. PRIVATE DNS ZONE
+------------------------------------------------------------
+What    : DNS zone used for private name resolution.
+Why     : Resolves private resources/services inside private
+          Azure networks.
+Common  : Private Endpoint scenarios.
+
+INTERVIEW LINE:
+"Private DNS Zone allows private services to be resolved
+using DNS names inside the private network."
+
+
+20. PUBLIC ENDPOINT
+------------------------------------------------------------
+What    : Internet-reachable endpoint of a service.
+Why     : Used when a service needs public accessibility.
+Security:
+          Should be protected using appropriate network and
+          application security controls.
+
+INTERVIEW LINE:
+"A public endpoint provides an internet-reachable access path
+to a service."
+
+
+21. SERVICE ENDPOINT
+------------------------------------------------------------
+What    : Extends VNet identity to supported Azure services.
+Why     : Allows subnet-based network restriction for services.
+Example : Storage Account, Azure SQL
+
+INTERVIEW LINE:
+"Service Endpoint allows a subnet to access supported Azure
+services while restricting access at the virtual network level."
+
+
+22. PRIVATE ENDPOINT
+------------------------------------------------------------
+What    : Provides a private IP from the VNet for an Azure service.
+Why     : Allows private access to services without relying
+          on their public endpoint.
+Example : Key Vault, Storage Account, Azure SQL
+
+INTERVIEW LINE:
+"Private Endpoint gives an Azure service a private IP inside
+my VNet, allowing private connectivity to that service."
+
+
+23. AZURE DDOS PROTECTION
+------------------------------------------------------------
+What    : Protection against Distributed Denial-of-Service attacks.
+Why     : Detects and mitigates abnormal traffic targeting
+          internet-facing resources.
+Focus   : Availability protection.
+
+INTERVIEW LINE:
+"DDoS Protection helps keep internet-facing applications
+available during large-scale malicious traffic attacks."
+
+
+24. WEB APPLICATION FIREWALL (WAF)
+------------------------------------------------------------
+What    : Application-layer security service.
+Why     : Protects web applications from common HTTP/HTTPS attacks.
+Layer   : Layer 7
+Common  : Application Gateway + WAF
+
+INTERVIEW LINE:
+"WAF protects the web application by inspecting HTTP and HTTPS
+requests and blocking malicious traffic."
+
+
+25. NETWORK WATCHER
+------------------------------------------------------------
+What    : Azure network monitoring and troubleshooting service.
+Why     : Helps identify network connectivity and routing issues.
+Useful  : IP Flow Verify, Connection Troubleshoot, NSG diagnostics.
+
+INTERVIEW LINE:
+"I use Network Watcher when I need to troubleshoot where
+network connectivity is failing."
+
+
+============================================================
+MOST IMPORTANT INTERVIEW DIFFERENCES
+============================================================
+
+NSG
+→ Basic traffic filtering
+→ Subnet / NIC level
+→ Mainly Layer 3/Layer 4
+
+AZURE FIREWALL
+→ Centralized network security
+→ Traffic inspection and control
+→ Can control traffic between network zones
+
+LOAD BALANCER
+→ Layer 4
+→ TCP / UDP
+→ Network-level traffic distribution
+
+APPLICATION GATEWAY
+→ Layer 7
+→ HTTP / HTTPS
+→ Web-aware routing
+
+WAF
+→ Layer 7 security
+→ Protects web applications
+
+NAT GATEWAY
+→ OUTBOUND internet connectivity
+→ Private resources can go to internet
+→ No individual Public IP required
+
+VPN GATEWAY
+→ Encrypted connectivity
+→ Uses internet
+
+EXPRESSROUTE
+→ Private connectivity
+→ Does not use public internet path
+
+BASTION
+→ Secure RDP / SSH
+→ VM management
+→ No Public IP required on the VM
+
+SERVICE ENDPOINT
+→ Subnet → Azure Service
+→ Uses Azure backbone
+→ Service remains accessed through its service endpoint
+
+PRIVATE ENDPOINT
+→ Azure Service gets a private IP in VNet
+→ Private connectivity
+→ Common with PaaS services
+
+
+============================================================
+ONE-LINE ARCHITECTURE STORY
+============================================================
+
+VNET
+ ↓
+SUBNET
+ ↓
+PRIVATE IP / NIC
+ ↓
+NSG
+ ↓
+┌──────────────────────────────────────────────┐
+│                                              │
+│  INBOUND WEB TRAFFIC                         │
+│       ↓                                      │
+│  Public IP                                   │
+│       ↓                                      │
+│  Application Gateway                         │
+│       ↓                                      │
+│  WAF                                         │
+│       ↓                                      │
+│  Application                                 │
+│                                              │
+├──────────────────────────────────────────────┤
+│                                              │
+│  OUTBOUND TRAFFIC                             │
+│       ↓                                      │
+│  UDR                                         │
+│       ↓                                      │
+│  Azure Firewall / NAT Gateway                 │
+│       ↓                                      │
+│  Internet                                    │
+│                                              │
+├──────────────────────────────────────────────┤
+│                                              │
+│  ON-PREMISES CONNECTIVITY                    │
+│       ↓                                      │
+│  VPN Gateway / ExpressRoute                   │
+│       ↓                                      │
+│  On-Premises                                 │
+│                                              │
+└──────────────────────────────────────────────┘
+
+PaaS PRIVATE ACCESS
+       ↓
+Private Endpoint
+       ↓
+Private DNS Zone
+       ↓
+Azure Service
+
+
+============================================================
+FINAL INTERVIEW LINE
+============================================================
+
+"If I explain the overall Azure network design, I start with
+the VNet and subnets, assign private addressing through NICs,
+and control traffic using NSGs. For application traffic I can
+use Load Balancer or Application Gateway depending on the
+required layer. For secure outbound traffic I can use NAT
+Gateway or Azure Firewall, while VPN Gateway or ExpressRoute
+handles connectivity with external networks. For private access
+to Azure services, I can use Private Endpoints with Private DNS.
+Finally, WAF, DDoS Protection and Network Watcher provide
+additional security and troubleshooting capabilities."
+============================================================

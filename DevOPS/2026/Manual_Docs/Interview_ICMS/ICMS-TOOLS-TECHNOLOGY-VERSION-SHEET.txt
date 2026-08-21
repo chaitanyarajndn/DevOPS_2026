@@ -1,0 +1,287 @@
+ICMS-TOOLS-TECHNOLOGY-VERSION-SHEET
+============================================================
+
+INFRASTRUCTURE / IaC
+------------------------------------------------------------
+
+Terraform CLI
+Project / previously locked version:
+    Terraform v1.15.6
+NOTE:
+    I am keeping your project-used version as v1.15.6.
+    Current public release information I could verify shows
+    Terraform v1.15.5 as the latest stable release on GitHub,
+    so v1.15.6 should be treated as YOUR PROJECT VERSION,
+    not claimed as the current public latest. 
+    [Source: HashiCorp Terraform releases]
+
+
+AzureRM Provider
+Project / previously locked version:
+    azurerm v4.80.0
+
+Current verified major line:
+    AzureRM Provider v5.x
+NOTE:
+    HashiCorp's changelog shows AzureRM Provider 5.0.0
+    released on July 27, 2026.
+    [Source: HashiCorp AzureRM changelog]
+
+TFLint
+Project / locked version:
+    TFLint v0.64.0
+
+Current verified latest:
+    v0.64.0
+    [Source: official TFLint GitHub releases]
+
+
+Checkov
+Project / locked version:
+    Checkov v3.3.8
+
+Current verified latest:
+    v3.3.8
+    Released July 9, 2026
+    [Source: PyPI / Checkov]
+
+
+Azure CLI
+Project version:
+    Not previously fixed by you
+
+Current verified release:
+    Azure CLI v2.89.1
+    Released August 12, 2026
+    [Source: Microsoft package repository / Azure CLI release history]
+
+
+AZURE PLATFORM
+------------------------------------------------------------
+
+Microsoft Azure
+    Cloud platform
+    No single "version"
+
+Azure Portal
+    Cloud management portal
+    No fixed project version
+
+Azure Resource Manager
+    Azure management plane
+    API-version based, not a single software version
+
+
+SOURCE CONTROL / CI-CD
+------------------------------------------------------------
+
+Git
+    Project version: NOT previously fixed
+
+    Git is versioned software, but we have not locked a
+    specific Git version for your ICMS project.
+
+GitHub
+    SaaS platform
+    No project "GitHub version" to quote
+
+GitHub Actions
+    CI/CD platform
+    No single overall version
+
+    Individual Actions are versioned separately, for example:
+    actions/checkout
+    docker/build-push-action
+    azure/login
+    etc.
+
+    We have NOT locked exact action versions for your ICMS project.
+
+
+GitLab
+    You have used GitLab
+    Exact GitLab version was NOT previously provided/locked.
+
+    GitLab is therefore listed as:
+    "Used / version not specified"
+
+IMPORTANT:
+    Current ICMS CI/CD story is GitHub Actions.
+    Do not present GitLab as the primary current ICMS CI/CD
+    platform unless you specifically want to discuss your
+    separate GitLab experience.
+
+
+APPLICATION STACK
+------------------------------------------------------------
+
+Angular
+    Project version:
+        NOT previously locked by you
+
+    Current supported release line:
+        Angular 22.x
+    [Source: Angular official version compatibility table]
+
+.NET / ASP.NET Core
+    Project version:
+        NOT previously locked by you
+
+    Current LTS:
+        .NET 10.0
+        Latest verified release:
+        .NET 10.0.10
+        Latest SDK:
+        10.0.302
+        [Source: Microsoft .NET official downloads]
+
+IMPORTANT:
+    Do NOT claim .NET 10 for your ICMS project unless you
+    confirm that your actual project uses .NET 10.
+    We only know the project uses .NET / ASP.NET Core.
+
+
+Docker
+    Project version:
+        NOT previously locked
+
+    Current version:
+        NOT locked in our ICMS project notes.
+
+NOTE:
+    Docker Engine / Docker Desktop / Docker CLI have different
+    versioning depending on what is being used, so we should not
+    invent a number.
+
+
+Kubernetes
+    Project version:
+        NOT previously locked
+
+    Current cluster version:
+        NOT provided by you.
+
+IMPORTANT:
+    AKS Kubernetes version is cluster-specific.
+    We should NOT invent a Kubernetes version for ICMS.
+
+
+Helm
+    Project version:
+        NOT previously locked
+
+    Current Helm version:
+        NOT fixed in your ICMS project context.
+
+IMPORTANT:
+    Do not quote a Helm version in interview unless your actual
+    environment version is confirmed.
+
+
+AKS
+    AKS itself is an Azure service, so there is no single
+    "AKS software version" to quote.
+
+    Important version:
+        Kubernetes version running in the cluster.
+
+    Your ICMS Kubernetes version:
+        NOT previously provided.
+
+
+SECURITY / QUALITY
+------------------------------------------------------------
+
+SonarQube
+    Project version:
+        NOT previously locked
+
+    Exact server version:
+        NOT provided by you.
+
+NOTE:
+    SonarQube is versioned by the installed server/edition,
+    so don't invent a version for your project.
+
+
+Monitoring
+------------------------------------------------------------
+
+Azure Monitor
+    Azure managed service
+    No single project software version
+
+Managed Prometheus
+    Azure managed capability
+    Cluster/service dependent
+
+Grafana
+    You mentioned Grafana in your broader monitoring stack,
+    but no specific ICMS project version was previously locked.
+
+
+CONTAINER REGISTRY
+------------------------------------------------------------
+
+ACR (Azure Container Registry)
+    Azure managed service
+    No fixed software version to quote
+
+
+DATABASE
+------------------------------------------------------------
+
+Database
+    ICMS database technology/version was NOT previously fixed.
+
+IMPORTANT:
+    Do not claim SQL Server / Azure SQL / PostgreSQL etc.
+    until the actual ICMS database is confirmed.
+
+
+TOOLS / VERSIONS WE SHOULD DEFINITELY REMEMBER
+------------------------------------------------------------
+
+Terraform
+    Your project version: v1.15.6
+
+AzureRM Provider
+    Your project version: v4.80.0
+
+TFLint
+    Your project version: v0.64.0
+
+Checkov
+    Your project version: v3.3.8
+
+Azure CLI
+    Current verified: v2.89.1
+
+.NET
+    Current LTS: 10.0
+    Project version: NOT CONFIRMED
+
+Angular
+    Current supported line: 22.x
+    Project version: NOT CONFIRMED
+
+Docker
+    Project version: NOT CONFIRMED
+
+Kubernetes / AKS
+    Project Kubernetes version: NOT CONFIRMED
+
+Helm
+    Project version: NOT CONFIRMED
+
+SonarQube
+    Project version: NOT CONFIRMED
+
+Git
+    Project version: NOT CONFIRMED
+
+GitHub Actions
+    Platform; individual action versions NOT CONFIRMED
+
+GitLab
+    Used separately; version NOT CONFIRMED

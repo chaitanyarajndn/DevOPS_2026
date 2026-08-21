@@ -295,11 +295,6 @@ End-to-End SSL → Gateway decrypt karta hai, inspect karta hai, fir dobara encr
 
 
 
-==============================================================================================================
-
-11. Web Application Firewall (WAF)
-
----
 
 ==============================================================================================================
 11. Web Application Firewall (WAF)
@@ -312,6 +307,7 @@ A Web Application Firewall (WAF) is a security feature that protects web applica
 Unlike a traditional firewall, which protects the network, WAF protects the web application itself by inspecting every HTTP/HTTPS request before it reaches the backend server.
 
 It identifies malicious requests and blocks them before they can reach the application.
+
 
 Why is WAF Needed?
 
@@ -412,9 +408,6 @@ Interview One-Liner:
 
 ==============================================================================================================
 
-12. Cookie-Based Session Affinity
-
----
 
 ==============================================================================================================
 12. Cookie-Based Session Affinity
@@ -483,9 +476,8 @@ Interview One-Liner:
 
 ==============================================================================================================
 
-13. HTTP to HTTPS Redirection
 
----
+
 
 ==============================================================================================================
 13. HTTP to HTTPS Redirection
