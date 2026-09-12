@@ -1,0 +1,418 @@
+
+
+
+AZURE DEVOPS — CREATE NEW AZURE SERVICE CONNECTION - WORKLOAD IDENTITY FEDERATION (WIF)
+
+===================================================
+Purpose:
+Azure DevOps Pipeline  --->  Azure
+                         |
+                         +--> Service Connection
+                         +--> Workload Identity Federation (WIF)
+                         +--> Existing App Registration / Service Principal
+
+================================================================================
+STEP 1 — OPEN AZURE DEVOPS ORGANIZATION
+================================================================================
+
+1. Open Azure DevOps
+2. Select your Organization
+
+   Example:
+   Organization = CloudNivara
+
+   URL:
+   https://dev.azure.com/cloudnivara
+
+                         |
+                         v
+================================================================================
+STEP 2 — SELECT / CREATE PROJECT
+================================================================================
+
+1. Select your Azure DevOps Project
+
+   Example:
+   Project = CloudNivara
+
+   Organization
+       |
+       +-- Project: CloudNivara
+              |
+              +-- Boards
+              +-- Repos
+              +-- Pipelines
+              +-- Project Settings
+
+                         |
+                         v
+================================================================================
+STEP 3 — PROJECT SETTINGS
+================================================================================
+
+1. Open the Project
+2. Bottom-left --> Project settings
+3. Under Pipelines section
+4. Select --> Service connections
+
+   Project
+      |
+      +-- Project Settings
+             |
+             +-- Pipelines
+                    |
+                    +-- Service connections
+
+                         |
+                         v
+================================================================================
+STEP 4 — CREATE SERVICE CONNECTION
+================================================================================
+
+1. Click --> New service connection
+
+2. Select:
+   Azure Resource Manager
+
+3. Click:
+   Next
+
+   DO NOT select:
+   - Docker Registry
+   - GitHub
+   - Kubernetes
+   - Generic
+   etc.
+
+   For Azure resource deployment:
+   ---> Azure Resource Manager
+
+                         |
+                         v
+================================================================================
+STEP 5 — SELECT AUTHENTICATION METHOD
+================================================================================
+
+You will see options related to Azure authentication.
+
+Use:
+
+   Identity type:
+   ---> App registration or managed identity (manual)
+
+   Credential:
+   ---> Workload identity federation
+
+   Environment:
+   ---> Azure Cloud
+
+   Why?
+   We are using an EXISTING Service Principal/App Registration
+   and WIF instead of storing a Client Secret.
+
+                         |
+                         v
+================================================================================
+STEP 6 — ENTER AZURE DETAILS
+================================================================================
+
+
+Use your EXISTING App Registration / Service Principal.
+
+Azure Subscription:
+   Subscription name:
+   ---> <YOUR AZURE SUBSCRIPTION NAME>
+
+   Subscription ID:
+   ---> a8c86d5d-e77e-4744-9758-f7cc3b1f2f9b
+
+   Tenant ID:
+   ---> 753f6bb3-2161-49b9-9591-ae1a80b3f24a
+
+   Service Principal / Client ID:
+   ---> 110ad3bf-ffed-4a06-948b-0a629d0ead83
+
+   Client Secret:
+   ---> NOT REQUIRED
+
+   Authentication:
+   ---> Workload Identity Federation
+
+IMPORTANT:
+		Subscription Name → Azure Portal mein jis naam se subscription listed hai
+		Subscription ID   → Usi subscription ki unique ID
+
+		Both belong to the same Azure subscription.
+
+Example:
+
+Subscription Name
+→ Chaitanya_Raj
+
+Subscription ID
+→ a8c86d5d-e77e-4744-9758-f7cc3b1f2f9b
+
+================================================================================
+
+   IMPORTANT:
+   Client Secret is NOT required when using WIF.
+
+                         |
+                         v
+================================================================================
+STEP 7 — SCOPE
+================================================================================
+
+Select:
+
+   Scope level:
+   ---> Subscription
+
+Then select your required:
+
+   Subscription
+   ---> Your Azure Subscription
+
+Resource Group scope is NOT required for our current setup.
+
+Why Subscription?
+   Terraform may create/manage multiple Azure resources,
+   so Subscription scope keeps the setup simple.
+
+                         |
+                         v
+================================================================================
+STEP 8 — SERVICE CONNECTION NAME
+================================================================================
+
+Give the connection a meaningful name.
+
+Example used in our setup:
+
+   CloudNivara-AzureDevOps-WIF
+
+This name is important because YAML will reference this name.
+
+Example:
+
+   azureSubscription: 'CloudNivara-AzureDevOps-WIF'
+
+IMPORTANT:
+The YAML name must EXACTLY match the Service Connection name.
+
+                         |
+                         v
+================================================================================
+STEP 9 — SAVE / VERIFY
+================================================================================
+
+1. Click --> Verify and save
+
+2. Azure DevOps will test:
+      Azure DevOps
+           |
+           v
+      WIF authentication
+           |
+           v
+      Microsoft Entra ID
+           |
+           v
+      Existing App Registration
+           |
+           v
+      Azure Subscription
+
+3. Expected result:
+      Verification succeeded
+
+4. Save the Service Connection.
+
+                         |
+                         v
+================================================================================
+STEP 10 — AZURE PORTAL: FEDERATED CREDENTIAL
+================================================================================
+
+For manual WIF setup, Azure Portal must also trust Azure DevOps.
+
+Go to:
+
+   Azure Portal
+      |
+      +-- Microsoft Entra ID
+             |
+             +-- App registrations
+                    |
+                    +-- Your existing App Registration
+                           |
+                           +-- Certificates & secrets
+                                  |
+                                  +-- Federated credentials
+
+                         |
+                         v
+================================================================================
+STEP 11 — ADD FEDERATED CREDENTIAL
+================================================================================
+
+Click:
+
+   Add credential
+
+Select:
+
+   ---> Other issuer
+
+Now Azure DevOps provides the required:
+
+   Issuer
+   Subject identifier
+
+COPY these EXACT values from Azure DevOps.
+
+Audience:
+
+   api://AzureADTokenExchange
+
+Name:
+
+   CloudNivara-AzureDevOps-WIF
+
+Then:
+
+   Add
+
+IMPORTANT:
+Do NOT manually invent Issuer or Subject values.
+Use the exact values generated/provided by Azure DevOps.
+
+                         |
+                         v
+================================================================================
+STEP 12 — FINAL CONNECTION
+================================================================================
+
+Your final setup looks like this:
+
+   Azure DevOps Organization
+          |
+          v
+   Project: CloudNivara
+          |
+          v
+   Project Settings
+          |
+          v
+   Service Connections
+          |
+          v
+   CloudNivara-AzureDevOps-WIF
+          |
+          |  Workload Identity Federation
+          v
+   Microsoft Entra ID
+          |
+          v
+   Existing App Registration
+   Client ID:
+   110ad3bf-ffed-4a06-948b-0a629d0ead83
+          |
+          v
+   Federated Credential
+          |
+          v
+   Azure Subscription
+          |
+          v
+   Azure Resources
+
+
+================================================================================
+IMPORTANT OPTIONS — WHAT TO SELECT
+================================================================================
+
+Azure Resource Manager       ---> YES
+Identity type                ---> App registration or managed identity (manual)
+Credential                   ---> Workload identity federation
+Environment                 ---> Azure Cloud
+Scope level                 ---> Subscription
+Client Secret               ---> NO
+New App Registration        ---> NO (we used existing one)
+Federated Credential        ---> YES
+Audience                    ---> api://AzureADTokenExchange
+Service Connection Name     ---> CloudNivara-AzureDevOps-WIF
+Verify and Save             ---> YES
+
+
+================================================================================
+WHAT WE USED IN THIS CHAT
+================================================================================
+
+Organization        = CloudNivara
+Project             = CloudNivara
+Service Connection  = CloudNivara-AzureDevOps-WIF
+
+Identity Type       = App registration or managed identity (manual)
+Credential          = Workload identity federation
+Environment         = Azure Cloud
+Scope               = Subscription
+
+Existing App Registration:
+   Name             = gitlab-terraform-sp
+   Client ID        = 110ad3bf-ffed-4a06-948b-0a629d0ead83
+
+Tenant ID            = 753f6bb3-2161-49b9-9591-ae1a80b3f24a
+Subscription ID      = a8c86d5d-e77e-4744-9758-f7cc3b1f2f9b
+
+Federated Credential:
+   Name             = CloudNivara-AzureDevOps-WIF
+   Audience         = api://AzureADTokenExchange
+
+================================================================================
+FINAL FLOW
+================================================================================
+
+Organization
+   |
+   v
+Project
+   |
+   v
+Project Settings
+   |
+   v
+Pipelines
+   |
+   v
+Service Connections
+   |
+   v
+New service connection
+   |
+   v
+Azure Resource Manager
+   |
+   v
+App registration / managed identity (manual)
+   |
+   v
+Workload Identity Federation
+   |
+   v
+Azure Cloud
+   |
+   v
+Subscription
+   |
+   v
+Verify + Save
+   |
+   v
+Azure Portal --> App Registration --> Federated credentials
+   |
+   v
+Add exact Issuer + Subject + Audience
+   |
+   v
+DONE

@@ -1,0 +1,368 @@
+============================================================
+IDENTITY & ACCESS MANAGEMENT — FUNDAMENTAL CONCEPTS
+============================================================
+
+IAM = Identity and Access Management.
+
+Simple meaning:
+→ Makes sure the RIGHT person, machine, or software gets access
+  to the RIGHT resource at the RIGHT time.
+
+Basic flow:
+Identity
+   ↓
+Authentication
+   ↓
+Authorization
+   ↓
+Resource Access
+
+============================================================
+WHAT DOES IAM DO?
+============================================================
+
+IAM mainly provides:
+
+→ Identity Management
+   → Create, store, and manage identity information.
+
+→ Identity Federation
+   → Allows users to use an identity/password they already have
+     with another organization or identity provider.
+
+→ Provisioning / Deprovisioning
+   → Create/manage user accounts and assign required access.
+   → Remove access when it is no longer needed.
+
+→ Authentication
+   → Check whether a person, machine, or software is really
+     who/what they claim to be.
+
+→ Authorization
+   → Decide what access that identity is allowed to have.
+
+→ Access Control
+   → Define who/what can access which resources.
+
+→ Reports & Monitoring
+   → Track things like sign-in time, resources accessed,
+     and authentication method.
+
+============================================================
+DIGITAL IDENTITY
+============================================================
+
+Digital Identity = Information that represents a person,
+machine, software, asset, or resource in a system.
+
+An identifier can be:
+→ Email address
+→ Username / Password
+→ Bank account number
+→ Government ID
+→ MAC address
+→ IP address
+
+Identity is used to:
+→ Authenticate
+→ Authorize
+→ Access resources
+→ Communicate
+→ Perform transactions
+
+============================================================
+4 TYPES OF IDENTITIES
+============================================================
+
+1. Human Identity
+   → Represents people.
+   → Employees, customers, consultants, vendors, partners.
+
+2. Workload Identity
+   → Represents software workloads.
+   → Application, service, script, container.
+
+3. Device Identity
+   → Represents devices.
+   → Laptop, mobile phone, IoT sensor, managed device.
+
+4. Agent Identity
+   → Represents AI agents that work autonomously
+     or on behalf of users.
+
+============================================================
+AUTHENTICATION — AuthN
+============================================================
+
+Authentication = Proving WHO or WHAT you are.
+
+It checks credentials provided by:
+→ Person
+→ Machine
+→ Software
+
+Examples:
+→ Username + Password
+→ Fingerprint
+→ Certificate
+→ One-Time Passcode (OTP)
+
+Simple:
+
+User
+ ↓
+Provides credentials
+ ↓
+System verifies identity
+ ↓
+Authentication successful
+
+============================================================
+MULTIFACTOR AUTHENTICATION — MFA
+============================================================
+
+MFA = More than one piece of evidence is required
+to verify identity.
+
+3 common types:
+
+→ Something you KNOW
+   → Password
+
+→ Something you HAVE
+   → Badge / device
+
+→ Something you ARE
+   → Fingerprint / face
+
+Example:
+
+Password
+   +
+Fingerprint
+   ↓
+MFA successful
+
+============================================================
+SINGLE SIGN-ON — SSO
+============================================================
+
+SSO = Sign in once and then access multiple resources
+without signing in separately to each one.
+
+Example:
+
+User
+ ↓
+Login once
+ ↓
+Application A
+Application B
+Application C
+
+Instead of:
+
+Login → App A
+Login → App B
+Login → App C
+
+The IAM system becomes the central identity source
+for those resources.
+
+============================================================
+AUTHORIZATION — AuthZ
+============================================================
+
+Authorization = Deciding WHAT an identity is allowed to access.
+
+Authentication:
+→ "Who are you?"
+
+Authorization:
+→ "What are you allowed to access?"
+
+Example:
+
+User
+ ↓
+Authentication successful
+ ↓
+Authorization
+ ↓
+Can access Storage Account
+ ↓
+Cannot access another restricted resource
+
+============================================================
+AUTHENTICATION vs AUTHORIZATION
+============================================================
+
+Authentication                  Authorization
+──────────────────────          ──────────────────────
+"Who are you?"                   "What can you access?"
+Proves identity                 Grants/denies access
+Uses credentials                Checks permissions
+Happens first                   Happens after authentication
+ID Token                        Access Token
+Often OIDC / SAML               Often OAuth 2.0
+
+Simple memory:
+
+AUTHENTICATION
+→ Identity check
+
+AUTHORIZATION
+→ Permission check
+
+============================================================
+HOTEL EXAMPLE
+============================================================
+
+Authentication:
+
+You arrive at hotel
+      ↓
+Show ID
+      ↓
+Reception verifies you
+      ↓
+Identity confirmed
+
+Authorization:
+
+Hotel gives you a keycard
+      ↓
+Keycard opens your room
+      ↓
+Keycard opens permitted areas
+      ↓
+Other rooms → ACCESS DENIED
+
+So:
+
+ID Card
+→ Authentication
+→ "You are this person."
+
+Keycard
+→ Authorization
+→ "You can access these areas."
+
+============================================================
+PERMISSION vs ROLE
+============================================================
+
+Permission
+→ Individual access right.
+
+Example:
+→ Access a specific room.
+
+Role
+→ Collection of permissions.
+
+Example:
+
+Hotel Patron Role
+→ Access assigned room
+→ Access exercise room
+
+Hotel Room Service Role
+→ Access guest rooms
+→ Access laundry room
+→ Access supply closets
+→ Access only during allowed hours
+
+============================================================
+IDENTITY PROVIDER — IdP
+============================================================
+
+Identity Provider (IdP)
+→ System that creates, maintains, and manages identities.
+
+It provides:
+→ Authentication
+→ Authorization
+→ Auditing
+
+Modern authentication:
+
+User
+ ↓
+Central Identity Provider
+ ↓
+Authentication
+ ↓
+Application / Resource
+
+Instead of every application managing identity separately,
+a central Identity Provider manages identity information.
+
+============================================================
+WHY USE A CENTRAL IDENTITY PROVIDER?
+============================================================
+
+Central Identity Provider allows organizations to:
+
+→ Create authentication policies
+→ Create authorization policies
+→ Monitor user behavior
+→ Detect suspicious activity
+→ Reduce malicious attacks
+
+Microsoft Entra is an example of a cloud-based
+Identity Provider.
+
+============================================================
+QUICK REVISION
+============================================================
+
+IAM
+→ Manage identity + access.
+
+Identity
+→ Represents a person, machine, software, device, etc.
+
+Authentication
+→ "Who are you?"
+
+Authorization
+→ "What can you access?"
+
+MFA
+→ More than one proof of identity.
+
+SSO
+→ Login once, access multiple resources.
+
+Access Control
+→ Decides who/what can access which resource.
+
+Identity Provider
+→ Central system that manages identity and access.
+
+============================================================
+INTERVIEW ANSWER
+============================================================
+
+Q: What is IAM?
+
+Ans:
+IAM is a system used to make sure the right people, machines,
+and software get access to the right resources at the right
+time. It handles identity management, authentication,
+authorization, access control, and monitoring.
+
+Q: Authentication vs Authorization?
+
+Ans:
+Authentication verifies who the user or workload is.
+Authorization decides what that identity is allowed to access.
+
+Q: What is an Identity Provider?
+
+Ans:
+An Identity Provider is a system that manages identities and
+provides authentication, authorization, and auditing services.
+Microsoft Entra is an example of a cloud-based Identity Provider.
+============================================================

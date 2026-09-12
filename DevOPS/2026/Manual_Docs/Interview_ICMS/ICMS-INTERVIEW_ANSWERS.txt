@@ -81,15 +81,15 @@ APPLICATION GATEWAY
   v
 AKS
   |
-  +-----------------------+
-  |                       |
-  v                       v
-NODE 1                  NODE 2
-  |                       |
-  +---------+---------+   +---------+---------+
-  |                   |   |                   |
-  v                   v   v                   v
-Angular Pod        .NET Pod  Angular Pod     .NET Pod
+  +--------------------------------------+
+  |                                      |
+  v                                      v
+NODE 1                                NODE 2
+  |                                      |
+  +---------+---------+        +---------+---------+
+  |                   |        |                   |
+  v                   v        v                   v
+Angular Pod        .NET Pod  Angular Pod       .NET Pod
                            |
                            v
                     KUBERNETES SERVICE

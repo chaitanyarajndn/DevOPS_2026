@@ -1,0 +1,157 @@
+
+══════════════════════════════════════════════════════════════════════════════════════
+AZURE LANDING ZONE — DESIGN PRINCIPLES
+══════════════════════════════════════════════════════════════════════════════════════
+
+1. SUBSCRIPTION DEMOCRATIZATION
+──────────────────────────────────────────────────────────────────────────────────────
+What is it?
+→ Application teams should be able to manage their own Azure subscriptions.
+→ Platform team does not manage every application resource.
+→ Platform team sets common security and governance rules.
+
+Example:
+Platform Team → Governance / Security / Network / Policies
+                     ↓
+Application Subscription → App Team manages its resources
+
+Simple:
+→ App team gets freedom.
+→ Platform team controls the common rules.
+
+Interview:
+"Subscription democratization means giving application teams control over
+their subscriptions while keeping common security and governance rules."
+
+
+2. POLICY-DRIVEN GOVERNANCE
+──────────────────────────────────────────────────────────────────────────────────────
+What is it?
+→ Use Azure Policy to define and enforce rules in Azure.
+→ These rules can be applied to multiple subscriptions.
+
+Examples:
+→ Allow resources only in approved regions.
+→ Require specific tags.
+→ Require encryption.
+→ Stop creation of unwanted resources.
+
+Flow:
+Management Group
+      ↓
+Azure Policy
+      ↓
+Subscriptions
+      ↓
+Resources
+
+Simple:
+→ Instead of checking every resource manually, Azure Policy checks the rules.
+
+Interview:
+"Policy-driven governance means using Azure Policy to apply common
+security, compliance and governance rules."
+
+
+3. SINGLE CONTROL & MANAGEMENT PLANE
+──────────────────────────────────────────────────────────────────────────────────────
+What is it?
+→ Azure Resource Manager (ARM) is the common management layer for Azure.
+
+We can use:
+→ Azure Portal
+→ Azure CLI
+→ PowerShell
+→ Terraform
+→ Bicep
+
+All of these manage Azure resources through Azure's management layer.
+
+Example:
+Terraform
+   ↓
+Azure Resource Manager
+   ↓
+Azure Resources
+
+Simple:
+→ Different tools can be used, but Azure has a common way to manage resources.
+
+Interview:
+"Azure Resource Manager provides a common management layer for Azure resources."
+
+
+4. APPLICATION-CENTRIC SERVICE MODEL
+──────────────────────────────────────────────────────────────────────────────────────
+What is it?
+→ Design the environment according to the application's requirements.
+→ Do not design everything as separate resources without considering the
+  complete application.
+
+Example:
+
+                 ICMS APPLICATION
+                       │
+          ┌────────────┼────────────┐
+          ↓            ↓            ↓
+       Compute      Database      Storage
+          │
+         AKS
+          │
+   Network + Security + Monitoring
+
+Simple:
+→ First understand the application.
+→ Then decide its compute, network, storage, security and monitoring needs.
+
+Interview:
+"Application-centric design means designing infrastructure based on the
+requirements of the application or workload."
+
+
+5. AZURE-NATIVE DESIGN & ROADMAP
+──────────────────────────────────────────────────────────────────────────────────────
+What is it?
+→ Prefer Azure services when Azure already provides the required capability.
+→ Use other tools when they provide something we need.
+
+Examples:
+
+Identity          → Microsoft Entra ID
+Governance        → Azure Policy
+Secrets           → Azure Key Vault
+Monitoring        → Azure Monitor
+Logs              → Log Analytics
+Network Security  → Azure Firewall
+DDoS Protection   → Azure DDoS Protection
+Kubernetes        → AKS
+Container Images  → Azure Container Registry (ACR)
+
+Simple:
+→ If Azure has a good built-in service for something, prefer it.
+→ But third-party tools can still be used when required.
+
+
+══════════════════════════════════════════════════════════════════════════════════════
+QUICK REVISION
+══════════════════════════════════════════════════════════════════════════════════════
+
+Subscription Democratization → App teams manage their subscriptions.
+Policy-Driven Governance     → Azure Policy applies common rules.
+Single Control Plane         → Azure Resource Manager manages Azure resources.
+Application-Centric Model    → Design according to application requirements.
+Azure-Native Design          → Prefer Azure services where suitable.
+
+Memory:
+S → P → C → A → A
+══════════════════════════════════════════════════════════════════════════════════════
+
+
+
+
+
+
+
+
+
+

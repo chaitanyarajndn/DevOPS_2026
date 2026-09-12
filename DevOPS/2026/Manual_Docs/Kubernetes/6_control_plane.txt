@@ -44,7 +44,7 @@ The Control Plane is responsible for making these decisions.
 
 The Control Plane can:
 
-• Accept deployment requests.
+• Accept deployment requests / API Request.
 • Decide where a Pod should run.
 • Monitor the overall Cluster.
 • Detect failed Worker Nodes.

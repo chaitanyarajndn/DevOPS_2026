@@ -1,0 +1,1008 @@
+════════════════════════════════════════════════════════════════════════════════════════
+AZURE GOVERNANCE — BASIC UNDERSTANDING
+════════════════════════════════════════════════════════════════════════════════════════
+1. WHAT IS AZURE GOVERNANCE?
+   → Azure Governance = Rules + Controls + Standards used to manage Azure resources
+     consistently across an organization.
+   → It controls:
+      → WHO can access resources
+      → WHAT resources/configurations are allowed
+      → WHERE resources can be deployed
+      → HOW resources should be configured
+      → HOW cost and compliance should be managed
+   → Main goal:
+      → Secure Azure environment
+      → Consistent configuration
+      → Controlled access
+      → Cost control
+      → Compliance
+      → Standardized resource deployment
+────────────────────────────────────────────────────────────────────────────────────────
+2. SIMPLE ENTERPRISE EXAMPLE
+   Company has:
+      Tenant
+       ↓
+      Landing Zones Management Group
+       ├── Prod Subscription
+       ├── Dev Subscription
+       └── Lab Subscription
+   Organization defines:
+      → Prod resources only in approved regions
+      → Mandatory Environment/Owner/CostCenter tags
+      → Public IP restricted
+      → Encryption required
+      → Access must follow RBAC standards
+      → Production privileged access should use PIM
+      → Budget and cost alerts required
+   → Defining + applying + monitoring these rules = GOVERNANCE
+────────────────────────────────────────────────────────────────────────────────────────
+3. MAIN AREAS OF AZURE GOVERNANCE
+   AZURE GOVERNANCE
+   │
+   ├── Management Groups
+   │    → Organize subscriptions into hierarchy
+   │
+   ├── Azure Policy
+   │    → Define/enforce resource rules
+   │
+   ├── Initiatives
+   │    → Group multiple policies
+   │
+   ├── Resource Locks
+   │    → Protect resources from accidental changes/deletion
+   │
+   ├── Tagging
+   │    → Standardize resource identification and cost tracking
+   │
+   ├── Region Governance
+   │    → Control approved Azure regions
+   │
+   ├── Resource Type Governance
+   │    → Restrict unwanted resource types/services
+   │
+   ├── Network Governance
+   │    → Enforce approved network patterns and restrictions
+   │
+   ├── Security Governance
+   │    → Enforce security standards and configurations
+   │
+   ├── Cost Governance
+   │    → Budgets, alerts and cost monitoring
+   │
+   └── Compliance
+        → Ensure organizational/regulatory requirements are followed
+────────────────────────────────────────────────────────────────────────────────────────
+4. WHERE DO RBAC AND PIM FIT?
+   → RBAC and PIM are primarily Identity & Access Management topics.
+   → They are NOT exclusively Governance features.
+   → Governance uses them as part of ACCESS GOVERNANCE.
+   RBAC:
+      → WHO can access?
+      → WHAT can they do?
+      → At WHICH scope?
+   PIM:
+      → WHO gets privileged access?
+      → WHEN can they get it?
+      → FOR HOW LONG?
+   Example:
+      Developer → Reader → Prod Subscription
+      DevOps    → Contributor → Prod Subscription
+      Admin     → Privileged access through PIM
+   → Identity & Access = primary area
+   → Governance = organizational control/standard around that access
+────────────────────────────────────────────────────────────────────────────────────────
+5. IMPORTANT INTERVIEW DISTINCTION
+   Management Groups
+      → Organize subscriptions + provide governance scope
+   Azure Policy
+      → WHAT is allowed/configured?
+   Azure RBAC
+      → WHO can do WHAT?
+   PIM
+      → HOW and WHEN privileged access is activated?
+   Resource Locks
+      → Can the resource be deleted/changed?
+   Cost Management
+      → HOW MUCH are we spending?
+────────────────────────────────────────────────────────────────────────────────────────
+6. ONE-LINE INTERVIEW ANSWER
+   Q: What is Azure Governance?
+   A: Azure Governance is the set of rules, controls and standards used to manage
+      Azure resources consistently, securely and within organizational requirements.
+────────────────────────────────────────────────────────────────────────────────────────
+7. OUR LEARNING FLOW
+   Management Groups
+        ↓
+   Azure Governance — What & Why
+        ↓
+   Azure Policy ⭐⭐⭐
+        ↓
+   Policy Definition
+        ↓
+   Policy Assignment
+        ↓
+   Policy Parameters
+        ↓
+   Policy Effects ⭐⭐⭐
+        ↓
+   Initiatives / Policy Sets ⭐⭐⭐
+        ↓
+   Policy Exemptions
+        ↓
+   Resource Locks
+        ↓
+   Tagging Governance
+        ↓
+   Region / Resource Type Governance
+        ↓
+   Network & Security Governance
+        ↓
+   Cost Governance
+        ↓
+   Compliance
+        ↓
+   Governance at Scale
+        ↓
+   Governance + Terraform
+════════════════════════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+AZURE GOVERNANCE — IMPORTANT BUILT-IN POLICIES
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+#   Policy                                      Effect                    Purpose                         Example
+01  Allowed locations                          Audit/Deny/Disabled       Region governance               East US, Central India
+02  Allowed locations for resource groups       Audit/Deny/Disabled       RG region governance           Central India
+03  Allowed resource types                      Audit/Deny/Disabled       Control resource types         Microsoft.Compute/virtualMachines
+04  Not allowed resource types                  Audit/Deny/Disabled       Block unwanted types           Microsoft.ClassicStorage/storageAccounts
+05  Allowed VM size SKUs                        Deny                      VM SKU/cost governance         Standard_D2s_v5, Standard_D4s_v5, Standard_D8s_v5
+06  Require a tag on resources                  Deny                      Mandatory resource tags        Environment
+07  Require a tag + value on resources          Deny                      Standard tag/value             Environment=Production
+08  Require a tag on resource groups             Deny                      Mandatory RG tags             CostCenter
+09  Require a tag + value on resource groups     Deny                      Standard RG tag/value         Environment=Production
+10  Add/replace a tag on resources               Modify                    Automatic tag governance       Environment=Production
+11  Add/replace a tag on resource groups         Modify                    Automatic RG tag governance   Environment=Production
+12  Storage accounts should restrict network     Audit/Deny/Disabled       Storage network security      Public network access restricted
+13  Storage public network access disabled       Audit/Deny/Disabled       Remove public exposure        Public network access = Disabled
+14  Storage accounts use private link            AuditIfNotExists/Disabled Private connectivity           Private Endpoint
+15  Secure transfer to storage enabled           Audit/Deny/Disabled       HTTPS-only storage            secureTransferRequired=true
+16  NICs should not have public IPs               Deny                      Prevent public exposure       NIC → No Public IP
+17  Subnets should have NSG                      AuditIfNotExists          Network security baseline     subnet → NSG association
+18  Key Vault public network access disabled     Audit/Deny/Disabled       Key Vault isolation           Public network access = Disabled
+19  Key Vault should use private link             Audit/Disabled            Private connectivity          Key Vault → Private Endpoint
+20  VM management ports restricted               AuditIfNotExists          SSH/RDP exposure              TCP 22 / TCP 3389 restricted
+21  VM extensions should be approved             Audit/Deny/Disabled       Extension governance          Approved extension list
+22  VM should have DR configured                 AuditIfNotExists          DR governance                Azure Site Recovery
+23  Resource logs should be enabled              AuditIfNotExists/Deploy   Monitoring/logging           Diagnostic settings → Log Analytics
+24  Resources should have diagnostic settings    AuditIfNotExists/Deploy   Centralized logging          Storage/Key Vault/VM → Logs
+25  Do not allow deletion of resource types      DenyAction                Protect critical resources   Block DELETE on critical resources
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+════════════════════════════════════════════════════════════════════════════════════════
+1. MANAGEMENT GROUPS
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Container/hierarchy for subscriptions.
+   → Used mainly to organize subscriptions and apply governance at scale.
+
+WHERE?
+   Azure Portal
+      → Search "Management Groups"
+      → Management Groups
+
+SCOPE:
+   → Above Subscription
+   → Can contain other Management Groups
+   → Contains Subscriptions
+
+EXAMPLE:
+   Tenant Root
+      ↓
+   Landing Zones MG
+      ├── Prod Subscription
+      ├── Dev Subscription
+      └── Lab Subscription
+
+PRACTICAL USE:
+   → Put common policies at MG level.
+   → Example: all Prod/Dev/Lab subscriptions must follow approved regions.
+
+INTERVIEW:
+   Q: Why Management Groups?
+   A: To organize subscriptions and apply governance consistently across multiple
+      subscriptions.
+
+IMPORTANT:
+   → Management Group is NOT a Resource Group.
+   → It does NOT contain VMs, VNets, AKS etc.
+   → It contains subscriptions and child management groups.
+────────────────────────────────────────────────────────────────────────────────────────
+2. AZURE POLICY
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Azure Policy checks whether Azure resources follow organizational rules.
+   → It can audit, deny, modify or deploy required configurations depending on
+     the policy effect.
+
+WHERE?
+   Azure Portal
+      → Search "Policy"
+      → Policy
+
+MAIN AREAS:
+   Policy
+      ├── Overview
+      ├── Assignments
+      ├── Definitions
+      ├── Compliance
+      └── Exemptions
+
+SCOPE:
+   Policy assignment can target:
+      → Management Group
+      → Subscription
+      → Resource Group
+      → Individual Resource
+
+INHERITANCE:
+   MG Policy
+      ↓
+   Subscription
+      ↓
+   Resource Group
+      ↓
+   Resources
+
+   Subscription Policy
+      ↓
+   Resource Groups
+      ↓
+   Resources
+
+   Resource Group Policy
+      ↓
+   Resources inside that RG
+
+Microsoft confirms that policy assignments can range from Management Group
+down to an individual resource, with child resources inheriting assignments. :contentReference[oaicite:2]{index=2}
+────────────────────────────────────────────────────────────────────────────────────────
+3. POLICY DEFINITION
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Defines the actual RULE.
+
+Example:
+   "Allowed locations should be Central India and East US."
+
+OR:
+   "Resources must have an Environment tag."
+
+WHERE?
+   Azure Portal
+      → Policy
+      → Definitions
+
+DEFINITION LOCATION:
+   → Management Group
+   → Subscription
+
+IMPORTANT:
+   Definition ≠ Assignment
+
+   Definition:
+      → What is the rule?
+
+   Assignment:
+      → Where do I apply the rule?
+
+Example:
+   Definition:
+      "Allowed locations = specified locations"
+
+   Assignment:
+      → Prod Subscription
+
+Microsoft currently allows a policy definition to be created at either
+subscription or management-group definition location. :contentReference[oaicite:3]{index=3}
+────────────────────────────────────────────────────────────────────────────────────────
+4. POLICY ASSIGNMENT
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Applies a Policy Definition to a particular scope.
+
+WHERE?
+   Azure Portal
+      → Policy
+      → Assignments
+      → Assign Policy
+
+SCOPE OPTIONS:
+   → Management Group
+   → Subscription
+   → Resource Group
+   → Resource
+
+Example:
+   Policy Definition:
+      "Allowed Locations"
+
+   Assignment:
+      Scope = Landing Zones MG
+
+   Result:
+      Prod + Dev + Lab subscriptions can inherit the policy.
+
+OR:
+
+   Scope = Prod Subscription
+
+   Result:
+      Policy applies to Prod and its child resources.
+
+PORTAL FLOW:
+   Policy
+      ↓
+   Assignments
+      ↓
+   Assign Policy
+      ↓
+   Scope
+      ↓
+   Policy Definition
+      ↓
+   Parameters
+      ↓
+   Review + Create
+
+The current portal assignment flow explicitly lets you select subscription/resource
+group scope and configure exclusions. :contentReference[oaicite:4]{index=4}
+────────────────────────────────────────────────────────────────────────────────────────
+5. POLICY PARAMETERS
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Parameters make the same Policy Definition reusable with different values.
+
+Example Policy Definition:
+   "Allowed locations"
+
+Assignment 1:
+   Prod
+      → Central India
+      → East US
+
+Assignment 2:
+   Dev
+      → Central India
+      → West Europe
+
+Instead of creating two policies:
+   ❌ Allowed Locations - Prod
+   ❌ Allowed Locations - Dev
+
+Create one parameterized policy:
+   ✅ Allowed Locations
+
+Then provide different parameter values during assignment.
+
+WHERE?
+   → Inside Policy Assignment configuration.
+
+FLOW:
+   Policy Definition
+       ↓
+   Parameters
+       ↓
+   Policy Assignment
+       ↓
+   Parameter Value
+
+INTERVIEW:
+   Q: Why use parameters?
+   A: To reuse the same policy definition for different environments or scopes
+      without creating separate policies.
+────────────────────────────────────────────────────────────────────────────────────────
+6. POLICY EFFECTS
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Effect defines WHAT happens when a resource violates the policy.
+
+COMMON EFFECTS:
+   Audit
+      → Resource is allowed but marked non-compliant.
+
+   Deny
+      → Deployment/update is blocked.
+
+   Modify
+      → Azure Policy can modify/add properties during deployment/update.
+      → Common example: tags.
+
+   Append
+      → Adds a value/property to the request/resource where supported.
+
+   DeployIfNotExists
+      → If required resource/configuration doesn't exist,
+        deploy the required configuration through remediation.
+
+   Disabled
+      → Policy is effectively disabled.
+
+PRACTICAL EXAMPLE:
+
+   Policy:
+      "Resources must have Environment tag"
+
+   Effect = Audit
+      → Resource gets created
+      → Compliance = Non-compliant
+
+   Effect = Deny
+      → Resource without required tag
+      → Deployment blocked
+
+   Effect = Modify
+      → Policy can add/modify the tag where the policy is designed to do so.
+
+Microsoft provides built-in tagging policies using effects such as
+deny, append and modify, including remediation for existing resources. :contentReference[oaicite:5]{index=5}
+────────────────────────────────────────────────────────────────────────────────────────
+7. INITIATIVE / POLICY SET
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Collection of multiple related policies.
+
+Example:
+   "Production Security Baseline"
+      │
+      ├── Allowed Locations
+      ├── Require HTTPS
+      ├── Require Encryption
+      ├── Audit Diagnostic Settings
+      └── Required Tags
+
+Instead of assigning:
+   Policy 1
+   Policy 2
+   Policy 3
+   Policy 4
+   Policy 5
+
+You assign:
+   ONE Initiative
+      ↓
+   Multiple Policies
+
+WHERE?
+   Azure Portal
+      → Policy
+      → Definitions
+      → Definition type = Initiative
+
+ASSIGNMENT:
+   Initiative can then be assigned at:
+      → Management Group
+      → Subscription
+      → Resource Group
+      → Resource
+
+BEST ENTERPRISE USE:
+   → Common security/compliance baseline at Management Group level.
+────────────────────────────────────────────────────────────────────────────────────────
+8. POLICY EXEMPTIONS
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Allows a specific scope/resource to be excluded from a Policy assignment.
+
+Example:
+
+   Corp rule:
+      "Public IP is not allowed."
+
+   ↓
+
+   Prod Subscription
+      ↓
+   ICMS Resource Group
+      ↓
+   One approved application requires Public IP
+
+Instead of removing the entire policy:
+
+   ❌ Remove policy
+
+Use:
+
+   Policy Exemption
+      ↓
+   Specific approved scope
+
+WHERE?
+   Azure Portal
+      → Policy
+      → Exemptions
+
+IMPORTANT:
+   → Exemption should be controlled/documented.
+   → Don't use exemptions simply to bypass governance.
+
+POLICY:
+   Applied at MG
+       ↓
+   Prod Subscription
+       ↓
+   Exclude approved RG/resource through exemption
+────────────────────────────────────────────────────────────────────────────────────────
+9. RESOURCE LOCKS
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Protect Azure resources from accidental deletion or modification.
+
+TYPES:
+
+   CanNotDelete
+      → Resource can be modified
+      → Resource cannot be deleted
+
+   ReadOnly
+      → Resource cannot be modified/deleted through normal management operations.
+
+WHERE?
+   Azure Portal
+      → Resource / Resource Group / Subscription
+      → Locks
+      → Add
+
+SCOPE:
+   → Subscription
+   → Resource Group
+   → Resource
+
+EXAMPLE:
+
+   Prod
+      ↓
+   Critical Key Vault
+      ↓
+   CanNotDelete
+
+   Someone tries to delete it
+      ↓
+   Delete operation blocked by lock.
+
+IMPORTANT:
+   → Lock is different from Azure Policy.
+   → Policy controls compliance/deployment rules.
+   → Lock protects against management operations such as deletion/change.
+────────────────────────────────────────────────────────────────────────────────────────
+10. TAGGING GOVERNANCE
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Tags are key/value metadata attached to Azure resources.
+
+Example:
+   Environment = Prod
+   Application = ICMS
+   Owner = DevOps
+   CostCenter = 1001
+
+WHY?
+   → Resource identification
+   → Cost allocation
+   → Ownership
+   → Environment tracking
+   → Automation/reporting
+
+IMPORTANT:
+   Tags themselves are NOT a hierarchy/scope like Management Groups.
+
+WHERE CAN TAGS BE USED?
+   → Resources
+   → Resource Groups
+   → Subscriptions also support tagging
+
+HOW TO ENFORCE?
+   Azure Policy
+
+Example:
+   Policy:
+      "Environment tag is required"
+
+   Scope:
+      Landing Zones MG
+
+   Result:
+      Child subscriptions/resources are evaluated according to assignment.
+
+PRACTICAL:
+   Tags
+      +
+   Azure Policy
+      ↓
+   Tagging Governance
+
+Microsoft specifically recommends Azure Policy for enforcing and automatically
+applying tagging rules at scale. :contentReference[oaicite:6]{index=6}
+────────────────────────────────────────────────────────────────────────────────────────
+11. REGION / LOCATION GOVERNANCE
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Organization decides which Azure regions can be used.
+
+Example:
+   Allowed:
+      → Central India
+      → South India
+
+   Not allowed:
+      → Random regions
+
+HOW?
+   Azure Policy
+
+Policy:
+   "Allowed locations"
+
+SCOPE:
+   Best enterprise approach:
+      → Management Group
+      → Subscription
+
+Example:
+   Landing Zones MG
+      ↓
+   Allowed Locations Policy
+      ↓
+   Prod / Dev / Lab
+
+RESULT:
+   Resource deployment outside approved locations
+      ↓
+   Audit OR Deny
+      depending on policy effect.
+
+IMPORTANT:
+   → Region governance is NOT a separate Azure service.
+   → Usually implemented using Azure Policy.
+────────────────────────────────────────────────────────────────────────────────────────
+12. RESOURCE TYPE GOVERNANCE
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Control which Azure resource types/services can be deployed.
+
+Example:
+   Organization allows:
+      → Virtual Machine
+      → Storage Account
+      → Key Vault
+      → AKS
+
+   Organization doesn't allow:
+      → Unapproved resource type
+
+HOW?
+   Azure Policy
+
+Example:
+   Policy:
+      "Allowed resource types"
+
+SCOPE:
+   → Management Group
+   → Subscription
+   → Resource Group
+   → Resource
+
+ENTERPRISE:
+   Management Group
+      ↓
+   Allowed Resource Types Policy
+      ↓
+   Multiple subscriptions
+
+WHY?
+   → Prevent unsupported/unapproved services
+   → Reduce security risk
+   → Control platform standards
+────────────────────────────────────────────────────────────────────────────────────────
+13. NETWORK GOVERNANCE
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Standards/rules for Azure networking.
+
+EXAMPLES:
+   → Public network access restrictions
+   → Private Endpoints
+   → NSG standards
+   → Approved VNet architecture
+   → Hub-Spoke connectivity
+   → Firewall requirements
+   → Approved network paths
+
+WHERE?
+   This is NOT one single Azure Portal blade.
+
+   Depending on the control:
+      → Azure Policy
+      → Network resources
+      → Azure Firewall
+      → NSG
+      → Private Endpoint
+      → Virtual Network
+      → Management Groups for governance scope
+
+EXAMPLE:
+   Landing Zones MG
+      ↓
+   Network-related Policies
+      ↓
+   Prod / Dev / Lab
+
+IMPORTANT:
+   "Network Governance" is a governance category.
+   It is implemented using multiple Azure networking services + Azure Policy.
+────────────────────────────────────────────────────────────────────────────────────────
+14. SECURITY GOVERNANCE
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Organization-wide security standards for Azure resources.
+
+EXAMPLES:
+   → Encryption
+   → Secure configurations
+   → Defender for Cloud
+   → Security recommendations
+   → Logging/monitoring requirements
+   → Secure network access
+
+WHERE?
+   Multiple places:
+
+   Azure Policy
+      → Enforce configuration
+
+   Microsoft Defender for Cloud
+      → Security posture/recommendations
+
+   Management Groups
+      → Apply security governance at scale
+
+   RBAC/PIM
+      → Control privileged access
+
+IMPORTANT:
+   Security Governance is a CATEGORY.
+   It is not a single Azure feature.
+
+EXAMPLE:
+   Landing Zones MG
+      ↓
+   Security Baseline Initiative
+      ├── Encryption
+      ├── Secure configuration
+      ├── Logging
+      └── Allowed locations
+────────────────────────────────────────────────────────────────────────────────────────
+15. COST GOVERNANCE
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Control and monitor Azure spending.
+
+MAIN TOOLS:
+   → Microsoft Cost Management
+   → Budgets
+   → Cost alerts
+   → Cost analysis
+   → Tags
+   → Subscription structure
+
+WHERE?
+   Azure Portal
+      → Cost Management + Billing
+
+BUDGET:
+   Can be configured at relevant supported scopes such as:
+      → Management Group
+      → Subscription
+      → Resource Group
+
+Example:
+   Prod Subscription
+      ↓
+   Budget = ₹10,00,000
+      ↓
+   Alert at 80%
+      ↓
+   Alert at 100%
+
+TAGGING:
+   Environment = Prod
+   CostCenter = 1001
+      ↓
+   Helps analyze/allocate costs.
+
+Microsoft's current portal supports creating/viewing budgets from scopes such as
+subscriptions, resource groups and management groups. :contentReference[oaicite:7]{index=7}
+────────────────────────────────────────────────────────────────────────────────────────
+16. COMPLIANCE
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Ensuring Azure environment follows organizational or regulatory requirements.
+
+EXAMPLES:
+   → ISO
+   → PCI DSS
+   → SOC
+   → Internal security standards
+
+HOW?
+   Mainly through:
+      → Azure Policy
+      → Initiatives
+      → Microsoft Defender for Cloud
+      → Compliance reporting
+
+EXAMPLE:
+   Requirement:
+      "Storage must use approved encryption."
+
+   ↓
+
+   Policy
+      ↓
+   Initiative
+      ↓
+   Subscription / Management Group
+      ↓
+   Compliance evaluation
+
+PORTAL:
+   Azure Policy
+      → Compliance
+
+   Defender for Cloud
+      → Regulatory compliance / security posture
+────────────────────────────────────────────────────────────────────────────────────────
+17. GOVERNANCE AT SCALE
+════════════════════════════════════════════════════════════════════════════════════════
+WHAT?
+   → Applying common governance to many subscriptions without configuring every
+     subscription manually.
+
+EXAMPLE:
+
+   Tenant Root
+       ↓
+   Landing Zones MG
+       │
+       ├── Prod Subscription
+       ├── Dev Subscription
+       └── Lab Subscription
+
+   Policy:
+      Allowed Locations
+      Required Tags
+      Security Baseline
+
+   Assigned at:
+      Landing Zones MG
+
+   ↓
+
+   Child subscriptions inherit the assignment
+   ↓
+   Resources are evaluated
+
+WHY?
+   5 subscriptions:
+      → Manual management may still be possible.
+
+   50/100+ subscriptions:
+      → Centralized governance becomes essential.
+
+BEST PRACTICE:
+   → Use Management Groups as governance boundaries.
+   → Assign common Policies/Initiatives at appropriate MG levels.
+   → Avoid unnecessary assignments at the root MG.
+   → Use lower scopes where requirements differ.
+
+Microsoft's current Landing Zone guidance recommends Management Groups for
+policy/initiative governance across subscriptions and cautions against putting
+application-team RBAC broadly at Management Group scope. :contentReference[oaicite:8]{index=8}
+────────────────────────────────────────────────────────────────────────────────────────
+18. THE MOST IMPORTANT SCOPE MAP
+════════════════════════════════════════════════════════════════════════════════════════
+   CONTROL / FEATURE              COMMON SCOPE
+   ───────────────────────────────────────────────────────────────────────────────────
+   Management Groups              Tenant hierarchy
+   Azure Policy                   MG / Subscription / RG / Resource
+   Policy Definition              Created at MG or Subscription definition location
+   Policy Assignment              MG / Subscription / RG / Resource
+   Policy Parameters              During Policy Assignment
+   Policy Effects                 Inside Policy Definition
+   Initiative                     Definition + Assignment at applicable scopes
+   Policy Exemption               Exemption against a Policy/Initiative assignment
+   Resource Lock                  Subscription / RG / Resource
+   Tags                           Resource / RG / Subscription
+   Region Governance              Usually Azure Policy at MG/Subscription
+   Resource Type Governance       Usually Azure Policy at MG/Subscription
+   Network Governance             Network services + Azure Policy
+   Security Governance            Policy + Initiatives + Defender + RBAC/PIM
+   Cost Governance               Cost Management + Budgets + Tags
+   Compliance                     Policy/Initiatives + Defender
+   Governance at Scale            Management Groups + Policy/Initiatives
+────────────────────────────────────────────────────────────────────────────────────────
+19. VERY IMPORTANT — SCOPE VS IDENTITY
+════════════════════════════════════════════════════════════════════════════════════════
+   Azure GOVERNANCE SCOPE:
+      Management Group
+           ↓
+      Subscription
+           ↓
+      Resource Group
+           ↓
+      Resource
+
+   IDENTITY:
+      User
+      Group
+      Service Principal
+      Managed Identity
+
+   RBAC:
+      Identity
+         ↓
+      Role
+         ↓
+      Scope
+
+   Example:
+      DevOps Group
+          ↓
+      Contributor
+          ↓
+      Prod Subscription
+
+   Managed Identity is NOT a governance scope.
+   It is an identity/security principal that can receive permissions through RBAC.
+────────────────────────────────────────────────────────────────────────────────────────
+20. FINAL ENTERPRISE PICTURE
+════════════════════════════════════════════════════════════════════════════════════════
+                         TENANT
+                           │
+                    MANAGEMENT GROUPS
+                           │
+          ┌────────────────┴────────────────┐
+          │                                 │
+     PLATFORM MG                     LANDING ZONES MG
+          │                                 │
+   Platform Subscriptions          ┌────────┼────────┐
+                                   │        │        │
+                                  PROD     DEV      LAB
+                                   │        │        │
+                              Resource Groups / Resources
+                                   │
+                    ┌──────────────┼──────────────┐
+                    │              │              │
+                 POLICY          RBAC           LOCKS
+                    │              │              │
+              WHAT is allowed   WHO can do    Protect resource
+                    │
+               INITIATIVES
+                    │
+              COMPLIANCE
+                    │
+              SECURITY
+                    │
+              TAG GOVERNANCE
+                    │
+              NETWORK GOVERNANCE
+                    │
+              COST GOVERNANCE
+════════════════════════════════════════════════════════════════════════════════════════
+
+
+
+
+
+
+

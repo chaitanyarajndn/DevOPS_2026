@@ -1,0 +1,227 @@
+============================================================
+MICROSOFT ENTRA — WHAT IS IT?
+============================================================
+
+Microsoft Entra = Microsoft's family of identity and network access products.
+
+Purpose:
+→ Helps organizations secure access to applications, resources, and services.
+→ Helps verify identities and control access.
+→ Supports Zero Trust security.
+
+Microsoft Entra can be used for:
+→ Employees
+→ Customers
+→ Partners
+→ Applications / workloads
+→ AI agents
+
+============================================================
+MICROSOFT ENTRA PRODUCTS
+============================================================
+
+Microsoft Entra
+│
+├── Microsoft Entra ID
+│   → Cloud-based Identity and Access Management (IAM)
+│   → Main/foundational Entra product.
+│   → Manages identity and access for users, devices, apps, and resources.
+│
+├── Microsoft Entra Domain Services
+│   → Provides managed domain services.
+│   → Used mainly by applications that need traditional domain features.
+│   → Supports LDAP, Kerberos, NTLM, and Group Policy.
+│
+├── Microsoft Entra Private Access
+│   → Provides secure access to private applications and resources.
+│   → Can be used for corporate networks and multicloud environments.
+│
+├── Microsoft Entra Internet Access
+│   → Secures access to internet resources.
+│   → Includes Microsoft 365 and SaaS applications.
+│   → Supports web content filtering.
+│
+├── Microsoft Entra ID Governance
+│   → Helps manage identity and access.
+│   → Handles access requests, access assignments, access reviews,
+│     and identity lifecycle.
+│
+├── Microsoft Entra ID Protection
+│   → Detects identity-based risks.
+│   → Helps investigate and fix risky identities/sign-ins.
+│
+├── Microsoft Entra Verified ID
+│   → Used for digital identity credentials.
+│   → Organizations can issue verifiable credentials.
+│   → Users can store and present these credentials.
+│
+├── Microsoft Entra External ID
+│   → Used for external users.
+│   → Examples: customers, partners, guests.
+│   → Supports external/consumer application scenarios.
+│
+├── Microsoft Entra Workload ID
+│   → Provides identity for applications, services, and containers.
+│   → Allows workloads to authenticate and access resources.
+│
+└── Microsoft Entra Agent ID
+    → Provides identity capabilities for AI agents.
+    → Helps authenticate, authorize, govern, and protect agent identities.
+
+============================================================
+ENTRA ID — MOST IMPORTANT
+============================================================
+
+Microsoft Entra ID
+→ Cloud-based Identity and Access Management (IAM) service.
+
+It helps with:
+→ Authentication
+→ Access control
+→ Policy enforcement
+→ Identity protection
+
+Used with:
+→ Users
+→ Devices
+→ Applications
+→ Azure resources
+→ Microsoft 365
+
+Example:
+
+User
+ ↓
+Microsoft Entra ID
+ ↓
+Identity verified
+ ↓
+Access policy checked
+ ↓
+Resource/Application access
+
+============================================================
+IDENTITY GOVERNANCE
+============================================================
+
+Entra ID Governance
+→ Controls who gets access to what.
+→ Helps manage access during the identity lifecycle.
+
+Example:
+
+Employee joins
+ ↓
+Access assigned
+ ↓
+Employee changes role
+ ↓
+Access updated
+ ↓
+Employee leaves
+ ↓
+Access removed
+
+============================================================
+IDENTITY PROTECTION
+============================================================
+
+Entra ID Protection
+→ Finds identity-related risks.
+
+Example:
+
+User sign-in
+ ↓
+Risk detected
+ ↓
+Administrator investigates
+ ↓
+Risk is remediated
+
+It can work with Conditional Access to apply actions
+for risky sign-ins.
+
+============================================================
+EXTERNAL ID
+============================================================
+
+Entra External ID
+→ Used when people outside the organization need access.
+
+Examples:
+→ Customers
+→ Partners
+→ Guests
+→ Users of consumer applications
+
+============================================================
+WORKLOAD ID
+============================================================
+
+Entra Workload ID
+→ Identity for non-human workloads.
+
+Examples:
+→ Application
+→ Service
+→ Container
+→ Automation workflow
+
+Example:
+
+Application / Pipeline
+ ↓
+Workload Identity
+ ↓
+Microsoft Entra
+ ↓
+Access Azure resource
+
+============================================================
+ADMINISTRATION
+============================================================
+
+Microsoft Entra Admin Center
+→ Web portal used to manage Microsoft Entra products.
+
+Microsoft Graph API
+→ Used to automate Entra-related management tasks.
+
+Microsoft Identity Platform
+→ Used by developers to add authentication to applications.
+
+============================================================
+QUICK REVISION
+============================================================
+
+Entra ID             → Cloud identity + access
+Domain Services     → Managed domain services
+Private Access      → Private resources
+Internet Access     → Internet + SaaS access
+ID Governance       → Manage access lifecycle
+ID Protection       → Detect identity risks
+Verified ID         → Verifiable digital credentials
+External ID         → Customers / partners / guests
+Workload ID         → Applications / services / containers
+Agent ID            → AI agent identity
+
+============================================================
+INTERVIEW ANSWER
+============================================================
+
+Q: What is Microsoft Entra?
+
+Ans:
+Microsoft Entra is Microsoft's family of identity and network
+access products. It helps organizations manage identities,
+control access, and secure access to applications, resources,
+workloads, external users, and AI agents.
+
+Q: What is Microsoft Entra ID?
+
+Ans:
+Microsoft Entra ID is Microsoft's cloud-based Identity and
+Access Management service. It manages identities and access
+for users, devices, applications, and resources.
+============================================================

@@ -1,0 +1,2088 @@
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+                         AZURE LANDING ZONE — COMPLETE INTERVIEW NOTES
+                         Microsoft Cloud Adoption Framework (CAF)
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. WHAT IS AZURE LANDING ZONE?
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Azure Landing Zone (ALZ) = A proven and flexible Azure architecture for GOVERNING, SECURING and SCALING
+a multi-subscription Azure environment.
+
+Simple definition:
+    "Landing Zone is the enterprise foundation on which Azure workloads are deployed."
+
+It provides:
+    Identity + Access
+    Governance
+    Security
+    Networking + Connectivity
+    Management + Monitoring
+    Resource Organization
+    Platform Automation / DevOps
+
+IMPORTANT:
+    Landing Zone ≠ VNet
+    Landing Zone ≠ Subscription
+    Landing Zone ≠ Hub-Spoke
+    Landing Zone ≠ Terraform
+
+Landing Zone is the COMPLETE operating/foundation architecture.
+Hub-Spoke or Virtual WAN = networking topology used within that architecture.
+Terraform = one way to implement/automate it.
+
+Microsoft Cloud Adoption Framework (CAF):
+    Plan → Ready → Adopt → Govern → Manage
+
+Landing Zone primarily belongs to the READY phase.
+
+════════════════════════════════════════════════════════════════════════════
+2. WHY DO WE NEED A LANDING ZONE?
+─────────────────────────────────────────────────────────────────────────────
+
+Without Landing Zone:
+
+    Team A → creates VNet
+    Team B → creates another VNet differently
+    Team C → gives excessive RBAC
+    Team D → deploys resources in unapproved region
+    Team E → doesn't configure monitoring
+
+Result:
+    Configuration drift
+    Security gaps
+    Inconsistent governance
+    Difficult operations
+    Difficult scaling
+
+With Landing Zone:
+
+    Central Foundation
+          ↓
+    Governance + Security + Networking + Identity + Management
+          ↓
+    Standardized workload environments
+          ↓
+    Consistent Azure deployments
+
+Main objective:
+    "Give application teams enough freedom to manage their workloads while
+     keeping enterprise security and governance guardrails."
+
+════════════════════════════════════════════════════════════════════════════
+3. TWO CORE COMPONENTS
+─────────────────────────────────────────────────────────────────────────────
+
+                    AZURE LANDING ZONE
+                           │
+             ┌─────────────┴─────────────┐
+             ↓                           ↓
+     PLATFORM LANDING ZONE       APPLICATION LANDING ZONES
+             │                           │
+     Central Foundation             Workload Environments
+             │                           │
+     ┌───────┼────────┐          ┌───────┼────────┐
+     ↓       ↓        ↓          ↓       ↓        ↓
+  Identity Security Connectivity DEV    TEST     PROD
+          Management/Governance
+
+PLATFORM LANDING ZONE:
+    Centralized foundation for all workloads.
+
+APPLICATION LANDING ZONE:
+    Environment where a workload team deploys and operates its workload.
+
+════════════════════════════════════════════════════════════════════════════
+4. PLATFORM LANDING ZONE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Platform Landing Zone establishes the organization's Azure foundation.
+
+Main responsibilities:
+
+    ├── Management Group hierarchy
+    ├── Governance
+    ├── Identity
+    ├── Connectivity
+    ├── Security
+    ├── Management / Monitoring
+    └── Application Landing Zone distribution
+
+Microsoft guidance:
+    Most organizations should have ONE Platform Landing Zone per
+    Microsoft Entra tenant.
+
+Platform team:
+    → Builds foundation
+    → Defines guardrails
+    → Provides shared services
+    → Creates/provisions Application Landing Zones
+    → Maintains centralized capabilities
+
+IMPORTANT:
+    Platform does NOT necessarily own every application resource.
+    Workload teams own and operate their application resources.
+
+════════════════════════════════════════════════════════════════════════════
+5. APPLICATION LANDING ZONE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Each WORKLOAD has a SINGLE Application Landing Zone.
+
+An Application Landing Zone contains ALL environments required by that workload.
+
+Example:
+
+    ICMS WORKLOAD
+         │
+         └── APPLICATION LANDING ZONE
+                 │
+                 ├── DEV
+                 ├── TEST / QA
+                 └── PROD
+
+Each environment can have:
+    → One subscription
+    OR
+    → Multiple subscriptions
+
+Multiple subscriptions are used only when justified by:
+    → Workload requirements
+    → Team ownership boundaries
+    → Security/isolation requirements
+    → Organizational boundaries
+    → Azure subscription limits
+
+Application Landing Zone contains:
+    → Azure resources owned/operated by workload team
+    → Across all workload environments
+
+════════════════════════════════════════════════════════════════════════════
+6. PLATFORM vs APPLICATION LANDING ZONE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+PLATFORM LANDING ZONE                  APPLICATION LANDING ZONE
+─────────────────────                  ─────────────────────────
+Enterprise foundation                  Workload environment
+Platform team                           Workload/application team
+Central governance                      Workload resources
+Central connectivity                    Application networking
+Central security                        AKS/VM/App Service/etc.
+Central monitoring                      Application services
+Shared capabilities                     Application-specific resources
+Creates ALZs                            Consumes platform capabilities
+
+INTERVIEW:
+    "Platform Landing Zone provides the foundation and guardrails;
+     Application Landing Zone hosts the actual workload."
+
+════════════════════════════════════════════════════════════════════════════
+7. MANAGEMENT GROUPS
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Management Group = Logical governance container ABOVE Azure subscriptions.
+
+Hierarchy:
+
+    Microsoft Entra Tenant
+            │
+       Tenant Root Group
+            │
+       Intermediate Root MG
+            │
+       ┌────┴──────────────────────────────────┐
+       │                                       │
+    Platform                              Landing Zones
+       │                                       │
+   ┌───┼────────┐                       ┌──────┼──────┐
+   ↓   ↓        ↓                       ↓      ↓      ↓
+Mgmt Security Connectivity            Corp   Online  Local
+
+Other branches:
+    Sandbox
+    Decommissioned
+
+Purpose:
+    → Organize subscriptions
+    → Apply Azure Policy
+    → Apply governance consistently
+    → Separate platform and workload resources
+    → Create governance boundaries
+
+════════════════════════════════════════════════════════════════════════════
+8. STANDARD MANAGEMENT GROUP HIERARCHY
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Tenant Root Group
+      │
+      └── Intermediate Root Management Group
+              │
+              ├── Platform
+              │    ├── Management
+              │    ├── Connectivity
+              │    ├── Identity
+              │    └── Security
+              │
+              ├── Landing Zones
+              │    ├── Corp
+              │    ├── Online
+              │    └── Local
+              │
+              ├── Sandbox
+              │
+              └── Decommissioned
+
+IMPORTANT:
+    "Corp", "Online" and "Local" are workload categories,
+    NOT DEV/QA/PROD management groups.
+
+Do NOT normally create:
+
+    Landing Zones
+       ├── DEV
+       ├── QA
+       └── PROD
+
+Instead:
+
+    Landing Zones
+       └── Corp
+            ├── Workload-DEV
+            ├── Workload-QA
+            └── Workload-PROD
+
+Microsoft recommends keeping the hierarchy reasonably flat,
+ideally around 3–4 levels, to reduce complexity.
+
+════════════════════════════════════════════════════════════════════════════
+9. PLATFORM MANAGEMENT GROUPS
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+PLATFORM
+│
+├── MANAGEMENT
+│   └── Monitoring / management subscription
+│
+├── CONNECTIVITY
+│   └── Network connectivity subscription
+│
+├── IDENTITY
+│   └── Identity-related infrastructure subscription
+│
+└── SECURITY
+    └── Security / SIEM tooling subscription
+
+These are PLATFORM capabilities.
+
+Typical centralized services:
+
+MANAGEMENT:
+    Log Analytics
+    Azure Monitor
+    Alerts
+    Dashboards
+    Azure Update Manager
+
+CONNECTIVITY:
+    Azure Firewall
+    Azure DNS
+    VPN Gateway
+    ExpressRoute Gateway
+    Virtual WAN
+    DDoS Protection
+
+IDENTITY:
+    AD DS / Active Directory Domain Services
+    Microsoft Entra Connect where required
+    Domain Services where required
+    Supporting identity infrastructure
+
+SECURITY:
+    Microsoft Defender for Cloud
+    Microsoft Sentinel
+    SIEM tooling
+    Security monitoring
+
+════════════════════════════════════════════════════════════════════════════
+10. LANDING ZONE MANAGEMENT GROUPS
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+LANDING ZONES
+│
+├── CORP
+│   └── Internal / corporate workloads
+│
+├── ONLINE
+│   └── Internet-connected workloads
+│
+└── LOCAL
+    └── Azure Local / local-hybrid workloads
+
+CORP:
+    Workloads requiring connectivity/hybrid connectivity to corporate network.
+
+ONLINE:
+    Workloads requiring direct Internet connectivity or workloads
+    that don't require a VNet.
+
+LOCAL:
+    Azure Local / hybrid scenarios with different policy requirements.
+
+IMPORTANT:
+    These classifications are based on workload requirements,
+    especially security, connectivity, compliance and feature needs.
+
+════════════════════════════════════════════════════════════════════════════
+11. SANDBOX MANAGEMENT GROUP
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Sandbox = Isolated environment for experimentation/testing.
+
+Purpose:
+    → Try Azure services
+    → Test configurations
+    → Learn/prototype
+    → Experiment without affecting production
+
+Sandbox should be isolated from:
+    DEV
+    TEST
+    PROD
+
+Sandbox can have:
+    Less restrictive policies where required for experimentation.
+
+IMPORTANT:
+    Sandbox is NOT the same as DEV.
+
+DEV = actual application development environment.
+Sandbox = experimentation/testing environment.
+
+════════════════════════════════════════════════════════════════════════════
+12. DECOMMISSIONED MANAGEMENT GROUP
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+When a Landing Zone/workload is retired:
+
+    Active Landing Zone
+           ↓
+    Decommissioned MG
+           ↓
+    Cleanup / deletion
+
+Purpose:
+    → Prevent abandoned subscriptions
+    → Controlled retirement
+    → Cleanup process
+
+Microsoft reference architecture shows decommissioned subscriptions
+being retained temporarily before deletion.
+
+════════════════════════════════════════════════════════════════════════════
+13. MANAGEMENT GROUP DESIGN RULES
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+GOOD:
+
+    Management Groups = Governance boundaries
+
+BAD:
+
+    Management Groups = Exact copy of company org chart
+
+Avoid:
+
+    Root
+      ↓
+    Country
+      ↓
+    Department
+      ↓
+    Business Unit
+      ↓
+    Team
+      ↓
+    Application
+      ↓
+    Environment
+
+This creates unnecessary complexity.
+
+Use Management Groups mainly for:
+    → Policy
+    → Compliance
+    → Governance
+    → Workload classification
+
+Use subscriptions/resource groups for:
+    → Workload ownership
+    → Environment separation
+    → Application boundaries
+
+Microsoft guidance:
+    Keep hierarchy reasonably flat.
+    Ideally no more than 3–4 management group levels.
+
+════════════════════════════════════════════════════════════════════════════
+14. AZURE POLICY
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Azure Policy = Governance mechanism used to AUDIT and/or ENFORCE
+resource configuration.
+
+Examples:
+
+    Allowed Locations
+    Required Tags
+    Allowed SKUs
+    Require HTTPS
+    Restrict public IPs
+    Require diagnostic settings
+    Security configuration
+    Regulatory requirements
+
+Policy effects commonly include:
+
+    Audit
+    Deny
+    Modify
+    Append
+    DeployIfNotExists
+
+Typical flow:
+
+    Management Group
+          ↓
+    Policy Assignment
+          ↓
+    Subscription
+          ↓
+    Resource Group
+          ↓
+    Resource
+
+Policy inheritance allows common rules to be applied consistently.
+
+════════════════════════════════════════════════════════════════════════════
+15. RBAC vs AZURE POLICY
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+RBAC = WHO can perform an ACTION?
+
+Azure Policy = WHAT configuration is allowed/required?
+
+Example:
+
+    RBAC:
+        Developer → Contributor on Application Subscription
+
+    Policy:
+        Resources → Only approved Azure regions
+
+Think:
+
+    RBAC  → Permission
+    Policy → Governance
+
+IMPORTANT:
+    Application teams should normally receive RBAC at:
+        Subscription or Resource Group
+
+    NOT normally at:
+        Management Group
+
+Why?
+    Management Group RBAC can give excessive inherited access.
+
+Platform teams may have broader management-group RBAC when required,
+but privileged access should be tightly controlled.
+
+════════════════════════════════════════════════════════════════════════════
+16. IDENTITY & ACCESS MANAGEMENT
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Identity is a PRIMARY security boundary.
+
+Main components:
+
+    Microsoft Entra ID
+    Azure RBAC
+    Managed Identities
+    Security Groups
+    Privileged Identity Management (PIM)
+    Hybrid identity where required
+
+Basic flow:
+
+    User / Service Principal / Managed Identity
+                    ↓
+             Microsoft Entra ID
+                    ↓
+                 RBAC
+                    ↓
+            Azure Resource
+
+Landing Zone principle:
+
+    Platform Team
+       ↓
+    Creates ALZ
+       ↓
+    Configures access controls
+       ↓
+    Workload Team gets required permissions
+       ↓
+    Workload Team manages its own resources
+
+This is called:
+    SUBSCRIPTION DEMOCRATIZATION
+
+Meaning:
+    Application teams get autonomy over their workloads,
+    but within platform-defined policy guardrails.
+
+════════════════════════════════════════════════════════════════════════════
+17. IMPORTANT RBAC DESIGN RULE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Application team:
+
+    Subscription / Resource Group scope
+            ↓
+        RBAC roles
+
+Platform team:
+
+    May have broader scope where operationally required.
+
+Azure Policy:
+
+    Management Group scope
+            ↓
+        Governance
+
+Key principle:
+
+    Policy at higher scope
+    RBAC at required lower scope
+
+This prevents application teams from modifying the governance
+policies that control their landing zone.
+
+════════════════════════════════════════════════════════════════════════════
+18. NETWORK TOPOLOGY
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Two major reference networking patterns:
+
+    1. Hub-and-Spoke
+    2. Azure Virtual WAN
+
+Choose based on:
+    → Number of regions
+    → Branches
+    → Hybrid connectivity
+    → Traffic patterns
+    → Operational model
+    → Scale
+
+Landing Zone itself is NOT tied to only one networking model.
+
+════════════════════════════════════════════════════════════════════════════
+19. HUB-AND-SPOKE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+                         ON-PREMISES
+                             │
+                     VPN / ExpressRoute
+                             │
+                             ↓
+                    ┌──────────────────┐
+                    │    HUB VNET      │
+                    │                  │
+                    │ Azure Firewall   │
+                    │ VPN Gateway      │
+                    │ DNS              │
+                    │ Bastion          │
+                    └────────┬─────────┘
+                             │
+                       VNet Peering
+             ┌───────────────┼───────────────┐
+             ↓               ↓               ↓
+        SPOKE-DEV        SPOKE-QA         SPOKE-PROD
+             │               │               │
+          Workload         Workload        Workload
+
+HUB:
+    Shared networking/connectivity/security.
+
+SPOKE:
+    Application/workload network.
+
+Benefits:
+    → Centralized connectivity
+    → Centralized security
+    → Network isolation
+    → Reusable shared services
+    → Controlled traffic flow
+
+════════════════════════════════════════════════════════════════════════════
+20. AZURE VIRTUAL WAN
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+                       BRANCHES
+                      /    |    \
+                     /     |     \
+                    ↓      ↓      ↓
+                 VPN / ExpressRoute
+                         │
+                         ↓
+                 AZURE VIRTUAL WAN
+                         │
+                  ┌──────┴──────┐
+                  ↓             ↓
+               HUB-REGION-1   HUB-REGION-2
+                  │             │
+                  ↓             ↓
+              Workloads      Workloads
+
+Virtual WAN is useful for:
+    → Large enterprise networks
+    → Multiple regions
+    → Many branches
+    → Hybrid connectivity
+    → Centralized WAN routing
+
+IMPORTANT:
+    Hub-Spoke ≠ Landing Zone
+    Virtual WAN ≠ Landing Zone
+
+They are networking approaches within Landing Zone architecture.
+
+════════════════════════════════════════════════════════════════════════════
+21. CONNECTIVITY SUBSCRIPTION
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Connectivity Subscription = Central place for shared network connectivity.
+
+Typical resources:
+
+    Azure Firewall
+    Azure DNS
+    VPN Gateway
+    ExpressRoute Gateway
+    Virtual WAN
+    DDoS Protection
+    Hub VNets
+    Private DNS zones where applicable
+
+Example:
+
+    On-Premises
+         ↓
+    ExpressRoute / VPN
+         ↓
+    Connectivity Subscription
+         ↓
+    Hub / Virtual WAN
+         ↓
+    Application Landing Zones
+
+Centralization provides:
+    → Consistent network architecture
+    → Central security controls
+    → Shared connectivity
+    → Easier operations
+
+════════════════════════════════════════════════════════════════════════════
+22. IDENTITY SUBSCRIPTION
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Identity subscription is used only when organization requires
+supporting identity infrastructure.
+
+Possible resources:
+
+    AD DS domain controllers
+    Microsoft Entra Connect
+    Microsoft Entra Domain Services
+    Supporting identity infrastructure
+    Recovery Services Vault where required
+
+IMPORTANT:
+    Microsoft Entra ID itself is NOT "inside the Identity subscription."
+
+Microsoft Entra ID is the tenant identity platform.
+
+Identity subscription contains supporting Azure infrastructure
+when required by the organization's identity architecture.
+
+════════════════════════════════════════════════════════════════════════════
+23. SECURITY SUBSCRIPTION
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Security subscription can host centralized security/SIEM tooling.
+
+Examples:
+
+    Microsoft Sentinel
+    Syslog collectors
+    Security monitoring components
+
+Security architecture:
+
+    Azure Resources
+          ↓
+    Logs / Security Signals
+          ↓
+    Log Analytics / Defender
+          ↓
+    Microsoft Sentinel
+          ↓
+    Security Operations Team
+
+Microsoft Defender for Cloud:
+    → Security posture
+    → Recommendations
+    → Threat protection
+
+Microsoft Sentinel:
+    → SIEM
+    → Security analytics
+    → Detection
+    → Investigation / response
+
+════════════════════════════════════════════════════════════════════════════
+24. MANAGEMENT SUBSCRIPTION
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Management subscription = Centralized operational monitoring/management.
+
+Typical components:
+
+    Log Analytics Workspace
+    Azure Monitor
+    Alerts
+    Action Groups
+    Dashboards
+    Azure Update Manager
+
+Monitoring flow:
+
+    Azure Resources
+          ↓
+    Diagnostic Settings
+          ↓
+    Log Analytics
+          ↓
+    Azure Monitor
+          ↓
+    Alerts / Dashboards / Operations
+
+Important monitoring areas:
+
+    Resource Health
+    Service Health
+    Activity Logs
+    VM logs
+    PaaS diagnostics
+    Application/workload telemetry
+
+════════════════════════════════════════════════════════════════════════════
+25. MANAGEMENT BASELINE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Management baseline = Minimum operational capability needed to run
+Azure workloads consistently.
+
+Main objectives:
+
+    Visibility
+    Operations compliance
+    Protection
+    Recovery
+
+Typical baseline:
+
+    Monitoring
+    Logging
+    Alerting
+    Backup
+    Update management
+    Resource health
+    Service health
+
+Important:
+    Workload-specific advanced monitoring can be added on top of
+    the central management baseline.
+
+════════════════════════════════════════════════════════════════════════════
+26. RESOURCE ORGANIZATION
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Hierarchy:
+
+    Microsoft Entra Tenant
+          ↓
+    Management Group
+          ↓
+    Subscription
+          ↓
+    Resource Group
+          ↓
+    Azure Resource
+
+Example:
+
+    Tenant
+      ↓
+    Landing Zones / Corp
+      ↓
+    ICMS PROD Subscription
+      ↓
+    rg-icms-prod
+      ↓
+    AKS / Key Vault / Storage / Application Gateway
+
+Use subscriptions as boundaries for:
+    → Ownership
+    → Isolation
+    → Billing
+    → Governance
+    → Limits
+
+Use Resource Groups as logical containers for resources
+that share lifecycle/management requirements.
+
+════════════════════════════════════════════════════════════════════════════
+27. SUBSCRIPTION DEMOCRATIZATION
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Old mindset:
+
+    Central IT controls everything.
+
+Landing Zone approach:
+
+    Platform Team
+         ↓
+    Provides guardrails
+         ↓
+    Application Team
+         ↓
+    Manages its own workload
+
+Example:
+
+    Platform:
+        Azure Policy
+        Network
+        Security
+        Identity
+        Monitoring baseline
+
+    Application:
+        AKS workloads
+        Application Gateway configuration
+        Application resources
+        Deployment
+        Application-level operations
+
+Result:
+    Central governance + decentralized workload ownership.
+
+════════════════════════════════════════════════════════════════════════════
+28. SUBSCRIPTION VENDING
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Subscription vending = Repeatable process for provisioning
+new Application Landing Zones/subscriptions.
+
+Manual:
+
+    Request
+      ↓
+    Platform Engineer
+      ↓
+    Portal
+      ↓
+    Create subscription
+      ↓
+    Configure policies
+      ↓
+    Configure RBAC
+      ↓
+    Configure network
+      ↓
+    Configure monitoring
+
+Automated:
+
+    Request
+      ↓
+    Vending workflow
+      ↓
+    Subscription creation
+      ↓
+    Management Group placement
+      ↓
+    Policy assignment
+      ↓
+    RBAC
+      ↓
+    Network integration
+      ↓
+    Monitoring/Security
+      ↓
+    Ready for workload
+
+As the number of landing zones grows:
+    Automation becomes increasingly important.
+
+════════════════════════════════════════════════════════════════════════════
+29. GOVERNANCE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Governance = Mechanisms + policies + processes used to maintain
+control over Azure resources.
+
+Main tools:
+
+    Management Groups
+    Azure Policy
+    Azure RBAC
+    Resource Locks
+    Tags
+    Cost Management
+    Compliance controls
+
+Example:
+
+    Requirement:
+        Production resources must use approved regions.
+
+    Azure Policy
+          ↓
+    Allowed locations
+          ↓
+    Deployment
+          ↓
+    Unsupported region
+          ↓
+    DENY
+
+Governance should be:
+    → Policy-driven
+    → Automated where possible
+    → Consistent
+    → Auditable
+
+════════════════════════════════════════════════════════════════════════════
+30. COST GOVERNANCE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Landing Zone should also consider cost management.
+
+Controls:
+
+    Cost Management
+    Budgets
+    Tags
+    Subscription boundaries
+    Resource organization
+    Policy
+    Reporting
+
+Useful tags:
+
+    Environment
+    Application
+    Owner
+    CostCenter
+    BusinessUnit
+
+Example:
+
+    Environment = PROD
+    Application = ICMS
+    Owner = Platform
+    CostCenter = FIN-001
+
+Tags can also help query and navigate resources
+without creating excessive management groups.
+
+════════════════════════════════════════════════════════════════════════════
+31. SECURITY BASELINE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Landing Zone security should cover:
+
+IDENTITY:
+    RBAC
+    Least privilege
+    Managed Identity
+    PIM
+
+NETWORK:
+    Firewall
+    NSG
+    Segmentation
+    Private connectivity
+    DDoS protection
+
+DATA:
+    Encryption
+    Key Vault
+    Access control
+
+SECURITY POSTURE:
+    Defender for Cloud
+    Microsoft Sentinel
+
+GOVERNANCE:
+    Azure Policy
+    Compliance
+    Resource restrictions
+
+MONITORING:
+    Logs
+    Alerts
+    Security events
+
+Principle:
+    Security is continuous, not a one-time deployment.
+
+════════════════════════════════════════════════════════════════════════════
+32. ZERO TRUST IN LANDING ZONE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Zero Trust principles can be incorporated into Landing Zone design.
+
+Core thinking:
+
+    Verify explicitly
+    Use least privilege
+    Assume breach
+
+Applied to:
+
+    Identity
+    Network segmentation
+    Data protection
+    Monitoring
+    Security governance
+
+Example:
+
+    User
+      ↓
+    Authenticate
+      ↓
+    Authorize
+      ↓
+    Access only required resource
+      ↓
+    Monitor activity
+
+════════════════════════════════════════════════════════════════════════════
+33. NETWORK SECURITY vs GOVERNANCE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Network topology answers:
+
+    "How will networks connect?"
+
+Security answers:
+
+    "How will we protect the traffic and workloads?"
+
+Governance answers:
+
+    "What networking/security configuration is allowed?"
+
+Example:
+
+    Network:
+        Hub-Spoke
+
+    Security:
+        Azure Firewall
+
+    Governance:
+        Azure Policy restricting public IPs
+
+These are related but different design areas.
+
+════════════════════════════════════════════════════════════════════════════
+34. DESIGN AREAS — BEFORE BUILDING LANDING ZONE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+DO NOT immediately start creating VNets/subscriptions.
+
+First understand organizational requirements.
+
+Key design areas include:
+
+    A → Azure Billing + Microsoft Entra Tenant
+    B → Identity + Access Management
+    C → Resource Organization
+    D → Governance
+    E → Network Topology + Connectivity
+    F → Security
+    G → Management
+    H → [Additional organizational/environment considerations]
+    I → Platform Automation + DevOps
+
+The exact architecture should be adapted to:
+    → Business requirements
+    → Security requirements
+    → Compliance
+    → Connectivity
+    → Operations
+    → Scale
+
+Microsoft reference architecture = STARTING POINT,
+NOT a mandatory architecture for every organization.
+
+════════════════════════════════════════════════════════════════════════════
+35. AZURE BILLING + MICROSOFT ENTRA TENANT
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Before designing the platform, understand:
+
+    Azure billing agreement
+    Microsoft Entra tenant
+    Subscription ownership
+    Identity model
+    Organizational requirements
+
+Possible billing models include:
+
+    Enterprise Agreement (EA)
+    Microsoft Customer Agreement (MCA)
+
+Important:
+    Billing hierarchy and Azure management hierarchy are related,
+    but they are NOT the same thing.
+
+Azure Landing Zone operates primarily around:
+    Tenant → Management Groups → Subscriptions → Resources
+
+════════════════════════════════════════════════════════════════════════════
+36. SINGLE vs MULTIPLE MICROSOFT ENTRA TENANTS
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Most organizations:
+
+    ONE Microsoft Entra Tenant
+             ↓
+    Multiple Management Groups
+             ↓
+    Multiple Subscriptions
+             ↓
+    Multiple Workloads
+
+Why single tenant?
+    → Easier collaboration
+    → Central governance
+    → Central identity
+    → Easier management
+
+Multiple tenants may be required due to:
+    → Organizational separation
+    → Regulatory requirements
+    → Security isolation
+    → Business requirements
+
+IMPORTANT:
+    A subscription is associated with ONE Microsoft Entra tenant.
+
+════════════════════════════════════════════════════════════════════════════
+37. REGIONS & LANDING ZONES
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Landing Zone architecture is REGION-AGNOSTIC.
+
+But actual resources are deployed into Azure regions.
+
+Consider:
+
+    Primary Region
+    Secondary/DR Region
+    Data residency
+    Availability
+    Latency
+    Regulatory requirements
+
+Example:
+
+    Primary:
+        East US
+
+    DR:
+        Central US
+
+Platform should be designed to support:
+    → Multi-region connectivity
+    → Multi-region identity where required
+    → Multi-region management
+    → Multi-region workloads
+
+IMPORTANT:
+    Do NOT create Management Groups simply because
+    workloads are deployed in different Azure regions.
+
+Create region-specific MG structures only when
+regulatory/business requirements justify it.
+
+════════════════════════════════════════════════════════════════════════════
+38. CENTRALIZATION PRINCIPLE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+DO NOT centralize everything.
+
+Centralize a capability when it provides clear:
+
+    Governance benefit
+    Operational benefit
+    Economic/cost benefit
+
+Good candidates:
+
+    Firewall
+    Connectivity
+    DNS
+    Security monitoring
+    Identity services
+    Management/monitoring
+
+Keep workload-specific capabilities with:
+    Application/Workload team
+
+Example:
+
+    CENTRAL:
+        Azure Firewall
+
+    WORKLOAD:
+        Application-specific NSG rules
+        Application configuration
+        Application resources
+
+════════════════════════════════════════════════════════════════════════════
+39. PLATFORM AUTOMATION + DEVOPS
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Landing Zone should be repeatable.
+
+Preferred approach:
+
+    Git
+      ↓
+    Infrastructure as Code (IaC)
+      ↓
+    CI/CD
+      ↓
+    Validation
+      ↓
+    Security
+      ↓
+    Plan
+      ↓
+    Approval
+      ↓
+    Apply
+      ↓
+    Azure
+
+Possible tools:
+
+    Terraform
+    Bicep
+    Azure DevOps
+    GitHub
+    GitLab
+
+For YOUR DevOps workflow:
+
+    Git
+      ↓
+    Terraform
+      ↓
+    TFLint
+      ↓
+    Checkov
+      ↓
+    Terraform Validate
+      ↓
+    Terraform Plan
+      ↓
+    Approval
+      ↓
+    Terraform Apply
+
+════════════════════════════════════════════════════════════════════════════
+40. LANDING ZONE IMPLEMENTATION OPTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+OPTION 1 — ACCELERATORS
+
+Microsoft-provided accelerators.
+
+Advantages:
+    → Faster implementation
+    → Recommended architecture patterns
+    → Infrastructure as Code
+    → Built-in organizational guardrails
+
+Microsoft recommends accelerators as the fastest path
+for most organizations to align with recommended practices.
+
+OPTION 2 — CUSTOM BUILD
+
+Organization designs/builds its own implementation.
+
+Can be:
+    → Internal team
+    → Microsoft support
+    → Microsoft partner
+
+Use when:
+    → Strong custom requirements
+    → Existing enterprise architecture
+    → Special regulatory requirements
+    → Custom operating model
+
+════════════════════════════════════════════════════════════════════════════
+41. TECHNOLOGY ADOPTION
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Landing Zone should not be redesigned every time
+a new Azure technology appears.
+
+Example:
+
+    Existing Landing Zone
+          ↓
+    New AI workload
+          ↓
+    Deploy into Application Landing Zone
+          ↓
+    Apply existing governance/security
+          ↓
+    Add policies where required
+
+This means:
+
+    Platform architecture remains stable
+             +
+    Governance/security evolves
+
+Example technologies:
+
+    AKS
+    Azure Machine Learning
+    Azure Databricks
+    Microsoft Fabric
+    AI workloads
+    Data workloads
+
+New technology → workload-specific deployment,
+NOT complete Landing Zone redesign.
+
+════════════════════════════════════════════════════════════════════════════
+42. LANDING ZONE + AKS
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Landing Zone provides the foundation:
+
+    Management Groups
+    Subscription
+    VNet
+    NSG
+    Firewall
+    DNS
+    Identity
+    Monitoring
+    Security
+    Policies
+
+AKS runs inside Application Landing Zone:
+
+    Application Landing Zone
+            │
+            ├── VNet
+            │    ├── AKS subnet
+            │    └── Application subnet
+            │
+            ├── AKS
+            ├── ACR
+            ├── Key Vault
+            └── Application Gateway
+
+Platform:
+    → Provides governance/network/security foundation
+
+DevOps:
+    → Builds image
+    → Pushes to ACR
+    → Deploys to AKS
+
+════════════════════════════════════════════════════════════════════════════
+43. LANDING ZONE + SECURITY TRAFFIC FLOW
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Internet User
+      ↓
+Application Gateway / WAF
+      ↓
+Azure Firewall / Network Controls
+      ↓
+Spoke / Application VNet
+      ↓
+AKS / VM / App Service
+      ↓
+Application
+
+Monitoring:
+
+    Resources
+       ↓
+    Diagnostic Logs
+       ↓
+    Log Analytics
+       ↓
+    Azure Monitor / Defender / Sentinel
+
+Governance:
+
+    Management Group
+       ↓
+    Azure Policy
+       ↓
+    Subscription
+       ↓
+    Resource
+
+Identity:
+
+    Microsoft Entra ID
+       ↓
+    RBAC / Managed Identity
+       ↓
+    Azure Resource
+
+════════════════════════════════════════════════════════════════════════════
+44. COMPLETE ENTERPRISE LANDING ZONE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+                         MICROSOFT ENTRA TENANT
+                                  │
+                           TENANT ROOT GROUP
+                                  │
+                       INTERMEDIATE ROOT MG
+                                  │
+              ┌───────────────────┴────────────────────┐
+              │                                        │
+           PLATFORM                               LANDING ZONES
+              │                                        │
+     ┌────────┼───────────┐                    ┌───────┼────────┐
+     │        │           │                    │       │        │
+  Identity  Security  Connectivity          Corp    Online    Local
+     │        │           │                    │       │        │
+     │        │           ├── Firewall         │       │        │
+     │        │           ├── DNS              │       │        │
+     │        │           ├── VPN              │       │        │
+     │        │           ├── ExpressRoute     │       │        │
+     │        │           └── VWAN             │       │        │
+     │        │                                │       │        │
+     │        └── Sentinel                     │       │        │
+     │                                         │       │        │
+     └── AD DS / Identity                      │       │        │
+                                              ↓       ↓        ↓
+                                           WORKLOAD WORKLOAD WORKLOAD
+                                              │       │        │
+                                           DEV/QA/PROD environments
+                                              │
+                                              ↓
+                                        Azure Resources
+
+Additional:
+    Sandbox MG → Experimental subscriptions
+    Decommissioned MG → Retired subscriptions
+
+════════════════════════════════════════════════════════════════════════════
+45. ICMS — PRACTICAL LANDING ZONE EXAMPLE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+                        AZURE LANDING ZONE
+                               │
+               ┌───────────────┴────────────────┐
+               │                                │
+        PLATFORM LANDING ZONE             APPLICATION LANDING ZONE
+               │                                │
+       ┌───────┼─────────────┐                  │
+       ↓       ↓             ↓                  │
+    Network Security      Management             │
+       │       │             │                  │
+       ↓       ↓             ↓                  │
+   Firewall Defender      Monitor                │
+   VPN/ER    Sentinel     Log Analytics          │
+       │                                      ICMS WORKLOAD
+       │                                           │
+       └───────────────────────────────────────────┤
+                                                   │
+                              ┌────────────────────┼───────────────────┐
+                              ↓                    ↓                   ↓
+                             DEV                   QA                 PROD
+                              │                    │                   │
+                              ↓                    ↓                   ↓
+                             AKS                  AKS                 AKS
+                              │                    │                   │
+                           ACR/KeyVault/AGW etc. as required
+
+DevOps flow:
+
+    Developer
+       ↓
+    Git
+       ↓
+    CI Pipeline
+       ↓
+    SonarQube
+       ↓
+    Gitleaks / Security checks
+       ↓
+    Docker Build
+       ↓
+    ACR (Azure Container Registry)
+       ↓
+    Helm
+       ↓
+    AKS
+       ↓
+    Validation
+
+Infrastructure flow:
+
+    Git
+       ↓
+    Terraform
+       ↓
+    TFLint
+       ↓
+    Checkov
+       ↓
+    Terraform Validate
+       ↓
+    Terraform Plan
+       ↓
+    Approval
+       ↓
+    Terraform Apply
+       ↓
+    Azure Infrastructure
+
+════════════════════════════════════════════════════════════════════════════
+46. LANDING ZONE END-TO-END FLOW
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+STEP 1:
+    Define organizational requirements.
+
+STEP 2:
+    Define Microsoft Entra tenant + billing structure.
+
+STEP 3:
+    Design Management Group hierarchy.
+
+STEP 4:
+    Design identity/access model.
+
+STEP 5:
+    Design network topology:
+        Hub-Spoke OR Virtual WAN.
+
+STEP 6:
+    Design security architecture.
+
+STEP 7:
+    Define governance/policies.
+
+STEP 8:
+    Define management/monitoring baseline.
+
+STEP 9:
+    Build Platform Landing Zone.
+
+STEP 10:
+    Create subscription vending process.
+
+STEP 11:
+    Create Application Landing Zone.
+
+STEP 12:
+    Apply policies + RBAC + connectivity + monitoring.
+
+STEP 13:
+    Application team deploys workload.
+
+STEP 14:
+    Continuously monitor, secure and govern.
+
+════════════════════════════════════════════════════════════════════════════
+47. WHAT DOES PLATFORM TEAM ACTUALLY DO?
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Platform Team:
+
+    ✓ Management Groups
+    ✓ Subscription strategy
+    ✓ Azure Policy
+    ✓ RBAC model
+    ✓ Networking foundation
+    ✓ Firewall
+    ✓ VPN / ExpressRoute
+    ✓ DNS
+    ✓ Identity integration
+    ✓ Security tooling
+    ✓ Monitoring baseline
+    ✓ Subscription vending
+    ✓ Platform automation
+    ✓ Governance
+
+Application Team:
+
+    ✓ Application resources
+    ✓ Application configuration
+    ✓ Application deployment
+    ✓ Application-level monitoring
+    ✓ Workload-specific requirements
+
+DevOps Engineer:
+
+    ✓ Terraform
+    ✓ CI/CD
+    ✓ Infrastructure deployment
+    ✓ Docker
+    ✓ ACR
+    ✓ Kubernetes / AKS
+    ✓ Helm
+    ✓ Deployment validation
+    ✓ Release troubleshooting
+
+════════════════════════════════════════════════════════════════════════════
+48. COMMON INTERVIEW TRAPS
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+TRAP 1:
+    "Landing Zone means VNet."
+
+CORRECT:
+    Landing Zone is the complete enterprise foundation.
+
+TRAP 2:
+    "Hub-Spoke is Landing Zone."
+
+CORRECT:
+    Hub-Spoke is a networking topology.
+
+TRAP 3:
+    "Every environment gets a Management Group."
+
+CORRECT:
+    Don't normally create MGs for DEV/TEST/PROD.
+    Use subscriptions within workload-type MGs.
+
+TRAP 4:
+    "Every workload needs multiple subscriptions."
+
+CORRECT:
+    Multiple subscriptions only when requirements justify them.
+
+TRAP 5:
+    "Platform team manages all application resources."
+
+CORRECT:
+    Platform provides foundation/guardrails;
+    workload team operates workload resources.
+
+TRAP 6:
+    "Policy controls users."
+
+CORRECT:
+    RBAC controls access.
+    Policy controls resource configuration/compliance.
+
+TRAP 7:
+    "Identity subscription contains Microsoft Entra ID."
+
+CORRECT:
+    Microsoft Entra ID is tenant-level identity.
+    Identity subscription contains supporting identity infrastructure.
+
+TRAP 8:
+    "Create Management Groups based on every Azure region."
+
+CORRECT:
+    Don't create regional MGs unless regulatory/business requirements require it.
+
+════════════════════════════════════════════════════════════════════════════
+49. MOST IMPORTANT DESIGN PRINCIPLES
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. SUBSCRIPTION DEMOCRATIZATION
+   → Workload teams manage their own workloads within guardrails.
+
+2. POLICY-DRIVEN GOVERNANCE
+   → Use Azure Policy to enforce governance consistently.
+
+3. SINGLE CONTROL & MANAGEMENT PLANE
+   → Prefer consistent Azure-native management/control across the estate.
+
+4. APPLICATION-CENTRIC SERVICE MODEL
+   → Organize around workloads rather than infrastructure alone.
+
+5. AZURE-NATIVE ALIGNMENT
+   → Prefer Azure-native capabilities and align with Azure roadmap.
+
+6. CENTRALIZE ONLY WHEN JUSTIFIED
+   → Centralize where governance, operational or economic benefits exist.
+
+7. AUTOMATE AT SCALE
+   → Use IaC + CI/CD + subscription vending.
+
+8. KEEP MANAGEMENT GROUPS SIMPLE
+   → Avoid unnecessary nesting.
+
+════════════════════════════════════════════════════════════════════════════
+50. HUB-SPOKE vs VIRTUAL WAN
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+HUB-SPOKE:
+    Best for:
+    → Controlled enterprise network
+    → Central hub
+    → Spokes for workloads
+    → Straightforward architecture
+
+VIRTUAL WAN:
+    Best for:
+    → Large enterprise
+    → Multiple regions
+    → Many branches
+    → Large hybrid connectivity
+    → Central WAN routing
+
+Both:
+    → Can be used with Azure Landing Zone.
+
+════════════════════════════════════════════════════════════════════════════
+51. LANDING ZONE vs MANAGEMENT GROUP vs SUBSCRIPTION
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+LANDING ZONE:
+    Complete standardized environment/foundation for workloads.
+
+MANAGEMENT GROUP:
+    Governance hierarchy above subscriptions.
+
+SUBSCRIPTION:
+    Azure resource/billing/management boundary.
+
+RESOURCE GROUP:
+    Logical container for Azure resources.
+
+Think:
+
+    Landing Zone
+         ↓
+    Management Group
+         ↓
+    Subscription
+         ↓
+    Resource Group
+         ↓
+    Resource
+
+════════════════════════════════════════════════════════════════════════════
+52. LANDING ZONE vs HUB-SPOKE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+LANDING ZONE:
+    Identity
+    Governance
+    Security
+    Network
+    Management
+    Resource organization
+    Automation
+
+HUB-SPOKE:
+    Network topology only
+
+Therefore:
+
+    Landing Zone
+        │
+        ├── Governance
+        ├── Identity
+        ├── Security
+        ├── Management
+        └── Networking
+                └── Hub-Spoke / Virtual WAN
+
+════════════════════════════════════════════════════════════════════════════
+53. "HOW WOULD YOU DESIGN AN AZURE LANDING ZONE?"
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+INTERVIEW ANSWER:
+
+"I would first understand the organization's requirements around identity,
+networking, security, governance, resource organization and operations.
+
+I would then establish the Management Group hierarchy and build the Platform
+Landing Zone for centralized capabilities such as connectivity, identity,
+security and management.
+
+Under the Landing Zones management group, I would create Application Landing
+Zones for workloads and classify them according to their requirements, such as
+Corp, Online or Local.
+
+For networking, I would select Hub-Spoke or Azure Virtual WAN based on the
+organization's scale, connectivity and traffic requirements.
+
+Azure Policy would provide governance and RBAC would control access. Centralized
+monitoring and security would be implemented using services such as Azure
+Monitor, Log Analytics, Defender for Cloud and Microsoft Sentinel.
+
+Finally, I would automate the platform and Application Landing Zone provisioning
+using Infrastructure as Code and CI/CD, including a subscription vending process
+for repeatable onboarding."
+
+════════════════════════════════════════════════════════════════════════════
+54. "HOW DOES A NEW APPLICATION ENTER THE LANDING ZONE?"
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Application Team
+      ↓
+Requirement submitted
+      ↓
+Platform Team reviews:
+    Identity
+    Network
+    Security
+    Compliance
+    Environment
+      ↓
+Subscription / ALZ provisioning
+      ↓
+Management Group placement
+      ↓
+Azure Policy
+      ↓
+RBAC
+      ↓
+Network connectivity
+      ↓
+Monitoring + Security baseline
+      ↓
+Application Team receives environment
+      ↓
+Application deployment
+      ↓
+Continuous monitoring/governance
+
+This is the practical idea behind:
+    SUBSCRIPTION VENDING
+
+════════════════════════════════════════════════════════════════════════════
+55. "WHY AZURE LANDING ZONE INSTEAD OF JUST CREATING SUBSCRIPTIONS?"
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Subscription alone gives:
+
+    Billing
+    Resource boundary
+    Access boundary
+    Azure resource container
+
+Landing Zone additionally provides:
+
+    Governance
+    Security baseline
+    Identity model
+    Network architecture
+    Monitoring
+    Management
+    Standardization
+    Automation
+    Workload onboarding model
+
+Therefore:
+
+    Subscription = boundary
+    Landing Zone = standardized operating foundation
+
+════════════════════════════════════════════════════════════════════════════
+56. "HOW DOES TERRAFORM FIT INTO LANDING ZONE?"
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Terraform is NOT the Landing Zone.
+
+Terraform is an implementation/automation tool.
+
+Example:
+
+    Git
+      ↓
+    Terraform Modules
+      ↓
+    Azure DevOps Pipeline
+      ↓
+    Validate
+      ↓
+    TFLint
+      ↓
+    Checkov
+      ↓
+    Plan
+      ↓
+    Approval
+      ↓
+    Apply
+      ↓
+    Azure Landing Zone
+
+Terraform can automate:
+
+    Management Groups
+    Policy
+    RBAC
+    VNets
+    Subnets
+    NSGs
+    Firewall
+    Key Vault
+    AKS
+    Monitoring
+    Other Azure resources
+
+════════════════════════════════════════════════════════════════════════════
+57. 30-SECOND REVISION
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+AZURE LANDING ZONE
+│
+├── PLATFORM LANDING ZONE
+│   ├── Management Groups
+│   ├── Governance / Policy
+│   ├── Identity
+│   ├── Connectivity
+│   ├── Security
+│   ├── Management
+│   └── Subscription Vending
+│
+└── APPLICATION LANDING ZONES
+    ├── One ALZ per workload
+    ├── DEV
+    ├── TEST / QA
+    └── PROD
+
+NETWORK:
+    Hub-Spoke OR Virtual WAN
+
+GOVERNANCE:
+    Management Groups + Azure Policy
+
+ACCESS:
+    Microsoft Entra ID + RBAC + Managed Identity
+
+SECURITY:
+    Defender + Sentinel + Firewall + DDoS + Key Vault
+
+MONITORING:
+    Azure Monitor + Log Analytics + Alerts
+
+AUTOMATION:
+    Terraform / Bicep + CI/CD
+
+CORE PRINCIPLE:
+    Platform Team → Foundation + Guardrails
+    Workload Team → Workload Resources + Operations
+
+════════════════════════════════════════════════════════════════════════════
+58. GOLDEN INTERVIEW ANSWER
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+"Azure Landing Zone is a standardized enterprise foundation for governing,
+securing and scaling Azure workloads across multiple subscriptions.
+
+It has two major components: the Platform Landing Zone and Application Landing
+Zones. The Platform Landing Zone provides centralized capabilities such as
+Management Groups, governance, identity, connectivity, security and management.
+Application Landing Zones are the environments where workload teams deploy and
+operate their applications.
+
+I would use Management Groups and Azure Policy for governance, Microsoft Entra
+ID and RBAC for identity and access, Hub-Spoke or Azure Virtual WAN for
+connectivity, and Azure Monitor, Defender for Cloud and Sentinel for operations
+and security.
+
+I would also implement subscription vending and Infrastructure as Code using
+Terraform with CI/CD so that new landing zones can be provisioned consistently
+and repeatedly.
+
+The key principle is to give workload teams autonomy while enforcing enterprise
+security and governance through centralized platform guardrails."
+
+════════════════════════════════════════════════════════════════════════════
+59. FINAL MENTAL MODEL
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Think of Azure Landing Zone as an AIRPORT:
+
+    PLATFORM LANDING ZONE
+        = Airport infrastructure
+
+    MANAGEMENT GROUPS
+        = Airport sections/rules
+
+    AZURE POLICY
+        = Rules passengers/airlines must follow
+
+    RBAC
+        = Who is allowed into which area
+
+    CONNECTIVITY
+        = Roads / runways / routes
+
+    SECURITY
+        = Airport security
+
+    MONITORING
+        = Control room
+
+    APPLICATION LANDING ZONE
+        = Space allocated to an airline/workload
+
+    SUBSCRIPTION
+        = Operational/billing boundary
+
+    APPLICATION
+        = Actual flight/service
+
+    DEVOPS / TERRAFORM
+        = Automation used to build and operate the airport
+
+KEY LINE:
+    "Landing Zone provides the FOUNDATION and GUARDRAILS;
+     workloads run on top of it."
+
+════════════════════════════════════════════════════════════════════════════
+OFFICIAL MICROSOFT REFERENCE
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Microsoft Learn — What is an Azure Landing Zone?
+https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/
+
+Current page updated: August 26, 2026
+════════════════════════════════════════════════════════════════════════════

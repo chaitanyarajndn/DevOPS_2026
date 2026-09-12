@@ -1,0 +1,1733 @@
+============================================================
+01. AZURE NETWORKING — CORE COMPONENTS
+============================================================
+
+01. AZURE VIRTUAL NETWORK (VNET)
+Definition : Azure VNet is a private networking boundary in Azure where resources communicate using private IP addresses.
+Why Needed : • Defines IP address space and network segmentation.
+             • Provides the base network for Azure workloads.
+Interview  : "VNet is basically the network foundation of my Azure environment."
+
+02. SUBNET
+Definition : A subnet is a logical network segment created inside a VNet.
+Why Needed : • Separates workloads such as Web, App, DB and Management.
+             • Allows different network security and routing controls.
+Interview  : "VNet is the overall network, while subnets divide it into logical sections."
+
+03. IP ADDRESS
+Definition : An IP address provides network identity to a resource.
+Why Needed : • Identifies the source and destination of network communication.
+             • Can be private for internal communication or public for internet access.
+Interview  : "IP addressing defines how an Azure resource is identified and reached."
+
+04. PUBLIC IP
+Definition : A Public IP is an internet-routable IP address assigned to or associated with an Azure resource.
+Why Needed : • Allows internet-facing connectivity.
+             • Commonly used with Application Gateway, Load Balancer, VPN Gateway and Bastion.
+Interview  : "I use a Public IP when a resource needs an internet-reachable access path."
+
+05. PRIVATE IP
+Definition : A Private IP is an internal IP address used for communication within private networks.
+Why Needed : • Enables internal resource-to-resource communication.
+             • Avoids directly exposing resources to the internet.
+Interview  : "Private IP keeps the communication within the private network path."
+
+06. NETWORK INTERFACE (NIC)
+Definition : A Network Interface Card is the networking interface through which an Azure VM connects to a VNet.
+Why Needed : • Connects the VM to a subnet.
+             • Holds network configuration such as private IP and NSG association.
+Interview  : "NIC is basically the network connection point of an Azure VM."
+
+07. NETWORK SECURITY GROUP (NSG)
+Definition : NSG is a network traffic filtering mechanism that allows or denies inbound and outbound traffic.
+Why Needed : • Controls which traffic can reach a resource.
+             • Provides basic network-level access control.
+Applied    : Subnet level / NIC level
+Interview  : "NSG provides basic network-level traffic control by allowing or denying inbound and outbound traffic."
+
+08. AZURE BASTION
+Definition : Azure Bastion is a managed service that provides secure RDP/SSH access to VMs through Azure Portal.
+Why Needed : • Allows administration without assigning a public IP directly to the VM.
+             • Reduces direct internet exposure of management ports.
+Interview  : "Bastion gives me secure RDP or SSH access to private VMs without exposing those VMs directly to the internet."
+
+09. VNET PEERING
+Definition : VNet Peering connects two Azure VNets using private network connectivity.
+Why Needed : • Enables communication between resources in different VNets.
+             • Commonly used in Hub-and-Spoke architecture.
+Interview  : "VNet Peering allows separate VNets to communicate using private network connectivity."
+
+10. AZURE LOAD BALANCER
+Definition : Azure Load Balancer is a Layer 4 load-balancing service for TCP and UDP traffic.
+Why Needed : • Distributes network traffic across backend instances.
+             • Improves availability by sending traffic to healthy instances.
+Interview  : "Azure Load Balancer distributes network-level traffic across healthy backend instances."
+
+11. APPLICATION GATEWAY
+Definition : Application Gateway is a Layer 7 web traffic load balancer for HTTP/HTTPS applications.
+Why Needed : • Supports application-aware routing such as host-based and URL-based routing.
+             • Can provide TLS termination and integrate with WAF.
+Interview  : "Application Gateway understands web traffic, so I can route HTTP/HTTPS requests based on application-level rules."
+
+12. NAT GATEWAY
+Definition : NAT Gateway is a managed Network Address Translation service for outbound internet connectivity.
+Why Needed : • Provides predictable outbound internet access for private resources.
+             • VMs do not need individual public IPs for outbound connectivity.
+Interview  : "NAT Gateway provides controlled and predictable outbound internet connectivity for resources in a subnet."
+
+13. VPN GATEWAY
+Definition : VPN Gateway provides encrypted connectivity between Azure and external networks over the internet.
+Why Needed : • Connects Azure with on-premises environments.
+             • Commonly used for Site-to-Site VPN connectivity.
+Interview  : "VPN Gateway creates an encrypted tunnel between Azure and an external network over the internet."
+
+14. EXPRESSROUTE
+Definition : ExpressRoute provides private connectivity between on-premises infrastructure and Azure.
+Why Needed : • Provides private and predictable network connectivity.
+             • Useful for enterprise workloads requiring dedicated connectivity.
+Interview  : "ExpressRoute provides private connectivity to Azure without using the public internet path."
+
+15. GATEWAY TRANSIT
+Definition : Gateway Transit allows a peered VNet to use the VPN or ExpressRoute gateway deployed in another VNet.
+Why Needed : • Avoids deploying a separate gateway in every spoke.
+             • Commonly used in Hub-and-Spoke architecture.
+Interview  : "Gateway Transit allows spoke VNets to use the connectivity gateway deployed in the hub."
+
+16. USER DEFINED ROUTE (UDR)
+Definition : UDR is a custom route created to control the path network traffic takes.
+Why Needed : • Forces traffic through a specific network appliance.
+             • Commonly used to send traffic through Azure Firewall.
+Interview  : "UDR allows me to define a custom traffic path instead of relying only on Azure's default routing."
+
+17. AZURE FIREWALL
+Definition : Azure Firewall is a managed, centralized network security service for controlling and inspecting network traffic.
+Why Needed : • Provides centralized traffic control across network segments.
+             • Can control and inspect north-south and east-west traffic.
+Interview  : "Azure Firewall acts as a centralized security checkpoint for network traffic."
+
+18. AZURE DNS
+Definition : Azure DNS is Azure's DNS hosting service used to resolve domain names to IP addresses.
+Why Needed : • Allows applications to be accessed using domain names.
+             • Provides DNS management for Azure-hosted domains.
+Interview  : "Azure DNS allows applications and users to reach resources using names instead of directly using IP addresses."
+
+19. PRIVATE DNS ZONE
+Definition : Private DNS Zone provides DNS name resolution inside private Azure networks.
+Why Needed : • Resolves private endpoints and internal services.
+             • Commonly used with Private Endpoint architecture.
+Interview  : "Private DNS Zone allows private services to be resolved using DNS names inside the private network."
+
+20. PUBLIC ENDPOINT
+Definition : A Public Endpoint is an internet-reachable endpoint of an Azure service.
+Why Needed : • Allows clients outside the private network to access a service.
+             • Must be protected using appropriate security controls.
+Interview  : "A public endpoint provides an internet-reachable access path to a service."
+
+21. SERVICE ENDPOINT
+Definition : Service Endpoint extends VNet/subnet identity to supported Azure PaaS services.
+Why Needed : • Restricts service access based on virtual network rules.
+             • Keeps traffic on the Azure backbone rather than requiring public internet routing.
+Interview  : "Service Endpoint allows a subnet to access supported Azure services while restricting access at the virtual network level."
+
+22. PRIVATE ENDPOINT
+Definition : Private Endpoint provides a private IP address from the VNet for an Azure PaaS service.
+Why Needed : • Provides private connectivity to services such as Key Vault and Storage.
+             • Removes the need to rely on the service's public endpoint for access.
+Interview  : "Private Endpoint gives an Azure service a private IP inside my VNet, allowing private connectivity to that service."
+
+23. AZURE DDOS PROTECTION
+Definition : Azure DDoS Protection helps protect internet-facing resources from Distributed Denial-of-Service attacks.
+Why Needed : • Helps maintain application availability during abnormal traffic.
+             • Provides protection for public-facing workloads.
+Interview  : "DDoS Protection helps keep internet-facing applications available during large-scale malicious traffic attacks."
+
+24. WEB APPLICATION FIREWALL (WAF)
+Definition : WAF is a Layer 7 security capability that inspects HTTP/HTTPS traffic for malicious web requests.
+Why Needed : • Protects web applications against common application-layer attacks.
+             • Commonly deployed with Application Gateway.
+Interview  : "WAF protects the web application by inspecting HTTP and HTTPS requests and blocking malicious traffic."
+
+25. NETWORK WATCHER
+Definition : Network Watcher is an Azure network monitoring and troubleshooting service.
+Why Needed : • Helps identify connectivity and routing problems.
+             • Provides tools such as IP Flow Verify and Connection Troubleshoot.
+Interview  : "I use Network Watcher when I need to troubleshoot where network connectivity is failing."
+
+
+============================================================
+02. IMPORTANT AZURE NETWORK DIFFERENCES
+============================================================
+
+NSG              → L3/L4 traffic filtering → Subnet/NIC → Allow/Deny rules
+Azure Firewall   → Centralized network security → Traffic inspection/control
+Load Balancer    → L4 → TCP/UDP → Network traffic distribution
+Application GW   → L7 → HTTP/HTTPS → Application-aware routing
+WAF              → L7 security → Web attack protection
+NAT Gateway      → Outbound connectivity → Private resources → Internet
+VPN Gateway      → Encrypted connectivity → Internet-based VPN
+ExpressRoute     → Private connectivity → Azure ↔ On-Premises
+Bastion          → RDP/SSH management → Private VM → No VM public IP required
+Service Endpoint → VNet identity → Supported Azure PaaS service
+Private Endpoint → Private IP → PaaS service → Private connectivity
+
+
+============================================================
+03. AZURE FIREWALL vs NSG
+============================================================
+
+NSG
+Definition : Basic network traffic filtering at subnet/NIC level.
+Why        : Controls which inbound/outbound traffic is allowed.
+Use        : VM/subnet-level access control.
+
+AZURE FIREWALL
+Definition : Centralized managed network security service.
+Why        : Centralizes traffic inspection and network security.
+Use        : Hub-based security, outbound control, segmentation.
+
+INTERVIEW:
+"NSG is generally used for basic subnet or NIC-level filtering,
+while Azure Firewall provides centralized network security and traffic inspection."
+
+
+============================================================
+04. AZURE POLICY
+============================================================
+
+Definition : Azure Policy is a governance service used to enforce organizational rules on Azure resources.
+Why Needed : • Ensures resources follow company standards.
+             • Can audit or deny non-compliant configurations.
+Examples   : Allowed regions, required tags, allowed SKUs, encryption requirements.
+
+Interview  : "I use Azure Policy to enforce governance standards across Azure resources instead of relying only on manual checks."
+
+
+============================================================
+05. AZURE RESOURCE GROUP
+============================================================
+
+Definition : A Resource Group is a logical container for related Azure resources.
+Why Needed : • Helps organize and manage resources together.
+             • Provides a common scope for access control, policy and lifecycle management.
+
+Interview  : "I use Resource Groups to logically organize related Azure resources and manage them at a common scope."
+
+
+============================================================
+06. AZURE SUBSCRIPTION
+============================================================
+
+Definition : Azure Subscription is a management and billing boundary under an Entra ID tenant.
+Why Needed : • Provides a boundary for billing, quotas and resource management.
+             • Allows workloads to be separated across environments or business units.
+
+Interview  : "A subscription is a major management and billing boundary where Azure resources are deployed."
+
+
+============================================================
+07. MICROSOFT ENTRA ID
+============================================================
+
+Definition : Microsoft Entra ID is Microsoft's cloud identity and access management service.
+Why Needed : • Manages users, groups, applications and service identities.
+             • Controls authentication and authorization for Azure resources.
+
+Interview  : "Microsoft Entra ID provides the identity layer used to authenticate and authorize access to Azure."
+
+
+============================================================
+08. SERVICE PRINCIPAL
+============================================================
+
+Definition : A Service Principal is an application identity used by automation or applications to authenticate to Azure.
+Why Needed : • Allows CI/CD pipelines and automation to access Azure without using a human account.
+             • Can be assigned specific Azure RBAC roles.
+
+Interview  : "For CI/CD, I use a service identity with the minimum required RBAC permissions instead of using a personal account."
+
+
+============================================================
+09. AZURE RBAC
+============================================================
+
+Definition : Azure Role-Based Access Control controls what an identity can do on Azure resources.
+Why Needed : • Provides permission management based on roles.
+             • Supports least-privilege access.
+
+Examples   : Owner / Contributor / Reader / Key Vault specific roles
+
+Interview  : "RBAC defines what an identity is allowed to do at a specific Azure scope."
+
+
+============================================================
+10. MANAGEMENT GROUP
+============================================================
+
+Definition : A Management Group is a governance container used to organize multiple Azure subscriptions.
+Why Needed : • Applies governance across multiple subscriptions.
+             • Provides a higher-level scope for Azure Policy and RBAC.
+
+Interview  : "Management Groups help me apply common governance and policies across multiple subscriptions."
+
+
+============================================================
+11. AZURE TENANT
+============================================================
+
+Definition : An Azure tenant represents an organization's Microsoft Entra ID directory.
+Why Needed : • Provides the identity boundary for users, applications and service principals.
+             • Subscriptions are associated with the tenant.
+
+Interview  : "The tenant is the identity boundary, while subscriptions are the resource and billing boundaries."
+
+
+============================================================
+12. AZURE LANDING ZONE
+============================================================
+
+Definition : Azure Landing Zone is a standardized foundation for deploying Azure workloads with governance, networking, security and identity already established.
+Why Needed : • Provides a consistent enterprise Azure structure.
+             • Avoids designing governance and networking separately for every workload.
+
+Interview  : "Landing Zone gives us a standardized Azure foundation where identity, governance, networking and security are established before workloads are deployed."
+
+
+============================================================
+13. LANDING ZONE — BASIC COMPONENTS
+============================================================
+
+Tenant
+  ↓
+Root Management Group
+  ↓
+Platform Management Group
+  ├── Identity
+  ├── Connectivity
+  └── Management
+  ↓
+Landing Zones Management Group
+  ↓
+Application Subscriptions
+  ↓
+Resource Groups
+  ↓
+Workloads
+
+
+============================================================
+14. AZURE FIREWALL — LANDING ZONE CONTEXT
+============================================================
+
+Spoke VNet
+    ↓
+UDR
+    ↓
+Hub VNet
+    ↓
+Azure Firewall
+    ↓
+Internet / On-Premises
+
+Interview:
+"In a Hub-and-Spoke Landing Zone, centralized services such as
+Azure Firewall can be deployed in the hub and spokes can route
+traffic through it using UDRs."
+
+
+============================================================
+15. BACKUP
+============================================================
+
+Definition : Backup is the process of creating recoverable copies of data or workloads.
+Why Needed : • Protects against accidental deletion, corruption or operational mistakes.
+             • Provides a restore point when original data is unavailable.
+
+Interview : "Backup gives me a recoverable copy of data so I can restore it after data loss or corruption."
+
+
+============================================================
+16. DISASTER RECOVERY (DR)
+============================================================
+
+Definition : Disaster Recovery is the process and architecture used to restore application availability after a major failure.
+Why Needed : • Protects against regional or infrastructure-level failures.
+             • Reduces business downtime during disasters.
+
+Interview : "DR is about keeping the application recoverable and available when the primary environment has a major failure."
+
+
+============================================================
+17. RECOVERY
+============================================================
+
+Definition : Recovery is the process of restoring services, infrastructure or data after a failure.
+Why Needed : • Brings the application back to an operational state.
+             • Helps meet defined RTO and RPO requirements.
+
+RTO → Maximum acceptable downtime.
+RPO → Maximum acceptable data loss.
+
+Interview : "Recovery is the actual process of bringing the workload back after a failure, based on RTO and RPO requirements."
+
+
+============================================================
+18. HIGH AVAILABILITY (HA) vs DR vs BACKUP
+============================================================
+
+HA       → Prevent/reduce downtime during component failure.
+Backup   → Recover lost/corrupted data.
+DR       → Recover application/environment after major failure.
+
+Example:
+VM Failure          → HA / VM Scale Set
+Deleted Data        → Backup
+Azure Region Failure → DR
+
+
+============================================================
+19. TERRAFORM
+============================================================
+
+Definition : Terraform is an Infrastructure as Code tool used to define and manage infrastructure through configuration files.
+Why Needed : • Makes infrastructure repeatable and consistent.
+             • Allows infrastructure changes to be reviewed and automated through CI/CD.
+
+Interview : "I use Terraform to provision and manage Azure infrastructure in a repeatable and version-controlled way."
+
+
+============================================================
+20. TERRAFORM PROVIDER
+============================================================
+
+Definition : A Terraform Provider is a plugin that allows Terraform to interact with a specific platform or API.
+Example    : azurerm provider → Azure Resource Manager
+
+Why Needed : • Terraform itself does not directly manage every platform.
+             • Provider translates Terraform configuration into API operations.
+
+Interview : "The provider acts as the bridge between Terraform and the platform API."
+
+
+============================================================
+21. TERRAFORM RESOURCE
+============================================================
+
+Definition : A Terraform resource block defines an infrastructure object that Terraform should create or manage.
+Example    : azurerm_resource_group, azurerm_virtual_network
+
+Interview : "A resource represents the actual infrastructure object that Terraform manages."
+
+
+============================================================
+22. TERRAFORM DATA SOURCE
+============================================================
+
+Definition : A data source reads existing information from a provider without creating that resource.
+Example    : Read an existing Azure Resource Group or Virtual Network.
+
+Why Needed : • Reuse existing infrastructure.
+             • Avoid creating duplicate resources.
+
+Interview : "I use a data source when I need to read existing infrastructure rather than create it."
+
+
+============================================================
+23. TERRAFORM MODULE
+============================================================
+
+Definition : A Terraform Module is a reusable collection of Terraform configuration used to provision a specific infrastructure component or group of components.
+Why Needed : • Avoids repeating Terraform code.
+             • Standardizes infrastructure across environments.
+
+Interview : "I use modules to make Terraform code reusable, standardized and easier to maintain."
+
+
+============================================================
+24. RESOURCE MODULE vs DATA MODULE
+============================================================
+
+RESOURCE MODULE
+Definition : Module primarily designed to create/manage infrastructure resources.
+Example    : VNet module → creates VNet, subnets, NSGs.
+
+DATA SOURCE
+Definition : Reads information about an already existing resource.
+Example    : data "azurerm_resource_group" → reads existing RG.
+
+Interview:
+"Resource configuration creates infrastructure, whereas a data source reads existing infrastructure."
+
+
+============================================================
+25. ROOT MODULE vs CHILD MODULE
+============================================================
+
+ROOT MODULE
+Definition : The Terraform configuration from which Terraform commands are executed.
+
+CHILD MODULE
+Definition : A reusable module called by the root module.
+
+Flow:
+ROOT MODULE
+    ↓
+NETWORK MODULE
+    ↓
+VNET
+    ↓
+SUBNET
+
+ROOT MODULE
+    ↓
+COMPUTE MODULE
+    ↓
+VM / VMSS / AKS
+
+
+============================================================
+26. TERRAFORM VARIABLES
+============================================================
+
+Definition : Variables are inputs used to make Terraform configurations reusable and configurable.
+Why Needed : • Avoid hardcoding values.
+             • Allow different values for Dev, QA and Prod.
+
+Interview : "Variables allow me to keep the Terraform code reusable while changing environment-specific values."
+
+
+============================================================
+27. TERRAFORM MAP
+============================================================
+
+Definition : A map is a collection of key-value pairs where each key identifies a value.
+Example:
+vm_size = {
+  dev  = "Standard_B2s"
+  prod = "Standard_D4s_v5"
+}
+
+Why Needed : • Useful for environment-specific configuration.
+             • Allows values to be accessed using keys.
+
+Interview : "I use maps when configuration needs to be maintained as key-value pairs."
+
+
+============================================================
+28. TERRAFORM LIST
+============================================================
+
+Definition : A list is an ordered collection of values.
+Example:
+regions = ["centralindia", "eastus", "westus"]
+
+Why Needed : • Stores multiple values in a defined order.
+             • Useful when order matters.
+
+
+============================================================
+29. TERRAFORM SET
+============================================================
+
+Definition : A set is an unordered collection of unique values.
+Why Needed : • Prevents duplicate values.
+             • Useful when ordering is not important.
+
+
+============================================================
+30. TERRAFORM COUNT
+============================================================
+
+Definition : count is a Terraform meta-argument used to create multiple instances of a resource based on a number.
+Example:
+count = 2
+
+Why Needed : • Useful when the number of identical resources is known.
+             • Access instances using count.index.
+
+Interview : "I use count when I need a fixed number of similar resource instances."
+
+
+============================================================
+31. TERRAFORM FOR_EACH
+============================================================
+
+Definition : for_each is a meta-argument used to create multiple resource instances from a map or set.
+Why Needed : • Better when each resource needs a unique key or configuration.
+             • Makes individual instances easier to manage.
+
+Interview : "I prefer for_each when resources have unique configurations or keys instead of simply creating a fixed number."
+
+
+============================================================
+32. COUNT vs FOR_EACH
+============================================================
+
+COUNT
+→ Numeric index
+→ count.index
+→ Good for identical resources
+→ Example: 3 VMs
+
+FOR_EACH
+→ Key-based
+→ each.key / each.value
+→ Good for uniquely configured resources
+→ Example: web/app/db resources
+
+Interview:
+"If resources are identical and quantity is the main requirement, I can use count.
+If each resource has its own configuration, I prefer for_each."
+
+
+============================================================
+33. TERRAFORM LIFECYCLE
+============================================================
+
+Definition : lifecycle is a Terraform resource block used to control how Terraform creates, updates or destroys a resource.
+
+Important Arguments:
+create_before_destroy
+prevent_destroy
+ignore_changes
+
+Why Needed : • Controls resource replacement behavior.
+             • Prevents accidental destruction of critical resources.
+
+Interview : "I use lifecycle rules when I need specific control over resource replacement or destruction behavior."
+
+
+============================================================
+34. CREATE_BEFORE_DESTROY
+============================================================
+
+Definition : Creates the replacement resource before destroying the existing one.
+Why Needed : • Helps reduce downtime during replacement.
+             • Useful for resources where continuous availability matters.
+
+Interview : "create_before_destroy allows Terraform to create the replacement before removing the old resource."
+
+
+============================================================
+35. PREVENT_DESTROY
+============================================================
+
+Definition : Prevents Terraform from destroying a resource.
+Why Needed : • Protects critical resources from accidental deletion.
+             • Useful for important production resources.
+
+Example:
+lifecycle {
+  prevent_destroy = true
+}
+
+
+============================================================
+36. IGNORE_CHANGES
+============================================================
+
+Definition : Tells Terraform to ignore changes made to selected resource attributes outside Terraform.
+Why Needed : • Useful when another system legitimately manages an attribute.
+             • Prevents Terraform from repeatedly trying to overwrite that change.
+
+Interview : "ignore_changes is useful when a particular attribute is intentionally managed outside Terraform."
+
+
+============================================================
+37. TERRAFORM META-ARGUMENTS
+============================================================
+
+Definition : Meta-arguments are Terraform arguments that control how Terraform manages resources rather than defining the resource itself.
+
+Main:
+count
+for_each
+depends_on
+provider
+lifecycle
+
+Interview : "Meta-arguments control resource creation, dependency, provider selection and lifecycle behavior."
+
+
+============================================================
+38. DEPENDS_ON
+============================================================
+
+Definition : depends_on explicitly tells Terraform that one resource or module depends on another.
+Why Needed : • Controls dependency ordering when Terraform cannot infer it automatically.
+             • Useful for hidden dependencies.
+
+Interview : "I use depends_on only when Terraform cannot automatically identify the required dependency."
+
+
+============================================================
+39. TERRAFORM STATE
+============================================================
+
+Definition : Terraform state is the record Terraform uses to map configuration with real infrastructure.
+Why Needed : • Tracks resources managed by Terraform.
+             • Helps Terraform determine what needs to be created, changed or destroyed.
+
+Interview : "Terraform state is the mapping between my Terraform configuration and the real infrastructure."
+
+
+============================================================
+40. TERRAFORM BACKEND
+============================================================
+
+Definition : A Terraform backend defines where Terraform state is stored.
+Why Needed : • Allows centralized state management.
+             • Supports team collaboration and remote state storage.
+
+Example:
+Azure Storage Account → Terraform Remote Backend
+
+
+============================================================
+41. TERRAFORM PLAN
+============================================================
+
+Definition : terraform plan previews the infrastructure changes Terraform intends to make.
+Why Needed : • Allows review before modifying Azure.
+             • Helps identify unexpected changes.
+
+Interview : "I review the Terraform plan before apply so infrastructure changes are known before execution."
+
+
+============================================================
+42. TERRAFORM APPLY
+============================================================
+
+Definition : terraform apply executes the planned infrastructure changes.
+Why Needed : • Creates, updates or deletes resources according to configuration.
+             • Commonly executed through CI/CD after validation and approval.
+
+
+============================================================
+43. TERRAFORM VALIDATE
+============================================================
+
+Definition : terraform validate checks whether Terraform configuration is syntactically and structurally valid.
+Why Needed : • Detects configuration errors early.
+             • Commonly used as an early CI pipeline validation step.
+
+
+============================================================
+44. TERRAFORM INIT
+============================================================
+
+Definition : terraform init initializes the Terraform working directory.
+It downloads providers/modules and configures the backend.
+
+Interview : "I run terraform init first to initialize the backend, providers and required modules."
+
+
+============================================================
+45. TERRAFORM IMPORT
+============================================================
+
+Definition : Terraform import brings an existing infrastructure resource under Terraform management.
+Why Needed : • Useful when resources were created outside Terraform.
+             • Avoids recreating an existing resource.
+
+Interview : "Import allows me to bring existing infrastructure under Terraform management."
+
+
+============================================================
+46. TERRAFORM OUTPUT
+============================================================
+
+Definition : Outputs expose selected values from Terraform configuration after deployment.
+Examples   : Public IP, VNet ID, AKS cluster name.
+
+Why Needed : • Passes useful information between modules.
+             • Makes deployment information easily available.
+
+
+============================================================
+47. TERRAFORM LOCALS
+============================================================
+
+Definition : Locals are named expressions used to simplify and reuse values inside Terraform configuration.
+Why Needed : • Reduces repeated expressions.
+             • Makes complex configurations easier to maintain.
+
+
+============================================================
+48. TERRAFORM MODULE INPUT / OUTPUT
+============================================================
+
+ROOT MODULE
+     |
+     | input variables
+     ↓
+CHILD MODULE
+     |
+     | output values
+     ↓
+ROOT MODULE
+
+Interview:
+"I pass required values into modules through variables and expose required results through outputs."
+
+
+============================================================
+49. TERRAFORM WORKSPACE
+============================================================
+
+Definition : Terraform Workspace allows multiple state instances to be associated with the same configuration.
+Why Needed : • Can separate state for similar configurations.
+             • Useful in specific environment/state management scenarios.
+
+Interview:
+"For larger projects I generally prefer separate environment configurations or state management rather than depending heavily on workspaces."
+
+
+============================================================
+50. TERRAFORM DRIFT
+============================================================
+
+Definition : Drift occurs when actual infrastructure differs from what Terraform state/configuration expects.
+Why Needed : • Identifies manual or external infrastructure changes.
+             • Helps maintain infrastructure consistency.
+
+Interview : "If someone manually changes a Terraform-managed resource, that can create infrastructure drift."
+
+
+============================================================
+51. TERRAFORM MODULE STRUCTURE
+============================================================
+
+ROOT
+├── provider.tf
+├── backend.tf
+├── variables.tf
+├── terraform.tfvars
+├── outputs.tf
+│
+├── modules/
+│   ├── resource-group/
+│   ├── vnet/
+│   ├── subnet/
+│   ├── nsg/
+│   ├── load-balancer/
+│   ├── firewall/
+│   └── aks/
+│
+└── environment/
+    ├── dev/
+    ├── qa/
+    └── prod/
+
+
+============================================================
+52. DOCKER
+============================================================
+
+Definition : Docker is a containerization platform used to package an application with its runtime dependencies into a portable container image.
+Why Needed : • Provides consistent application environments.
+             • Makes application packaging and deployment easier.
+
+Interview : "I use Docker to package the application and its dependencies into a consistent container image."
+
+
+============================================================
+53. DOCKER IMAGE
+============================================================
+
+Definition : A Docker Image is an immutable package/template used to create containers.
+Why Needed : • Provides the packaged application artifact.
+             • Can be stored in a container registry such as Azure Container Registry.
+
+Interview : "The image is the packaged artifact, while the container is the running instance of that image."
+
+
+============================================================
+54. DOCKER CONTAINER
+============================================================
+
+Definition : A Docker Container is a running instance of a Docker image.
+Why Needed : • Runs the application in an isolated environment.
+             • Provides a consistent runtime.
+
+Interview : "A container is the runtime instance created from a Docker image."
+
+
+============================================================
+55. DOCKERFILE
+============================================================
+
+Definition : Dockerfile is a text file containing instructions used to build a Docker image.
+Common Instructions:
+FROM
+WORKDIR
+COPY
+RUN
+EXPOSE
+CMD
+ENTRYPOINT
+
+Interview : "Dockerfile defines how the application image should be built."
+
+
+============================================================
+56. DOCKER VOLUME
+============================================================
+
+Definition : Docker Volume provides persistent storage that exists outside the container's writable layer.
+Why Needed : • Prevents data loss when a container is recreated.
+             • Useful for persistent application data.
+
+
+============================================================
+57. DOCKER NETWORK
+============================================================
+
+Definition : Docker Network provides communication between containers and external networks.
+Why Needed : • Allows containers to communicate with each other.
+             • Controls how containers connect to services.
+
+
+============================================================
+58. AZURE CONTAINER REGISTRY (ACR)
+============================================================
+
+Definition : Azure Container Registry is a private Azure registry for storing and managing container images.
+Why Needed : • Stores application Docker images securely.
+             • AKS can pull images from ACR for deployment.
+
+Interview : "I build the Docker image, push it to ACR, and then AKS pulls that image during deployment."
+
+
+============================================================
+59. KUBERNETES
+============================================================
+
+Definition : Kubernetes is a container orchestration platform used to deploy, manage and scale containerized workloads.
+Why Needed : • Automates container deployment and scaling.
+             • Provides service discovery, self-healing and workload management.
+
+Interview : "Kubernetes manages the lifecycle of containers across a cluster instead of managing individual containers manually."
+
+
+============================================================
+60. POD
+============================================================
+
+Definition : A Pod is the smallest deployable unit in Kubernetes and contains one or more closely related containers.
+Why Needed : • Provides the execution environment for containers.
+             • Containers in the same Pod share network and storage resources.
+
+Interview : "Kubernetes does not normally deploy containers directly; it schedules them inside Pods."
+
+
+============================================================
+61. DEPLOYMENT
+============================================================
+
+Definition : A Deployment manages the desired state and lifecycle of Pods.
+Why Needed : • Maintains the required number of replicas.
+             • Supports rolling updates and rollback.
+
+Interview : "Deployment maintains the desired number of Pods and manages application updates."
+
+
+============================================================
+62. REPLICASET
+============================================================
+
+Definition : ReplicaSet ensures that the required number of Pod replicas are running.
+Why Needed : • Maintains application availability.
+             • Recreates Pods when they fail.
+
+Interview : "ReplicaSet maintains the desired number of Pod replicas, while Deployment manages ReplicaSets."
+
+
+============================================================
+63. SERVICE
+============================================================
+
+Definition : A Kubernetes Service provides a stable network endpoint for accessing Pods.
+Why Needed : • Pod IPs are temporary and can change.
+             • Service provides stable connectivity and load distribution.
+
+Types:
+ClusterIP
+NodePort
+LoadBalancer
+
+
+============================================================
+64. CONFIGMAP
+============================================================
+
+Definition : ConfigMap stores non-sensitive application configuration in Kubernetes.
+Why Needed : • Separates configuration from container images.
+             • Allows configuration changes without rebuilding the image.
+
+
+============================================================
+65. SECRET
+============================================================
+
+Definition : Kubernetes Secret stores sensitive configuration such as passwords, tokens or keys.
+Why Needed : • Separates sensitive values from application configuration.
+             • Can be consumed by Pods as environment variables or mounted files.
+
+Interview : "I keep sensitive configuration separate from the application image and normal ConfigMaps."
+
+
+============================================================
+66. AKS
+============================================================
+
+Definition : Azure Kubernetes Service is Microsoft's managed Kubernetes service on Azure.
+Why Needed : • Provides managed Kubernetes control-plane capabilities.
+             • Allows us to run containerized applications with Azure integration.
+
+Interview : "AKS gives us managed Kubernetes on Azure, while we focus on deploying and operating our workloads."
+
+
+============================================================
+67. HELM
+============================================================
+
+Definition : Helm is a package manager for Kubernetes that uses Charts to define and deploy Kubernetes resources.
+Why Needed : • Packages Kubernetes manifests together.
+             • Makes application deployment reusable and configurable.
+
+Interview : "I use Helm Charts to package Kubernetes resources and deploy the application consistently across environments."
+
+
+============================================================
+68. KUBERNETES INGRESS
+============================================================
+
+Definition : Ingress defines external HTTP/HTTPS routing rules for Kubernetes services.
+Why Needed : • Provides application-level routing.
+             • Allows multiple applications to be exposed through controlled HTTP/HTTPS rules.
+
+Interview : "Ingress provides HTTP/HTTPS routing into Kubernetes services."
+
+
+============================================================
+69. AKS + ACR BASIC FLOW
+============================================================
+
+Developer Code
+      ↓
+Git / GitHub
+      ↓
+CI/CD Pipeline
+      ↓
+Docker Build
+      ↓
+Docker Image
+      ↓
+Azure Container Registry (ACR)
+      ↓
+Helm / kubectl
+      ↓
+AKS
+      ↓
+Deployment
+      ↓
+ReplicaSet
+      ↓
+Pods
+      ↓
+Service
+      ↓
+Ingress / Application Gateway
+      ↓
+User
+
+
+============================================================
+70. KUBERNETES SELF-HEALING
+============================================================
+
+Definition : Kubernetes automatically works to bring workloads back to their declared desired state.
+Why Needed : • Recreates failed Pods.
+             • Maintains the configured replica count.
+
+Interview : "If a Pod fails, Kubernetes can recreate it to maintain the desired state."
+
+
+============================================================
+71. ROLLING UPDATE
+============================================================
+
+Definition : Rolling update gradually replaces old Pods with new Pods during an application deployment.
+Why Needed : • Reduces application downtime.
+             • Allows controlled version transition.
+
+Interview : "Deployment performs a rolling update so I don't have to stop all application Pods at once."
+
+
+============================================================
+72. KUBERNETES ROLLBACK
+============================================================
+
+Definition : Rollback restores a previous Deployment revision.
+Why Needed : • Helps recover from a failed application release.
+             • Reduces production recovery time.
+
+Interview : "If a new release causes issues, I can roll back the Deployment to a previous revision."
+
+
+============================================================
+73. LIVENESS vs READINESS
+============================================================
+
+LIVENESS
+→ Checks whether the container is still healthy.
+→ Failure can cause container restart.
+
+READINESS
+→ Checks whether the application is ready to receive traffic.
+→ Failure removes the Pod from service traffic.
+
+Interview:
+"Liveness tells Kubernetes whether the application should be restarted;
+readiness tells Kubernetes whether the Pod should receive traffic."
+
+
+============================================================
+74. REQUEST vs LIMIT
+============================================================
+
+REQUEST
+→ Resources guaranteed/used for scheduling decisions.
+
+LIMIT
+→ Maximum resource consumption allowed for the container.
+
+Example:
+CPU Request → 250m
+CPU Limit   → 500m
+
+Interview:
+"Requests help Kubernetes schedule the Pod, while limits restrict maximum resource consumption."
+
+
+============================================================
+75. NAMESPACE
+============================================================
+
+Definition : Namespace provides logical separation of Kubernetes resources within a cluster.
+Why Needed : • Separates applications or environments.
+             • Helps organize and manage Kubernetes resources.
+
+
+============================================================
+76. NODE
+============================================================
+
+Definition : A Kubernetes Node is a worker machine where Pods run.
+Why Needed : • Provides compute capacity for workloads.
+             • Can be scaled based on workload requirements.
+
+AKS:
+AKS Cluster
+    ↓
+Node Pool
+    ↓
+Nodes
+    ↓
+Pods
+
+
+============================================================
+77. NODE POOL
+============================================================
+
+Definition : Node Pool is a group of Kubernetes nodes with the same or similar configuration.
+Why Needed : • Allows different compute types for different workloads.
+             • Supports workload-specific scaling.
+
+
+============================================================
+78. KUBERNETES DESIRED STATE
+============================================================
+
+Definition : Desired state is the configuration that describes how the application should run.
+Why Needed : • Kubernetes continuously works toward the declared configuration.
+             • Enables self-healing and automated workload management.
+
+Interview : "I define the desired state through Kubernetes manifests, and Kubernetes works continuously to maintain it."
+
+
+============================================================
+79. DOCKER vs KUBERNETES
+============================================================
+
+DOCKER
+→ Containerization
+→ Builds/runs containers
+→ Packages application
+
+KUBERNETES
+→ Container orchestration
+→ Manages containers at cluster scale
+→ Deployment, scaling, service discovery, self-healing
+
+Interview:
+"Docker solves container packaging and runtime, while Kubernetes solves container orchestration at scale."
+
+
+============================================================
+80. VM vs CONTAINER
+============================================================
+
+VM
+→ Includes guest operating system
+→ More isolated
+→ Heavier
+
+CONTAINER
+→ Shares host OS kernel
+→ Lightweight
+→ Starts faster
+
+Interview:
+"A VM virtualizes the machine, while a container isolates the application process and its dependencies."
+
+
+============================================================
+81. TERRAFORM vs ARM/BICEP
+============================================================
+
+Terraform
+→ Infrastructure as Code
+→ Multi-cloud capability
+→ Provider-based
+
+ARM/Bicep
+→ Azure-native Infrastructure as Code
+→ Azure-focused
+
+Interview:
+"I use Terraform when I want reusable Infrastructure as Code with a provider-based approach, including Azure."
+
+
+============================================================
+82. AZURE PORTAL vs TERRAFORM
+============================================================
+
+PORTAL
+→ Manual
+→ Good for exploration/troubleshooting
+→ Harder to reproduce consistently
+
+TERRAFORM
+→ Code-based
+→ Version controlled
+→ Repeatable
+→ CI/CD friendly
+
+Interview:
+"For production infrastructure I prefer Terraform because the infrastructure definition can be version-controlled, reviewed and automated."
+
+
+============================================================
+83. BASIC AZURE LANDING ZONE ARCHITECTURE
+============================================================
+
+TENANT / MICROSOFT ENTRA ID
+│
+└── ROOT MANAGEMENT GROUP
+    │
+    ├── PLATFORM MANAGEMENT GROUP
+    │   │
+    │   ├── IDENTITY SUBSCRIPTION
+    │   │   └── Identity / Entra-integrated services
+    │   │
+    │   ├── CONNECTIVITY SUBSCRIPTION
+    │   │   ├── HUB VNET
+    │   │   ├── Azure Firewall
+    │   │   ├── VPN Gateway
+    │   │   └── ExpressRoute Gateway
+    │   │
+    │   └── MANAGEMENT SUBSCRIPTION
+    │       ├── Azure Monitor
+    │       ├── Log Analytics
+    │       └── Monitoring / Management
+    │
+    └── LANDING ZONES MANAGEMENT GROUP
+        │
+        ├── PRODUCTION SUBSCRIPTION
+        │   └── Application Resource Groups
+        │       └── VNET
+        │           ├── APP SUBNET
+        │           │   └── AKS
+        │           │       ├── Node Pool
+        │           │       │   └── Nodes
+        │           │       │       └── Pods
+        │           │       └── Services / Ingress
+        │           └── Private Endpoint / Private DNS
+        │
+        ├── NON-PRODUCTION MANAGEMENT GROUP
+        │   ├── DEV SUBSCRIPTION
+        │   └── QA SUBSCRIPTION
+        │
+        └── SANDBOX MANAGEMENT GROUP
+            └── SANDBOX SUBSCRIPTIONS
+
+
+============================================================
+84. COMPLETE TENANT → AKS ARCHITECTURE
+============================================================
+
+MICROSOFT ENTRA ID TENANT
+          │
+          ▼
+ROOT MANAGEMENT GROUP
+          │
+          ├─────────────────────────────────────────────────────────────┐
+          │                                                             │
+          ▼                                                             ▼
+PLATFORM MANAGEMENT GROUP                                  LANDING ZONES MANAGEMENT GROUP
+          │                                                             │
+          ├── IDENTITY SUBSCRIPTION                                     ├── PROD MANAGEMENT GROUP
+          │                                                             │       │
+          │                                                             │       └── PROD SUBSCRIPTION
+          │                                                             │               │
+          ├── CONNECTIVITY SUBSCRIPTION                                 │               └── RESOURCE GROUP
+          │       │                                                     │                       │
+          │       ├── HUB VNET                                          │                       └── SPOKE VNET
+          │       ├── Azure Firewall                                    │                               │
+          │       ├── VPN Gateway                                       │                               ├── AKS SUBNET
+          │       └── ExpressRoute                                      │                               │      │
+          │                                                             │                               │      └── AKS
+          └── MANAGEMENT SUBSCRIPTION                                   │                               │             │
+                  │                                                     │                               │             ├── Node Pool
+                  ├── Azure Monitor                                     │                               │             ├── Nodes
+                  └── Log Analytics                                     │                               │             └── Pods
+                                                                        │                               │
+                                                                        │                               ├── APP SUBNET
+                                                                        │                               │
+                                                                        │                               └── PRIVATE ENDPOINT
+                                                                        │                                      │
+                                                                        │                                      └── Private DNS
+                                                                        │
+                                                                        └── NON-PROD MANAGEMENT GROUP
+                                                                                 │
+                                                                                 ├── DEV SUBSCRIPTION
+                                                                                 └── QA SUBSCRIPTION
+
+
+============================================================
+85. HUB-SPOKE + AKS TRAFFIC STORY
+============================================================
+
+USER
+ │
+ ▼
+PUBLIC INTERNET
+ │
+ ▼
+PUBLIC IP
+ │
+ ▼
+APPLICATION GATEWAY + WAF
+ │
+ ▼
+SPOKE VNET
+ │
+ ▼
+AKS INGRESS
+ │
+ ▼
+KUBERNETES SERVICE
+ │
+ ▼
+PODS
+ │
+ ├── Private communication → PaaS services
+ │                              ↓
+ │                       Private Endpoint
+ │                              ↓
+ │                       Private DNS Zone
+ │
+ └── Outbound traffic
+          ↓
+        UDR
+          ↓
+    Azure Firewall
+          ↓
+     NAT Gateway / Internet
+
+
+============================================================
+86. ON-PREMISES → AZURE STORY
+============================================================
+
+ON-PREMISES
+     │
+     ├──────── VPN ────────► VPN GATEWAY
+     │                              │
+     │                              ▼
+     │                         HUB VNET
+     │                              │
+     │                         VNET PEERING
+     │                              │
+     │                              ▼
+     │                         SPOKE VNET
+     │                              │
+     │                              ▼
+     │                             AKS
+     │
+     └──── ExpressRoute ─────► ExpressRoute Gateway
+                                      │
+                                      ▼
+                                  HUB VNET
+
+
+============================================================
+87. COMPLETE DEVOPS FLOW — TERRAFORM + AKS
+============================================================
+
+DEVELOPER
+   ↓
+GIT / GITHUB
+   ↓
+PULL REQUEST
+   ↓
+CODE REVIEW
+   ↓
+AZURE DEVOPS YAML PIPELINE
+   │
+   ├── Terraform Validate
+   ├── TFLint
+   ├── Checkov
+   ├── Terraform Plan
+   ├── Approval
+   └── Terraform Apply
+            ↓
+       AZURE INFRASTRUCTURE
+            │
+            ├── Resource Groups
+            ├── VNet / Subnets
+            ├── NSG
+            ├── Firewall
+            ├── Key Vault
+            └── AKS
+                  ↓
+            APPLICATION PIPELINE
+                  ↓
+              Docker Build
+                  ↓
+              Docker Image
+                  ↓
+                 ACR
+                  ↓
+             Helm Deployment
+                  ↓
+                 AKS
+                  ↓
+              Deployment
+                  ↓
+               Pods
+                  ↓
+               Service
+                  ↓
+              Ingress
+                  ↓
+                USER
+
+
+============================================================
+88. BASIC TERRAFORM INTERVIEW QUESTIONS
+============================================================
+
+Q1. What is Terraform?
+→ Infrastructure as Code tool used to provision and manage infrastructure.
+
+Q2. What is a provider?
+→ Plugin that allows Terraform to communicate with a platform/API.
+
+Q3. What is a resource?
+→ Infrastructure object managed by Terraform.
+
+Q4. What is a module?
+→ Reusable Terraform configuration.
+
+Q5. What is a data source?
+→ Reads existing information without creating the resource.
+
+Q6. What is Terraform state?
+→ Mapping between Terraform configuration and real infrastructure.
+
+Q7. Why use remote backend?
+→ Centralized and shared state management.
+
+Q8. What is terraform plan?
+→ Preview of infrastructure changes.
+
+Q9. What is terraform apply?
+→ Executes infrastructure changes.
+
+Q10. What is terraform destroy?
+→ Removes resources managed by Terraform.
+
+Q11. What is count?
+→ Creates multiple resource instances using a number.
+
+Q12. What is for_each?
+→ Creates multiple instances using a map/set.
+
+Q13. count vs for_each?
+→ count = index based; for_each = key based.
+
+Q14. What is lifecycle?
+→ Controls resource creation/replacement/destruction behavior.
+
+Q15. What is depends_on?
+→ Explicit dependency between resources/modules.
+
+Q16. What is drift?
+→ Difference between actual infrastructure and Terraform-managed configuration/state.
+
+Q17. What is terraform import?
+→ Brings an existing resource under Terraform management.
+
+Q18. Why use modules?
+→ Reusability, standardization and maintainability.
+
+Q19. Why use variables?
+→ Avoid hardcoding and support different environments.
+
+Q20. What is output?
+→ Exposes useful values from Terraform configuration/modules.
+
+Q21. What is Terraform lock file?
+→ .terraform.lock.hcl records selected provider versions/checksums.
+
+Q22. What is terraform init?
+→ Initializes backend, providers and modules.
+
+Q23. What is terraform validate?
+→ Validates Terraform configuration structure/syntax.
+
+Q24. What is Terraform dependency?
+→ Relationship where one resource needs another resource first.
+
+Q25. Implicit vs explicit dependency?
+→ Implicit is inferred from references; explicit is defined using depends_on.
+
+
+============================================================
+89. AZURE LANDING ZONE — BASIC INTERVIEW QUESTIONS
+============================================================
+
+Q1. What is Azure Landing Zone?
+→ Standardized Azure foundation for governance, identity, networking and workloads.
+
+Q2. Why Management Groups?
+→ Apply governance across multiple subscriptions.
+
+Q3. Why multiple subscriptions?
+→ Separate billing, workloads, environments, quotas and access boundaries.
+
+Q4. What is Platform subscription?
+→ Subscription hosting shared platform capabilities such as connectivity or management.
+
+Q5. What is Landing Zone subscription?
+→ Subscription where application workloads are deployed.
+
+Q6. Why Hub-and-Spoke?
+→ Centralizes shared networking/security while keeping workloads separated.
+
+Q7. Where can Azure Firewall be deployed?
+→ Commonly in the centralized hub/connectivity layer.
+
+Q8. How does spoke traffic reach Firewall?
+→ UDR can force traffic toward the Firewall.
+
+Q9. Why Private Endpoint?
+→ Private connectivity from VNet to supported Azure PaaS services.
+
+Q10. Why Azure Policy?
+→ Enforces organizational governance standards.
+
+Q11. Management Group vs Subscription?
+→ Management Group organizes subscriptions; subscription contains Azure resources and provides a management/billing boundary.
+
+Q12. Tenant vs Management Group?
+→ Tenant is identity boundary; Management Group is governance hierarchy.
+
+
+============================================================
+90. DOCKER — INTERVIEW QUESTIONS
+============================================================
+
+Q1. What is Docker?
+→ Containerization platform for packaging and running applications.
+
+Q2. Image vs Container?
+→ Image = package/template; Container = running instance.
+
+Q3. What is Dockerfile?
+→ Instructions used to build an image.
+
+Q4. CMD vs ENTRYPOINT?
+→ Both define container startup behavior; ENTRYPOINT defines the main executable while CMD commonly supplies default command/arguments.
+
+Q5. COPY vs ADD?
+→ COPY is the straightforward choice for copying files; ADD has additional behavior such as archive extraction and URL handling.
+
+Q6. Why multi-stage Docker build?
+→ Keeps final image smaller by separating build and runtime stages.
+
+Q7. Why .dockerignore?
+→ Prevents unnecessary files from being included in the build context.
+
+Q8. What is Docker Registry?
+→ Repository for storing container images.
+
+Q9. What is ACR?
+→ Azure-managed private container registry.
+
+Q10. How does AKS get image from ACR?
+→ AKS is granted permission to pull images from ACR.
+
+
+============================================================
+91. KUBERNETES — INTERVIEW QUESTIONS
+============================================================
+
+Q1. Why Pod if we already have a container?
+→ Kubernetes manages Pods as the smallest deployable unit; a Pod provides the shared execution/network context for one or more containers.
+
+Q2. Pod vs Container?
+→ Container runs application process; Pod is Kubernetes deployment unit containing one or more containers.
+
+Q3. Deployment vs ReplicaSet?
+→ Deployment manages application rollout and ReplicaSets; ReplicaSet maintains Pod replicas.
+
+Q4. Why Service?
+→ Provides stable networking for changing Pod IPs.
+
+Q5. ClusterIP vs NodePort vs LoadBalancer?
+→ ClusterIP = internal; NodePort = node-level external port; LoadBalancer = external load-balancer integration.
+
+Q6. ConfigMap vs Secret?
+→ ConfigMap = non-sensitive configuration; Secret = sensitive configuration.
+
+Q7. Liveness vs Readiness?
+→ Liveness = restart decision; Readiness = traffic eligibility.
+
+Q8. What happens when Pod dies?
+→ Kubernetes creates a replacement if the workload's desired state requires it.
+
+Q9. What is rolling deployment?
+→ Gradually replaces old Pods with new Pods.
+
+Q10. How do you rollback?
+→ Roll back the Kubernetes Deployment to a previous revision.
+
+Q11. What is Namespace?
+→ Logical separation of Kubernetes resources.
+
+Q12. What is Ingress?
+→ HTTP/HTTPS routing into Kubernetes services.
+
+Q13. What is Helm?
+→ Kubernetes package manager using Charts.
+
+Q14. What is Node?
+→ Worker machine where Pods run.
+
+Q15. What is Node Pool?
+→ Group of nodes with similar configuration.
+
+
+============================================================
+92. MOST IMPORTANT "SCENARIO" QUESTIONS
+============================================================
+
+Q: VM has no internet access. What do you check?
+→ NSG → Route Table/UDR → NAT Gateway → Firewall → DNS → Network Watcher.
+
+Q: VM needs secure SSH/RDP access without public IP?
+→ Azure Bastion.
+
+Q: VM needs outbound internet but should not have public IP?
+→ NAT Gateway.
+
+Q: Two VNets need private communication?
+→ VNet Peering.
+
+Q: Spoke needs on-premises connectivity through hub?
+→ VNet Peering + Gateway Transit.
+
+Q: Application needs HTTP path-based routing?
+→ Application Gateway.
+
+Q: Application needs protection against web attacks?
+→ WAF.
+
+Q: Centralized network traffic inspection?
+→ Azure Firewall.
+
+Q: Private access to Key Vault?
+→ Private Endpoint + Private DNS Zone.
+
+Q: Existing Azure resource needs Terraform management?
+→ terraform import.
+
+Q: Someone manually changed Terraform infrastructure?
+→ Terraform drift.
+
+Q: Need 3 identical resources?
+→ count.
+
+Q: Need multiple resources with unique configuration?
+→ for_each.
+
+Q: Need to prevent production resource deletion?
+→ lifecycle.prevent_destroy.
+
+Q: Need replacement before destroying old resource?
+→ lifecycle.create_before_destroy.
+
+Q: Need to ignore external change to an attribute?
+→ lifecycle.ignore_changes.
+
+Q: Need existing resource information but don't want to create it?
+→ Terraform data source.
+
+Q: Need reusable infrastructure code?
+→ Terraform module.
+
+Q: Application needs container deployment on Azure?
+→ Docker → ACR → AKS.
+
+Q: Pod keeps restarting?
+→ Check liveness probe, logs, events, resource limits, application health.
+
+Q: Pod is running but user cannot access application?
+→ Check Service → Endpoints → Ingress → Network/NSG → Application Gateway if used.
+
+Q: New application version is failing?
+→ Check Deployment/Pods/logs → rollback to previous Deployment revision.
+
+
+============================================================
+93. FINAL 30-SECOND INTERVIEW STORY
+============================================================
+
+"At the Azure level, I start with the tenant and management-group
+hierarchy, then separate platform and workload subscriptions.
+For networking, I use VNets and subnets for segmentation, NSGs
+for basic traffic filtering, and centralized services such as
+Azure Firewall where required. For application traffic I use
+Application Gateway or Load Balancer depending on the traffic
+layer. Private Endpoints and Private DNS provide private access
+to PaaS services. For infrastructure automation, I use Terraform
+with reusable modules, remote state, variables, data sources and
+meta-arguments such as count, for_each and lifecycle. For
+containerized applications, I build Docker images, push them to
+Azure Container Registry, and deploy them to Azure Kubernetes
+Service using Helm. Kubernetes then manages Pods, Services,
+scaling, rolling updates and self-healing."

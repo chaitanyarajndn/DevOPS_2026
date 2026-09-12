@@ -1,0 +1,580 @@
+
+
+
+===============================================================
+AZURE_LANDING_ZONE — BILLING + MICROSOFT ENTRA TENANT
+===============================================================
+
+
+
+1. BASIC IDEA
+---------------------------------------------------------------
+Azure environment design karte time sabse pehle decide karna hota hai:
+
+    1. Azure Billing Offer
+    2. Microsoft Entra Tenant
+
+Ye dono decide karte hain ki:AZURE LANDING ZONE — AZURE BILLING & MICROSOFT ENTRA TENANT
+============================================================
+
+1. WHAT IS THIS DESIGN AREA?
+------------------------------------------------------------
+Before creating the Landing Zone, we need to decide:
+
+    • How Azure will be billed
+    • Which Microsoft Entra tenant will be used
+    • How subscriptions will be connected to the tenant
+
+Simple:
+
+    Billing Offer   → How we pay for Azure
+    Entra Tenant    → Identity boundary for Azure
+
+
+2. AZURE BILLING OFFER
+------------------------------------------------------------
+Azure Billing Offer defines how an organization purchases
+and pays for Azure.
+
+Common options:
+
+    • Enterprise Agreement (EA)
+    • Microsoft Customer Agreement (MCA)
+    • Cloud Solution Provider (CSP)
+
+Example:
+
+    Company
+       |
+       +-- Enterprise Agreement
+              |
+              +-- Azure Subscription 1
+              +-- Azure Subscription 2
+              +-- Azure Subscription 3
+
+
+3. MICROSOFT ENTRA TENANT
+------------------------------------------------------------
+Microsoft Entra Tenant is the identity boundary of the
+Azure environment.
+
+It contains:
+
+    • Users
+    • Groups
+    • Service Principals
+    • Managed Identities
+    • Authentication / Identity settings
+
+Example:
+
+    Microsoft Entra Tenant
+           |
+           +-- Users
+           +-- Groups
+           +-- Service Principals
+           |
+           +-- Azure Subscriptions
+
+
+4. SUBSCRIPTION AND ENTRA TENANT
+------------------------------------------------------------
+An Azure Subscription is associated with one Microsoft
+Entra tenant at a time.
+
+Example:
+
+    Entra Tenant
+         |
+         +-- Subscription-01
+         +-- Subscription-02
+         +-- Subscription-03
+
+
+5. HOW THIS FITS INTO LANDING ZONE
+------------------------------------------------------------
+
+                 Azure Billing
+                      |
+             +--------+--------+
+             |        |        |
+            EA       MCA      CSP
+                      |
+                      v
+             Microsoft Entra Tenant
+                      |
+                      v
+               Management Groups
+                      |
+             +--------+--------+
+             |                 |
+        Platform MG       Landing Zones MG
+             |                 |
+       +-----+-----+       +---+---+
+       |     |     |       |       |
+    Identity Conn. Mgmt   Prod   NonProd
+      Sub    Sub   Sub    Subs     Subs
+
+
+6. YOUR HUB-SPOKE EXAMPLE
+------------------------------------------------------------
+
+Microsoft Entra Tenant
+        |
+        v
+Management Group
+        |
+   +----+-------------------+
+   |                        |
+Platform MG            Landing Zones MG
+   |                        |
+   +-- Identity Sub         +-- Production Sub
+   +-- Connectivity Sub     +-- Non-Production Sub
+   +-- Management Sub
+             |
+             +-- Hub VNet
+             +-- Azure Firewall
+             +-- VPN Gateway
+             +-- Bastion
+
+Application Subscription
+        |
+        +-- Spoke VNet
+        +-- AKS
+        +-- Application resources
+
+
+7. IMPORTANT DIFFERENCE
+------------------------------------------------------------
+
+Billing Offer
+    → How the organization purchases/pays for Azure
+
+Microsoft Entra Tenant
+    → Identity boundary
+
+Management Group
+    → Organizes subscriptions and applies governance
+
+Subscription
+    → Container for Azure resources and billing
+
+
+8. MULTIPLE ENTRA TENANTS
+------------------------------------------------------------
+An organization can have multiple Entra tenants.
+
+Example:
+
+        Azure Billing
+             |
+       +-----+-----+
+       |           |
+   Tenant A     Tenant B
+       |           |
+   Subs         Subs
+
+But a subscription is associated with one Entra tenant
+at a time.
+
+
+9. WHAT DO WE DECIDE IN THIS DESIGN AREA?
+------------------------------------------------------------
+
+    1. Which Azure billing offer will we use?
+           |
+           +-- EA
+           +-- MCA
+           +-- CSP
+
+    2. Which Microsoft Entra tenant will we use?
+           |
+           +-- Existing tenant
+           +-- New tenant
+
+    3. How will subscriptions be organized?
+           |
+           +-- Platform subscriptions
+           +-- Production subscriptions
+           +-- Non-Production subscriptions
+           +-- Sandbox subscriptions
+
+
+10. INTERVIEW ANSWER
+------------------------------------------------------------
+
+Q: What is the Azure billing and Microsoft Entra tenant
+   design area?
+
+A:
+
+"It defines how the organization will purchase Azure and
+which Microsoft Entra tenant will be used for the Azure
+environment.
+
+We decide the billing offer, such as Enterprise Agreement,
+Microsoft Customer Agreement or Cloud Solution Provider,
+and identify the Entra tenant where the subscriptions will
+be managed.
+
+The subscriptions are then organized using Management Groups
+and governed using Azure Policy and RBAC."
+
+
+KEY POINT TO REMEMBER
+------------------------------------------------------------
+
+Billing Offer
+    → How we pay for Azure
+
+Entra Tenant
+    → Identity boundary
+
+Management Group
+    → Subscription organization + governance
+
+Subscription
+    → Azure resource container
+
+Flow:
+
+Billing
+   ↓
+Entra Tenant
+   ↓
+Management Groups
+   ↓
+Subscriptions
+   ↓
+Azure Resources
+============================================================
+    - Azure subscriptions ka billing kaise hoga
+    - subscriptions kis Entra tenant ke under hongi
+    - management group hierarchy kahan banegi
+    - Azure Policy / RBAC jaise controls kahan apply honge
+
+
+===============================================================
+2. AZURE BILLING OFFER
+===============================================================
+
+Azure Billing Offer
+        |
+        +-- Enterprise Agreement (EA)
+        |
+        +-- Microsoft Customer Agreement (MCA)
+        |
+        +-- Cloud Solution Provider (CSP)
+        |
+        +-- Other Azure offers
+
+
+Billing Offer = Azure usage ka commercial/billing arrangement.
+
+Example:
+
+Company
+   |
+   +-- Enterprise Agreement
+           |
+           +-- Azure Subscriptions
+           |      +-- Prod
+           |      +-- Non-Prod
+           |      +-- Shared Services
+           |
+           +-- Billing / Cost Management
+
+
+IMPORTANT:
+Azure Landing Zone kisi ek specific billing offer ke saath
+locked nahi hai.
+
+EA / MCA / CSP etc. ke subscriptions Landing Zone architecture
+ke saath use kiye ja sakte hain.
+
+
+===============================================================
+3. MICROSOFT ENTRA TENANT
+===============================================================
+
+Microsoft Entra Tenant
+        |
+        +-- Users
+        +-- Groups
+        +-- Service Principals
+        +-- Identity / Authentication
+        |
+        +-- Azure Subscriptions
+                |
+                +-- Management Groups
+                        |
+                        +-- Azure Policies
+                        +-- RBAC
+
+
+Simple meaning:
+
+Entra Tenant = Azure environment ki identity boundary.
+
+Ye decide karta hai ki:
+    "Azure resources ko manage karne wali identities
+     kis tenant ke andar hain?"
+
+
+===============================================================
+4. SUBSCRIPTION + TENANT RELATIONSHIP
+===============================================================
+
+IMPORTANT RULE:
+
+One Azure Subscription
+        |
+        +---- belongs to ONE Microsoft Entra Tenant
+
+
+Example:
+
+Entra Tenant
+    |
+    +-- Subscription-01
+    +-- Subscription-02
+    +-- Subscription-03
+
+Then these subscriptions can be placed under:
+
+Management Group
+        |
+        +-- Subscription-01
+        +-- Subscription-02
+        +-- Subscription-03
+
+
+Management Groups + Azure Policy + RBAC
+can then be used to manage these subscriptions centrally.
+
+
+===============================================================
+5. LANDING ZONE ARCHITECTURE
+===============================================================
+
+                    AZURE BILLING
+                         |
+             +-----------+-----------+
+             |           |           |
+            EA          MCA         CSP
+             |           |           |
+             +-----------+-----------+
+                         |
+                  AZURE SUBSCRIPTIONS
+                         |
+                         v
+              MICROSOFT ENTRA TENANT
+                         |
+                         v
+                  MANAGEMENT GROUP
+                         |
+          +--------------+--------------+
+          |              |              |
+      Platform        Landing Zone    Sandbox
+      Subscriptions   Subscriptions   Subscriptions
+          |
+          +-- Identity
+          +-- Connectivity
+          +-- Management
+          |
+          +-- Azure Policy
+          +-- RBAC
+
+
+===============================================================
+6. YOUR HUB-SPOKE LANDING ZONE EXAMPLE
+===============================================================
+
+                    BILLING / EA
+                         |
+                         v
+                Entra Tenant
+                         |
+                         v
+                  ROOT MANAGEMENT
+                         |
+              +----------+----------+
+              |                     |
+          Platform MG           Landing Zones MG
+              |                     |
+       +------+------+          +----+----+
+       |      |      |          |         |
+   Identity  Conn.  Mgmt.     Prod      NonProd
+     Sub     Sub    Sub       Subs       Subs
+       |
+       +-- Entra / Identity
+       
+Connectivity Subscription
+       |
+       +-- Hub VNet
+       +-- Azure Firewall
+       +-- VPN Gateway
+       +-- Bastion
+
+Application Subscription
+       |
+       +-- Spoke VNet
+       +-- AKS / VM / App
+       +-- Application resources
+
+
+===============================================================
+7. MULTIPLE ENTRA TENANTS
+===============================================================
+
+Billing arrangement aur Entra tenant same concept nahi hain.
+
+Example:
+
+Enterprise Agreement
+       |
+       +-------------------+
+       |                   |
+   Entra Tenant A      Entra Tenant B
+       |                   |
+   Subscriptions       Subscriptions
+
+
+EA billing can support subscriptions
+across multiple Entra tenants.
+
+BUT:
+
+Azure Landing Zone reference architecture
+is normally scoped/deployed to ONE Entra tenant.
+
+So interview mein ye distinction important hai.
+
+
+===============================================================
+8. WHAT SHOULD WE DECIDE?
+===============================================================
+
+Before implementing Landing Zone, decide:
+
+    [1] Which Azure billing offer?
+        |
+        +-- EA?
+        +-- MCA?
+        +-- CSP?
+
+    [2] Which Microsoft Entra tenant?
+        |
+        +-- Existing tenant?
+        +-- New tenant?
+
+    [3] Subscription structure?
+        |
+        +-- Platform subscriptions
+        +-- Application subscriptions
+        +-- Production / Non-Production
+
+    [4] Management Group hierarchy?
+        |
+        +-- Platform MG
+        +-- Landing Zones MG
+        +-- Sandbox MG
+        +-- Decommissioned MG etc.
+
+
+===============================================================
+9. VERY IMPORTANT DIFFERENCE
+===============================================================
+
+Billing Offer
+    =
+    "Azure ka payment/commercial arrangement kaise hai?"
+
+Microsoft Entra Tenant
+    =
+    "Identities aur Azure subscriptions kis identity boundary
+     ke andar hain?"
+
+Management Group
+    =
+    "Subscriptions ko centrally kaise organize/manage karenge?"
+
+Subscription
+    =
+    "Azure resources aur billing ka primary container"
+
+
+Flow:
+
+Billing
+   |
+   v
+Entra Tenant
+   |
+   v
+Management Groups
+   |
+   v
+Subscriptions
+   |
+   v
+Azure Resources
+
+
+===============================================================
+10. INTERVIEW ANSWER
+===============================================================
+
+Q: What is the Azure billing and Microsoft Entra tenant
+   design area in Landing Zone?
+
+A:
+
+"It is about deciding the Azure billing model and the
+Microsoft Entra tenant structure before implementing the
+Landing Zone.
+
+The Landing Zone can work with different Azure offers such
+as Enterprise Agreement, Microsoft Customer Agreement and
+Cloud Solution Provider.
+
+An Azure subscription belongs to one Microsoft Entra tenant,
+and subscriptions from that tenant can be organized under
+Management Groups.
+
+Management Groups can then be used to apply centralized
+Azure Policy and RBAC controls across subscriptions."
+
+
+===============================================================
+KEY TAKEAWAY
+===============================================================
+
+Billing Offer
+      ↓
+Commercial / Payment relationship
+
+Microsoft Entra Tenant
+      ↓
+Identity boundary
+
+Management Group
+      ↓
+Central governance boundary
+
+Subscription
+      ↓
+Resource + billing container
+
+Resources
+      ↓
+VM / AKS / VNet / Key Vault / Storage etc.
+
+
+REMEMBER:
+
+"Billing tells us HOW Azure is purchased.
+Entra Tenant tells us WHERE identities and subscriptions
+are organized.
+Management Groups tell us HOW subscriptions are governed."
+===============================================================
