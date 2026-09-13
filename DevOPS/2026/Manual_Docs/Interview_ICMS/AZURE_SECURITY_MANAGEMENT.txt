@@ -1,0 +1,346 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    AZURE SECURITY MANAGEMENT — BIG PICTURE                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+AZURE INFRASTRUCTURE
+│
+├──► Virtual Machines        ├──► AKS                  ├──► Storage
+├──► Key Vault               ├──► SQL                  ├──► Azure Firewall
+├──► Application Gateway     ├──► NSG                  └──► Entra ID
+│
+└─────────────────────────────────────────────────────────────────────────────►
+                              SECURITY MANAGEMENT
+                                        │
+                     ┌──────────────────┼──────────────────┐
+                     ▼                  ▼                  ▼
+              DEFENDER FOR CLOUD    SENTINEL       SECURITY MONITORING
+                     │                  │                  │
+                     ▼                  ▼                  ▼
+              Security Posture     Security Events     Continuous
+              + Protection         + Detection          Visibility
+                     │                  │                  │
+                     ▼                  ▼                  ▼
+              "What is insecure?" "What is suspicious?" "What is happening?"
+
+═══════════════════════════════════════════════════════════════════════════════
+1. MICROSOFT DEFENDER FOR CLOUD
+═══════════════════════════════════════════════════════════════════════════════
+WHAT IS IT?
+→ Microsoft Defender for Cloud is a cloud security service that helps assess
+  the security posture of Azure/cloud resources and protect workloads.
+SIMPLE MEANING:
+→ "Is my Azure environment secure?"
+→ "What security weaknesses exist?"
+→ "What should I fix?"
+→ "Are my workloads exposed to security threats?"
+THINK OF IT AS:
+→ SECURITY POSTURE + RECOMMENDATIONS + WORKLOAD PROTECTION
+───────────────────────────────────────────────────────────────────────────────
+EXAMPLE:
+Azure VM
+  │
+  ├──► Configuration
+  ├──► OS / Software
+  ├──► Network exposure
+  └──► Security signals
+             │
+             ▼
+     Defender for Cloud
+             │
+       ┌─────┴─────┐
+       ▼           ▼
+    Assess       Protect
+       │           │
+       ▼           ▼
+ Recommendations  Threat protection
+───────────────────────────────────────────────────────────────────────────────
+WHAT CAN IT FIND?
+→ Vulnerable configuration
+→ Security recommendations
+→ Missing security controls
+→ Unnecessary exposure
+→ Workload security issues
+→ Security alerts
+IMPORTANT:
+→ Defender for Cloud is NOT simply a firewall.
+→ It does not normally sit in the network traffic path.
+→ It evaluates and protects Azure/cloud resources.
+───────────────────────────────────────────────────────────────────────────────
+MAIN DEFENDER FOR CLOUD CONCEPTS — WE WILL LEARN LATER:
+→ CSPM                         → Secure Score
+→ Security Recommendations    → Regulatory Compliance
+→ Defender Plans               → Workload Protection
+→ Defender for Servers         → Defender for Containers
+→ Defender for Storage         → Defender for SQL
+→ Defender for Key Vault       → Security Alerts
+═══════════════════════════════════════════════════════════════════════════════
+2. MICROSOFT SENTINEL
+═══════════════════════════════════════════════════════════════════════════════
+WHAT IS IT?
+→ Microsoft Sentinel is a cloud-native SIEM and SOAR solution.
+SIEM = Security Information and Event Management
+SOAR = Security Orchestration, Automation and Response
+SIMPLE MEANING:
+→ "Collect security events from different sources."
+→ "Find suspicious activity."
+→ "Investigate security incidents."
+→ "Automate security response."
+THINK OF IT AS:
+→ CENTRAL SECURITY CONTROL ROOM
+───────────────────────────────────────────────────────────────────────────────
+EXAMPLE:
+VM ──────────────────────┐
+AKS ─────────────────────┤
+Azure Firewall ──────────┤
+Entra ID ────────────────┤
+Key Vault ───────────────┤
+Microsoft 365 ───────────┤
+Other Sources ───────────┤
+                         ▼
+                   MICROSOFT SENTINEL
+                         │
+                ┌────────┼────────┐
+                ▼        ▼        ▼
+             Detect  Investigate Respond
+───────────────────────────────────────────────────────────────────────────────
+REAL-WORLD EXAMPLE:
+User
+ │
+ ├──► Failed login
+ ├──► Failed login
+ ├──► Failed login
+ ├──► Successful login
+ └──► Suspicious activity
+             │
+             ▼
+         Sentinel
+             │
+             ▼
+      Detection / Alert
+             │
+             ▼
+          Incident
+             │
+             ▼
+       Investigation
+             │
+             ▼
+          Response
+───────────────────────────────────────────────────────────────────────────────
+IMPORTANT:
+→ Sentinel is NOT a firewall.
+→ Sentinel does not normally sit between Internet and VM.
+→ It analyzes security-related data/events collected from different sources.
+───────────────────────────────────────────────────────────────────────────────
+MAIN SENTINEL CONCEPTS — WE WILL LEARN LATER:
+→ SIEM                    → SOAR
+→ Data Connectors         → Log Analytics Workspace
+→ Analytics Rules         → Alerts
+→ Incidents               → Hunting
+→ KQL                     → Workbooks
+→ Automation Rules        → Playbooks
+→ Threat Intelligence     → UEBA
+═══════════════════════════════════════════════════════════════════════════════
+3. SECURITY MONITORING
+═══════════════════════════════════════════════════════════════════════════════
+WHAT IS IT?
+→ Security Monitoring is the continuous process of watching infrastructure,
+  logs and security events to detect, investigate and respond to issues.
+IMPORTANT:
+→ Security Monitoring is NOT one specific Azure service.
+→ It is an overall process/capability.
+SIMPLE MEANING:
+→ "Continuously watch the environment."
+───────────────────────────────────────────────────────────────────────────────
+EXAMPLE:
+Azure Infrastructure
+ │
+ ├──► VM
+ ├──► AKS
+ ├──► Firewall
+ ├──► NSG
+ ├──► Key Vault
+ ├──► Storage
+ ├──► SQL
+ └──► Entra ID
+          │
+          ▼
+       Logs / Events
+          │
+          ▼
+   SECURITY MONITORING
+          │
+     ┌────┼────┬─────────┐
+     ▼    ▼    ▼         ▼
+   Detect Alert Investigate Respond
+───────────────────────────────────────────────────────────────────────────────
+AZURE MONITORING COMPONENTS:
+→ Azure Monitor       = General monitoring / observability
+→ Log Analytics       = Log collection + querying
+→ Activity Log        = Subscription-level Azure operations
+→ Resource Logs       = Logs generated by Azure resources
+→ Defender for Cloud  = Security posture + workload protection
+→ Sentinel            = Security event analysis + SIEM/SOAR
+═══════════════════════════════════════════════════════════════════════════════
+4. DIFFERENCE — VERY IMPORTANT
+═══════════════════════════════════════════════════════════════════════════════
+DEFENDER FOR CLOUD
+→ "WHAT SECURITY RISKS / WEAKNESSES EXIST?"
+→ Security posture
+→ Recommendations
+→ Workload protection
+→ Security alerts
+SENTINEL
+→ "WHAT SUSPICIOUS SECURITY ACTIVITY IS HAPPENING?"
+→ Collect security data
+→ Detect threats
+→ Correlate events
+→ Investigate incidents
+→ Automate response
+SECURITY MONITORING
+→ "WHAT IS HAPPENING IN THE ENVIRONMENT?"
+→ Continuous observation
+→ Logs
+→ Metrics
+→ Alerts
+→ Detection
+→ Investigation
+→ Response
+═══════════════════════════════════════════════════════════════════════════════
+5. SIMPLE AZURE EXAMPLE
+═══════════════════════════════════════════════════════════════════════════════
+COMPANY HAS:
+VM + AKS + Storage + Key Vault + Firewall + Entra ID
+│
+├──► DEFENDER FOR CLOUD
+│      │
+│      ├──► Checks security posture
+│      ├──► Finds security weaknesses
+│      ├──► Provides recommendations
+│      └──► Protects supported workloads
+│
+├──► SECURITY MONITORING
+│      │
+│      ├──► Watches logs
+│      ├──► Watches metrics
+│      ├──► Watches activity
+│      └──► Generates/uses alerts
+│
+└──► SENTINEL
+       │
+       ├──► Collects security events
+       ├──► Detects suspicious activity
+       ├──► Creates/investigates incidents
+       └──► Automates response
+═══════════════════════════════════════════════════════════════════════════════
+6. HOW THEY FIT TOGETHER
+═══════════════════════════════════════════════════════════════════════════════
+                       AZURE ENVIRONMENT
+                              │
+             ┌────────────────┼────────────────┐
+             ▼                ▼                ▼
+            VM               AKS             Firewall
+             │                │                │
+             └────────────────┼────────────────┘
+                              │
+                       Logs / Signals
+                              │
+             ┌────────────────┴────────────────┐
+             ▼                                 ▼
+      DEFENDER FOR CLOUD                 MONITORING
+             │                                 │
+             ▼                                 ▼
+      Security Posture                 Azure Monitor
+      Recommendations                  Log Analytics
+      Workload Protection              Activity Logs
+      Security Alerts                  Resource Logs
+             │                                 │
+             └────────────────┬────────────────┘
+                              ▼
+                         SENTINEL
+                              │
+                              ▼
+                    Security Detection
+                              │
+                              ▼
+                          Incident
+                              │
+                              ▼
+                       Investigation
+                              │
+                              ▼
+                          Response
+═══════════════════════════════════════════════════════════════════════════════
+7. INTERVIEW ONE-LINERS
+═══════════════════════════════════════════════════════════════════════════════
+Q: What is Defender for Cloud?
+A: "Defender for Cloud helps assess cloud security posture, provide security
+   recommendations and protect supported cloud workloads."
+Q: What is Microsoft Sentinel?
+A: "Microsoft Sentinel is a cloud-native SIEM and SOAR solution used to
+   collect, analyze and correlate security data, detect threats, investigate
+   incidents and automate response."
+Q: What is Security Monitoring?
+A: "Security monitoring is the continuous observation of infrastructure,
+   logs and security events to detect, investigate and respond to issues."
+═══════════════════════════════════════════════════════════════════════════════
+8. FINAL MEMORY TRICK
+═══════════════════════════════════════════════════════════════════════════════
+DEFENDER FOR CLOUD
+        ↓
+   FIND SECURITY RISKS
+        ↓
+"What is insecure?"
+───────────────────────────────────────────────────────────────────────────────
+SECURITY MONITORING
+        ↓
+   WATCH ENVIRONMENT
+        ↓
+"What is happening?"
+───────────────────────────────────────────────────────────────────────────────
+SENTINEL
+        ↓
+   ANALYZE SECURITY EVENTS
+        ↓
+"What suspicious activity is happening?"
+═══════════════════════════════════════════════════════════════════════════════
+9. LEARNING ORDER
+═══════════════════════════════════════════════════════════════════════════════
+01 → Security Fundamentals
+     Threat → Vulnerability → Risk → Security Posture → Alert → Incident
+02 → Defender for Cloud
+     CSPM → Secure Score → Recommendations → Defender Plans →
+     Workload Protection → Security Alerts
+03 → Azure Security Monitoring
+     Azure Monitor → Activity Log → Resource Logs → Metrics →
+     Log Analytics → Alerts
+04 → Microsoft Sentinel
+     SIEM → SOAR → Workspace → Data Connectors → Analytics Rules →
+     Alerts → Incidents → KQL → Hunting → Workbooks →
+     Automation Rules → Playbooks
+05 → END-TO-END
+     Azure Resource
+          ↓
+     Logs / Signals
+          ↓
+     Monitoring / Log Analytics
+          ↓
+     Defender for Cloud / Sentinel
+          ↓
+     Detection
+          ↓
+     Alert
+          ↓
+     Incident
+          ↓
+     Investigation
+          ↓
+     Response
+═══════════════════════════════════════════════════════════════════════════════
+10. MOST IMPORTANT DISTINCTION
+═══════════════════════════════════════════════════════════════════════════════
+Defender for Cloud → Security posture + workload protection
+Azure Monitor      → General monitoring / observability
+Log Analytics      → Store + query logs
+Sentinel            → Security SIEM/SOAR + threat detection/investigation
+Security Monitoring → Overall continuous security monitoring process
+═══════════════════════════════════════════════════════════════════════════════

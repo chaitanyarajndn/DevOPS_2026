@@ -1,0 +1,200 @@
+
+
+============================================================
+ICMS-INFRASTRUCTURE_ENGINEER
+INTERVIEW SPEAKING ANSWERS
+============================================================
+
+
+3. BRIEFLY EXPLAIN WHAT YOU ARE CURRENTLY WORKING ON IN YOUR PROJECT / ORGANIZATION
+------------------------------------------------------------
+
+"Currently, my work is mainly focused on Azure infrastructure implementation and deployment for the ICMS environment. The architecture and network design are prepared by our Architect and DevOps Architect team, and I work from the approved HLD, LLD and IP planning to implement the required environment in Azure.
+
+My work starts with understanding the infrastructure requirement and identifying what needs to be deployed in the target environment. Based on that, I work with Terraform and reusable Terraform modules to provision the required Azure resources. I also make sure the configuration follows the approved IP planning, network segmentation and security requirements.
+
+Before I deploy any infrastructure change, I follow the validation process. I validate the Terraform configuration, run TFLint for Terraform linting and Checkov for Infrastructure as Code security scanning, and then review the Terraform Plan so I can see what changes are going to be made.
+
+For infrastructure delivery, we use GitHub Actions for Deployment Automation. So the infrastructure changes move through the repository and CI/CD workflow instead of being handled manually for every change.
+
+After deployment, I validate the environment from the infrastructure side. I check resource health, network connectivity, private connectivity, DNS resolution and the required dependencies. If something is not working as expected, I troubleshoot the issue and coordinate with the relevant team where the problem is outside the infrastructure layer.
+
+I also support the environment after the initial deployment. That includes configuration changes, scaling, upgrades, monitoring and production support. So my current role is mainly around taking an approved Azure design, implementing it correctly, validating the environment and keeping the infrastructure operational."
+
+
+4. EXPLAIN THE WORK YOU HAVE DONE IN THE LAST ONE OR TWO YEARS
+------------------------------------------------------------
+
+"Over the last one to two years, my work has mainly covered the Azure infrastructure lifecycle, starting from the requirement and going all the way through deployment and production support.
+
+Usually, the architecture team provides the approved HLD, LLD and IP planning. I use those documents to understand the infrastructure requirements for the environment and then implement the required Azure resources. My role here is implementation-focused, so I work on translating the approved design into the actual Azure environment.
+
+A large part of this work has been Terraform-based Infrastructure as Code. I maintain the Terraform code in GitHub and use reusable modules so that the infrastructure can be deployed consistently across multiple environments. I have worked with networking, security, connectivity and the Azure resources required by the environment.
+
+On the networking side, I have worked with Virtual Networks, subnets, NSGs, private connectivity, Application Gateway, NAT Gateway, VPN Gateway, Azure Firewall, Azure Bastion, Private Endpoints and Private DNS. I also work with environment isolation across multiple environments and make sure the deployed network follows the approved IP planning and connectivity requirements.
+
+On the infrastructure security side, I use a Shift-Left approach by checking the infrastructure before deployment. Terraform validation is followed by TFLint for Terraform linting and Checkov for IaC security scanning. We also use Azure Policy for governance and compliance requirements, and the infrastructure access side involves Azure identity and RBAC controls based on the approved design.
+
+For Terraform state management, we use an Azure Storage Account as the Remote Backend. This gives us centralized Terraform state management and allows the deployment workflow to work with the same state rather than relying only on a local machine.
+
+For infrastructure delivery, we use GitHub Actions. The workflow takes the Terraform code through validation, linting, security checks and Terraform Plan, and then the approved changes are deployed to Azure. I also review the plan before the actual change is applied.
+
+My work does not stop after provisioning. I have handled infrastructure configuration changes, scaling, upgrades, monitoring and decommissioning as part of the resource lifecycle. I also perform post-deployment validation and check that the required resources, connectivity and dependencies are working correctly.
+
+On the operations side, I have supported P1, P2 and P3 production incidents. When an issue occurs, I first look at the impact and identify whether the problem is related to infrastructure, networking, connectivity, resource health or configuration. I then work with the relevant teams if the issue involves another layer.
+
+After the incident is resolved, I also work on Root Cause Analysis, or RCA, and preventive actions. The objective is not only to restore the service but also to understand why the issue happened and reduce the chance of it recurring.
+
+I have also been involved in release readiness and infrastructure coordination across multiple environments. That includes checking whether the required infrastructure is ready, coordinating change sequencing, validating the environment after changes and supporting rollback activities where required.
+
+So, if I summarize my work over the last one to two years, it has covered the complete infrastructure lifecycle: requirement understanding, Azure implementation, Terraform and reusable modules, infrastructure validation and security, deployment automation, environment management, scaling, monitoring, troubleshooting, production incident handling and RCA."
+
+
+6. EXPLAIN YOUR AZURE ARCHITECTURE AT A HIGH LEVEL
+------------------------------------------------------------
+
+                              AZURE
+                                |
+                +---------------+---------------+
+                |                               |
+                v                               v
+             HUB VNET                       SPOKE VNET
+                |                               |
+        +-------+-------+             +---------+---------+
+        |       |       |             |         |         |
+        v       v       v             v         v         v
+     BASTION FIREWALL  VPN       APP GATEWAY   AKS   PRIVATE ENDPOINTS
+                                      |          |
+                                      |      +---+---+
+                                      |      |       |
+                                      |      v       v
+                                      |    NODE 1  NODE 2
+                                      |      |       |
+                                      |   +--+--+  +--+--+
+                                      |   |     |  |     |
+                                      |   v     v  v     v
+                                      | Angular .NET Angular .NET
+                                      |
+                              Separate Subnets:
+                              App Gateway
+                              AKS
+                              Private Endpoints
+
+
+"At a high level, this is a Hub-Spoke Azure environment implemented from the approved design provided by our Architect and DevOps Architect team. I work from the HLD, LLD and IP planning and implement the required infrastructure in the target environment.
+
+The Hub VNet contains the common connectivity and security components such as Azure Bastion, Azure Firewall and VPN Gateway. The ICMS workload environment is maintained in the Spoke VNet.
+
+Within the Spoke, the major components are separated according to the approved network design. Application Gateway is placed in its dedicated subnet, the AKS infrastructure uses its required subnet, and Private Endpoints are placed in their required subnet.
+
+The Hub and Spoke are connected through VNet Peering. This gives the application environment the required private connectivity while keeping the common network and security components separate from the workload environment.
+
+From my side, I am mainly responsible for implementing this design in Azure. I work with the network addressing from the IP planning, subnet configuration, security controls, resource configuration and connectivity. After deployment, I validate the environment against the approved design and troubleshoot any infrastructure or connectivity issue that comes up.
+
+So I would describe my role as the implementation and operational side of the Azure architecture. The design comes from the architecture team, and I make sure that the approved design is correctly deployed, validated and maintained in Azure."
+
+
+7. WHICH CLOUD ARE YOU CURRENTLY WORKING ON?
+------------------------------------------------------------
+
+"Microsoft Azure is my primary cloud platform. Most of my recent hands-on work has been around Azure infrastructure implementation, deployment and operations.
+
+My work is mainly focused on Azure networking, security, connectivity, Infrastructure as Code and environment management. I use Terraform for Infrastructure as Code and GitHub Actions for Deployment Automation.
+
+Within Azure, I have worked across infrastructure, networking, security, governance, monitoring and operational support. So my strongest practical exposure is Microsoft Azure, particularly on the infrastructure implementation and deployment side."
+
+
+8. WHICH DATABASES HAVE YOU USED IN YOUR PROJECT?
+------------------------------------------------------------
+
+"In my ICMS project, I work with the database mainly from the infrastructure and connectivity side. The database is part of the application environment, so my responsibility is to make sure the required infrastructure, network access and connectivity are available for the application to communicate with it.
+
+From the Azure side, I work with the database-related requirements such as private connectivity, network access, DNS resolution, security rules and environment configuration. Where private access is required, I make sure the relevant Private Endpoint and Private DNS configuration is in place so the application can reach the database through the intended private path.
+
+When there is an issue with application-to-database connectivity, I normally start from the infrastructure side. I check the resource health, subnet and network configuration, NSG rules, Private Endpoint, DNS resolution and the connectivity path. If the infrastructure side is healthy, I coordinate with the application or database team for the next level of investigation.
+
+I have also supported database availability and environment readiness as part of the overall infrastructure deployment. The database needs to be available and reachable before the application can function properly, so I treat it as one of the important dependencies during environment validation.
+
+My role is not focused on database development activities such as schema design or writing application queries. My responsibility is around the Azure infrastructure, connectivity, security and operational support required for the database to work correctly with the environment.
+
+So from my project perspective, I have practical exposure to the database as an infrastructure dependency, especially around private connectivity, access, availability, troubleshooting and environment validation. I would not mention a specific database engine or version in an interview unless it is confirmed in the actual ICMS project documentation."
+
+
+============================================================
+TECHNICAL POSITIONING TO KEEP CONSISTENT
+============================================================
+
+ARCHITECT / DEVOPS ARCHITECT
+    |
+    +--> HLD
+    +--> LLD
+    +--> IP PLANNING
+    +--> APPROVED DESIGN
+    |
+    v
+INFRASTRUCTURE ENGINEER - ME
+    |
+    +--> UNDERSTAND REQUIREMENTS
+    +--> IMPLEMENT IN AZURE
+    +--> TERRAFORM
+    +--> NETWORKING
+    +--> SECURITY
+    +--> CONNECTIVITY
+    +--> VALIDATE
+    +--> DEPLOY
+    +--> MONITOR
+    +--> TROUBLESHOOT
+    +--> PRODUCTION SUPPORT
+    +--> RCA
+    |
+    v
+READY AZURE ENVIRONMENT
+
+
+IMPORTANT ANSWER RULES
+------------------------------------------------------------
+
+Q3 - CURRENT WORK
+    Focus on current responsibility and day-to-day work.
+    Do not open the complete Azure resource list unless asked.
+
+Q4 - LAST 1-2 YEARS
+    This is the broadest answer.
+    Use it to show the full infrastructure lifecycle:
+    requirement -> implementation -> Terraform -> security ->
+    deployment -> validation -> operations -> incidents -> RCA.
+
+Q6 - AZURE ARCHITECTURE
+    Clearly say the design comes from the Architect / DevOps Architect.
+    Your role is implementation, deployment, validation and operations.
+    Do not say "I designed the architecture."
+
+Q7 - CLOUD
+    Answer Azure directly.
+    Do not start listing every Azure service unless asked.
+
+Q8 - DATABASE
+    Keep the answer infrastructure-focused.
+    Do not invent a database engine or version that has not been confirmed.
+
+USEFUL INFRASTRUCTURE TERMS
+------------------------------------------------------------
+
+Azure Landing Zone
+Infrastructure as Code (IaC)
+Shift-Left Security
+Network Segmentation
+Private Connectivity
+Environment Isolation
+Policy-Driven Governance
+Infrastructure Validation
+Deployment Automation
+Infrastructure Lifecycle Management
+Production Operations
+Incident Management
+Root Cause Analysis (RCA)
+High Availability
+Disaster Recovery
+Scaling
+Monitoring
+Troubleshooting
