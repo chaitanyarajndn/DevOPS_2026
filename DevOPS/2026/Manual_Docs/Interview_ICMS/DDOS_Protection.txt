@@ -1,0 +1,169 @@
+
+
+DDoS – BACKGROUND / WHY IT CAME
+
+• Initially, applications were mainly accessed by normal users.
+• Attackers realized they could make a service unavailable without actually hacking it.
+• DoS (Denial of Service) → attacker sends excessive traffic to exhaust server resources.
+• Single attacker has limited traffic capacity, so attackers started using many compromised devices.
+• DDoS (Distributed Denial of Service) → traffic comes from many different systems at the same time.
+• Compromised PCs, servers, IoT devices, etc. can form a Botnet and generate attack traffic.
+• Large DDoS attacks can exhaust:
+  → Network bandwidth
+  → Server connections
+  → CPU / memory
+  → Application resources
+• Problem became bigger with cloud because applications have public Internet endpoints and can be targeted at very large scale.
+• Firewall/Application Gateway alone may not be enough if massive traffic reaches the network before the application can process it.
+• Cloud providers therefore needed protection at their network infrastructure/edge, before attack traffic consumes customer resources.
+• Azure introduced Azure DDoS Protection as a managed service to protect Azure workloads from large-scale DDoS attacks.
+
+BASIC FLOW:
+Attacker(s)
+   ↓
+Huge malicious traffic
+   ↓
+Internet / Azure Network
+   ↓
+Target Public IP
+   ↓
+Resources exhausted
+   ↓
+Legitimate users affected
+
+WITH DDoS PROTECTION:
+Attacker(s)
+   ↓
+Huge traffic
+   ↓
+Azure network-level detection/mitigation
+   ↓
+Malicious traffic blocked/mitigated
+   ↓
+Legitimate traffic
+   ↓
+Application
+
+KEY POINT TO REMEMBER:
+DDoS Protection is needed because the attack can be so large that
+the problem occurs at the network level, before the application
+itself gets a chance to reject the malicious requests.
+
+
+
+
+DDoS ATTACK TYPES
+
+1. VOLUMETRIC ATTACK
+   → Goal: Consume network bandwidth.
+   → Sends a huge volume of traffic toward the target.
+   → Examples:
+      • UDP Flood
+      • ICMP Flood
+      • DNS Amplification
+      • NTP Amplification
+   → Mainly Layer 3 / Layer 4.
+
+2. PROTOCOL ATTACK
+   → Goal: Exhaust network/protocol resources.
+   → Exploits weaknesses in network/transport protocols.
+   → Examples:
+      • SYN Flood
+      • Ping of Death
+      • Fragmented Packet attacks
+   → Mainly Layer 3 / Layer 4.
+
+3. APPLICATION-LAYER ATTACK
+   → Goal: Exhaust application/server resources.
+   → Sends requests that look like legitimate application traffic.
+   → Example:
+      • HTTP/HTTPS Flood
+      • HTTP GET/POST Flood
+   → Layer 7.
+   → WAF is important for this type.
+
+EASY WAY TO REMEMBER:
+
+Volumetric
+→ "Too much traffic"
+
+Protocol
+→ "Too many protocol/connection requests"
+
+Application Layer
+→ "Too many application requests"
+
+AZURE:
+
+Azure DDoS Protection
+→ Primarily L3/L4 DDoS protection
+
+Web Application Firewall (WAF)
+→ Helps protect against L7/application attacks
+
+
+
+
+
+AZURE DDOS PROTECTION – SHORT NOTES
+
+WHY DDOS PROTECTION WAS CREATED:
+• Internet-facing applications can be targeted by DDoS attacks.
+• Attackers use many systems/botnets to generate huge amounts of traffic.
+• The attack can exhaust network bandwidth, connections or application resources.
+• Result → application becomes slow/unavailable and legitimate users are affected.
+• Large attacks can impact the network before traffic even reaches the application.
+• Therefore, cloud providers need large-scale network-level DDoS mitigation.
+
+WHAT IS DDoS:
+• DDoS = Distributed Denial of Service.
+• Distributed → attack traffic comes from many sources.
+• Denial of Service → objective is to make the service unavailable to legitimate users.
+• Main objective is availability disruption, not necessarily gaining access to the application.
+
+MAIN DDoS ATTACK CATEGORIES:
+• Volumetric Attack → overwhelms network bandwidth with huge traffic volume.
+  Examples: UDP Flood, ICMP Flood, DNS/NTP Amplification.
+• Protocol Attack → exhausts network/protocol resources.
+  Examples: SYN Flood, protocol-based attacks.
+• Application-Layer Attack → exhausts application resources.
+  Example: HTTP/HTTPS Flood.
+
+AZURE DDoS PROTECTION:
+• Azure provides basic infrastructure-level DDoS protection automatically.
+• Azure DDoS Protection provides enhanced, workload-aware protection.
+• It continuously monitors traffic and detects abnormal traffic patterns.
+• It automatically mitigates supported DDoS attacks.
+• Azure DDoS Protection primarily protects L3/L4 attacks.
+• For L7/application attacks, combine DDoS Protection with WAF.
+
+TWO AZURE DDoS PROTECTION OPTIONS:
+• DDoS IP Protection
+  → Protection for individual public IP resources.
+
+• DDoS Network Protection
+  → Protection through a DDoS protection plan for VNets/public IP resources.
+
+EASY MEMORY:
+DDoS = Make the service unavailable
+DDoS Protection = Detect + Mitigate the attack
+DDoS → Mainly L3/L4
+WAF   → L7/Application protection
+
+
+
+
+
+az group create -n rg-ddos-test -l centralindia
+
+az network vnet create -g rg-ddos-test -n vnet-ddos-test -l centralindia --address-prefix 10.20.0.0/16
+
+az network vnet subnet create -g rg-ddos-test --vnet-name vnet-ddos-test -n snet-test --address-prefixes 10.20.1.0/24
+
+az network ddos-protection create -g rg-ddos-test -n ddos-test -l centralindia
+
+az network vnet update -g rg-ddos-test -n vnet-ddos-test --ddos-protection true --ddos-protection-plan ddos-test
+
+
+
+

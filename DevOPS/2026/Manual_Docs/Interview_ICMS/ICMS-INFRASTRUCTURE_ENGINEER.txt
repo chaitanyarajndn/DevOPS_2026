@@ -177,6 +177,8 @@ Q8 - DATABASE
     Keep the answer infrastructure-focused.
     Do not invent a database engine or version that has not been confirmed.
 
+
+
 USEFUL INFRASTRUCTURE TERMS
 ------------------------------------------------------------
 

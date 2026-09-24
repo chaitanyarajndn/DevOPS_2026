@@ -1,0 +1,784 @@
+================================================================
+AZURE CLOUD INFRASTRUCTURE ENGINEER - INTERVIEW Q&A
+ICMS PROJECT - UPDATED VERSION
+================================================================
+
+Q1. Tell me about yourself.
+
+I am a Cloud Engineer with around 5 years of experience, mainly working on Microsoft Azure infrastructure, Terraform and infrastructure automation. My primary experience is on the infrastructure implementation and operations side, where I work with Azure networking, security, private connectivity, infrastructure deployment and production support.
+
+In my current project, which is an Insurance Claims Management System, I work across Dev, QA and Production environments. The architecture, HLD (High-Level Design), LLD (Low-Level Design) and IP planning are provided by the Architecture and DevOps Architect team, and my responsibility is to implement that approved design using Azure services and Terraform.
+
+My work includes Azure Landing Zone based infrastructure implementation, Hub-and-Spoke networking, Azure Policy, private connectivity, Application Gateway, Azure Firewall, VPN connectivity, AKS infrastructure, Azure Key Vault, monitoring, scaling, backup and disaster recovery activities.
+
+I am also involved in CI/CD automation, infrastructure validation, production incidents, troubleshooting, RCA and ongoing infrastructure changes and support.
+
+----------------------------------------------------------------
+
+Q2. What are you currently working on?
+
+Currently, I am mainly working on the implementation and operational management of Azure infrastructure for an enterprise Insurance Claims Management System.
+
+We maintain separate Dev, QA and Production environments. The enterprise Azure foundation follows an Azure Landing Zone approach, and the workload networking follows a Hub-and-Spoke model.
+
+My work starts with the approved HLD, LLD and IP planning. Based on those requirements, I provision and configure the Azure infrastructure using Terraform and then perform deployment validation.
+
+My day-to-day work covers networking, security, private connectivity, AKS infrastructure, Application Gateway, Azure Firewall, VPN Gateway, Private Endpoints, Private DNS, Azure Key Vault, monitoring, scaling, backup, DR and production troubleshooting.
+
+----------------------------------------------------------------
+
+Q3. Can you explain the Azure Landing Zone part of your project?
+
+We follow the Azure Landing Zone approach to provide a governed and standardized foundation for the Azure environment.
+
+At the enterprise level, management groups, subscriptions, identity, connectivity, governance, management and security are organized according to the approved enterprise structure.
+
+The Landing Zone gives us the foundation for things such as Azure Policy, identity and access management, subscription organization, networking standards, monitoring and security controls.
+
+For example, the Connectivity area contains the Hub networking components, while workload subscriptions contain the respective Dev, QA and Production Spoke VNets.
+
+My responsibility is not to define the Landing Zone architecture. I implement the approved Azure environment and workload infrastructure according to the standards and design provided by the architecture and platform teams.
+
+High-level structure:
+
+Azure Tenant
+    |
+    v
+Management Groups
+    |
+    +--> Governance / Policy
+    +--> Identity
+    +--> Connectivity
+    +--> Management
+    +--> Security
+    |
+    +--> Subscriptions
+           |
+           +--> Connectivity Subscription
+           |       |
+           |       +--> Hub VNet
+           |
+           +--> Dev Workload Subscription
+           |       |
+           |       +--> Dev Spoke VNet
+           |
+           +--> QA Workload Subscription
+           |       |
+           |       +--> QA Spoke VNet
+           |
+           +--> Prod Workload Subscription
+                   |
+                   +--> Prod Spoke VNet
+
+----------------------------------------------------------------
+
+Q4. Can you explain the Azure architecture of your ICMS project?
+
+At a high level, the environment follows an Azure Landing Zone approach with a Hub-and-Spoke network architecture.
+
+The Hub VNet provides centralized connectivity and network security services such as Azure Firewall, VPN Gateway and Azure Bastion. DNS services and the required DNS resolution layer are also part of the centralized connectivity design.
+
+The workload environments are deployed in separate Spoke VNets for Dev, QA and Production.
+
+Each Spoke contains the workload components such as Application Gateway, AKS and Private Endpoint subnets. Application Gateway has its own dedicated subnet, AKS has its own subnet and Private Endpoints are placed in their required dedicated subnet.
+
+The Hub VNet and each Spoke VNet are connected using VNet Peering.
+
+VNet peering is at the VNet level. We do not peer individual subnets.
+
+High-level architecture:
+
+                         AZURE
+                           |
+                           v
+                Azure Landing Zone
+                           |
+         +-----------------+-----------------+
+         |                 |                 |
+      Identity         Governance         Security
+      Entra ID        Azure Policy       Sentinel
+      RBAC / PIM       Compliance         Defender
+         |
+         +-----------------------------------------+
+         |
+         v
+              CONNECTIVITY / HUB
+                    |
+                HUB VNet
+                    |
+       +------------+-------------+
+       |            |             |
+       v            v             v
+   Firewall      VPN Gateway    Bastion
+       |
+       +--> DNS / Private DNS / DNS Resolution
+       |
+       +--> DDoS Protection as applicable
+                    |
+                    |
+             VNet Peering
+                    |
+         +----------+----------+
+         |          |          |
+         v          v          v
+      DEV Spoke  QA Spoke   PROD Spoke
+         |          |          |
+         |          |          |
+       App GW      App GW     App GW
+       AKS         AKS        AKS
+       Private EP  Private EP Private EP
+       
+Centralized Management / Security
+         |
+         +--> Azure Monitor
+         +--> Log Analytics
+         +--> Microsoft Sentinel
+         +--> Backup / DR services
+
+----------------------------------------------------------------
+
+Q5. What was your responsibility in this architecture?
+
+My responsibility was mainly on the Azure infrastructure implementation and operations side.
+
+The Architecture and DevOps Architect team provided the approved HLD, LLD and IP planning. I implemented that design using Terraform and Azure services.
+
+This included creating and configuring the required VNets, subnets, NSGs, Application Gateway, Azure Firewall, VPN connectivity, Bastion, Private Endpoints, Private DNS integration and AKS-related infrastructure.
+
+After deployment, I performed infrastructure and connectivity validation and supported monitoring, scaling, upgrades, production incidents and troubleshooting.
+
+So I would describe my role as implementing and managing the approved architecture rather than owning the architecture design itself.
+
+----------------------------------------------------------------
+
+Q6. How are you using Terraform in the project?
+
+Terraform is our primary Infrastructure as Code tool for provisioning and managing Azure infrastructure.
+
+We use reusable Terraform modules for common infrastructure components so that deployments remain consistent across Dev, QA and Production.
+
+Terraform is used for Azure infrastructure such as VNets, subnets, NSGs, Application Gateway, Azure Firewall, VPN Gateway, NAT Gateway, Azure Bastion, Private Endpoints, Key Vault, AKS and other required resources.
+
+We also use a Terraform Remote Backend with Azure Storage Account for centralized state management.
+
+Typical flow:
+
+Terraform Code
+      |
+      v
+terraform init
+      |
+      v
+terraform validate
+      |
+      v
+TFLint
+      |
+      v
+Checkov
+      |
+      v
+terraform plan
+      |
+      v
+Review / Approval
+      |
+      v
+terraform apply
+      |
+      v
+Azure Infrastructure
+
+----------------------------------------------------------------
+
+Q7. What is the purpose of Terraform Remote Backend?
+
+Terraform Remote Backend is used to store Terraform state centrally instead of keeping the state only on an engineer's local machine.
+
+In our environment, the state is maintained in an Azure Storage Account.
+
+Terraform uses the state to track the resources it manages and to determine the difference between the desired configuration and the existing infrastructure.
+
+Centralized state is important for team-based infrastructure management, controlled changes and maintaining a consistent Terraform state across environments.
+
+----------------------------------------------------------------
+
+Q8. What infrastructure security controls do you use?
+
+Security is handled through multiple layers.
+
+At the network level, we use NSGs, Azure Firewall, network segmentation and private connectivity. Private Endpoints are used for private access to supported Azure services, and Private DNS provides the required name resolution.
+
+At the identity level, we use Microsoft Entra ID, RBAC and managed identities according to the approved access model.
+
+Azure Key Vault is used for managing secrets and sensitive configuration.
+
+Azure Policy is used for governance and compliance controls.
+
+Microsoft Sentinel is part of the centralized security monitoring layer, and Azure DDoS Protection can be part of the enterprise network protection strategy for public-facing resources where required.
+
+The important point is that infrastructure security is applied through multiple controls rather than relying on a single service.
+
+----------------------------------------------------------------
+
+Q9. Explain Azure Policy and how you use it.
+
+Azure Policy is used to enforce and validate governance and compliance requirements on Azure resources.
+
+A policy definition contains the rule or requirement. That policy can then be assigned at an appropriate scope such as a management group, subscription or resource group.
+
+For example, an organization can restrict deployment to approved regions, require specific tags or audit certain security configurations.
+
+Depending on the requirement, policy effects can include Audit, Deny, Modify or DeployIfNotExists.
+
+In my role, I work with the approved organizational policies and ensure that the infrastructure we deploy follows those governance requirements.
+
+----------------------------------------------------------------
+
+Q10. How do you handle Backup and Disaster Recovery?
+
+Backup and Disaster Recovery are handled as part of the overall business continuity strategy.
+
+First, we identify the critical components and their recovery requirements. Based on the approved design, we define backup, retention and recovery mechanisms.
+
+For Disaster Recovery, we consider RPO (Recovery Point Objective) and RTO (Recovery Time Objective), dependency mapping, secondary-region infrastructure, data recovery and application recovery sequence.
+
+The important point is that Disaster Recovery is not only about creating resources in another region. Network connectivity, security, identity, application dependencies and data also need to be recoverable.
+
+High-level flow:
+
+Primary Region
+      |
+      +--> Application
+      +--> Network
+      +--> Security
+      +--> Data
+      |
+      v
+Backup / Replication
+      |
+      v
+Secondary Region
+      |
+      v
+Recovery
+      |
+      v
+Validation
+
+My role is to implement and validate the infrastructure according to the approved backup and DR design and support recovery-related operational activities.
+
+----------------------------------------------------------------
+
+Q11. What is the difference between Backup and Disaster Recovery?
+
+Backup mainly focuses on protecting and restoring data.
+
+For example, if data is accidentally deleted, corrupted or needs to be restored, backup provides the recovery point.
+
+Disaster Recovery is broader. It is the capability to recover the complete application service and its supporting dependencies after a major failure such as a regional outage.
+
+Backup answers:
+
+"Can I restore the required data?"
+
+Disaster Recovery answers:
+
+"Can I restore the required service and its dependencies?"
+
+So backup and DR are related, but they solve different recovery requirements.
+
+----------------------------------------------------------------
+
+Q12. How do you manage multiple environments like DEV, QA and PROD?
+
+We maintain separate environments for isolation and controlled promotion.
+
+The Terraform codebase can remain common, while environment-specific configuration determines the target Azure environment.
+
+Each environment has its own Spoke VNet and corresponding workload infrastructure.
+
+Example:
+
+                     Terraform Code
+                           |
+            +--------------+--------------+
+            |              |              |
+            v              v              v
+       DEV Config       QA Config      PROD Config
+            |              |              |
+            v              v              v
+       DEV Spoke       QA Spoke       PROD Spoke
+            |              |              |
+           AKS            AKS            AKS
+            |              |              |
+        Resources      Resources      Resources
+
+This gives us environment isolation while maintaining reusable infrastructure code.
+
+----------------------------------------------------------------
+
+Q13. Explain your source-code promotion and release promotion process.
+
+There is an important distinction between source-code promotion and release promotion.
+
+Source-code promotion happens through the Git workflow, where code moves through feature branches, Pull Requests and approved branches.
+
+Release promotion is the movement of an approved build or release into the next environment.
+
+Typical flow:
+
+Feature Branch
+      |
+      v
+Pull Request
+      |
+      v
+Develop
+      |
+      v
+DEV Deployment
+      |
+      v
+QA Validation
+      |
+      v
+QA Approval
+      |
+      v
+Production PR / Approval
+      |
+      v
+Production Deployment
+
+The key distinction is:
+
+PR Merge       = Source-Code Promotion
+Deployment     = Release Promotion
+
+This distinction is important because merging code does not by itself mean that the production release has happened.
+
+----------------------------------------------------------------
+
+Q14. How does your GitHub Actions CI/CD process work?
+
+We use GitHub Actions to automate infrastructure and application deployment workflows.
+
+For infrastructure, the pipeline validates the Terraform code, performs linting and Infrastructure-as-Code security checks, creates the Terraform plan and then deploys the approved changes.
+
+Infrastructure flow:
+
+GitHub
+   |
+   v
+GitHub Actions
+   |
+   +--> Terraform Validate
+   +--> TFLint
+   +--> Checkov
+   +--> Terraform Plan
+   |
+   v
+Approval
+   |
+   v
+Terraform Apply
+   |
+   v
+Azure Infrastructure
+
+For the application side, the pipeline builds and validates the application, creates the container image, stores the image in ACR (Azure Container Registry), and deploys the approved application configuration to AKS.
+
+----------------------------------------------------------------
+
+Q15. What is your involvement with AKS?
+
+My AKS involvement is mainly from the Azure infrastructure, networking, connectivity, security, deployment and operational side.
+
+I work with the AKS environment, its Azure networking integration, access, connectivity, scaling, monitoring and integration with other Azure services.
+
+The application workloads are containerized and the images are stored in ACR. Helm is used for the Kubernetes deployment configuration, and AKS runs the application workloads.
+
+In the architecture, the AKS environment is located in the Spoke VNet and uses the required subnet and network controls.
+
+My role is not Kubernetes platform architecture ownership. My role is working with AKS as part of the Azure infrastructure and application deployment lifecycle.
+
+----------------------------------------------------------------
+
+Q16. Explain Application Gateway in your architecture.
+
+Application Gateway is used as the application entry point for the workload environment.
+
+It is deployed in its own dedicated subnet inside the Spoke VNet.
+
+It handles application-layer traffic and can provide Web Application Firewall capability where required by the approved design.
+
+High-level application flow:
+
+Users
+   |
+   v
+Internet
+   |
+   v
+Application Gateway
+   |
+   v
+AKS
+   |
+   +--> Angular Frontend
+   |
+   +--> .NET / ASP.NET Core Backend
+           |
+           v
+        Database
+
+Application Gateway provides the controlled entry point before traffic reaches the application workloads in AKS.
+
+----------------------------------------------------------------
+
+Q17. How do Private Endpoints and Private DNS work together?
+
+Private Endpoint provides a private IP address for accessing a supported Azure service through the private network.
+
+Private DNS provides the name resolution required for that private connectivity.
+
+For example:
+
+Application
+     |
+     v
+DNS Resolution
+     |
+     v
+Private IP
+     |
+     v
+Private Endpoint
+     |
+     v
+Azure Service
+
+In our architecture, Private Endpoints are placed in the Spoke environment, while the DNS design provides centralized and connected name resolution as required.
+
+The important concept is:
+
+Private Endpoint = Private connectivity
+
+Private DNS = Private name resolution
+
+----------------------------------------------------------------
+
+Q18. What monitoring tools do you use?
+
+Monitoring is handled as a centralized service layer rather than treating Azure Monitor as a resource deployed inside the Hub VNet.
+
+We use Azure Monitor for metrics, alerts and resource monitoring.
+
+Log Analytics provides centralized log collection and analysis.
+
+Microsoft Sentinel is used as the centralized security monitoring and investigation platform.
+
+Prometheus and Grafana can be used for workload and Kubernetes-related monitoring.
+
+The overall flow is:
+
+Azure Resources
+      |
+      +--> Azure Monitor
+      |
+      +--> Log Analytics
+      |
+      +--> Prometheus / Grafana
+      |
+      +--> Microsoft Sentinel
+      |
+      v
+Centralized Monitoring / Security Visibility
+
+So the Hub provides network connectivity and security services, while monitoring and security management are maintained as centralized enterprise services.
+
+----------------------------------------------------------------
+
+Q19. How do you handle a production incident?
+
+For a production incident, I first understand the business impact and identify whether the issue is related to infrastructure, network, security, connectivity, application dependency or another Azure service.
+
+I check monitoring alerts, Azure resource health, logs, recent changes and the relevant traffic path.
+
+For a P1 incident, service restoration is the immediate priority. After restoration, I work on RCA and identify preventive or corrective actions.
+
+Typical approach:
+
+Incident / Alert
+      |
+      v
+Impact Assessment
+      |
+      v
+Troubleshooting
+      |
+      v
+Service Restoration
+      |
+      v
+RCA
+      |
+      v
+Preventive / Corrective Action
+
+P1, P2 and P3 incidents are handled according to their business impact, urgency and escalation process.
+
+----------------------------------------------------------------
+
+Q20. How do you troubleshoot an Azure connectivity issue?
+
+I normally trace the traffic path layer by layer.
+
+For example:
+
+Source
+   |
+   v
+NSG
+   |
+   v
+Subnet / Route
+   |
+   v
+VNet
+   |
+   v
+VNet Peering
+   |
+   v
+Azure Firewall
+   |
+   v
+Private Endpoint / Application Gateway
+   |
+   v
+Target
+
+I check IP addressing, NSG rules, route tables and UDR (User Defined Route) configuration, firewall rules, VNet peering, DNS resolution, Private Endpoint status and relevant Azure logs.
+
+An important point in a Hub-and-Spoke architecture is that the Hub and Spoke VNets are peered.
+
+The subnets are not separately peered.
+
+If traffic has to pass through Azure Firewall, routing can be controlled using UDRs and the required routing configuration.
+
+----------------------------------------------------------------
+
+Q21. How do you handle infrastructure changes in Production?
+
+Production changes follow the approved change and release management process.
+
+I first understand the requirement, impact and dependencies and review the Terraform configuration and plan.
+
+After the required review and approval, the change is deployed through the controlled process.
+
+After deployment, I validate resource health, connectivity, application availability and monitoring.
+
+I also verify that there are no unexpected changes to dependent infrastructure.
+
+If a problem occurs, rollback or recovery is performed according to the approved change and recovery plan.
+
+----------------------------------------------------------------
+
+Q22. How do you handle scaling requirements?
+
+Scaling starts with understanding what is actually reaching capacity.
+
+I review Azure Monitor metrics, resource utilization, workload behavior and application dependencies.
+
+For AKS-related workloads, scaling can involve the required compute or workload capacity based on the approved architecture and application requirements.
+
+For Azure services, I also check SKU limits, resource capacity and performance requirements.
+
+After scaling, I validate application availability, resource health and monitoring metrics to confirm that the expected capacity has been achieved.
+
+----------------------------------------------------------------
+
+Q23. How do you ensure infrastructure quality and security before deployment?
+
+We follow a Shift-Left approach for infrastructure validation.
+
+Terraform changes go through validation, linting and Infrastructure-as-Code security checks before deployment.
+
+Typical flow:
+
+Terraform Code
+      |
+      v
+Terraform Validate
+      |
+      v
+TFLint
+      |
+      v
+Checkov
+      |
+      v
+Terraform Plan
+      |
+      v
+Review / Approval
+      |
+      v
+Terraform Apply
+
+Apart from these pipeline checks, Azure Policy provides governance and compliance validation at the Azure environment level.
+
+Network security is also enforced using NSGs, Azure Firewall, private connectivity and appropriate identity and access controls.
+
+----------------------------------------------------------------
+
+Q24. What makes your current role different from an Azure Architect role?
+
+My role is primarily implementation, deployment and operations focused.
+
+The architecture team defines the approved architecture, HLD, LLD, IP planning and standards.
+
+I take those requirements and implement the Azure infrastructure using Terraform and Azure services.
+
+My involvement is deeper in areas such as infrastructure deployment, network configuration, security controls, validation, monitoring, scaling, upgrades, production support, troubleshooting and RCA.
+
+So I would describe myself as an Azure infrastructure implementation and operations engineer rather than an architecture owner.
+
+----------------------------------------------------------------
+
+Q25. Give me the complete flow of your project from design to production support.
+
+The overall lifecycle is:
+
+Approved HLD / LLD / IP Planning
+              |
+              v
+      Azure Landing Zone
+              |
+              v
+     Hub-and-Spoke Network
+              |
+              v
+      Terraform Infrastructure
+              |
+              v
+   Validate + TFLint + Checkov
+              |
+              v
+       Terraform Plan
+              |
+              v
+       Review / Approval
+              |
+              v
+       Terraform Apply
+              |
+              v
+       Azure Infrastructure
+              |
+              v
+      Application Deployment
+              |
+              v
+             DEV
+              |
+              v
+        Deployment Validation
+              |
+              v
+             QA
+              |
+              v
+   Functional / Integration Testing
+              |
+              v
+         QA Approval
+              |
+              v
+        Production Release
+              |
+              v
+        PROD Deployment
+              |
+              v
+   Monitoring / Operations
+              |
+      +-------+--------+
+      |                |
+      v                v
+   Scaling          Upgrades
+      |                |
+      +-------+--------+
+              |
+              v
+       P1 / P2 / P3 Support
+              |
+              v
+     Troubleshooting / RCA
+              |
+              v
+       Backup / Disaster Recovery
+
+My responsibility mainly covers the implementation, deployment, validation and operational lifecycle of the Azure infrastructure.
+
+================================================================
+IMPORTANT ARCHITECTURE RULES TO REMEMBER
+================================================================
+
+Hub VNet <======== VNet Peering ========> Spoke VNet
+
+This is VNet-to-VNet peering.
+
+NOT:
+
+AKS Subnet <======> Firewall Subnet
+
+There is no subnet-to-subnet peering.
+
+Hub VNet:
+Azure Firewall
+VPN Gateway
+Azure Bastion
+DNS / DNS resolution components
+
+Spoke VNet:
+Application Gateway
+AKS
+Private Endpoint Subnet
+Other workload subnets as required
+
+Centralized Management / Security:
+Azure Monitor
+Log Analytics
+Microsoft Sentinel
+Backup / DR services
+
+Azure Policy:
+Governance / Compliance layer
+
+Azure DDoS Protection:
+Enterprise network protection for applicable public-facing resources;
+not a subnet inside the Hub.
+
+Private Endpoint:
+Private connectivity
+
+Private DNS:
+Private name resolution
+
+VNet Peering:
+VNet-level connectivity
+
+UDR:
+Controls the routing path, including sending traffic through Azure
+Firewall where required.
+
+Source-Code Promotion:
+Feature Branch -> PR -> Approved Branch
+
+Release Promotion:
+DEV -> QA -> PROD through the approved release process
+
+================================================================

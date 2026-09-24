@@ -1,0 +1,81 @@
+OSI MODEL – AZURE NETWORKING UNDERSTANDING
+
+Layer 7    Application
+           Basic: Provides network services directly to applications/users.
+           Other terms: Application layer, Network Application Layer
+           OSI role: Defines how applications use network communication.
+           Examples: HTTP, HTTPS, DNS, SMTP, FTP
+           ↓ Uses Layer 6 for data representation/encryption and Layer 5 for sessions.
+           Azure: Application Gateway, WAF, App Service, AKS Ingress
+           Azure relation: HTTP/HTTPS requests reaching your application are L7 traffic.
+           DDoS: HTTP/HTTPS Flood is an L7 attack.
+
+Layer 6    Presentation
+           Basic: Handles how data is represented between systems.
+           Other terms: Syntax layer, Data representation layer
+           OSI role: Translation, encoding/decoding, encryption/decryption,
+                     compression/decompression.
+           Examples: TLS/SSL, data encoding, serialization formats
+           ↓ Converts/prepares data so Layer 7 applications can understand it.
+           Azure: HTTPS/TLS termination on Application Gateway; certificates
+                  can be stored/managed using Azure Key Vault.
+           Azure relation: When Application Gateway terminates HTTPS, TLS processing
+                           happens around this layer.
+
+Layer 5    Session
+           Basic: Establishes, manages and terminates communication sessions.
+           Other terms: Session layer
+           OSI role: Controls communication sessions between applications.
+           Examples: Session establishment, session maintenance, session termination.
+           ↓ Provides/maintains communication context for Layer 7.
+           Azure: Usually handled by application/framework/protocols rather than
+                  a dedicated Azure networking service.
+           Azure relation: Important conceptually, but rarely configured directly
+                           as a separate Azure network component.
+
+Layer 4    Transport
+           Basic: Provides end-to-end communication between hosts/processes.
+           Other terms: Transport layer
+           OSI role: Segmentation, reliability, flow control and port-based delivery.
+           Protocols: TCP, UDP
+           Identifiers: Source Port + Destination Port
+           Examples: TCP 443, TCP 80, UDP 53
+           ↓ Uses Layer 3 IP connectivity to deliver transport segments/datagrams.
+           Azure: NSG, Azure Load Balancer, NAT Gateway, Application Gateway
+           Azure relation: Ports, TCP/UDP connections and connection-level traffic
+                           are primarily L4 concepts.
+           DDoS: SYN Flood / UDP Flood are common L4 attacks.
+
+Layer 3    Network
+           Basic: Provides logical addressing and routing between networks.
+           Other terms: Network layer, IP layer
+           OSI role: Logical addressing, routing, packet forwarding.
+           Protocols: IPv4, IPv6, ICMP
+           Identifier: Source IP + Destination IP
+           ↓ Uses Layer 2 to actually move frames across the local network.
+           Azure: VNet, Subnet, Route Table/UDR, VNet Peering, VPN Gateway,
+                  Azure Firewall, Public IP
+           Azure relation: IP addressing and routing between Azure networks/subnets
+                           are L3 concepts.
+           DDoS: IP/ICMP and volumetric attacks can operate at L3.
+
+Layer 2    Data Link
+           Basic: Provides node-to-node communication over the local network.
+           Other terms: Data Link layer, MAC layer
+           OSI role: Frames, MAC addressing, error detection, local delivery.
+           Protocol examples: Ethernet, ARP
+           Identifier: MAC address
+           ↓ Uses Layer 1 to physically transmit frames.
+           Azure: Mostly abstracted/managed by Azure.
+           Azure relation: You normally work with VNet/Subnet/IP rather than
+                           directly configuring switches, MAC tables or Ethernet frames.
+
+Layer 1    Physical
+           Basic: Actual transmission of raw bits through physical medium.
+           Other terms: Physical layer, PHY
+           OSI role: Electrical/optical/radio transmission of 0s and 1s.
+           Examples: Fiber, copper, radio, physical NIC, cables, signals.
+           ↓ Provides the physical medium required by Layer 2.
+           Azure: Fully managed by Microsoft in Azure datacenters/global network.
+           Azure relation: As an Azure DevOps/Infrastructure engineer, you normally
+                           don't manage Azure's physical switches, cables or routers.

@@ -1,0 +1,1590 @@
+══════════════════════════════════════════════════════════════════════════════
+ICMS – ENTERPRISE DISASTER RECOVERY + BACKUP
+US-BASED AZURE DEPLOYMENT | HLD + LLD | INFRASTRUCTURE ENGINEER
+══════════════════════════════════════════════════════════════════════════════
+
+1. FIRST: UNDERSTAND AZURE US REGIONS
+══════════════════════════════════════════════════════════════════════════════
+
+Current Azure public-cloud regions in the United States include:
+
++--------------------+----------------------+--------------------+----------------------+
+| Azure Region       | Physical Location    | Availability Zones | Paired Region        |
++--------------------+----------------------+--------------------+----------------------+
+| East US            | Virginia             | Yes: 1,2,3         | West US              |
+| East US 2          | Virginia             | Yes: 1,2,3         | Central US            |
+| Central US         | Iowa                 | Yes: 1,2,3         | East US 2             |
+| South Central US   | Texas                | Yes: 1,2,3         | North Central US      |
+| North Central US   | Illinois             | Coming soon        | South Central US      |
+| West US            | California            | No                 | East US               |
+| West US 2          | Washington            | Yes: 1,2,3         | West Central US       |
+| West US 3          | Phoenix              | Yes: 1,2,3         | East US               |
+| West Central US    | Wyoming              | No                 | West US 2             |
++--------------------+----------------------+--------------------+----------------------+
+
+Microsoft's current region list identifies the physical location, Availability Zone
+support and pairing for these regions. :contentReference[oaicite:1]{index=1}
+
+IMPORTANT:
+"Availability Zone 1/2/3" does NOT mean you can identify them as:
+    Zone 1 = Building A
+    Zone 2 = Building B
+    Zone 3 = Building C
+
+Microsoft deliberately abstracts the physical datacenter mapping. Availability
+Zones are physically separate locations within the region, with independent
+power, cooling and networking. :contentReference[oaicite:2]{index=2}
+
+
+2. WHICH US REGION WOULD I CHOOSE FOR ICMS?
+══════════════════════════════════════════════════════════════════════════════
+
+There is no universal answer such as:
+
+    "East US is always the primary region."
+
+I would select the region based on:
+
+    Business user location
+    Application latency
+    Azure service availability
+    VM SKU availability
+    AKS availability
+    Database capabilities
+    Compliance/data residency
+    Network connectivity
+    Azure quota/capacity
+    Cost
+    DR requirements
+
+For a US enterprise ICMS example, I can assume:
+
+    PRIMARY REGION
+        East US
+
+    DR REGION
+        West US 3
+
+Why?
+
+    East US
+       |
+       +-- Mature Azure region
+       +-- Availability Zones
+       +-- Strong service availability
+
+    West US 3
+       |
+       +-- Separate geographic location
+       +-- Availability Zones
+       +-- Independent regional failure domain
+
+Microsoft lists West US 3 as paired with East US. :contentReference[oaicite:3]{index=3}
+
+But there is an important enterprise point:
+
+    Region Pair != mandatory DR region
+
+Azure SQL Database failover groups can be configured across Azure regions and
+do not require the regions to be an official Azure region pair. Therefore the
+final choice should be based on workload requirements rather than blindly
+choosing the paired region. :contentReference[oaicite:4]{index=4}
+
+
+3. REGION VS AVAILABILITY ZONE
+══════════════════════════════════════════════════════════════════════════════
+
+Think of the hierarchy like this:
+
+    Azure Geography
+          |
+          +--------------------------------+
+          |                                |
+      East US                         West US 3
+      REGION                           REGION
+          |                                |
+      +---+---+                        +---+---+
+      |   |   |                        |   |   |
+     AZ1 AZ2 AZ3                      AZ1 AZ2 AZ3
+      |   |   |                        |   |   |
+    DCs DCs DCs                      DCs DCs DCs
+
+
+AVAILABILITY ZONE:
+
+    Protects against:
+        Rack failure
+        Datacenter failure
+        Power failure
+        Cooling failure
+        Local networking failure
+        Zone-level failure
+
+REGION:
+
+    Protects against:
+        Large-scale regional outage
+        Regional service disruption
+        Major geographic failure
+
+Therefore:
+
+    AZ = Regional HA
+    Region = Regional DR
+
+
+4. ICMS TARGET ARCHITECTURE
+══════════════════════════════════════════════════════════════════════════════
+
+I would use:
+
+    PRIMARY:
+        East US
+
+    DR:
+        West US 3
+
+    DR MODEL:
+        Active-Passive / Warm Standby
+
+Why Active-Passive?
+
+    ICMS has a central database and enterprise application.
+
+    If the application is primarily dependent on one active database,
+    Active-Passive is generally simpler and cheaper than maintaining fully
+    active application/data tiers in both regions.
+
+Microsoft specifically notes that active-passive can be appropriate when the
+application depends on resources such as a database that is active in only
+one region. :contentReference[oaicite:5]{index=5}
+
+
+5. HIGH-LEVEL DESIGN (HLD)
+══════════════════════════════════════════════════════════════════════════════
+
+                         INTERNET
+                            |
+                            v
+                 GLOBAL TRAFFIC ROUTING
+                            |
+              +-------------+-------------+
+              |                           |
+              v                           v
+        EAST US                       WEST US 3
+        PRIMARY                       DR REGION
+        ACTIVE                        STANDBY
+              |                           |
+        Application GW              Application GW
+        + Web Application            + Web Application
+        Firewall (WAF)               Firewall (WAF)
+              |                           |
+             AKS                         AKS
+        PRIMARY CLUSTER               DR CLUSTER
+              |                           |
+              +-------------+-------------+
+                            |
+                         ACR
+                  Geo-Replicated Registry
+                            |
+                +-----------+-----------+
+                |                       |
+            East US                 West US 3
+            Replica                  Replica
+
+                            |
+                     AZURE SQL DATABASE
+                            |
+                    Failover Group
+                            |
+                    Secondary Database
+
+                            |
+                     AZURE BACKUP
+                            |
+                     BACKUP VAULT
+                            |
+                     GRS + CRR
+
+                            |
+                       TERRAFORM
+                            |
+                  Infrastructure as Code
+                            |
+                +-----------+-----------+
+                |                       |
+          PRIMARY INFRA             DR INFRA
+          Terraform                 Terraform
+
+
+6. PRIMARY REGION – EAST US
+══════════════════════════════════════════════════════════════════════════════
+
+                        EAST US
+                 Availability Zones
+                 +-----+-----+-----+
+                 | AZ1 | AZ2 | AZ3 |
+                 +-----+-----+-----+
+                    |     |     |
+                    +-----+-----+
+                          |
+                       AKS
+                          |
+             +------------+------------+
+             |                         |
+        System Node Pool          User Node Pool
+        AZ1 / AZ2 / AZ3           AZ1 / AZ2 / AZ3
+             |                         |
+             +------------+------------+
+                          |
+                    Application GW
+                         + WAF
+
+
+AKS node pools should be distributed across Availability Zones.
+
+Example:
+
+    System Pool:
+        node-01 -> AZ1
+        node-02 -> AZ2
+        node-03 -> AZ3
+
+    User Pool:
+        node-01 -> AZ1
+        node-02 -> AZ2
+        node-03 -> AZ3
+        ...
+
+AKS supports zone-spanning and zone-aligned node pools. Azure recommends
+using Availability Zones to distribute AKS resources across physically
+separate locations. :contentReference[oaicite:6]{index=6}
+
+
+7. IMPORTANT AKS POINT
+══════════════════════════════════════════════════════════════════════════════
+
+DO NOT design:
+
+    AKS
+     |
+     +-- East US AZ1
+     +-- East US AZ2
+     +-- West US AZ1       <-- WRONG
+
+AKS cannot span Azure regions.
+
+Correct:
+
+    East US
+       |
+       +-- AKS-ICMS-PRIMARY
+           +-- AZ1
+           +-- AZ2
+           +-- AZ3
+
+
+    West US 3
+       |
+       +-- AKS-ICMS-DR
+           +-- AZ1
+           +-- AZ2
+           +-- AZ3
+
+Each region has its own independent AKS cluster. :contentReference[oaicite:7]{index=7}
+
+
+8. HUB-SPOKE NETWORKING – PRIMARY
+══════════════════════════════════════════════════════════════════════════════
+
+                         EAST US HUB
+                              |
+              +---------------+---------------+
+              |               |               |
+          Firewall         VPN Gateway      Bastion
+              |
+           DNS / Shared
+           Connectivity
+              |
+          VNet Peering
+              |
+              v
+                       ICMS SPOKE VNET
+                              |
+             +----------------+----------------+
+             |                |                |
+          AKS Subnet     App Gateway       Private
+                          Subnet            Endpoints
+                                              |
+                                    +---------+---------+
+                                    |         |         |
+                                   SQL      Key Vault   ACR
+
+
+9. DR NETWORK – WEST US 3
+══════════════════════════════════════════════════════════════════════════════
+
+                       WEST US 3 HUB
+                             |
+              +--------------+--------------+
+              |              |              |
+          Firewall       VPN Gateway      Bastion
+              |
+             DNS
+              |
+          VNet Peering
+              |
+              v
+                    ICMS DR SPOKE VNET
+                             |
+            +----------------+----------------+
+            |                |                |
+          AKS Subnet     App Gateway       Private
+                          Subnet            Endpoints
+
+
+Enterprise rule:
+
+    Do NOT assume the primary network will magically exist
+    when the primary region is unavailable.
+
+The DR region must have the required:
+
+    VNet
+    Subnets
+    Network Security Groups (NSG)
+    Route Tables
+    Azure Firewall
+    VPN Gateway
+    Private Endpoints
+    Private DNS
+    Application Gateway
+    Public IP
+    User Defined Routes (UDR)
+    Managed Identities
+    Monitoring
+
+
+10. TERRAFORM IS THE RECOVERY MECHANISM FOR INFRASTRUCTURE
+══════════════════════════════════════════════════════════════════════════════
+
+I would NOT manually rebuild the DR environment from the Azure Portal.
+
+Terraform repository:
+
+    terraform/
+    |
+    +-- modules/
+    |   +-- vnet/
+    |   +-- aks/
+    |   +-- acr/
+    |   +-- application-gateway/
+    |   +-- firewall/
+    |   +-- private-endpoint/
+    |   +-- key-vault/
+    |   +-- sql/
+    |   +-- monitoring/
+    |
+    +-- environments/
+        |
+        +-- prod-eastus/
+        |
+        +-- prod-westus3/
+
+
+The same reusable Terraform modules should be used for:
+
+    Primary
+    DR
+
+Only environment-specific values change:
+
+    region
+    CIDR
+    subnet ranges
+    resource names
+    SKU/capacity
+    private IPs
+    environment variables
+
+
+11. AKS BACKUP
+══════════════════════════════════════════════════════════════════════════════
+
+Primary AKS
+     |
+     v
+Azure Backup for AKS
+     |
+     v
+Backup Vault
+     |
+     +-- Operational Tier
+     |
+     +-- Vault Tier
+             |
+             v
+          GRS
+             |
+             v
+    Cross Region Restore
+
+
+For regional disaster recovery:
+
+    Backup Vault:
+        Geo-Redundant Storage (GRS)
+
+    Cross Region Restore:
+        ENABLED
+
+Microsoft specifically states that AKS Backup should use GRS with Cross
+Region Restore when backups need to support regional disaster recovery.
+:contentReference[oaicite:8]{index=8}
+
+
+12. WHAT AKS BACKUP ACTUALLY PROTECTS
+══════════════════════════════════════════════════════════════════════════════
+
+AKS Backup protects:
+
+    Kubernetes resource state
+        +
+    Application data in supported Persistent Volumes (PV)
+
+It is NOT:
+
+    "backup the entire AKS service and restore the cluster exactly like a VM."
+
+For infrastructure:
+
+    Terraform
+        |
+        +-- Rebuild AKS
+
+For Kubernetes workload state:
+
+    AKS Backup
+        |
+        +-- Restore workload resources / supported data
+
+For container images:
+
+    Azure Container Registry (ACR)
+        |
+        +-- Geo-replication
+
+For database:
+
+    Azure SQL Database
+        |
+        +-- Failover Group / Geo-replication / Backup
+
+
+13. AZURE CONTAINER REGISTRY (ACR) DR
+══════════════════════════════════════════════════════════════════════════════
+
+Primary:
+
+    ACR Premium
+        |
+        +-- East US
+        |
+        +-- West US 3 replica
+
+
+Application image:
+
+    icms-api:v1.25
+          |
+          +----------------------+
+          |                      |
+       East US                West US 3
+          |                      |
+      Primary ACR             Replica
+          |                      |
+      Primary AKS               DR AKS
+
+
+Why?
+
+Suppose:
+
+    East US is completely unavailable.
+
+DR AKS starts:
+
+    DR AKS
+       |
+       v
+    Pull icms-api:v1.25
+       |
+       v
+    West US 3 ACR replica
+
+Without registry availability in DR, you can have:
+
+    DR AKS = HEALTHY
+    Application = CANNOT START
+
+because the required image cannot be pulled.
+
+ACR Premium geo-replication is therefore an important multi-region design
+component.
+
+
+14. AZURE SQL DATABASE – MOST CRITICAL COMPONENT
+══════════════════════════════════════════════════════════════════════════════
+
+ICMS:
+
+    Angular
+       |
+       v
+    ASP.NET Core
+       |
+       v
+    AKS
+       |
+       v
+    Azure SQL Database
+       |
+       +---- BUSINESS DATA
+
+
+AKS can be rebuilt.
+
+Application can be redeployed.
+
+But:
+
+    CUSTOMER / CLAIM / POLICY DATA
+
+must be protected separately.
+
+
+15. SQL DR DESIGN
+══════════════════════════════════════════════════════════════════════════════
+
+                    EAST US
+                 SQL PRIMARY
+                      |
+                      |
+                 Failover Group
+                      |
+                      |
+                      v
+                   WEST US 3
+                 SQL SECONDARY
+
+
+Configure:
+
+    Azure SQL Database
+        |
+        +-- Zone redundancy where supported
+        |
+        +-- Automated backups
+        |
+        +-- Point-in-Time Restore
+        |
+        +-- Long-Term Retention where required
+        |
+        +-- Failover Group
+        |
+        +-- Secondary database in DR region
+
+
+For enterprise ICMS, I would normally prefer:
+
+    Failover Group
+
+because it provides:
+
+    Primary server
+          |
+          v
+    Secondary server
+
+and provides listener endpoints that can direct the application to the
+current primary after failover. Microsoft recommends failover groups for
+groups of databases requiring coordinated failover. :contentReference[oaicite:9]{index=9}
+
+
+16. SQL FAILOVER FLOW
+══════════════════════════════════════════════════════════════════════════════
+
+NORMAL:
+
+    Application
+         |
+         v
+    SQL Read-Write Listener
+         |
+         v
+    EAST US SQL PRIMARY
+
+
+REGIONAL FAILURE:
+
+    East US SQL
+         |
+        DOWN
+         |
+         v
+    DR Decision
+         |
+         v
+    Failover Group
+         |
+         v
+    WEST US 3 SQL SECONDARY
+         |
+         v
+    New PRIMARY
+
+
+The application should use the failover-group listener rather than hard-coding
+the primary database server.
+
+This reduces application-side changes during DR. Microsoft recommends using
+the read-write/read-only listener endpoints with failover groups. :contentReference[oaicite:10]{index=10}
+
+
+17. IMPORTANT: SQL REPLICATION IS NOT THE SAME AS BACKUP
+══════════════════════════════════════════════════════════════════════════════
+
+SQL Failover Group:
+
+    Protects against:
+        Region outage
+        Database/server failure
+
+SQL Backup:
+
+    Protects against:
+        Accidental deletion
+        Data corruption
+        Bad application operation
+        Point-in-time recovery
+
+Therefore:
+
+    SQL
+     |
+     +-- Backup
+     |
+     +-- Point-in-Time Restore
+     |
+     +-- Long-Term Retention
+     |
+     +-- Geo Secondary
+     |
+     +-- Failover Group
+
+Use multiple layers.
+
+
+18. SQL RPO CONSIDERATION
+══════════════════════════════════════════════════════════════════════════════
+
+Cross-region SQL replication is asynchronous.
+
+Therefore:
+
+    PRIMARY
+       |
+       | asynchronous replication
+       v
+    SECONDARY
+
+There can be replication lag.
+
+Example:
+
+    Primary:
+        Transaction T100
+        Transaction T101
+        Transaction T102
+
+    Secondary:
+        T100
+        T101
+
+If primary suddenly disappears:
+
+    T102 may not yet exist on secondary.
+
+Therefore I would monitor:
+
+    replication_lag_sec
+
+and compare it with the required Recovery Point Objective (RPO).
+
+Microsoft explicitly recommends monitoring geo-replication lag when designing
+for disaster recovery. :contentReference[oaicite:11]{index=11}
+
+
+19. KEY VAULT DR
+══════════════════════════════════════════════════════════════════════════════
+
+Primary Key Vault:
+
+    East US
+       |
+       +-- Secrets
+       +-- Certificates
+       +-- Keys
+
+Configure:
+
+    Soft Delete
+    Purge Protection
+    Azure Role-Based Access Control (RBAC)
+    Managed Identity / Workload Identity
+
+
+DR AKS:
+
+    AKS DR
+       |
+       v
+    Managed Identity
+       |
+       v
+    Key Vault
+       |
+       v
+    Secret
+
+
+Do not forget:
+
+    Private Endpoint
+    Private DNS
+    Firewall rules
+    Identity permissions
+    Federated credentials
+
+Otherwise DR AKS may start successfully but the application will fail because
+it cannot retrieve its secrets.
+
+
+20. STORAGE ACCOUNT DR
+══════════════════════════════════════════════════════════════════════════════
+
+If ICMS uses Azure Storage:
+
+    Primary Storage
+          |
+          +-- ZRS / GZRS depending on requirement
+          |
+          +-- Versioning where appropriate
+          |
+          +-- Soft Delete where appropriate
+          |
+          +-- Backup/recovery strategy
+
+
+For regional resilience:
+
+    GZRS
+      |
+      +-- Zone redundancy in primary region
+      |
+      +-- Geo-replication to secondary region
+
+
+Don't select redundancy only based on cost.
+
+Select it based on:
+
+    RPO
+    RTO
+    Data criticality
+    Regulatory requirements
+    Cost
+
+
+21. TERRAFORM STATE DR
+══════════════════════════════════════════════════════════════════════════════
+
+Terraform Backend:
+
+    Azure Storage Account
+          |
+          +-- tfstate
+          |
+          +-- Versioning
+          +-- Soft Delete
+          +-- Access Control
+          +-- Appropriate redundancy
+
+
+Important distinction:
+
+    Terraform Code
+        |
+        v
+    Git Repository
+
+    Terraform State
+        |
+        v
+    Azure Storage Backend
+
+
+Both are required for infrastructure recovery.
+
+If the state is lost:
+
+    Terraform recovery becomes much more difficult.
+
+Therefore protect the backend as production infrastructure.
+
+
+22. MONITORING
+══════════════════════════════════════════════════════════════════════════════
+
+Azure Monitor
+     |
+     +-- AKS
+     +-- Application Gateway
+     +-- Azure Firewall
+     +-- Azure SQL
+     +-- ACR
+     +-- Storage
+     +-- Key Vault
+     +-- Backup
+     +-- Network
+     +-- DR health
+
+
+Important alerts:
+
+    AKS node unavailable
+    AKS cluster unhealthy
+    Application Gateway backend unhealthy
+    SQL replication lag
+    SQL failover group unhealthy
+    Backup job failed
+    Backup policy unhealthy
+    ACR replication issue
+    Storage availability issue
+    Key Vault access failure
+    Firewall issue
+
+
+23. DR RUNBOOK – REAL INCIDENT
+══════════════════════════════════════════════════════════════════════════════
+
+SCENARIO:
+
+    10:00 AM
+    Major outage occurs in East US.
+
+    ICMS users cannot access the application.
+
+------------------------------------------------------------
+
+STEP 1 – DETECT
+
+    Azure Monitor
+         |
+         v
+    Application unavailable
+         |
+         v
+    Validate:
+        AKS
+        App Gateway
+        SQL
+        Network
+        Azure service health
+
+------------------------------------------------------------
+
+STEP 2 – DETERMINE SCOPE
+
+    Is it:
+
+        Pod failure?
+        Node failure?
+        Availability Zone failure?
+        AKS failure?
+        Networking failure?
+        SQL failure?
+        Entire region?
+
+If only AZ:
+
+    Stay in East US.
+
+If entire region:
+
+    Start regional DR.
+
+------------------------------------------------------------
+
+STEP 3 – DECLARE DR
+
+    Incident Manager
+          |
+          v
+    DR decision
+          |
+          v
+    Freeze production changes
+
+No Terraform Apply.
+No application release.
+No infrastructure modifications
+unless part of the DR runbook.
+
+------------------------------------------------------------
+
+STEP 4 – VALIDATE DR INFRASTRUCTURE
+
+    West US 3
+
+    Check:
+
+        Hub VNet
+        Spoke VNet
+        Firewall
+        VPN
+        DNS
+        Private Endpoints
+        Application Gateway
+        AKS
+        ACR
+        Key Vault
+        SQL Secondary
+        Monitoring
+
+------------------------------------------------------------
+
+STEP 5 – VALIDATE AKS
+
+    AKS DR
+       |
+       +-- Nodes healthy
+       +-- System pods healthy
+       +-- Networking healthy
+       +-- Ingress healthy
+       +-- Required identities available
+
+------------------------------------------------------------
+
+STEP 6 – DATABASE FAILOVER
+
+    East SQL
+        X
+        |
+        v
+    Failover Group
+        |
+        v
+    West SQL
+        |
+        v
+    New Primary
+
+Validate:
+
+    Database Online
+    Application login works
+    Data accessible
+    Replication state
+    Firewall
+    Private DNS
+
+------------------------------------------------------------
+
+STEP 7 – APPLICATION DEPLOYMENT
+
+    DR AKS
+       |
+       v
+    Pull image
+       |
+       v
+    West US 3 ACR
+       |
+       v
+    Deploy ICMS application
+       |
+       v
+    Health checks
+
+------------------------------------------------------------
+
+STEP 8 – TRAFFIC FAILOVER
+
+    Global Traffic Routing
+            |
+            X
+        East US
+            |
+            v
+        West US 3
+            |
+            v
+        App Gateway
+            |
+            v
+          AKS DR
+
+------------------------------------------------------------
+
+STEP 9 – APPLICATION VALIDATION
+
+    Test:
+
+        Login
+        Claim search
+        Claim creation
+        Database read
+        Database write
+        Authentication
+        API
+        Frontend
+        File operations
+        Monitoring
+
+------------------------------------------------------------
+
+STEP 10 – DECLARE RECOVERY
+
+    ICMS = operational in West US 3
+
+    Continue monitoring.
+
+------------------------------------------------------------
+
+
+24. WHAT HAPPENS AFTER PRIMARY REGION RECOVERS?
+══════════════════════════════════════════════════════════════════════════════
+
+DO NOT immediately switch traffic back.
+
+First:
+
+    East US
+       |
+       v
+    Validate infrastructure
+       |
+       v
+    Validate AKS
+       |
+       v
+    Validate networking
+       |
+       v
+    Validate SQL
+       |
+       v
+    Synchronize data
+       |
+       v
+    Application testing
+       |
+       v
+    Planned failback
+       |
+       v
+    East US PRIMARY
+
+
+Flow:
+
+    EAST US
+       X
+       |
+       v
+    WEST US 3
+       |
+       | Recovery
+       v
+    EAST US
+       |
+       v
+    Planned failback
+
+
+Microsoft recommends testing failover and planning for recovery/failback rather
+than assuming that a configured secondary is automatically sufficient.
+:contentReference[oaicite:12]{index=12}
+
+
+25. BACKUP POLICY – EXAMPLE
+══════════════════════════════════════════════════════════════════════════════
+
+These are example enterprise values, NOT universal values:
+
+    AKS:
+        Daily backup
+        Operational retention: 7-30 days
+        Vault retention: according to compliance
+
+    SQL:
+        Point-in-Time Restore
+        Long-Term Retention where required
+        Geo-secondary
+
+    Storage:
+        Versioning
+        Soft Delete
+        Geo/zone redundancy as required
+
+    Key Vault:
+        Soft Delete
+        Purge Protection
+
+    Terraform:
+        State versioning
+        Soft Delete
+        Protected backend
+        Git repository
+
+
+The actual retention period should come from:
+
+    Business
+        +
+    Compliance
+        +
+    Recovery Point Objective (RPO)
+        +
+    Recovery Time Objective (RTO)
+
+
+26. EXAMPLE RPO / RTO
+══════════════════════════════════════════════════════════════════════════════
+
+For interview purposes, assume business gives:
+
+    RPO = 15 minutes
+    RTO = 60 minutes
+
+Meaning:
+
+    RPO 15 min:
+        Maximum acceptable data loss = 15 minutes
+
+    RTO 60 min:
+        ICMS should be operational within 60 minutes
+
+
+Then design against those targets.
+
+Do NOT say:
+
+    "I decided RPO is 15 minutes."
+
+Say:
+
+    "Business defined the RPO/RTO and I designed the infrastructure
+     and recovery mechanisms to meet those targets."
+
+
+27. HLD VS LLD
+══════════════════════════════════════════════════════════════════════════════
+
+HLD = WHAT + WHERE
+
+    Primary Region:
+        East US
+
+    DR Region:
+        West US 3
+
+    DR Model:
+        Active-Passive
+
+    Components:
+        AKS
+        ACR
+        Azure SQL
+        Application Gateway
+        Firewall
+        Key Vault
+        Backup Vault
+        Monitoring
+
+    Data Protection:
+        SQL Failover Group
+        AKS Backup
+        ACR Geo-replication
+        Storage redundancy
+
+
+LLD = HOW
+
+    East US:
+
+        VNet
+        Address Space
+        Subnets
+        NSGs
+        Route Tables
+        Firewall
+        AKS
+        Node Pools
+        Availability Zones
+        Application Gateway
+        Private Endpoints
+        Private DNS
+
+
+    West US 3:
+
+        Same logical architecture
+        Different CIDR ranges
+        Different resource names
+        Different regional endpoints
+
+
+    AKS:
+
+        System pool:
+            AZ1 + AZ2 + AZ3
+
+        User pool:
+            AZ1 + AZ2 + AZ3
+
+
+    SQL:
+
+        Primary:
+            East US
+
+        Secondary:
+            West US 3
+
+        Failover Group:
+            Enabled
+
+
+    ACR:
+
+        Primary:
+            East US
+
+        Geo-replica:
+            West US 3
+
+
+    Backup:
+
+        Backup Vault
+            |
+            +-- GRS
+            +-- Cross Region Restore
+
+
+28. TERRAFORM / INFRASTRUCTURE LAYOUT
+══════════════════════════════════════════════════════════════════════════════
+
+                    Git Repository
+                          |
+                          v
+                    Terraform Code
+                          |
+             +------------+------------+
+             |                         |
+             v                         v
+        prod-eastus               prod-westus3
+             |                         |
+             v                         v
+        PRIMARY INFRA              DR INFRA
+             |                         |
+      +------+-------+          +------+-------+
+      |              |          |              |
+     VNet           AKS        VNet           AKS
+      |              |          |              |
+    Firewall      App GW     Firewall       App GW
+      |              |          |              |
+    Private EP    Monitor    Private EP     Monitor
+
+
+The objective is:
+
+    DR environment should be reproducible.
+
+Not:
+
+    "Engineer remembers how to build it."
+
+
+29. ENTERPRISE DR TEST
+══════════════════════════════════════════════════════════════════════════════
+
+I would schedule:
+
+    Quarterly DR Drill
+
+Test:
+
+    1. Primary region failure simulation
+    2. SQL planned failover
+    3. AKS DR validation
+    4. ACR image availability
+    5. Key Vault access
+    6. Private DNS resolution
+    7. Application deployment
+    8. Traffic switch
+    9. Application smoke test
+    10. Monitoring validation
+    11. Failback
+
+
+Measure:
+
+    Actual RTO
+    Actual RPO
+    Database replication lag
+    Application recovery time
+    Infrastructure provisioning time
+    DNS/traffic switch time
+    Application startup time
+
+
+Then compare:
+
+    TARGET RTO = 60 min
+    ACTUAL RTO = 43 min
+
+    TARGET RPO = 15 min
+    ACTUAL RPO = 4 min
+
+This is how you prove that the DR architecture actually works.
+
+
+30. VERY IMPORTANT: DR IS NOT ONLY AKS
+══════════════════════════════════════════════════════════════════════════════
+
+For ICMS:
+
+    +------------------------------------------------------+
+    |                 DISASTER RECOVERY                    |
+    +------------------------------------------------------+
+    |                                                      |
+    |  Infrastructure                                      |
+    |      Terraform                                      |
+    |                                                      |
+    |  Compute                                             |
+    |      AKS Primary + AKS DR                            |
+    |                                                      |
+    |  Container Registry                                  |
+    |      ACR Geo-replication                             |
+    |                                                      |
+    |  Database                                            |
+    |      Azure SQL Failover Group                        |
+    |                                                      |
+    |  Kubernetes Backup                                  |
+    |      Azure Backup for AKS                            |
+    |                                                      |
+    |  Secrets                                             |
+    |      Key Vault Recovery                              |
+    |                                                      |
+    |  Networking                                          |
+    |      Hub + Spoke + Firewall + DNS + PE               |
+    |                                                      |
+    |  Traffic                                             |
+    |      Global Routing + App Gateway + WAF              |
+    |                                                      |
+    |  Monitoring                                          |
+    |      Azure Monitor + Log Analytics                   |
+    |                                                      |
+    |  Operations                                          |
+    |      DR Runbook + DR Drill + Failback                |
+    |                                                      |
+    +------------------------------------------------------+
+
+
+31. WHAT I WOULD SAY IN AN INTERVIEW
+══════════════════════════════════════════════════════════════════════════════
+
+"Since ICMS is a US-based enterprise application, I would design disaster
+recovery at two levels. First, I would use Availability Zones within the
+primary region to protect against datacenter and zone-level failures. For
+example, I could use East US with AKS node pools distributed across
+Availability Zones 1, 2 and 3."
+
+"For a regional disaster, I would deploy a separate AKS cluster in a
+secondary region such as West US 3. AKS is regional, so I would not try to
+stretch a single AKS cluster across regions. Both environments would be
+provisioned through Terraform so the DR infrastructure remains reproducible."
+
+"For data protection, I would configure Azure SQL Database with a secondary
+database and Failover Group, because the database is the most critical
+stateful component. I would also retain Azure SQL backups for point-in-time
+recovery. For Kubernetes workloads, I would use Azure Backup for AKS with a
+Backup Vault configured for Geo-Redundant Storage (GRS) and Cross Region
+Restore."
+
+"I would use Azure Container Registry (ACR) geo-replication so that the DR
+AKS cluster can pull the same production container images. I would also
+duplicate the networking stack, Private Endpoints, Private DNS, Azure
+Firewall, Application Gateway, Key Vault access and monitoring in the DR
+region."
+
+"Finally, I would create a documented DR runbook covering incident
+declaration, infrastructure validation, database failover, application
+deployment, traffic failover, smoke testing and failback. I would perform
+regular DR drills and compare the actual Recovery Point Objective (RPO) and
+Recovery Time Objective (RTO) against the business targets."
+
+
+32. THE ONE-LINE ARCHITECTURE TO REMEMBER
+══════════════════════════════════════════════════════════════════════════════
+
+    AZ = protect against LOCAL / ZONE failure
+
+    REGION = protect against REGIONAL failure
+
+    BACKUP = recover DATA / WORKLOAD STATE
+
+    TERRAFORM = rebuild INFRASTRUCTURE
+
+    ACR GEO-REPLICATION = recover CONTAINER IMAGES
+
+    SQL FAILOVER GROUP = recover DATABASE AVAILABILITY
+
+    KEY VAULT RECOVERY = recover SECRETS / KEYS
+
+    DR RUNBOOK = recover BUSINESS SERVICE
+
+    DR DRILL = PROVE THAT RECOVERY ACTUALLY WORKS
+
+
+33. FINAL ICMS DR FLOW
+══════════════════════════════════════════════════════════════════════════════
+
+                    ICMS PRODUCTION
+                          |
+                    EAST US REGION
+                          |
+              +-----------+-----------+
+              |           |           |
+             AZ1         AZ2         AZ3
+              |           |           |
+              +-----------+-----------+
+                          |
+                         AKS
+                          |
+                    App Gateway
+                       + WAF
+                          |
+                       ICMS APP
+                          |
+                    Azure SQL Primary
+                          |
+                  Failover Group
+                          |
+                          v
+                    WEST US 3
+                          |
+              +-----------+-----------+
+              |           |           |
+             AZ1         AZ2         AZ3
+              |           |           |
+              +-----------+-----------+
+                          |
+                       AKS DR
+                          |
+                     App Gateway
+                          |
+                       ICMS APP
+
+
+    BACKUP / DATA PROTECTION
+    ──────────────────────────────────────────────────────────
+
+    AKS
+      |
+      +---- Azure Backup
+                |
+                +---- Backup Vault
+                         |
+                         +---- GRS
+                         +---- Cross Region Restore
+
+    ACR
+      |
+      +---- Geo-Replication
+                |
+                +---- West US 3
+
+    SQL
+      |
+      +---- Automated Backup
+      +---- Point-in-Time Restore
+      +---- Long-Term Retention
+      +---- Failover Group
+
+    STORAGE
+      |
+      +---- ZRS/GZRS as required
+
+    KEY VAULT
+      |
+      +---- Soft Delete
+      +---- Purge Protection
+
+    INFRASTRUCTURE
+      |
+      +---- Terraform
+      +---- Git
+      +---- Protected State
+
+
+    DISASTER:
+
+    EAST US
+       |
+       X
+       |
+       v
+    DR DECLARED
+       |
+       +---- SQL FAILOVER
+       |
+       +---- Validate AKS DR
+       |
+       +---- Validate ACR
+       |
+       +---- Validate Key Vault
+       |
+       +---- Validate Private DNS
+       |
+       +---- Deploy/validate application
+       |
+       +---- Switch traffic
+       |
+       v
+    WEST US 3
+       |
+       v
+    ICMS RESTORED
+       |
+       v
+    MONITOR
+       |
+       v
+    PRIMARY RECOVERY
+       |
+       v
+    PLANNED FAILBACK
+══════════════════════════════════════════════════════════════════════════════
+
+
+
+
+
+
+
+
+
