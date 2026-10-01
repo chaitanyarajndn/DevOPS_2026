@@ -1,0 +1,536 @@
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                    TERRAFORM—SCENARIO-BASED-INTERVIEW-QUESTIONS + ANSWERS                                            ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+Target: 4–5 Years Azure Infrastructure / DevOps Engineer
+Focus: Real Production Scenarios | Troubleshooting | Decision Making | Interview Answers
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+1. TERRAFORM DEPLOYMENT FAILS BECAUSE RESOURCE ALREADY EXISTS
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform is trying to create an Azure resource, but Azure says that the resource already exists. What would you do?
+ANS:
+First, I would check whether the resource was created manually, by another Terraform state, or by another deployment process. I would verify the resource in Azure and compare it with my Terraform configuration.
+If it is the correct existing resource and I want Terraform to manage it, I would import the resource into the Terraform state instead of trying to recreate it.
+Flow:
+Terraform configuration → Terraform Plan → Resource already exists → Check Azure → Check Terraform State → Confirm ownership → Import if required → Terraform Plan again → Review changes → Apply
+The important point is that I would not blindly delete the existing resource just to make Terraform deployment successful, especially in Production.
+Typical command:
+    terraform import <resource_address> <azure_resource_id>
+After import, I would run `terraform plan` and make sure Terraform does not show unexpected changes.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+2. TERRAFORM STATE AND AZURE INFRASTRUCTURE ARE OUT OF SYNC
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: The Terraform state and actual Azure infrastructure are different. How would you troubleshoot it?
+ANS:
+This is a Terraform drift scenario. I would first run `terraform plan` because Terraform refreshes its understanding of the existing infrastructure and compares it with the desired configuration.
+Then I would identify what changed and why.
+For example, if someone manually changed a resource from the Azure Portal, Terraform may detect that difference and propose changing it back.
+I would first determine whether the manual change was intentional. If Terraform is the source of truth, I would normally update the Terraform code if the new configuration is required, or allow Terraform to restore the declared configuration if the manual change was not approved.
+I would not simply apply the plan without understanding the drift.
+Flow:
+Actual Azure → Terraform refresh → Compare with State/Configuration → Identify drift → Find reason → Decide desired state → Update code if required → Plan → Review → Apply
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+3. TERRAFORM PLAN SHOWS CHANGES EVEN THOUGH CODE WAS NOT CHANGED
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: You did not change your Terraform code, but `terraform plan` is showing changes. What could be the reason?
+ANS:
+There can be several reasons. The most common one is that someone changed the Azure resource manually, which created infrastructure drift.
+Other possibilities are provider version changes, Terraform version changes, changes in module inputs, changes in variables, Azure API behavior, default values, or changes made by another automation process.
+I would check the exact attributes shown in the plan rather than assuming Terraform is wrong.
+I would also check:
+    1. Recent code/module changes
+    2. Terraform version
+    3. AzureRM provider version
+    4. Terraform state
+    5. Actual Azure resource configuration
+    6. Recent manual changes
+    7. Pipeline changes
+The goal is to understand why Terraform sees a difference before applying anything.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+4. TERRAFORM APPLY FAILS HALF WAY THROUGH
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform Apply failed after creating some resources successfully. What would you do?
+ANS:
+I would not immediately run `terraform apply` again.
+First, I would identify the exact resource where the deployment failed and understand the error.
+Then I would check which resources were successfully created and whether those resources are already present in Terraform state.
+I would also check Azure because sometimes a resource can be partially created even when Terraform reports an error.
+My approach would be:
+    1. Check Terraform error/logs.
+    2. Identify the failed resource.
+    3. Check Terraform state.
+    4. Check the resource in Azure.
+    5. Identify the root cause.
+    6. Fix the actual problem.
+    7. Run `terraform plan`.
+    8. Review what Terraform now wants to create/change/destroy.
+    9. Run Apply only after confirming the plan.
+Terraform is designed to continue from the current state, but I still verify the state and plan before retrying.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+5. RESOURCE WAS MANUALLY DELETED FROM AZURE
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: A resource was deleted manually from Azure, but it still exists in Terraform state. What will happen?
+ANS:
+Terraform state still contains information about that resource, but during the next refresh/plan Terraform will detect that the resource no longer exists in Azure.
+If the resource is still present in the Terraform configuration, Terraform will normally propose creating it again.
+I would review the plan before applying it.
+Example:
+    Terraform Configuration → Resource exists
+    Terraform State         → Resource exists
+    Azure                    → Resource deleted
+                                ↓
+                         Terraform Plan
+                                ↓
+                         Resource needs creation
+I would also investigate why the resource was manually deleted because repeated manual changes can create operational problems.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+6. SOMEONE MANUALLY CHANGES PRODUCTION FROM AZURE PORTAL
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Someone manually changes a Production resource from the Azure Portal. Terraform now wants to revert the change. What would you do?
+ANS:
+First, I would confirm whether the manual change was intentional and approved.
+If Terraform is the source of truth and the manual change was not required, I would normally let Terraform restore the declared configuration.
+If the manual change is actually required, I would update the Terraform code to reflect the desired configuration instead of keeping the change only in Azure.
+The main principle is to avoid having Azure and Terraform maintain different configurations.
+I would also identify why the manual change happened and whether Production access controls need improvement.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+7. TERRAFORM WANTS TO DESTROY A PRODUCTION RESOURCE
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform Plan shows that a critical Production resource will be destroyed. What would you do?
+ANS:
+I would not approve or run Apply immediately.
+First, I would understand why Terraform wants to destroy it.
+I would check whether:
+    - The resource name/address changed.
+    - A Terraform resource block was removed.
+    - A module changed.
+    - A variable changed.
+    - The resource was moved or renamed.
+    - Provider behavior changed.
+    - State is incorrect.
+    - Someone manually modified the resource.
+I would review the complete Terraform plan and compare it with the expected change.
+If the destruction is not expected, I would fix the Terraform configuration or state before applying.
+For critical resources, I can also consider Terraform lifecycle protection such as `prevent_destroy` where it makes sense.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+8. WHY USE TERRAFORM REMOTE BACKEND?
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Why do you use a remote backend for Terraform?
+ANS:
+In a team or enterprise environment, I would not keep the Production Terraform state only on my local machine.
+I would use a remote backend, for example Azure Storage, so that the state is centrally stored and accessible to the authorized CI/CD pipeline and team members.
+Main benefits:
+    - Centralized state
+    - Team collaboration
+    - State locking
+    - Better access control
+    - Protection against local state loss
+    - CI/CD integration
+    - Better separation between environments
+For Azure, a common approach is:
+    Terraform → Azure Storage Account → Blob container → Terraform state
+The Storage Account itself should also be properly secured using Azure RBAC and network controls.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+9. TERRAFORM INIT FAILS WHILE ACCESSING AZURE STORAGE BACKEND
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: `terraform init` fails because Terraform cannot access the Azure Storage Account backend. How would you troubleshoot it?
+ANS:
+I would first determine whether the issue is authentication, authorization, backend configuration, or network connectivity.
+I would check:
+    1. Azure subscription and tenant.
+    2. Authentication identity used by Terraform.
+    3. Storage Account name.
+    4. Container name.
+    5. Resource Group.
+    6. Backend configuration.
+    7. RBAC permissions on the Storage Account.
+    8. Storage Account firewall/network restrictions.
+    9. Private Endpoint/DNS if private connectivity is being used.
+    10. Whether the pipeline identity can actually reach the Storage Account.
+For example, if the identity can authenticate but does not have sufficient permission to access the state container, `terraform init` can fail even though Azure authentication itself is working.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+10. TERRAFORM INIT ASKS TO RECONFIGURE OR MIGRATE BACKEND
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform `init` says the backend configuration has changed. Why can this happen?
+ANS:
+Terraform detects that the current backend configuration is different from the configuration stored in the working directory.
+This can happen when:
+    - Storage Account changes.
+    - Container changes.
+    - State key changes.
+    - Backend configuration is modified.
+    - Terraform configuration is moved to another environment.
+Terraform may ask whether I want to migrate the existing state or reconfigure the backend.
+I would not select an option blindly. I would first confirm where the existing state is stored and whether the state needs to be migrated.
+In Production, moving state incorrectly can cause serious problems, so I would verify the backend configuration carefully before proceeding.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+11. TWO ENGINEERS RUN TERRAFORM APPLY AT THE SAME TIME
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Two engineers run Terraform Apply against the same environment at the same time. What can happen?
+ANS:
+Both operations may try to modify the same Terraform state and infrastructure.
+With a properly configured remote backend, Terraform state locking helps prevent multiple operations from modifying the same state simultaneously.
+Without proper locking, there is a risk of conflicting operations and state problems.
+In a CI/CD setup, I would also control Production deployments through approvals and pipeline concurrency so that only the intended deployment operates on the Production state at a time.
+Flow:
+Engineer A → Terraform Apply ─┐
+                              ├→ Same State → Locking / Controlled Deployment
+Engineer B → Terraform Apply ─┘
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+12. TERRAFORM STATE IS LOCKED
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform says the state is locked. What would you do?
+ANS:
+I would not immediately force-unlock it.
+First, I would check whether another Terraform operation is currently running.
+I would check the Azure DevOps pipeline history, running jobs, and the lock information.
+If another deployment is active, I would wait for it to complete.
+If the previous operation failed and left a stale lock, and I confirm that no Terraform process is running, then I can carefully use `terraform force-unlock`.
+The important point is that `force-unlock` should only be used after confirming that the lock is stale.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+13. TERRAFORM STATE FILE IS ACCIDENTALLY DELETED
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: What would you do if the Terraform state file was accidentally deleted?
+ANS:
+If we are using a remote backend, I would first check whether the state still exists in the remote backend or whether a previous version can be recovered.
+For Azure Storage, I would check the storage container and available recovery/versioning capabilities configured for the storage.
+I would not immediately run `terraform apply` because Terraform may no longer know about existing resources and could propose creating them.
+If the state cannot be recovered, I would need to carefully reconstruct/import the existing resources into Terraform state.
+The main priority is to recover the correct state rather than recreating Production infrastructure.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+14. TERRAFORM PLAN SAYS "NO CHANGES", BUT AZURE PORTAL LOOKS DIFFERENT
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform Plan says "No changes", but the Azure Portal shows a different configuration. What would you investigate?
+ANS:
+I would first identify exactly which property appears different.
+Then I would check whether that property is actually managed by the Terraform resource.
+Not every Azure Portal setting is necessarily represented or managed in the same way by the Terraform resource.
+I would also check:
+    - Terraform provider version.
+    - Terraform state.
+    - Actual Azure resource details.
+    - Resource API behavior.
+    - Whether the Portal displays a derived/default value.
+I would not assume that "No changes" means every Portal setting is identical. It means Terraform does not detect a change in the attributes it is managing.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+15. TERRAFORM RESOURCE WAS RENAMED IN CODE
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: You renamed a Terraform resource block, and Terraform wants to destroy the old resource and create a new one. How would you avoid unnecessary recreation?
+ANS:
+Terraform identifies resources using their resource addresses in the state.
+If I simply rename:
+    azurerm_resource_group.old
+to:
+    azurerm_resource_group.new
+Terraform may interpret it as one resource being removed and another being created.
+I would use Terraform's resource move functionality, such as a `moved` block, when appropriate, so Terraform understands that the resource address changed but the actual infrastructure resource is the same.
+Then I would run:
+    terraform plan
+and verify that Terraform shows the resource being moved rather than destroyed and recreated.
+This is especially important for Production resources.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+16. TERRAFORM MODULE CHANGE AFFECTS DEV, LAB AND PRODUCTION
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: You have a reusable Terraform module used by Dev, Lab and Production. A change is required only for Dev. How would you handle it?
+ANS:
+I would avoid making a Production-impacting change just to solve a Dev requirement.
+First, I would check whether the module can support the behavior through variables.
+For example:
+    module
+       ↓
+    environment-specific variables
+       ↓
+    Dev / Lab / Production
+If the behavior is genuinely environment-specific, I would expose an appropriate variable or configuration option in the module.
+Then Dev can use the new value while Lab and Production continue using their existing configuration.
+I would test the module change in Dev first and then promote it through the normal review and deployment process.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+17. TERRAFORM MODULE HAS TOO MANY VARIABLES
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: A Terraform module has 30–40 variables and is becoming difficult to maintain. What would you do?
+ANS:
+I would first check whether the module has a clear responsibility.
+If one module is managing too many unrelated resources, I would consider splitting it into smaller reusable modules.
+For example:
+    Network Module
+    AKS Module
+    ACR Module
+    Monitoring Module
+Instead of creating a very large module with unrelated responsibilities.
+I would also use sensible defaults and structured variables where appropriate.
+The goal is to keep modules reusable without making them unnecessarily complex.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+18. TERRAFORM DEPENDENCY BETWEEN MODULES
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: One Terraform module creates networking and another creates AKS. How would you handle the dependency?
+ANS:
+I would prefer to create an explicit dependency through module outputs and inputs.
+For example:
+    Network Module
+         ↓
+    subnet_id output
+         ↓
+    AKS Module input
+         ↓
+    AKS deployment
+This gives Terraform a dependency relationship based on actual resource values.
+Terraform can then understand that the required network resource must exist before the dependent AKS resource is created.
+I would avoid using `depends_on` everywhere. I would use natural dependencies through resource references where possible and use explicit `depends_on` only when there is a real dependency that Terraform cannot infer.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+19. TERRAFORM APPLY IS VERY SLOW
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform Apply is taking much longer than expected. How would you troubleshoot it?
+ANS:
+I would first identify which resources are taking the most time rather than assuming Terraform itself is slow.
+I would check:
+    - Terraform logs.
+    - Azure API/resource provisioning time.
+    - Dependencies between resources.
+    - Network-related resources.
+    - Large or complex resources.
+    - Provider/API delays.
+    - Excessive sequential dependencies.
+Terraform normally creates independent resources in parallel where possible.
+If the configuration unnecessarily creates dependencies between resources, it can reduce parallelism.
+I would optimize only after identifying the actual bottleneck.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+20. TERRAFORM PROVIDER VERSION CHANGED
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: The AzureRM provider version changed and Terraform now shows unexpected changes. What would you do?
+ANS:
+I would first identify the exact provider version used before and after the change.
+I would check the provider changelog and any breaking or behavior changes.
+For enterprise projects, I would use version constraints and commit the dependency lock file so that the same provider version is consistently used.
+I would test provider upgrades in a lower environment first:
+    Dev → Lab → Production
+I would never upgrade the provider directly in Production without reviewing the Terraform plan and testing the change.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+21. TERRAFORM APPLY FAILS BECAUSE AZURE POLICY DENIES THE RESOURCE
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform Apply fails because Azure Policy denies the resource. What would you do?
+ANS:
+I would not try to bypass the policy from Terraform.
+First, I would identify:
+    - Which policy denied the resource.
+    - At which Management Group/Subscription/Resource Group scope it is assigned.
+    - Which property violates the policy.
+Then I would determine whether the Terraform configuration can be changed to comply with the policy.
+If the workload genuinely requires an exception, I would follow the organization's policy exemption/approval process.
+This is important because Azure Policy is part of governance and should not be treated as a pipeline error that we simply disable.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+22. TERRAFORM APPLY FAILS BECAUSE OF AZURE QUOTA
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform fails because Azure has reached a resource quota. How would you handle it?
+ANS:
+First, I would identify the exact quota from the Azure error.
+Then I would check current usage and determine whether:
+    - The infrastructure design can be optimized.
+    - An existing unused resource can be removed.
+    - The deployment can use another SKU/region if appropriate.
+    - A quota increase can be requested.
+I would not simply rerun Terraform because the same quota error will occur again until the underlying capacity issue is resolved.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+23. TERRAFORM AUTHENTICATION WORKS LOCALLY BUT FAILS IN PIPELINE
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform works from your laptop but fails in Azure DevOps. How would you troubleshoot it?
+ANS:
+The first thing I would check is whether both environments are using the same identity.
+My laptop may be authenticated using my personal Azure account, while Azure DevOps may use a Service Principal or another identity.
+I would compare:
+    Local identity
+        VS
+    Pipeline identity
+Then check:
+    - Subscription
+    - Tenant
+    - RBAC permissions
+    - Service connection
+    - Environment variables
+    - Terraform authentication method
+    - Backend permissions
+I would make sure the pipeline identity has only the permissions required for the deployment.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+24. TERRAFORM PLAN WORKS BUT APPLY FAILS
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform Plan succeeds, but Terraform Apply fails. Why is this possible?
+ANS:
+Plan and Apply happen at different points in time and Apply performs the actual Azure operations.
+Plan can successfully calculate the intended changes, but Apply can still encounter runtime problems.
+For example:
+    - Permission changes.
+    - Azure Policy.
+    - Resource quota.
+    - Network restrictions.
+    - Resource conflicts.
+    - Azure API failures.
+    - Another deployment changed the environment.
+    - Credentials expired.
+So a successful Plan does not guarantee a successful Apply.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+25. TERRAFORM CODE IS VALID BUT DEPLOYMENT STILL FAILS
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform Validate passes, but the infrastructure deployment still fails. Why?
+ANS:
+`terraform validate` checks whether the Terraform configuration is valid from Terraform's configuration perspective.
+It does not guarantee that Azure will accept and successfully provision the resources.
+For example:
+    terraform validate
+        ↓
+    Configuration structure is valid
+        ↓
+    But deployment can still fail because of:
+    Authentication
+    Authorization
+    Azure Policy
+    Quota
+    Networking
+    Existing resources
+    Invalid Azure-side configuration
+    Provider/API issues
+So I treat validation as one stage of the pipeline, not as proof that deployment will succeed.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+26. TERRAFORM DEPLOYMENT HAS PARTIALLY CREATED RESOURCES
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform failed, but you can see that some Azure resources were created. Should you manually delete them before running Terraform again?
+ANS:
+Not automatically.
+First, I would check Terraform state and determine which resources Terraform knows about.
+Then I would compare the state with Azure.
+If Terraform already manages the successfully created resources, I would normally allow Terraform to continue from the current state after fixing the root cause.
+If a resource exists in Azure but is not in Terraform state, I would determine whether it should be imported or whether it is an unintended resource.
+Blindly deleting resources can create additional problems, especially in Production.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+27. TERRAFORM STATE IS DIFFERENT BETWEEN DEV AND PRODUCTION
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Would you use the same Terraform state file for Dev, Lab and Production?
+ANS:
+No, I would normally keep separate state for separate environments.
+For example:
+    Dev   → dev.tfstate
+    Lab   → lab.tfstate
+    Prod  → prod.tfstate
+This provides isolation between environments.
+A change in Dev should not directly modify the Production state.
+It also makes access control, deployment and recovery easier to manage.
+The exact backend structure can vary, but the key principle is environment isolation.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+28. TERRAFORM DESTROY IN PRODUCTION
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Someone accidentally runs `terraform destroy` against the Production environment. How would you prevent this?
+ANS:
+I would use multiple layers of protection rather than relying on one control.
+For example:
+    - Separate Production state.
+    - Restricted Production permissions.
+    - CI/CD approvals.
+    - Separate Production deployment process.
+    - `prevent_destroy` for selected critical resources.
+    - RBAC and least privilege.
+    - Pipeline controls.
+    - Review/approval before destructive changes.
+The idea is to make accidental destructive operations difficult and detectable.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+29. TERRAFORM DEPLOYMENT WORKS IN DEV BUT FAILS IN PRODUCTION
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Terraform works successfully in Dev but fails in Production. How would you troubleshoot it?
+ANS:
+I would not assume that the Terraform code itself is the problem because the environments can have different permissions, policies and infrastructure.
+I would compare:
+    Dev
+      VS
+    Production
+Specifically:
+    - Variables
+    - Terraform state
+    - Azure subscription
+    - Service connection/identity
+    - RBAC
+    - Azure Policy
+    - Resource quotas
+    - Networking
+    - Existing resources
+    - Provider/Terraform versions
+    - Backend configuration
+I would identify the first difference between Dev and Production that explains the failure.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+30. HOW DO YOU TROUBLESHOOT ANY TERRAFORM ISSUE?
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: If I give you an unknown Terraform deployment failure, what is your general troubleshooting approach?
+ANS:
+I follow a structured approach instead of immediately changing the code.
+    Step 1 → Read the exact Terraform error.
+    Step 2 → Identify the resource and operation that failed.
+    Step 3 → Check whether the issue is Terraform, provider, authentication, authorization, Azure, networking, policy or quota.
+    Step 4 → Check Terraform state.
+    Step 5 → Check the actual Azure resource.
+    Step 6 → Check recent code, variable, provider or environment changes.
+    Step 7 → Fix the root cause.
+    Step 8 → Run `terraform plan`.
+    Step 9 → Carefully review the proposed changes.
+    Step 10 → Apply only after confirming that the plan is safe.
+For Production, I would also follow the organization's approval and change-management process.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+31. FINAL INTERVIEW SCENARIO — END-TO-END TERRAFORM DEPLOYMENT
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Q: Explain how you would safely deploy Azure infrastructure using Terraform in an enterprise environment.
+ANS:
+I would use Terraform as the Infrastructure-as-Code tool and keep the infrastructure configuration in Git.
+For every infrastructure change, I would create a feature branch and raise a Pull Request.
+The CI pipeline would perform formatting, validation, linting, security checks, cost estimation and Terraform Plan.
+For example:
+    Feature Branch
+        ↓
+    Pull Request
+        ↓
+    terraform fmt
+        ↓
+    terraform validate
+        ↓
+    TFLint
+        ↓
+    Checkov
+        ↓
+    Infracost
+        ↓
+    terraform plan
+        ↓
+    Review / Approval
+        ↓
+    Merge to Main
+        ↓
+    Production Deployment Approval
+        ↓
+    terraform apply
+Before Apply, I would make sure the correct Terraform state, Azure subscription, identity and environment are being used.
+I would also review the Terraform Plan carefully, especially if it contains changes to critical Production resources.
+After Apply, I would validate the deployed infrastructure and monitor the environment.
+The main objective is to make infrastructure changes controlled, reviewable, repeatable and safe.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+32. QUICK REVISION — TERRAFORM TROUBLESHOOTING MINDSET
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Terraform issue
+      ↓
+Read exact error
+      ↓
+Which resource failed?
+      ↓
+Terraform code / State / Azure — which one is different?
+      ↓
+Authentication?
+Authorization?
+Policy?
+Quota?
+Networking?
+Provider?
+Existing resource?
+State?
+      ↓
+Fix root cause
+      ↓
+terraform plan
+      ↓
+Review carefully
+      ↓
+Apply
+      ↓
+Validate + Monitor
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
