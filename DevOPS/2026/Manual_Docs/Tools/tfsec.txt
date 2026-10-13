@@ -1,0 +1,129 @@
+TFSEC COMMANDS
+============================================================
+
+# BASIC SCAN
+tfsec
+    Scan current directory
+
+tfsec .
+    Scan current directory explicitly
+
+tfsec ./environment/dev
+    Scan specific Terraform directory
+
+tfsec --version
+    Show tfsec version
+
+tfsec --help
+    Show help
+
+
+# OUTPUT FORMAT
+tfsec . --format text
+    Text output
+
+tfsec . --format json
+    JSON output
+
+tfsec . --format csv
+    CSV output
+
+tfsec . --format sarif
+    SARIF output
+
+tfsec . --format junit
+    JUnit output
+
+tfsec . --format checkstyle
+    Checkstyle output
+
+tfsec . --format markdown
+    Markdown output
+
+tfsec . --format html
+    HTML output
+
+
+# SAVE REPORT
+tfsec . --format json --out tfsec_report.json
+    JSON report file
+
+tfsec . --format sarif --out tfsec_report.sarif
+    SARIF report file
+
+tfsec . --format junit --out tfsec_report.xml
+    JUnit report file
+
+
+# OUTPUT SHORT OPTIONS
+tfsec . -f json
+    JSON output
+
+tfsec . -f json -O tfsec_report.json
+    Save JSON report
+
+
+# SEVERITY
+tfsec . --minimum-severity LOW
+    Show LOW and above
+
+tfsec . --minimum-severity MEDIUM
+    Show MEDIUM and above
+
+tfsec . --minimum-severity HIGH
+    Show HIGH and above
+
+tfsec . --minimum-severity CRITICAL
+    Show CRITICAL findings
+
+
+# EXCLUDE RULE
+tfsec . --exclude AWS001
+    Exclude specific rule
+
+tfsec . --exclude AVD-AWS-0017
+    Exclude specific rule ID
+
+
+# EXCLUDE PATH
+tfsec . --exclude-path ./modules/test
+    Exclude a directory/path
+
+
+# TFVARS
+tfsec . --tfvars-file terraform.tfvars
+    Scan using specified tfvars file
+
+
+# IGNORE SETTINGS
+tfsec . --no-ignores
+    Do not use tfsec ignore comments
+
+
+# INCLUDE PASSED CHECKS
+tfsec . --include-passed
+    Include passed checks in output
+
+
+# SOFT FAIL
+tfsec . --soft-fail
+    Do not fail based on findings
+
+
+# COLOUR / LOGGING
+tfsec . --no-colour
+    Disable coloured output
+
+tfsec . --verbose
+    Verbose output
+
+tfsec . --debug
+    Debug output
+
+
+# AZURE DEVOPS - JSON REPORT
+tfsec . --format json --out "$(Build.ArtifactStagingDirectory)/tfsec_report.json"
+
+
+# AZURE DEVOPS - SARIF REPORT
+tfsec . --format sarif --out "$(Build.ArtifactStagingDirectory)/tfsec_report.sarif"

@@ -1,6 +1,6 @@
 
 ========================================================================================================================
-Infracost (v2.12.2)
+Infracost (v0.10.46)
 ========================================================================================================================
 
 1. Definition
@@ -63,274 +63,155 @@ Benefits
 ✔ Improve cost visibility during code review.
 
 
+STEP 1: Terraform Initialization
+Description: Initialize Terraform modules, providers, and Azure Storage backend.
+Run from:
+PS C:\Users\chait\OneDrive\Documents\Devops\Azure_Project\azure-terraform-modular-3tier-infrastructure\azure-terraform-modular-3tier-infrastructure\environment\dev>
 
-------------------------------------------------------------------------------------------------------------------------
-8. Commands (v2.12.2)
-------------------------------------------------------------------------------------------------------------------------
-
-General Commands
-
-infracost --version                                            → Display the installed Infracost version.
-infracost setup                                                → Perform first-time CLI setup.
-infracost auth login                                           → Login to your Infracost account.
-infracost auth whoami                                          → Show the currently logged-in user.
-infracost auth logout                                          → Logout from Infracost.
-infracost doctor                                               → Verify CLI configuration and diagnose issues.
-infracost update                                               → Update Infracost to the latest version.
-infracost --help                                               → Display all available commands.
-
-Terraform Workflow
-
-terraform init                                                → Download and initialize Terraform providers.
-terraform validate                                            → Validate Terraform configuration.
-terraform plan                                                → Generate the execution plan.
-
-infracost scan .                                              → Scan the Terraform project and estimate cloud costs.
-infracost scan . --json > infracost-report.json               → Save the scan result as a JSON report.
-
-infracost inspect --summary                                   → Display a summary of the latest scan.
-infracost inspect                                             → View detailed scan results.
-infracost inspect --top 10                                    → Show the top 10 most expensive resources.
-infracost inspect --total-savings                             → Display potential cost savings.
-
-terraform apply                                               → Deploy the reviewed infrastructure.
-
-infracost doctor                                              → Diagnose CLI configuration and installation issues.
-infracost update                                              → Update Infracost to the latest version.
-infracost auth logout                                         → Logout from the current account.
-infracost --help                                              → Display all available commands.
-
-------------------------------------------------------------------------------------------------------------------------
-9. Hands-on Workflow
-------------------------------------------------------------------------------------------------------------------------
-
-Quick Workflow
-
-Sign Up
-   │
-Install Infracost
-   │
-infracost setup
-   │
-infracost auth login
-   │
+Command:
 terraform init
-   │
-terraform plan
-   │
-terraform show -json
-   │
-infracost scan
-   │
-Review Cost
-   │
-terraform apply
 
+Example Output:
+PS C:\Users\chait\OneDrive\Documents\Devops\Azure_Project\azure-terraform-modular-3tier-infrastructure\azure-terraform-modular-3tier-infrastructure\environment\dev> terraform init
+Initializing modules...
+- network_interface_association in ..\..\modules\10-azurerm_network_interface_security_group_association
+- resource_group in ..\..\modules\01-azurerm_resource_group
+- virtual_network in ..\..\modules\02-azurerm_virtual_network
+- network_interface in ..\..\modules\09-azurerm_network_interface
+- public_ip in ..\..\modules\06-azurerm_public_ip
+- network_security_group in ..\..\modules\04-azurerm_network_security_group
+- subnet in ..\..\modules\03-azurerm_subnet
+- bastion in ..\..\modules\07-azurerm_bastion_host
+- virtual_machine in ..\..\modules\11-azurerm_linux_virtual_machine
+- virtual_network_peering in ..\..\modules\08-azurerm_virtual_network_peering
+- subnet_network_security_group_association in ..\..\modules\05-azurerm_subnet_network_security_group_association
+Initializing provider plugins found in the configuration...
+- Finding hashicorp/azurerm versions matching "4.80.0"...
+- Installing hashicorp/azurerm v4.80.0...
+- Installed hashicorp/azurerm v4.80.0 (signed by HashiCorp)
 
-------------------------------------------------------------------------------------------------------------------------
-4. Real Enterprise Example
-------------------------------------------------------------------------------------------------------------------------
-Developer modifies a Virtual Machine.
+Initializing the backend...
 
-Old VM : Standard_D2s_v5
-New VM : Standard_D8s_v5
+Successfully configured the backend "azurerm"! Terraform will automatically
+use this backend unless the backend configuration changes.
 
-Terraform Output
-Plan: 1 Resource to Update
+Initializing provider plugins found in the state...
+- Reusing previous version of hashicorp/azurerm
+- Using previously-installed hashicorp/azurerm v4.80.0
 
-Infracost Output
-Monthly Cost Before : $145
-Monthly Cost After  : $318
-Difference          : +$173/month
+Terraform has created a lock file .terraform.lock.hcl to record the provider
+selections it made above. Include this file in your version control repository
+so that Terraform can guarantee to make the same selections by default when
+you run "terraform init" in the future.
 
-Reviewer immediately knows the financial impact and can decide whether the larger VM is really required before approving the deployment.
+Terraform has been successfully initialized!
 
-------------------------------------------------------------------------------------------------------------------------
-5. How Infracost Works
-------------------------------------------------------------------------------------------------------------------------
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
 
-Terraform Code
-      │
-terraform plan
-      │
-Terraform Binary Plan
-      │
-terraform show -json
-      │
-Terraform Plan JSON
-      │
-infracost scan
-      │
-Reads Resource Configuration
-      │
-Matches Cloud Pricing Database
-      │
-Calculates Estimated Cost
-      │
-Generates Cost Report
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+PS C:\Users\chait\OneDrive\Documents\Devops\Azure_Project\azure-terraform-modular-3tier-infrastructure\azure-terraform-modular-3tier-infrastructure\environment\dev>
 
-The report can include:
-• Hourly Cost
-• Monthly Cost
-• Yearly Cost
-• Cost Breakdown per Resource
-• Total Estimated Infrastructure Cost
+============================================================
 
-------------------------------------------------------------------------------------------------------------------------
-6. What Infracost Can & Cannot Do
-------------------------------------------------------------------------------------------------------------------------
+STEP 2: Terraform Validation
+Description: Validate the Terraform configuration for syntax and configuration errors.
+Run from the same environment\dev directory.
 
-Can Do
-✔ Estimate infrastructure cost.
-✔ Analyze Terraform plans.
-✔ Generate cost reports.
-✔ Compare infrastructure cost before deployment.
-✔ Integrate with CI/CD pipelines.
+Command:
+terraform validate
 
-Cannot Do
-✘ Create cloud resources.
-✘ Modify infrastructure.
-✘ Delete resources.
-✘ Replace Terraform.
-✘ Monitor actual cloud billing.
+Example Output:
+PS C:\Users\chait\OneDrive\Documents\Devops\Azure_Project\azure-terraform-modular-3tier-infrastructure\azure-terraform-modular-3tier-infrastructure\environment\dev> terraform validate
+Success! The configuration is valid.
 
-Quick Remember
+PS C:\Users\chait\OneDrive\Documents\Devops\Azure_Project\azure-terraform-modular-3tier-infrastructure\azure-terraform-modular-3tier-infrastructure\environment\dev>
 
-Terraform  → Infrastructure Deployment
-Infracost  → Infrastructure Cost Estimation
+============================================================
 
-========================================================================================================================
+STEP 3: Infracost Breakdown
+Description: Estimate the monthly cost of Azure resources defined in the Terraform configuration.
+Run from the repository root directory:
+C:\Users\chait\OneDrive\Documents\Devops\Azure_Project\azure-terraform-modular-3tier-infrastructure\azure-terraform-modular-3tier-infrastructure
 
+Command:
+infracost breakdown --path=.\environment\dev
 
-------------------------------------------------------------------------------------------------------------------------
-7. Supported Cloud Providers
-------------------------------------------------------------------------------------------------------------------------
-Infracost supports pricing for infrastructure deployed on:
+Example Output:
+PS C:\Users\chait\OneDrive\Documents\Devops\Azure_Project\azure-terraform-modular-3tier-infrastructure\azure-terraform-modular-3tier-infrastructure> infracost breakdown --path=.\environment\dev
+INFO Autodetected 1 Terraform project across 1 root module
+INFO Found Terraform project main at directory . using Terraform var files terraform.tfvars
 
-✔ Microsoft Azure
-✔ Amazon Web Services (AWS)
-✔ Google Cloud Platform (GCP)
+Project: main
 
-Common Supported Resources
-• Virtual Machines
-• Storage Accounts
-• Managed Disks
-• Load Balancers
-• Public IPs
-• NAT Gateways
-• Virtual Networks
-• Databases
-• Kubernetes Clusters
-• Hundreds of other supported Terraform resources
+ Name                                                                                        Monthly Qty  Unit                      Monthly Cost   
+                                                                                                                                                   
+ module.bastion.azurerm_bastion_host.BAS["bastion"]                                                                                                
+ ├─ Bastion host                                                                                     730  hours                          $138.70   
+ └─ Outbound data transfer (first 10TB)                                               Monthly cost depends on usage: $0.087 per GB                 
+                                                                                                                                                   
+ module.virtual_machine.azurerm_linux_virtual_machine.LINUXVM["bk-vm"]                                                                             
+ ├─ Instance usage (Linux, pay as you go, Standard_D2s_v3)                                           730  hours                           $70.08   
+ └─ os_disk                                                                                                                                        
+    ├─ Storage (S4, LRS)                                                                               1  months                           $1.54   
+    └─ Disk operations                                                                Monthly cost depends on usage: $0.0005 per 10k operations    
+                                                                                                                                                   
+ module.virtual_machine.azurerm_linux_virtual_machine.LINUXVM["db-vm"]                                                                             
+ ├─ Instance usage (Linux, pay as you go, Standard_D2s_v3)                                           730  hours                           $70.08   
+ └─ os_disk                                                                                                                                        
+    ├─ Storage (S4, LRS)                                                                               1  months                           $1.54   
+    └─ Disk operations                                                                Monthly cost depends on usage: $0.0005 per 10k operations    
+                                                                                                                                                   
+ module.virtual_machine.azurerm_linux_virtual_machine.LINUXVM["fe-vm"]                                                                             
+ ├─ Instance usage (Linux, pay as you go, Standard_D2s_v3)                                           730  hours                           $70.08   
+ └─ os_disk                                                                                                                                        
+    ├─ Storage (S4, LRS)                                                                               1  months                           $1.54   
+    └─ Disk operations                                                                Monthly cost depends on usage: $0.0005 per 10k operations    
+                                                                                                                                                   
+ module.public_ip.azurerm_public_ip.PIP["bastion-pip"]                                                                                             
+ └─ IP address (static, regional)                                                                    730  hours                            $3.65   
+                                                                                                                                                   
+ module.public_ip.azurerm_public_ip.PIP["bk-pip"]                                                                                                  
+ └─ IP address (static, regional)                                                                    730  hours                            $3.65   
+                                                                                                                                                   
+ module.public_ip.azurerm_public_ip.PIP["fe-pip"]                                                                                                  
+ └─ IP address (static, regional)                                                                    730  hours                            $3.65   
+                                                                                                                                                   
+ module.virtual_network_peering.azurerm_virtual_network_peering.VPEER["app-to-mgmt"]                                                               
+ ├─ Inbound data transfer                                                             Monthly cost depends on usage: $0.01 per GB                  
+ └─ Outbound data transfer                                                            Monthly cost depends on usage: $0.01 per GB                  
+                                                                                                                                                   
+ module.virtual_network_peering.azurerm_virtual_network_peering.VPEER["mgt-to-app"]                                                               
+ ├─ Inbound data transfer                                                             Monthly cost depends on usage: $0.01 per GB                  
+ └─ Outbound data transfer                                                            Monthly cost depends on usage: $0.01 per GB                  
+                                                                                                                                                   
+ OVERALL TOTAL                                                                                                                          $364.50 
 
+*Usage costs can be estimated by updating Infracost Cloud settings, see docs for other options.
 
-------------------------------------------------------------------------------------------------------------------------
-10. CI/CD Integration
-------------------------------------------------------------------------------------------------------------------------
+──────────────────────────────────
+25 cloud resources were detected:
+∙ 9 were estimated
+∙ 16 were free
 
-Developer Pushes Code
-        │
-Terraform Plan
-        │
-terraform show -json
-        │
-Infracost Scan
-        │
-Cost Report Generated
-        │
-Pull Request Review
-        │
-Approval
-        │
-terraform apply
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Project                                            ┃ Baseline cost ┃ Usage cost* ┃ Total cost ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━╋━━━━━━━━━━━━┫
+┃ main                                               ┃         $364 ┃           - ┃       $364 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━┻━━━━━━━━━━━━┛
 
-Common CI/CD Platforms
-• Azure DevOps
-• GitHub Actions
-• GitLab CI/CD
-• Jenkins
+Update: A new version of Infracost is available: v0.10.46 → v2.17.0
+  Go to https://www.infracost.io/docs/update for instructions
+PS C:\Users\chait\OneDrive\Documents\Devops\Azure_Project\azure-terraform-modular-3tier-infrastructure\azure-terraform-modular-3tier-infrastructure>
 
-Best Practice
-Run Infracost after "terraform plan" and before "terraform apply" so reviewers can verify the cost impact before approving infrastructure changes.
-
-========================================================================================================================
-
-------------------------------------------------------------------------------------------------------------------------
-11. Enterprise Pull Request Example
-------------------------------------------------------------------------------------------------------------------------
-
-Developer updates Terraform.
-
-Before
-VM Size : Standard_D2s_v5
-
-After
-VM Size : Standard_D8s_v5
-
-Terraform detects the infrastructure change.
-
-Infracost estimates:
-
-Monthly Cost Before : $145
-Monthly Cost After  : $318
-Difference          : +$173/month
-
-The cost report is automatically added to the Pull Request, allowing reviewers to understand the financial impact before approving the deployment.
-
-------------------------------------------------------------------------------------------------------------------------
-12. Where Is Infracost Used?
-------------------------------------------------------------------------------------------------------------------------
-
-• DevOps Teams
-• Cloud Engineering Teams
-• Platform Engineering Teams
-• Infrastructure Teams
-• FinOps Teams
-• Enterprise CI/CD Pipelines
-
-------------------------------------------------------------------------------------------------------------------------
-13. Benefits
-------------------------------------------------------------------------------------------------------------------------
-
-✔ Estimates infrastructure cost before deployment.
-✔ Prevents unexpected cloud bills.
-✔ Improves Pull Request reviews.
-✔ Helps optimize cloud spending.
-✔ Provides better budget visibility.
-✔ Easy integration with Terraform workflows.
-✔ Supports Azure, AWS and GCP.
-✔ Works with popular CI/CD platforms.
-✔ Encourages cost-aware infrastructure design.
-
-------------------------------------------------------------------------------------------------------------------------
-14. Limitations
-------------------------------------------------------------------------------------------------------------------------
-
-• Estimates cost only; it does not calculate the actual cloud bill.
-• Actual billing can vary due to:
-  • Reserved Instances
-  • Savings Plans
-  • Discounts
-  • Data Transfer
-  • Runtime Usage
-  • Taxes
-• Pricing depends on supported Terraform resources.
-
-------------------------------------------------------------------------------------------------------------------------
-15. Terraform vs Infracost
-------------------------------------------------------------------------------------------------------------------------
-
-Terraform                                         Infracost
------------------------------------------------   ----------------------------------------------------
-Creates Infrastructure                            Estimates Infrastructure Cost
-Deploys Cloud Resources                           Generates Cost Reports
-Manages Infrastructure as Code                    Provides Cost Visibility
-Runs terraform apply                              Reviews Cost Before Deployment
-Focuses on Infrastructure                         Focuses on Infrastructure Cost
-
-Quick Remember
-
-Terraform + Infracost = Infrastructure + Cost Visibility
+============================================================
+NOTE:
+Terraform init and validate must be run from environment\dev.
+Infracost breakdown must be run from the repository root.
+============================================================
 
 ------------------------------------------------------------------------------------------------------------------------
 16. Popular Alternatives

@@ -183,27 +183,33 @@ Important Commands
 ------------------
 
 
-tflint                                              Scan Current Directory
+tflint                                              			Scan Current Directory
 
-tflint main.tf                                      Scan Single Terraform File
+tflint main.tf                                      			Scan Single Terraform File
 
-tflint --init                                       Download & Initialize Plugins
+tflint --init                                       			Download & Initialize Plugins
 
-tflint --recursive                                  Scan Current Directory Recursively
+tflint --recursive                                 				Scan Current Directory Recursively
 
-tflint --filter=main.tf                             Scan Specific File
+tflint --filter=main.tf                             			Scan Specific File
 
-tflint --format default                             Default Output
+tflint --format default                             			Default Output
+	
+tflint --format compact                             			Compact Output
 
-tflint --format compact                             Compact Output
+tflint --format json                                			JSON Output
 
-tflint --format json                                JSON Output
+tflint --format json > tflint_report.json           			Save JSON Report
 
-tflint --format json > tflint_report.json           Save JSON Report
+tflint --format sarif                               			SARIF Output
 
-tflint --format sarif                               SARIF Output
+tflint --format sarif > report.sarif                			Save SARIF Report
 
-tflint --format sarif > report.sarif                Save SARIF Report
+tflint --recursive --format json > tflint_report.json			Scan complete repository + JSON report
+
+tflint --recursive --format json > tflint_report.json			JSON report with explicit exit status handling
+
+
 
 ===============================================================================
 

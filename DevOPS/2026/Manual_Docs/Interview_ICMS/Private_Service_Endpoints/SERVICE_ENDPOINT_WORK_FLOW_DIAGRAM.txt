@@ -1,0 +1,120 @@
+
+SERVICE_ENDPOINT_WORK_FLOW_DIAGRAM
+
+
+04) HOW DOES AZURE SERVICE ENDPOINT ACTUALLY WORK?
+══════════════════════════════════════════════════════════════════════════════
+
+
+
+FLOW 1 — VERY BEGINNING → APPLICATION → STORAGE
+══════════════════════════════════════════════════════════════════════
+
+USER / CLIENT
+     │
+     │ HTTPS(443)
+     ▼
+PUBLIC IP
+     │
+     ▼
+APPLICATION GATEWAY + WAF
+     │
+     ▼
+HUB VNET
+     │
+     │ VNet Peering
+     ▼
+SPOKE VNET
+     │
+     ▼
+APPLICATION / WORKLOAD SUBNET
+     │
+     │ Service Endpoint
+     │ Microsoft.Storage
+     ▼
+AZURE STORAGE
+(novatfstatefiles)
+     │
+     ▼
+STORAGE NETWORK RULE
+     │
+     └── Allow → vnet-web / snet-web01
+
+
+
+
+FLOW 2 — SPOKE VNET SE SERVICE ENDPOINT TAK
+══════════════════════════════════════════════════════════════════════
+
+SPOKE VNET
+    │
+    ▼
+snet-web01
+10.77.1.0/24
+    │
+    │ Microsoft.Storage
+    │ Service Endpoint
+    ▼
+MICROSOFT AZURE BACKBONE
+    │
+    ▼
+AZURE STORAGE
+novatfstatefiles
+    │
+    ▼
+Storage Firewall / Network Rules
+    │
+    ▼
+ALLOW → snet-web01
+
+
+
+IMPORTANT:
+══════════════════════════════════════════════════════════════════════
+
+Service Endpoint:
+→ SUBNET par configured
+→ Microsoft.Storage selected
+→ Traffic Azure backbone par jaata hai
+→ Storage ka normal service endpoint/DNS remains
+→ Source is identified using private IP from the subnet
+→ Storage side par VNet/Subnet network rule required
+
+Service Endpoint DOES NOT mean:
+
+Spoke
+  ↓
+Private Endpoint
+  ↓
+Private IP of Storage
+
+NO.
+
+Service Endpoint:
+Spoke Subnet
+     ↓
+Microsoft.Storage Service Endpoint
+     ↓
+Azure Backbone
+     ↓
+Storage Service
+
+
+
+INTERVIEW ME KYA BOLNA HAI?
+══════════════════════════════════════════════════════════════════════
+
+"In my hub-spoke architecture, user traffic first reaches the Application
+Gateway. The Application Gateway is connected to the spoke workload through
+VNet peering with the hub. From the workload subnet, if I need to access
+Azure Storage, I enable the Microsoft.Storage Service Endpoint on that
+subnet. The traffic then goes directly to Azure Storage over the Microsoft
+Azure backbone. On the Storage side, I allow the required VNet and subnet
+through the Storage network rules."
+
+ONE-LINER:
+App Gateway → Hub/Peering → Spoke → Subnet → Service Endpoint → Azure Storage
+
+
+
+

@@ -1,0 +1,420 @@
+================================================================================
+MICROSOFT SENTINEL — AZURE INFRASTRUCTURE ENGINEER INTERVIEW NOTES
+================================================================================
+01. WHAT IS MICROSOFT SENTINEL?
+--------------------------------------------------------------------------------
+Microsoft Sentinel is a cloud-native SIEM (Security Information and Event Management)
+solution used to collect security logs from different sources, detect suspicious
+activities, investigate incidents and automate security responses.
+Simple meaning:
+   Azure resources, identities, servers and applications generate logs.
+   Sentinel collects relevant logs, checks for suspicious patterns and helps
+   security teams investigate and respond to potential threats.
+Example:
+   Someone repeatedly attempts to sign in to Microsoft Entra ID using an account.
+   Sentinel can detect suspicious sign-in patterns and create a security incident
+   when the configured analytics rule matches the activity.
+02. WHY DO ENTERPRISES USE SENTINEL?
+--------------------------------------------------------------------------------
+Without Sentinel:
+   Logs are spread across Azure Activity Logs, Entra ID, servers, firewalls,
+   applications and other security products.
+   Investigating an attack may require checking multiple systems separately.
+With Sentinel:
+   Relevant logs can be collected in one workspace, correlated and investigated
+   through queries, analytics rules, incidents and workbooks.
+Main benefits:
+   1. Centralized security monitoring.
+   2. Detection of suspicious activities across connected data sources.
+   3. Investigation using logs and related entities.
+   4. Automated incident handling through rules and playbooks.
+   5. Threat hunting using KQL (Kusto Query Language).
+03. SIEM VS SOAR — INTERVIEW FAVOURITE
+--------------------------------------------------------------------------------
+SIEM = Security Information and Event Management
+   Collects and analyzes logs, detects suspicious activities and generates alerts
+   or incidents.
+SOAR = Security Orchestration, Automation and Response
+   Automates repeatable response actions and connects security workflows with
+   other services.
+In Microsoft Sentinel:
+   SIEM = Data connectors + Analytics rules + Incidents + Hunting.
+   SOAR = Automation rules + Playbooks built using Azure Logic Apps.
+Example:
+   SIEM: Detect suspicious sign-in activity and create an incident.
+   SOAR: Automatically assign the incident, notify the security team or trigger
+         an approved response workflow.
+Interview answer:
+   "Sentinel provides SIEM capabilities for detecting and investigating threats,
+   along with SOAR capabilities for automating incident-handling workflows."
+04. SENTINEL ARCHITECTURE — UNDERSTAND THIS FLOW
+--------------------------------------------------------------------------------
+Microsoft Entra ID / Azure Activity Logs / VMs / Firewalls / Other Sources
+                              |
+                              v
+                     DATA CONNECTORS
+                              |
+                              v
+                  LOG ANALYTICS WORKSPACE
+                              |
+                              v
+                      LOGS + KQL QUERIES
+                              |
+                              v
+                      ANALYTICS RULES
+                              |
+                              v
+                    ALERTS / INCIDENTS
+                              |
+                 +------------+------------+
+                 |                         |
+                 v                         v
+          MANUAL INVESTIGATION       AUTOMATION RULES
+                                           |
+                                           v
+                                       PLAYBOOKS
+                                           |
+                                           v
+                                     AZURE LOGIC APPS
+                                           |
+                                           v
+                               APPROVED RESPONSE ACTIONS
+Important:
+   Not every log automatically creates an incident.
+   The data source must be connected, relevant data must be ingested, and a
+   detection rule or other supported detection mechanism must identify activity.
+05. LOG ANALYTICS WORKSPACE — VERY IMPORTANT
+--------------------------------------------------------------------------------
+A Log Analytics workspace is the Azure Monitor Logs environment where collected
+log data is stored and queried.
+Microsoft Sentinel is enabled on a Log Analytics workspace for its SIEM features.
+Remember:
+   Log Analytics workspace = Log storage, tables and KQL query environment.
+   Microsoft Sentinel     = Security detection, investigation, hunting and response.
+Example:
+   Workspace name: law-icms-security-prod
+   Sentinel is enabled on this workspace.
+   Entra ID and Azure Activity logs are connected to it.
+   Security analysts query the data and configure analytics rules.
+Important:
+   Sentinel is not a replacement for the workspace; it uses the workspace.
+   Workspace location, access permissions, retention and ingestion design matter.
+06. WHAT IS A DATA CONNECTOR?
+--------------------------------------------------------------------------------
+A data connector connects a supported data source to Sentinel so that its data
+can be ingested into the connected workspace.
+Common examples:
+   Microsoft Entra ID     -> Sign-in and audit-related logs, depending on connector.
+   Azure Activity         -> Azure subscription control-plane activity.
+   Microsoft Defender     -> Supported security alerts and events.
+   Windows/Linux sources  -> Supported event or syslog collection methods.
+   Firewall products      -> Network/security logs through supported integrations.
+Example:
+   An administrator deletes an Azure Network Security Group.
+   Azure Activity Logs record the control-plane operation.
+   If the relevant logs are connected to Sentinel, a detection rule can identify
+   unexpected or suspicious deletion activity.
+Important:
+   Connecting a source does not mean every event automatically becomes an alert.
+   Verify which log categories are enabled and which tables receive the data.
+07. ANALYTICS RULES — HOW SENTINEL DETECTS THREATS
+--------------------------------------------------------------------------------
+Analytics rules evaluate collected data to identify activity matching a detection
+condition. Rules can generate alerts and contribute to incidents.
+Common rule types include:
+   Scheduled rules      -> Run a query on a schedule.
+   Near-real-time rules -> Detect supported activity with low delay.
+   Anomaly rules        -> Identify unusual patterns using supported analytics.
+   Microsoft security   -> Use supported alert sources and built-in detections.
+Example:
+   A scheduled rule checks for repeated failed sign-ins within a defined period.
+   If the query matches the configured condition, Sentinel can generate an alert.
+   Related alerts may be grouped into an incident according to configuration.
+Important:
+   Detection depends on the source logs, query, schedule, thresholds and rule setup.
+   Too many broad rules can create false positives and unnecessary investigation.
+08. ALERT VS INCIDENT
+--------------------------------------------------------------------------------
+Alert:
+   A detection signal indicating that suspicious activity may have occurred.
+Incident:
+   A security case that groups related alerts and relevant evidence for investigation.
+Example:
+   Alert 1 = Multiple failed sign-ins.
+   Alert 2 = Successful sign-in from an unusual location.
+   Alert 3 = Suspicious activity after the sign-in.
+   These alerts may be correlated into an incident, depending on the rules and
+   incident grouping configuration.
+Interview answer:
+   "An alert is an individual detection signal, while an incident is a case used
+   to investigate and manage one or more related alerts."
+09. KQL — KUSTO QUERY LANGUAGE
+--------------------------------------------------------------------------------
+KQL is used to query log data in Azure Monitor Logs and Microsoft Sentinel.
+An Azure Infrastructure Engineer should understand basic filtering and searching.
+Example 1 — Check Azure subscription activity:
+   AzureActivity
+   | where TimeGenerated > ago(24h)
+   | project TimeGenerated, Caller, OperationNameValue, ActivityStatusValue
+   | take 20
+Meaning:
+   Read recent Azure activity records, select useful fields and show 20 records.
+Example 2 — Check failed sign-ins, if the required table and permissions exist:
+   SigninLogs
+   | where TimeGenerated > ago(24h)
+   | where ResultType != "0"
+   | project TimeGenerated, UserPrincipalName, IPAddress, ResultType
+   | take 20
+Meaning:
+   Find sign-in records that were not successful during the last 24 hours.
+Important:
+   The table must exist and contain the required data.
+   Available columns depend on the table schema and connected data source.
+10. AUTOMATION RULES VS PLAYBOOKS
+--------------------------------------------------------------------------------
+Automation Rule:
+   Manages incident handling actions, such as assigning an incident, adding tags,
+   changing status or invoking a playbook when configured conditions match.
+Playbook:
+   A workflow built using Azure Logic Apps that performs defined actions.
+Example:
+   A high-severity incident is created.
+       |
+       v
+   Automation rule checks incident severity and conditions.
+       |
+       v
+   Assign incident to the security team.
+       |
+       v
+   Trigger a playbook.
+       |
+       v
+   Playbook sends a notification or creates a ticket in an integrated system.
+Important:
+   A playbook does not automatically block an IP or disable an account unless
+   the workflow has the required action, permissions and correct configuration.
+   High-impact actions should have appropriate approvals and safeguards.
+11. WORKBOOKS, HUNTING AND WATCHLISTS
+--------------------------------------------------------------------------------
+Workbooks:
+   Visual reports and dashboards based on collected data.
+   Example: Security activity trends or incident summaries.
+Threat Hunting:
+   Proactively search logs for suspicious activity, even when no alert has fired.
+   Uses KQL and other supported investigation tools.
+Watchlists:
+   Reference data imported into Sentinel for comparison with log records.
+   Example: A list of approved admin accounts or critical infrastructure assets.
+Interview distinction:
+   Analytics rule = Detect configured suspicious patterns.
+   Hunting query  = Search proactively for suspicious activity.
+   Workbook       = Visualize data.
+   Watchlist      = Compare events against reference information.
+12. SENTINEL VS MICROSOFT DEFENDER FOR CLOUD
+--------------------------------------------------------------------------------
+Microsoft Defender for Cloud:
+   Helps assess Azure resource security posture and provides workload protection
+   capabilities through supported Defender plans.
+   Example: Identify a security recommendation for an Azure resource or receive
+   a supported workload threat alert.
+Microsoft Sentinel:
+   Collects and correlates security data from connected sources to support
+   centralized threat detection, investigation and response.
+   Example: Correlate suspicious identity activity with relevant Azure activity.
+Relationship:
+   Supported Defender alerts can be connected to Sentinel for centralized
+   investigation and incident handling.
+Interview answer:
+   "Defender for Cloud focuses on cloud security posture and workload protection.
+   Sentinel focuses on SIEM-based detection, investigation and response across
+   connected data sources. They complement each other."
+13. SENTINEL VS AZURE MONITOR
+--------------------------------------------------------------------------------
+Azure Monitor:
+   Collects and analyzes telemetry such as metrics, logs and application data
+   for monitoring, troubleshooting and operational alerting.
+Microsoft Sentinel:
+   Uses relevant log data for security detection, investigation, hunting and
+   response workflows.
+Example:
+   CPU usage is continuously high on an ICMS VM.
+      -> Azure Monitor can alert the operations team.
+   Suspicious activity is recorded against an Azure resource.
+      -> Sentinel can detect it if the relevant data and detection rules exist.
+Important:
+   Azure Monitor and Sentinel overlap in log infrastructure, but their purposes
+   and configured alerts are not identical.
+14. SENTINEL SECURITY INCIDENT — ICMS ENTERPRISE EXAMPLE
+--------------------------------------------------------------------------------
+Scenario:
+   ICMS production uses AKS, Azure SQL, ACR, Key Vault, Entra ID and a hub-spoke
+   network with Azure Firewall and Application Gateway.
+   An attacker attempts to access a privileged Azure identity.
+Possible flow:
+   1. Entra ID records relevant sign-in activity.
+   2. Azure Activity Logs record relevant Azure control-plane operations.
+   3. Configured connectors ingest the available records into the workspace.
+   4. An analytics rule detects suspicious activity.
+   5. Sentinel creates an alert and potentially an incident.
+   6. The security team investigates identities, IPs, timestamps and related events.
+   7. An approved automation workflow may notify the team or trigger a response.
+Infrastructure Engineer's responsibility:
+   - Ensure required diagnostic settings and log collection are configured.
+   - Verify that the right subscription/resource logs reach the intended workspace.
+   - Troubleshoot missing data, permissions and connectivity.
+   - Coordinate with the security team on required detections and retention.
+   - Validate approved response actions and avoid unauthorized production changes.
+Important:
+   Sentinel does not automatically inspect every AKS pod, database query or network
+   packet. Visibility depends on the relevant data source, collection setup and
+   supported integrations.
+15. ENTERPRISE SCENARIO — AZURE RESOURCE DELETION
+--------------------------------------------------------------------------------
+Problem:
+   An unexpected identity deletes a production NSG or changes a network rule.
+What happens?
+   1. Azure Activity Logs record the relevant control-plane operation.
+   2. The logs must be routed/connected to the Sentinel workspace.
+   3. A suitable analytics rule must identify the unexpected activity.
+   4. Sentinel can generate an alert and incident.
+   5. The team investigates the caller, operation, time and affected resource.
+   6. The infrastructure team validates the change and restores the approved
+      configuration if required.
+Prevention and response:
+   RBAC/PIM reduce unnecessary permissions.
+   Azure Policy can enforce supported configuration requirements.
+   Resource Locks can protect supported resources from accidental deletion.
+   Sentinel provides detection and investigation; it does not replace these controls.
+16. ENTERPRISE SCENARIO — SENTINEL SHOWS NO LOGS
+--------------------------------------------------------------------------------
+Possible causes:
+   1. The data connector is not configured or has stopped working.
+   2. Required diagnostic settings or log categories are not enabled.
+   3. Logs are being sent to a different workspace.
+   4. Required permissions or authentication are missing.
+   5. Ingestion delay, source-side problems or connector limitations exist.
+Troubleshooting:
+   Step 1: Identify the expected source and exact log category.
+   Step 2: Check the source's diagnostic settings or connector configuration.
+   Step 3: Confirm the correct destination workspace.
+   Step 4: Query the expected table using KQL.
+   Step 5: Check connector health, permissions and ingestion errors.
+   Step 6: Confirm that the source actually generated the expected event.
+Interview answer:
+   "I would first verify the source configuration and destination workspace, then
+   check whether records are arriving in the expected table. I would investigate
+   connector health, permissions and ingestion errors before changing detection rules."
+17. SENTINEL PRICING — WHAT AN INFRA ENGINEER SHOULD KNOW
+--------------------------------------------------------------------------------
+Main cost factors:
+   1. Amount of data ingested.
+   2. Selected data tier and pricing model.
+   3. Data retention beyond the included period.
+   4. Playbooks and their Azure Logic Apps consumption.
+   5. Other applicable services or infrastructure costs.
+Analytics Logs:
+   Pay-as-you-go or an eligible commitment tier.
+   Pay-as-you-go charges are based on billable ingestion volume.
+Auxiliary Logs:
+   Intended for supported high-volume, lower-fidelity use cases; capabilities and
+   pricing differ from Analytics Logs.
+Retention:
+   Included retention depends on the current pricing terms and workspace setup.
+   Longer retention can incur additional charges.
+Cost calculation method:
+   Monthly ingestion = Average GB/day × Number of days.
+   Illustrative example:
+      Average ingestion = 20 GB/day
+      Month            = 30 days
+      Monthly ingestion = 20 × 30 = 600 GB
+   Illustrative cost formula:
+      600 GB × Applicable rate per GB
+      + applicable retention charges
+      + Logic Apps/playbook charges
+      + other applicable charges
+IMPORTANT:
+   This is a usage calculation, NOT a final price.
+   The applicable rate depends on region, tier, agreement and pricing model.
+   Use the current Azure pricing calculator before quoting an enterprise budget.
+Cost optimization:
+   - Collect only required log categories.
+   - Estimate ingestion volume before enabling every source.
+   - Review workspace usage and Sentinel cost workbooks.
+   - Select the appropriate data tier and retention period.
+   - Monitor actual usage after onboarding.
+18. RBAC AND ACCESS CONTROL
+--------------------------------------------------------------------------------
+Sentinel access is controlled through Azure role-based access control (RBAC).
+Access can be assigned at supported scopes, including the workspace and inherited
+subscription/resource-group scopes.
+Examples of roles:
+   Microsoft Sentinel Reader:
+      Read Sentinel data and resources within the role's permissions.
+   Microsoft Sentinel Responder:
+      Includes incident response capabilities within the role's permissions.
+   Microsoft Sentinel Contributor:
+      Can manage Sentinel resources within the role's permissions.
+   Log Analytics Reader:
+      Can read log data within the role's scope and permissions.
+Important:
+   Exact permissions depend on the assigned role, scope and current role definition.
+   Playbook execution may require additional Logic Apps and resource permissions.
+Interview answer:
+   "I would follow least privilege, assign access at the narrowest practical scope,
+   and verify workspace, Sentinel and playbook permissions separately."
+19. INFRASTRUCTURE ENGINEER — WHAT SHOULD YOU ACTUALLY DO?
+--------------------------------------------------------------------------------
+You should be able to:
+   1. Explain Sentinel architecture and SIEM vs SOAR.
+   2. Understand Log Analytics workspaces and data connectors.
+   3. Configure or troubleshoot Azure diagnostic settings and log routing.
+   4. Verify whether expected records are arriving in the correct tables.
+   5. Run basic KQL queries to investigate missing or unexpected data.
+   6. Understand incidents, analytics rules, automation rules and playbooks.
+   7. Apply least-privilege access and understand the cost implications of logging.
+   8. Coordinate with the security/SOC team on detection and response requirements.
+You do NOT need to present yourself as a SOC analyst or threat hunter.
+Your strongest position is:
+   "I support the Azure infrastructure and logging integration required for
+   centralized security monitoring, and I troubleshoot data collection, permissions,
+   workspace configuration and approved response integrations."
+20. INTERVIEW QUESTIONS — QUICK REVISION
+--------------------------------------------------------------------------------
+Q1. What is Microsoft Sentinel?
+A. A cloud-native SIEM solution for collecting security data, detecting threats,
+   investigating incidents and supporting automated response.
+Q2. What is the role of Log Analytics workspace?
+A. It stores collected log data and provides the KQL query environment used by
+   Azure Monitor Logs and Sentinel.
+Q3. Does every log generate an incident?
+A. No. The relevant data must be collected and a detection mechanism must identify
+   activity that meets its configured conditions.
+Q4. What is the difference between an alert and an incident?
+A. An alert is a detection signal; an incident is a case used to investigate and
+   manage one or more related alerts.
+Q5. What is the difference between an automation rule and a playbook?
+A. Automation rules manage incident-handling actions; playbooks are Logic Apps
+   workflows that perform configured response actions.
+Q6. How does Sentinel receive Azure activity logs?
+A. Through the supported Azure Activity data-collection integration, with the
+   relevant configuration and destination workspace set up correctly.
+Q7. Why might Sentinel not show expected logs?
+A. Incorrect connector or diagnostic settings, wrong workspace, permissions,
+   source issues, ingestion delays or missing log categories.
+Q8. How does Sentinel help with a compromised identity?
+A. It can analyze connected identity logs, generate alerts through configured
+   detections, correlate relevant activity and support investigation and response.
+Q9. How is Sentinel billed?
+A. Primarily according to ingested data and the applicable data tier/pricing model,
+   with possible retention, automation and other applicable charges.
+Q10. Can Sentinel replace Azure Policy or NSGs?
+A. No. Policy and NSGs enforce or control configurations/traffic; Sentinel helps
+    detect and investigate suspicious activity in the data available to it.
+Q11. What is KQL used for?
+A. Querying log data to filter events, investigate activity and build detections.
+Q12. What is your role as an Azure Infrastructure Engineer?
+A. Maintain the required Azure logging configuration, workspace integration,
+    permissions and operational troubleshooting, coordinating detections and
+    incident response with the security team.
+================================================================================
