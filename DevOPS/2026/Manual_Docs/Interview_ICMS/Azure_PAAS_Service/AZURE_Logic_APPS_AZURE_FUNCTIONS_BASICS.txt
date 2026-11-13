@@ -1,0 +1,696 @@
+============================================================
+AZURE PAAS LEARNING
+Topic 1: Why Azure Logic Apps and Azure Functions Exist
+Level: Beginner (Starting from Zero)
+============================================================
+
+OUR LEARNING PATH
+-----------------
+1. Why these services exist                         [CURRENT]
+2. What is Azure Logic Apps?
+3. What is Azure Functions?
+4. Logic Apps vs Functions
+5. Triggers and Actions
+6. Real-world enterprise examples
+7. ICMS project integration
+8. Azure Portal: Create and configure both services
+9. Monitoring, security, networking and troubleshooting
+10. Interview questions and answers
+
+
+============================================================
+1. FIRST, UNDERSTAND THE PROBLEM
+============================================================
+
+Imagine you work on an enterprise application called ICMS
+(Insurance Claims Management System).
+
+The application has three main components:
+
+    Frontend  : Angular
+    Backend   : .NET / ASP.NET Core
+    Database  : Azure SQL Database
+
+A customer submits an insurance claim through the application.
+
+What happens next?
+
+    Customer submits claim
+              |
+              v
+       .NET Backend
+              |
+              v
+       Azure SQL Database
+              |
+              v
+       Claim is saved
+
+So far, everything is fine.
+
+BUT NOW THE BUSINESS WANTS MORE FEATURES.
+
+Whenever a new claim is submitted:
+
+    1. Save the claim in the database.
+    2. Send a confirmation email to the customer.
+    3. Notify the claims team in Microsoft Teams.
+    4. Check whether the claim requires manual approval.
+    5. Send the claim details to another business system.
+
+Now we have multiple operations involving different systems.
+
+QUESTION:
+Who will execute all these additional operations?
+
+
+============================================================
+2. THE OLD WAY: WRITE CODE FOR EVERYTHING
+============================================================
+
+One approach is to write additional code in the .NET backend.
+
+For example:
+
+    Customer submits claim
+              |
+              v
+       .NET Backend
+              |
+              +----> Save claim in Azure SQL
+              |
+              +----> Send confirmation email
+              |
+              +----> Notify Teams
+              |
+              +----> Check approval requirements
+              |
+              +----> Call external business system
+
+This approach can work.
+
+But as the application grows, some problems may appear.
+
+PROBLEM 1: MORE CODE TO MAINTAIN
+--------------------------------
+Developers must write and maintain code for multiple integrations.
+
+PROBLEM 2: DIFFERENT SYSTEMS
+----------------------------
+Email, Teams, databases and external applications have different
+APIs, authentication methods and communication requirements.
+
+PROBLEM 3: FAILURE HANDLING
+---------------------------
+What happens if the email service is temporarily unavailable?
+
+The application may need retry logic, error handling and logging.
+
+PROBLEM 4: BACKGROUND PROCESSING
+--------------------------------
+Some tasks should happen in the background rather than delay
+the customer's claim submission.
+
+PROBLEM 5: INFRASTRUCTURE
+-------------------------
+Additional code may need hosting, monitoring and scaling.
+
+IMPORTANT:
+These problems do not mean that .NET is bad.
+
+Developers can solve them using .NET and other services.
+However, doing everything manually can increase development
+and maintenance effort.
+
+
+============================================================
+3. THE AZURE SOLUTION
+============================================================
+
+Microsoft Azure provides managed services that help solve
+different parts of these problems.
+
+Two of these services are:
+
+    1. Azure Logic Apps
+    2. Azure Functions
+
+They solve related problems, but they are NOT the same service.
+
+
+------------------------------------------------------------
+A. AZURE LOGIC APPS
+------------------------------------------------------------
+
+PROBLEM:
+How can we connect different systems and automate a sequence
+of business operations without writing all the integration
+code ourselves?
+
+SOLUTION:
+Azure Logic Apps.
+
+Think of Logic Apps as a WORKFLOW AUTOMATION SERVICE.
+
+You define what should happen and in what order.
+
+ICMS EXAMPLE:
+
+    New claim submitted
+            |
+            v
+    Logic Apps detects the event
+            |
+            v
+    Send confirmation email
+            |
+            v
+    Notify claims team in Teams
+            |
+            v
+    Check approval requirement
+            |
+            v
+    Continue the appropriate workflow
+
+You can build workflows using a visual designer and
+connectors for supported services.
+
+You do not need to write all the integration code yourself.
+
+KEY POINTS:
+    - Automates business workflows.
+    - Connects different applications and services.
+    - Supports triggers, actions and conditions.
+    - Provides connectors for many common systems.
+    - Azure manages the underlying workflow infrastructure.
+
+Think:
+LOGIC APPS = CONNECT SYSTEMS + AUTOMATE WORKFLOWS.
+
+
+------------------------------------------------------------
+B. AZURE FUNCTIONS
+------------------------------------------------------------
+
+PROBLEM:
+What if a task requires custom programming logic?
+
+
+ICMS = Insurance Claims Management System
+
+Azure Functions executes custom code for a specific task. An ICMS application can use multiple functions for different requirements.
+
+============================================================
+EXAMPLE 1: GENERATE A CLAIM REFERENCE NUMBER
+============================================================
+Scenario: A customer submits a new insurance claim.
+Customer
+   |
+   v
+Submits insurance claim
+   |
+   v
+.NET Backend
+   |
+   v
+Saves claim details in Azure SQL Database
+   |
+   v
+Triggers Azure Function
+   |
+   v
++----------------------------------+
+|         AZURE FUNCTION           |
+|                                  |
+| Receives claim details           |
+| Generates unique reference       |
+| Returns reference to backend     |
++----------------------------------+
+   |
+   v
+.NET Backend updates claim record
+   |
+   v
+Backend sends confirmation email
+   |
+   v
+CUSTOMER RECEIVES:
+"Claim registered successfully.
+ Reference: CLM-10245"
+NOTE: Azure Function's responsibility ends after returning the reference number.
+============================================================
+EXAMPLE 2: VALIDATE UPLOADED DOCUMENTS
+============================================================
+Scenario: A customer uploads vehicle insurance claim documents.
+Customer uploads documents
+   |
+   v
+Documents saved in Azure Blob Storage
+   |
+   v
+Upload event triggers Azure Function
+   |
+   v
++----------------------------------+
+|         AZURE FUNCTION           |
+|                                  |
+| Checks allowed file types        |
+| Checks file size                 |
+| Checks required document rules   |
++----------------------------------+
+   |
+   v
+Function returns validation result
+   |
+   v
+.NET Backend updates document status
+   |
+   +--------------------+
+   |                    |
+   v                    v
+Documents valid     Documents invalid
+   |                    |
+   v                    v
+Continue claim      Request new documents
+processing          from customer
+NOTE: The function checks the rules implemented in its code. It does not automatically understand document contents.
+============================================================
+EXAMPLE 3: CALCULATE THE ESTIMATED CLAIM PAYOUT
+============================================================
+Scenario: A customer submits a vehicle repair claim.
+Repair cost = ₹50,000
+Policy deductible = ₹5,000
+Estimated payable = ₹45,000
+Flow:
+Claim details received by .NET Backend
+   |
+   v
+Backend invokes Azure Function
+   |
+   v
++----------------------------------+
+|         AZURE FUNCTION           |
+|                                  |
+| Receives repair cost             |
+| Receives deductible              |
+| Calculates estimated payout      |
+| ₹50,000 - ₹5,000 = ₹45,000       |
++----------------------------------+
+   |
+   v
+Function returns ₹45,000
+   |
+   v
+.NET Backend records the calculation
+   |
+   v
+Claim proceeds for further assessment
+NOTE: This is a simplified example. Actual payouts depend on policy coverage, exclusions and other rules. The function calculates an estimate; it does not automatically approve the claim.
+============================================================
+EXAMPLE 4: IDENTIFY POLICIES NEARING EXPIRY
+============================================================
+Scenario: ICMS needs to identify policies expiring within 30 days.
+Timer trigger runs every day
+   |
+   v
+Azure Function starts
+   |
+   v
++----------------------------------+
+|         AZURE FUNCTION           |
+|                                  |
+| Retrieves relevant policy data   |
+| Checks policy expiry dates       |
+| Identifies policies expiring     |
+| within the next 30 days          |
++----------------------------------+
+   |
+   v
+Returns matching policy records
+   |
+   v
+Notification workflow receives results
+   |
+   v
+Customers receive renewal reminders
+NOTE: The function identifies expiring policies. A separate component can handle notifications.
+============================================================
+EXAMPLE 5: IDENTIFY POSSIBLE DUPLICATE CLAIMS
+============================================================
+Scenario: A customer accidentally submits the same claim twice.
+Customer submits a claim
+   |
+   v
+.NET Backend receives claim
+   |
+   v
+Backend invokes Azure Function
+   |
+   v
++----------------------------------+
+|         AZURE FUNCTION           |
+|                                  |
+| Checks configured matching rules |
+| Compares policy number            |
+| Compares incident date            |
+| Compares other relevant details   |
++----------------------------------+
+   |
+   v
+Function returns matching result
+   |
+   +---------------------+
+   |                     |
+   v                     v
+Possible duplicate   No match found
+   |                     |
+   v                     v
+Backend flags claim  Normal claim
+for further review   processing
+NOTE: A possible match does not prove fraud. The function only identifies claims that meet the configured matching rules.
+============================================================
+EXAMPLE 6: PROCESS VEHICLE DAMAGE PHOTOGRAPHS
+============================================================
+Scenario: A customer uploads photographs of vehicle damage.
+Customer uploads photographs
+   |
+   v
+Azure Blob Storage
+   |
+   v
+Blob upload event triggers Azure Function
+   |
+   v
++----------------------------------+
+|         AZURE FUNCTION           |
+|                                  |
+| Reads uploaded image             |
+| Resizes image                    |
+| Converts image format if needed  |
++----------------------------------+
+   |
+   v
+Saves processed image to Blob Storage
+   |
+   v
+Function execution ends
+   |
+   v
+ICMS can use the processed image
+for further claim assessment
+NOTE: Resizing images is a straightforward function task. Detecting damage or estimating repair costs requires additional image-analysis logic or services.
+============================================================
+EXAMPLE 7: IDENTIFY DELAYED CLAIMS
+============================================================
+Scenario: Some claims have remained Pending for more than 7 days.
+Timer trigger runs every day
+   |
+   v
+Azure Function starts
+   |
+   v
+Retrieves pending claim records
+   |
+   v
++----------------------------------+
+|         AZURE FUNCTION           |
+|                                  |
+| Calculates pending duration      |
+| Identifies claims older than     |
+| the configured 7-day limit       |
++----------------------------------+
+   |
+   v
+Returns list of delayed claims
+   |
+   v
+Escalation workflow receives list
+   |
+   v
+Claims team receives an alert
+NOTE: The function identifies delayed claims. A separate workflow can notify the claims team.
+============================================================
+IMPORTANT: HOW TO UNDERSTAND THESE FLOWCHARTS
+============================================================
+1. A trigger starts a function. Examples include an HTTP request, timer, message or supported storage event.
+2. Azure Function executes the custom code written by the developer.
+3. The function produces a result, updates a resource or sends a message, depending on its implementation.
+4. Other components can use that result to continue the business process.
+5. The function does not need to manage the entire ICMS workflow.
+REMEMBER:
+Azure Function = TRIGGER → EXECUTE CUSTOM CODE → PRODUCE RESULT
+Logic Apps or .NET Backend = Can coordinate the remaining business steps.
+============================================================
+
+KEY POINTS:
+    - Runs your custom code.
+    - Supports languages such as C#, JavaScript and Python.
+    - Can execute code when an event occurs.
+    - Can respond to HTTP requests or scheduled events.
+    - Can process messages and files.
+
+Think:
+AZURE FUNCTIONS = RUN CUSTOM CODE WHEN NEEDED.
+
+
+============================================================
+4. WHY ARE THEY CALLED PAAS SERVICES?
+============================================================
+
+PaaS = Platform as a Service.
+
+Let's compare two approaches.
+
+OPTION A: HOST YOUR OWN APPLICATION ON A VIRTUAL MACHINE
+--------------------------------------------------------
+
+You may be responsible for:
+
+    Virtual machine
+         |
+         +--> Operating system maintenance
+         +--> Runtime installation
+         +--> Application deployment
+         +--> Security patching
+         +--> Capacity planning
+         +--> Application monitoring
+
+OPTION B: USE A MANAGED SERVICE
+-------------------------------
+
+For Logic Apps:
+
+    Configure your workflow
+             |
+             v
+    Azure runs the workflow
+
+For Azure Functions:
+
+    Write and deploy your code
+             |
+             v
+    Azure executes the function
+
+Azure manages much of the underlying infrastructure.
+
+However, you are still responsible for your workflow or code,
+configuration, permissions, monitoring and application logic.
+
+IMPORTANT:
+PaaS does NOT mean that Azure manages absolutely everything.
+
+It means Azure takes responsibility for much of the platform
+and infrastructure management.
+
+Also, serverless services are not necessarily free.
+Costs depend on the service, hosting plan, usage and resources.
+
+
+============================================================
+5. WHAT DOES SERVERLESS MEAN?
+============================================================
+
+You will frequently hear this term when learning Logic Apps
+and Azure Functions.
+
+Serverless does NOT mean that there are no servers.
+
+Servers still exist.
+
+Azure manages the underlying infrastructure so that you can
+focus more on your workflow or code instead of managing
+servers directly.
+
+For example:
+
+    WITHOUT A MANAGED SERVICE
+    -------------------------
+    Arrange hosting
+         |
+    Configure runtime
+         |
+    Deploy code
+         |
+    Manage capacity
+
+    WITH AZURE FUNCTIONS
+    --------------------
+    Write code
+         |
+    Configure the function
+         |
+    Deploy
+         |
+    Azure executes the code
+
+Some hosting plans can automatically scale according to
+workload demand.
+
+Certain plans can also charge according to execution or usage.
+Other plans have different pricing models.
+
+Therefore, SERVERLESS DOES NOT ALWAYS MEAN PAY ONLY WHEN CODE RUNS.
+
+
+============================================================
+6. LOGIC APPS VS FUNCTIONS: THE BASIC DIFFERENCE
+============================================================
+
+AZURE LOGIC APPS
+----------------
+Purpose:
+Connect systems and automate workflows.
+
+Example:
+When a claim is submitted:
+    1. Send an email.
+    2. Notify Teams.
+    3. Request approval.
+    4. Update another system.
+
+AZURE FUNCTIONS
+---------------
+Purpose:
+Execute custom code.
+
+Example:
+When a claim is submitted:
+    1. Read the claim details.
+    2. Calculate a risk score.
+    3. Apply custom business rules.
+    4. Return the result.
+
+CAN THEY WORK TOGETHER?
+-----------------------
+YES.
+
+For example:
+
+AZURE LOGIC APPS + AZURE FUNCTIONS
+ICMS (Insurance Claims Management System) — Real-World Example
+SCENARIO:
+A customer submits a vehicle insurance claim and uploads repair documents. ICMS needs to validate the uploaded documents, calculate the estimated claim amount, and notify the customer whether the documents are valid or further documents are required.
+SOLUTION: AZURE LOGIC APPS + AZURE FUNCTIONS
+Azure Logic Apps manages the workflow and connects the required services. Azure Functions executes the custom code to validate documents and calculate the estimated claim amount.
+FLOWCHART:
+Customer submits insurance claim
+          |
+          v
+.NET Backend saves claim details
+in Azure SQL Database
+          |
+          v
+Logic Apps workflow is triggered
+          |
+          v
+Logic Apps retrieves claim details
+and uploaded document information
+          |
+          v
+Logic Apps calls Azure Function
+          |
+          v
++-----------------------------------+
+|          AZURE FUNCTION           |
+|                                   |
+|  1. Checks document file type     |
+|  2. Checks file size              |
+|  3. Validates configured rules    |
+|  4. Calculates estimated payout   |
+|     if the required inputs exist  |
++-----------------------------------+
+          |
+          v
+Function returns validation result
+and estimated amount to Logic Apps
+          |
+          v
+Logic Apps checks the result
+          |
+          +----------------------+
+          |                      |
+          v                      v
+   Documents valid          Documents invalid
+          |                      |
+          v                      v
+Logic Apps requests       Logic Apps prepares
+claim processing         a request for missing
+to continue              or corrected documents
+          |                      |
+          v                      v
+Logic Apps sends          Logic Apps sends
+confirmation email       email requesting
+to customer              required documents
+          |                      |
+          v                      v
+Customer receives        Customer receives
+claim status update      document request
+          |                      |
+          v                      v
+        END                    END
+============================================================
+WHO DOES WHAT?
+============================================================
+AZURE LOGIC APPS:
+- Manages the sequence of workflow steps.
+- Calls the Azure Function.
+- Checks the returned result and selects the next action.
+- Connects to supported services to send emails or notifications.
+AZURE FUNCTIONS:
+- Executes the custom document-validation code.
+- Calculates the estimated payout when given the required inputs.
+- Returns the results to Logic Apps.
+.NET BACKEND:
+- Handles the ICMS application's core business operations.
+- Saves claim details and updates database records as required.
+- Provides the claim data needed by the workflow.
+IMPORTANT:
+The example assumes the Logic Apps workflow is configured to call the function and handle its result. The function does not automatically validate documents or calculate payouts; developers must implement the required rules in code.
+REMEMBER:
+LOGIC APPS = MANAGES THE WORKFLOW
+AZURE FUNCTIONS = EXECUTES CUSTOM CODE
+BOTH TOGETHER = AUTOMATE THE BUSINESS PROCESS
+
+============================================================
+7. REMEMBER THESE FOUR POINTS
+============================================================
+
+1. Logic Apps:
+   Automates workflows and connects systems.
+
+2. Azure Functions:
+   Runs custom code when triggered.
+
+3. PaaS:
+   Azure manages much of the underlying platform.
+
+4. Serverless:
+   You focus more on your workload and less on managing
+   servers directly.
+
+
+============================================================
+END OF TOPIC 1
+============================================================

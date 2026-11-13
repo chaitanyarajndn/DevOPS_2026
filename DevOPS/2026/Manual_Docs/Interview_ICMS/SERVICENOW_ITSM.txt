@@ -1,0 +1,302 @@
+SERVICENOW_ITSM – INTERVIEW NOTES
+Role: Azure Infrastructure / DevOps Engineer
+Project: ICMS (Insurance Claims Management System)
+
+1. WHAT IS SERVICENOW?
+
+* ServiceNow is a cloud-based platform used to manage IT services, incidents, service requests, problems, changes and approvals.
+* In an enterprise environment, teams use it to log issues, assign ownership, track resolution and maintain an audit trail.
+* As an Azure Infrastructure Engineer, I would use it to track production incidents, infrastructure change requests, access requests and maintenance activities.
+* ServiceNow is an ITSM tool. ITSM stands for Information Technology Service Management, which refers to the processes used to manage IT services.
+
+2. WHAT IS ITSM?
+   ITSM = Information Technology Service Management.
+
+ITSM defines how an organization handles IT incidents, requests, changes and problems.
+
+Main ITSM processes:
+
+* Incident Management → Restore a service that is interrupted or degraded.
+* Problem Management → Identify the root cause of recurring incidents.
+* Change Management → Assess, approve and control infrastructure or application changes.
+* Service Request Management → Handle standard requests such as access or resource provisioning.
+* Knowledge Management → Maintain troubleshooting guides, known errors and operational procedures.
+* Release Management → Plan and coordinate application or infrastructure releases.
+
+Important: ServiceNow is one platform used to implement these processes. ITSM itself is not a software product.
+
+3. INCIDENT vs PROBLEM vs CHANGE vs SERVICE REQUEST
+
+INCIDENT:
+An existing service is unavailable or not working correctly.
+Example: ICMS users cannot access the claims application because the backend service is failing.
+Action: Raise an incident, investigate logs and metrics, restore the service and document the resolution.
+
+PROBLEM:
+The underlying cause of one or more incidents needs to be identified.
+Example: ICMS backend pods repeatedly restart because the application is exceeding its memory limit.
+Action: Analyze recurring failures, identify the root cause and coordinate a permanent fix with the application team.
+
+CHANGE REQUEST:
+A planned modification to infrastructure or an application needs to be assessed and controlled.
+Example: Upgrade the ICMS AKS node pool or modify a production NSG rule.
+Action: Document the scope, impact, implementation plan, validation steps and rollback plan. Obtain required approval before implementation.
+
+SERVICE REQUEST:
+A user requests an approved service or standard activity.
+Example: A developer needs read access to an Azure Storage Account or access to application logs.
+Action: Validate the request, follow the access approval process, provision the required access and update the ticket.
+
+4. ICMS PROJECT – ITSM WORKFLOW
+
+Project architecture:
+Users
+|
+v
+Application Gateway + WAF
+|
+v
+AKS (Azure Kubernetes Service)
+|
++--> Angular Frontend
+|
++--> .NET / ASP.NET Core Backend
+|
+v
+Azure SQL Database
+
+Infrastructure and application monitoring:
+Azure Monitor + Log Analytics + Application Insights
+
+ITSM workflow for a production incident:
+
+Step 1: Issue Detection
+Azure Monitor detects a rise in backend errors, or users report that the ICMS claims page is not loading.
+
+Step 2: Incident Creation
+An incident is logged in ServiceNow with the affected service, environment, symptoms, business impact, timestamps and available monitoring evidence.
+
+Step 3: Priority Assessment
+The support team assesses the business impact and urgency to determine the incident priority.
+
+Step 4: Assignment
+The ticket is assigned to the appropriate application, Azure infrastructure, networking or database support team.
+
+Step 5: Investigation
+The assigned team checks relevant metrics, logs, application health, AKS status, Application Gateway health and network connectivity.
+
+Step 6: Service Restoration
+The responsible team applies an appropriate fix or recovery action. If a controlled production change is required, the applicable change approval process is followed.
+
+Step 7: Validation
+The team verifies application availability, backend health and connectivity to Azure SQL Database.
+
+Step 8: Resolution and Closure
+The ticket is updated with the cause, troubleshooting steps, recovery time and resolution details. Closure follows the organization's process.
+
+Flow:
+Detection → Incident Logged → Priority Assigned → Team Investigation
+→ Service Restored → Validation → Resolution Documented → Closure
+
+5. REAL ICMS EXAMPLE – PRODUCTION INCIDENT
+
+Scenario:
+Users cannot submit insurance claims. The frontend loads, but backend requests return errors.
+
+Investigation:
+
+* Check Application Gateway backend health and relevant access logs.
+* Check AKS workload status, pod restarts and application logs.
+* Review Azure Monitor metrics and Application Insights failures.
+* Verify connectivity between the backend and Azure SQL Database.
+* Identify the failing component before making changes.
+
+Possible findings:
+The backend application is failing because it cannot connect to Azure SQL Database.
+
+Resolution:
+The responsible team investigates the connection errors, validates network rules and database availability, and applies the appropriate fix.
+
+Ticket update:
+
+* Impact: ICMS claim submission is affected.
+* Root cause: Document the confirmed cause, not an assumption.
+* Resolution: Record the corrective action.
+* Validation: Confirm successful claim submission.
+* Closure: Follow the incident closure process.
+
+Interview point:
+I use monitoring evidence to narrow down the failure, coordinate with the responsible team and document the recovery in the incident ticket.
+
+6. WHAT IS CHANGE MANAGEMENT?
+
+Change Management controls modifications to production infrastructure and applications.
+
+Example: ICMS AKS node pool upgrade.
+
+Typical workflow:
+
+1. Raise a Change Request (CR) in ServiceNow.
+2. Document the reason, scope, affected resources and business impact.
+3. Prepare an implementation plan and validation checklist.
+4. Document risks, dependencies and rollback steps.
+5. Obtain the approvals required by the organization's change policy.
+6. Execute the change during the approved maintenance window.
+7. Validate the application and infrastructure.
+8. Record the outcome and close the change.
+
+Important:
+
+* A change ticket is not the same as a deployment pipeline.
+* ServiceNow manages the change record and approval workflow.
+* Azure DevOps or GitHub Actions can execute the approved deployment.
+* Approval requirements depend on the change type and company policy.
+
+7. TYPES OF CHANGES
+
+STANDARD CHANGE:
+A pre-authorized, repeatable, low-risk change with an established procedure.
+Example: An approved routine activity performed according to an existing standard procedure.
+
+NORMAL CHANGE:
+A change that requires assessment and approval according to the organization's change process.
+Example: Modifying a production NSG rule or upgrading an AKS node pool.
+
+EMERGENCY CHANGE:
+An urgent change needed to resolve a major incident or address a critical risk.
+Example: An urgent production network correction required to restore ICMS availability.
+
+Interview point:
+Emergency changes still require appropriate authorization and documentation. The approval process may be expedited according to company policy.
+
+8. WHAT IS PROBLEM MANAGEMENT?
+
+Problem Management focuses on finding and addressing the underlying cause of incidents.
+
+Example:
+ICMS backend pods restart repeatedly, and several incidents are raised over a week.
+
+Process:
+
+* Review incident history and identify the recurring pattern.
+* Correlate application logs, resource metrics and deployment history.
+* Identify the confirmed root cause.
+* Coordinate a permanent fix with the responsible team.
+* Track corrective actions and verify that the issue does not recur.
+
+Incident Management focuses on restoring service.
+Problem Management focuses on understanding and preventing recurrence.
+
+RCA = Root Cause Analysis.
+It documents why the issue occurred and what evidence supports the conclusion.
+
+CAPA = Corrective and Preventive Action.
+It records actions taken to correct the issue and reduce the chance of recurrence.
+
+9. WHAT IS SLA, PRIORITY AND SEVERITY?
+
+SLA = Service Level Agreement.
+
+An SLA defines agreed service targets, such as response and resolution times, where applicable.
+
+Priority determines how urgently a ticket should be handled. It is generally based on impact and urgency.
+
+Example:
+
+* P1: Critical business service outage affecting a major part of the business.
+* P2: Significant degradation or a major function unavailable, with limited workarounds.
+* P3: Limited impact affecting a smaller group or a non-critical function.
+
+Exact P1/P2/P3 definitions and SLA targets vary by organization.
+
+Impact = How much of the business or how many users are affected.
+Urgency = How quickly action is required.
+Priority = The resulting order in which the issue should be handled.
+
+Interview point:
+I assess the business impact and urgency, provide technical evidence and follow the established incident priority and escalation process.
+
+10. WHAT INFORMATION SHOULD AN INCIDENT TICKET CONTAIN?
+
+A good incident ticket should include:
+
+* Short description and detailed symptoms.
+* Affected application, service and environment.
+* Business impact and priority.
+* Time the issue started and relevant timestamps.
+* Monitoring alerts, logs and troubleshooting evidence.
+* Assigned team and actions taken.
+* Confirmed root cause, when established.
+* Resolution details and validation results.
+
+Never close an incident simply because the alert disappeared. Follow the organization's validation and closure requirements.
+
+11. HOW DOES SERVICENOW INTEGRATE WITH DEVOPS?
+
+Example workflow:
+
+Developer
+|
+v
+GitHub Pull Request
+|
+v
+Terraform Plan
+|
+v
+Required Review / Approval
+|
+v
+Merge to Main
+|
+v
+CI/CD Pipeline
+|
+v
+Azure Infrastructure Deployment
+|
+v
+Post-Deployment Validation
+|
+v
+Update Change Record / Deployment Status
+
+In this example:
+
+* ServiceNow tracks the change request, approvals and audit history.
+* GitHub manages source control and pull requests.
+* The CI/CD platform runs Terraform and deploys infrastructure.
+* Azure Monitor provides operational monitoring.
+* The responsible team records the result and closes the change when required.
+
+The integration can be implemented through supported connectors, APIs or automation. The exact workflow depends on the company's configuration.
+
+12. COMMON INTERVIEW QUESTIONS
+
+Q1. What is the difference between ServiceNow and Azure DevOps?
+ServiceNow is commonly used for enterprise ITSM processes, including incidents, service requests and changes. Azure DevOps manages development work, source control, builds, releases and work items.
+
+Q2. Does ServiceNow deploy Azure infrastructure?
+Not by itself in a typical ITSM setup. It can manage approvals and trigger integrated automation, while Terraform and the configured CI/CD platform perform the actual infrastructure deployment.
+
+Q3. What would you do if a P1 incident occurred in ICMS?
+I would acknowledge and assess the incident according to the escalation process, check monitoring evidence, identify the affected component, coordinate with the responsible teams, restore service safely and document the recovery. A root cause analysis would follow as required.
+
+Q4. Can a production change be performed without approval?
+Only when permitted by the organization's change policy. Normal changes generally require the prescribed approval, while emergency changes follow the defined emergency authorization process.
+
+Q5. What is a rollback plan?
+It describes how to return to a known working state if a change fails. The steps depend on the change, and rollback feasibility must be assessed before implementation.
+
+Q6. What is the difference between incident resolution and permanent resolution?
+Incident resolution restores the affected service. Permanent resolution addresses the underlying cause where possible, often through Problem Management and a controlled change.
+
+Q7. What happens if the same incident occurs repeatedly?
+I review previous incidents, correlate logs and metrics, identify the root cause, raise or update the problem record as required and track corrective actions.
+
+Q8. How do you use ServiceNow as an Azure Infrastructure Engineer?
+I use it to track incidents, infrastructure changes and service requests, record investigation findings, follow approval procedures and maintain an auditable record of operational activities.
+
+13. SHORT INTERVIEW ANSWER
+
+"ServiceNow is an ITSM platform used to manage incidents, service requests, problems and change requests. In an Azure infrastructure environment, incidents help us restore failed services, while change management controls planned production modifications. For our ICMS application, if users cannot submit claims, we investigate the issue using Azure Monitor, Log Analytics, Application Insights and the relevant Azure resource logs. We document the findings and recovery steps in the incident ticket. For planned activities such as an AKS node pool upgrade or a production network change, we follow the change process, obtain the required approvals, execute the change through the appropriate tools and validate the application afterward."

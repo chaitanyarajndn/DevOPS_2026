@@ -1,0 +1,24 @@
+parameters:
+  - name: stageName
+    type: string
+    default: 'TflintScan'
+  - name: displayName
+    type: string
+    default: 'Tflint Scan'
+  - name: condition
+    type: string
+    default: 'true'
+  - name: dependsOn
+    type: object
+    default: []
+
+stages:
+  - stage: ${{ parameters.stageName }}
+    displayName: ${{ parameters.displayName }}
+    condition: ${{ parameters.condition }}
+    dependsOn: ${{ parameters.dependsOn }}
+    jobs:
+      - template: ../jobs/tflint.yml
+        parameters:
+          jobName: ${{ parameters.stageName }}
+          displayName: ${{ parameters.displayName }}

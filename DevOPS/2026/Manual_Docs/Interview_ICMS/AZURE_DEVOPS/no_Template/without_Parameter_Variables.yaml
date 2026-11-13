@@ -1,0 +1,113 @@
+pool: CloudNivara-SelfHosted
+
+
+trigger:
+  branches:
+    include:
+      - main
+      - feature/*
+  paths:
+    include:
+      - environment/dev
+
+
+
+stages:
+- stage: TerraformInitAndValidate
+  displayName: Terraform Init And Validate
+  jobs:
+    - job:  TerraformInitAndValidate
+      displayName: Terraform Init And Validate
+      steps:
+
+      - task: TerraformTask@5
+        displayName: Terraform Init
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+          backendServiceArm: 'CloudNivara-Terraform-Azure'
+          backendAzureRmResourceGroupName: 'nova-backend'
+          backendAzureRmStorageAccountName: 'novatfstatefiles'
+          backendAzureRmContainerName: 'tfstate'
+          backendAzureRmKey: 'terraform.tfstate'
+
+      - task: TerraformTask@5
+        displayName: Terraform Validate
+        inputs:
+          provider: 'azurerm'
+          command: 'validate'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+
+- stage: TerraformPlan
+  displayName: Terraform Plan
+  jobs:
+    - job: TerraformPlan
+      displayName: Terraform Plan
+      steps:
+      - task: TerraformTask@5
+        displayName: Terraform Init
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+          backendServiceArm: 'CloudNivara-Terraform-Azure'
+          backendAzureRmResourceGroupName: 'nova-backend'
+          backendAzureRmStorageAccountName: 'novatfstatefiles'
+          backendAzureRmContainerName: 'tfstate'
+          backendAzureRmKey: 'terraform.tfstate'
+      - task: TerraformTask@5
+        displayName: Terraform Plan
+        inputs:
+          provider: 'azurerm'
+          command: 'plan'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+          environmentServiceNameAzureRM: 'CloudNivara-Terraform-Azure'
+
+- stage: ManualApproval
+  displayName: Manual Approval
+  dependsOn: Terraform Plan
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/'))
+  jobs:
+    - job: ManualApproval
+      displayName: Manual Approval
+      steps:
+      - task: ManualValidation@1
+        inputs:
+          notifyUsers: 'chaitanyarajndn_gmail.com#EXT#@chaitanyarajndngmail.onmicrosoft.com'
+          approvers: 'pim-test-user@chaitanyarajndngmail.onmicrosoft.com'
+          allowApproversToApproveTheirOwnRuns: false
+          instructions: 'Kindly Provide you Inputs or Approve it.'
+
+- stage: TerraformApply
+  displayName: Terraform Apply
+  dependsOn: Manual Approval
+  jobs:
+    - job: TerraformInit
+      displayName: Terraform Init
+      steps:
+      - task: TerraformTask@5
+        displayName: Terraform Init
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+          backendServiceArm: 'CloudNivara-Terraform-Azure'
+          backendAzureRmResourceGroupName: 'nova-backend'
+          backendAzureRmStorageAccountName: 'novatfstatefiles'
+          backendAzureRmContainerName: 'tfstate'
+          backendAzureRmKey: 'terraform.tfstate'
+      
+      - task: TerraformTask@5
+        displayName: Terraform Apply
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+          environmentServiceNameAzureRM: 'CloudNivara-Terraform-Azure'
+
+
+
+
+
+

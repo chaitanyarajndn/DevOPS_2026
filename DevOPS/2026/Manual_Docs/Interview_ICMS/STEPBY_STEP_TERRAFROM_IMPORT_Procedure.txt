@@ -1,0 +1,221 @@
+================================================================================================================
+        TERRAFORM IMPORT BLOCK — PRACTICAL IMPLEMENTATION USING CHILD MODULE
+        Azure Infrastructure | Terraform v1.15.6 | AzureRM v4.80.0
+================================================================================================================
+OBJECTIVE:
+Azure Portal se manually create kiye gaye existing Resource Group `rg-app` ko Terraform ke existing child module
+ke through import karna, bina Resource Group ko dobara create kiye.
+ENVIRONMENT:
+Working Directory : cloudnivara_2/environment/dev
+Terraform Version : v1.15.6
+AzureRM Provider  : v4.80.0
+Existing Terraform Resource Group : rg-web
+Existing Terraform VNet           : vnet-web
+Manually Created Resource Group   : rg-app
+================================================================================================================
+STEP 1: CREATE EXISTING TERRAFORM INFRASTRUCTURE
+----------------------------------------------------------------------------------------------------------------
+Command:
+    terraform apply -auto-approve
+
+RESULT:
+    Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+
+Resources created:
+    Resource Group : rg-web
+    Virtual Network: vnet-web
+
+Terraform state addresses:
+    module.resource_group.azurerm_resource_group.RG["rga"]
+    module.virtual_network.azurerm_virtual_network.VN["vna"]
+
+STEP 2: VERIFY EXISTING TERRAFORM STATE
+----------------------------------------------------------------------------------------------------------------
+Command:
+    terraform state list
+
+Output:
+    module.resource_group.azurerm_resource_group.RG["rga"]
+    module.virtual_network.azurerm_virtual_network.VN["vna"]
+
+Explanation:
+    Dono resources Terraform state mein present hain. Ab hum ek alag Resource Group import karenge, isliye existing
+    `rg-web` aur `vnet-web` ko modify karne ki zaroorat nahi hai.
+
+STEP 3: CREATE A NEW RESOURCE GROUP MANUALLY IN AZURE PORTAL
+----------------------------------------------------------------------------------------------------------------
+Azure Portal -> Resource Groups -> Create
+
+Details:
+    Resource Group Name : rg-app
+    Region              : Central India
+
+Click:
+    Review + Create -> Create
+
+IMPORTANT:
+    `rg-app` Azure Portal se create hua hai, Terraform se nahi. Isliye ye abhi Terraform state mein managed nahi tha.
+
+STEP 4: COPY THE EXISTING AZURE RESOURCE ID
+----------------------------------------------------------------------------------------------------------------
+Azure Portal -> rg-app -> Resource JSON / Properties -> Resource ID
+
+Resource ID:
+    /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/rg-app
+
+Explanation:
+    Import block ka `id` existing Azure resource ka actual Resource ID hota hai. Isse Terraform identify karta hai
+    ki Azure mein kis resource ko import karna hai.
+
+STEP 5: ADD rg-app ENTRY IN terraform.tfvars
+----------------------------------------------------------------------------------------------------------------
+File:
+    environment/dev/terraform.tfvars
+
+Configuration:
+    rg_map = {
+      rga = {
+        name     = "rg-web"
+        location = "central india"
+      }
+      rgtry = {
+        name     = "rg-app"
+        location = "central india"
+      }
+    }
+
+Explanation:
+    `rg_map` existing Resource Group module ka input map hai.
+    `rga`   -> Existing Terraform-managed Resource Group `rg-web`.
+    `rgtry` -> Azure mein existing Resource Group `rg-app` ke liye nayi Terraform configuration entry.
+
+    `rgtry` map key hi Terraform resource address mein use hogi. Sirf variable entry add karne se Terraform normally
+    resource create karne ka plan bana sakta hai; import block us existing resource ko state mein import karne ke
+    liye mapping define karega.
+
+NOTE:
+    `rg_map` aur uska object structure tere existing module configuration ke according hai.
+
+STEP 6: CREATE imports.tf FILE
+----------------------------------------------------------------------------------------------------------------
+File Path:
+    environment/dev/import.tf
+
+NOTE:
+    `import.tf` koi fixed filename nahi hai. `imports.tf` bhi use kar sakte ho. Terraform working directory ki
+    `.tf` configuration files automatically load karta hai.
+
+Code:
+    import {
+      to = module.resource_group.azurerm_resource_group.RG["rgtry"]
+      id = "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/rg-app"
+    }
+
+EXPLANATION:
+    `to` = Terraform configuration mein target resource address.
+           module.resource_group -> Root module mein child module ka naam.
+           azurerm_resource_group.RG -> Child module ka resource address.
+           ["rgtry"] -> terraform.tfvars mein define ki gayi map key.
+
+    `id` = Azure mein pehle se existing `rg-app` ka Resource ID.
+
+    Import block existing Azure resource ko Terraform resource address ke saath map karta hai.
+
+STEP 7: RUN TERRAFORM PLAN
+----------------------------------------------------------------------------------------------------------------
+Command:
+    terraform plan
+
+EXPECTED OUTPUT:
+    module.resource_group.azurerm_resource_group.RG["rgtry"]: Preparing import...
+    [id=/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/rg-app]
+
+    Terraform will perform the following actions:
+
+      # module.resource_group.azurerm_resource_group.RG["rgtry"] will be imported
+        resource "azurerm_resource_group" "RG" {
+            id         = "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/rg-app"
+            location   = "centralindia"
+            managed_by = null
+            name       = "rg-app"
+            tags       = {}
+        }
+
+    Plan: 1 to import, 0 to add, 0 to change, 0 to destroy.
+
+EXPLANATION:
+    `1 to import` -> Existing rg-app Terraform state mein import hoga.
+    `0 to add`    -> Naya Azure Resource Group create nahi hoga.
+    `0 to change` -> Koi infrastructure update planned nahi hai.
+    `0 to destroy`-> Koi resource delete nahi hoga.
+
+IMPORTANT:
+    Agar plan mein unexpected create, update, replacement ya destroy action dikhe, toh apply karne se pehle
+    configuration aur resource address verify karo.
+
+STEP 8: EXECUTE THE IMPORT
+----------------------------------------------------------------------------------------------------------------
+Command:
+    terraform apply -auto-approve
+
+EXPECTED OUTPUT:
+    module.resource_group.azurerm_resource_group.RG["rgtry"]: Preparing import...
+    [id=/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/rg-app]
+
+    module.resource_group.azurerm_resource_group.RG["rgtry"]: Importing...
+    [id=/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/rg-app]
+
+    module.resource_group.azurerm_resource_group.RG["rgtry"]: Import complete
+    [id=/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/rg-app]
+
+    Apply complete! Resources: 1 imported, 0 added, 0 changed, 0 destroyed.
+
+RESULT:
+    rg-app successfully Terraform state mein import ho gaya. Azure mein dobara Resource Group create nahi hua.
+
+STEP 9: VERIFY THE FINAL STATE
+----------------------------------------------------------------------------------------------------------------
+Command:
+    terraform state list
+
+Expected addresses:
+    module.resource_group.azurerm_resource_group.RG["rga"]
+    module.resource_group.azurerm_resource_group.RG["rgtry"]
+    module.virtual_network.azurerm_virtual_network.VN["vna"]
+
+Inspect imported resource:
+    terraform state show 'module.resource_group.azurerm_resource_group.RG["rgtry"]'
+
+FINAL VALIDATION:
+    terraform plan
+
+Expected:
+    No changes. Your infrastructure matches the configuration.
+
+    Ye result tab expected hai jab Terraform configuration aur actual Azure resource aligned hon. Agar changes
+    propose hote hain, toh unka reason investigate karo.
+
+================================================================================================================
+IMPORTANT LEARNING
+================================================================================================================
+1. Traditional `terraform import` CLI command ke unlike, import block ko Terraform configuration mein define karte hain.
+2. Import block kisi bhi suitable `.tf` file mein likh sakte hain; filename fixed nahi hai.
+3. `terraform.tfvars` mein input variable values define hoti hain; import block wahan nahi likhte.
+4. `for_each` use karte waqt target resource address mein correct map key dena zaroori hai.
+5. Import block ke liye corresponding Terraform resource configuration available honi chahiye.
+6. `terraform plan` import ko identify karta hai; `terraform apply` import operation execute karta hai.
+7. Successful import ke baad bhi `terraform plan` run karke configuration aur state verify karna chahiye.
+8. Enterprise production mein `-auto-approve` use karne se pehle approved plan aur change-control process follow karo.
+
+INTERVIEW ANSWER:
+"I created an additional Resource Group named rg-app manually through the Azure Portal. I added its configuration
+to the existing for_each map and defined an import block targeting the child module resource address. Terraform
+Plan showed one resource to import, with zero additions, changes or destructions. After reviewing the plan, I
+applied it and verified that the existing Resource Group was imported into Terraform state without being recreated."
+
+OFFICIAL REFERENCES:
+Terraform Import Blocks:
+https://developer.hashicorp.com/terraform/language/block/import
+Terraform State List:
+https://developer.hashicorp.com/terraform/cli/commands/state/list
+================================================================================================================

@@ -1,0 +1,32 @@
+parameters:
+  - name: stageName
+    type: string
+    default: 'ManualApproval'
+  - name: displayName
+    type: string
+    default: 'Manual Validate'
+  - name: dependsOn
+    type: object
+    default:
+      - TflintScan
+      - CheckovScan
+      - TfsecScan
+      - TerraformInitAndValidate
+      - TerraformPlan
+  - name: approvers
+    type: string
+  - name: allowApproversToApproveTheirOwnRuns
+    type: boolean
+    default: true
+
+stages:
+  - stage: ${{ parameters.stageName }}
+    displayName: ${{ parameters.displayName }}
+    dependsOn: ${{ parameters.dependsOn }}
+    jobs:
+      - template: ../jobs/manual-approval.yml
+        parameters:
+          jobName: ManualValidate
+          displayName: Manual Validate
+          approvers: ${{ parameters.approvers }}
+          allowApproversToApproveTheirOwnRuns: ${{ parameters.allowApproversToApproveTheirOwnRuns }}

@@ -1,0 +1,13 @@
+parameters:
+  - name: approvers
+    type: string
+  - name: allowApproversToApproveTheirOwnRuns
+    type: boolean
+    default: true
+
+steps:
+  - task: ManualValidation@1
+    displayName: 'Manual Validation'
+    inputs:
+      approvers: ${{ parameters.approvers }}
+      allowApproversToApproveTheirOwnRuns: ${{ parameters.allowApproversToApproveTheirOwnRuns }}

@@ -1,0 +1,403 @@
+AZURE SQL DATABASE – INTERVIEW NOTES
+ROLE: AZURE INFRASTRUCTURE ENGINEER
+============================================================
+1. WHAT IS AZURE SQL DATABASE?
+============================================================
+• Azure SQL Database is a fully managed PaaS (Platform as a Service) relational database.
+• Used to store application data such as customer details, insurance claims, policies and transactions.
+• Example: ICMS application (Angular + .NET + Azure SQL Database).
+• Microsoft manages the underlying infrastructure, OS patching, database engine updates, automated backups and built-in high availability.
+• Infrastructure Engineer manages connectivity, network security, identity access, monitoring, availability configuration and infrastructure troubleshooting.
+• Important: PaaS does not mean zero responsibility. Database permissions, data protection and application connectivity still require configuration.
+
+============================================================
+2. AZURE SQL FAMILY – IMPORTANT DIFFERENCES
+============================================================
+Azure SQL Database       → PaaS; individual databases; minimal infrastructure management.
+Azure SQL Managed Instance → PaaS; instance-level capabilities and greater SQL Server compatibility.
+SQL Server on Azure VM   → IaaS; customer manages the VM, OS, SQL installation, patching and much of HA/backup configuration.
+
+INTERVIEW: Why choose Azure SQL Database?
+ANSWER: When an application needs a managed relational database without managing the underlying operating system or database server infrastructure.
+
+INTERVIEW: Is Azure SQL Database deployed inside our VNet like AKS nodes?
+ANSWER: No. Azure SQL Database is a PaaS service. We can connect privately using a Private Endpoint in our VNet.
+
+============================================================
+3. AZURE SQL RESOURCE HIERARCHY
+============================================================
+Azure Subscription
+  └── Resource Group
+       └── Logical SQL Server
+            ├── ICMS-Dev Database
+            ├── ICMS-Test Database
+            └── ICMS-Prod Database
+
+• Logical SQL Server is a logical management boundary, NOT a customer-managed VM.
+• It provides the SQL connection endpoint and server-level configuration.
+• Database stores the actual application data.
+• Elastic Pool allows multiple databases to share a pool of compute resources.
+• Example: ICMS-Dev and ICMS-Test may share an Elastic Pool if their workload patterns and requirements permit it.
+
+============================================================
+4. AZURE SQL NETWORKING – MOST IMPORTANT
+============================================================
+Default SQL FQDN : <server-name>.database.windows.net
+Default TCP Port : 1433
+
+A) PUBLIC ENDPOINT
+Application/VM → SQL Public Endpoint → SQL Firewall Rules → Database
+
+• The public endpoint does not automatically allow every client to connect.
+• SQL firewall rules control which client IP addresses can access the server.
+• Server-level firewall rules apply to all databases on that logical server.
+• Keep allowed IP ranges restricted.
+• "Allow Azure services and resources to access this server" can permit connections from Azure resources outside your own subscription/VNet.
+• For production workloads, prefer private connectivity when required by the security architecture.
+
+B) PRIVATE ENDPOINT (PREFERRED FOR PRIVATE CONNECTIVITY)
+AKS/VM in Spoke VNet
+       |
+       v
+VNet Peering / Approved Network Path
+       |
+       v
+Private Endpoint (Private IP)
+       |
+       v
+Azure SQL Database
+
+• Private Endpoint provides a private IP address from a VNet subnet.
+• It uses Azure Private Link to connect privately to Azure SQL Database.
+• Private DNS Zone: privatelink.database.windows.net
+• Link the Private DNS Zone to the VNets that require private name resolution.
+• Application connection string should use:
+  <server-name>.database.windows.net
+• With correct Private DNS configuration, the normal FQDN resolves through the private-link DNS chain to the private IP.
+• Do not configure the application to use the private IP directly as the SQL hostname.
+• Disable public network access separately after validating private connectivity and required dependencies.
+
+C) SERVICE ENDPOINT VS PRIVATE ENDPOINT
+Service Endpoint:
+• SQL service endpoint remains public.
+• Azure identifies traffic from the configured VNet subnet.
+• Does not assign a private IP to the SQL service inside your VNet.
+
+Private Endpoint:
+• Provides a private IP inside your VNet.
+• Uses Azure Private Link.
+• Supports private connectivity to the PaaS service.
+
+INTERVIEW: Which would you prefer for production?
+ANSWER: Usually Private Endpoint when private connectivity and reduced public exposure are required.
+
+D) NETWORK COMPONENTS TO CHECK
+• NSG (Network Security Group): Required outbound traffic from the application subnet.
+• TCP 1433: Default SQL connectivity port; connection policy can affect additional port requirements.
+• DNS: SQL FQDN must resolve to the intended private IP.
+• VNet Peering: Required connectivity between relevant VNets when using a hub-and-spoke design.
+• UDR (User Defined Route): Verify routes when traffic traverses a firewall or NVA.
+• Azure Firewall: Check network rules and permitted traffic if the path uses it.
+• Private Endpoint: Verify approval and connection status.
+• Public Network Access: Ensure the configuration matches the intended connection path.
+
+============================================================
+5. AZURE SQL SECURITY
+============================================================
+A) MICROSOFT ENTRA ID AUTHENTICATION
+• Supports identity-based authentication for users and applications.
+• Enables centralized identity management and supports MFA for applicable user access.
+• Entra-only authentication can disable SQL authentication where supported and appropriate.
+• Database permissions must still be configured.
+
+B) MANAGED IDENTITY
+• Applications can authenticate using system-assigned or user-assigned managed identity.
+• Avoids storing database passwords in application configuration.
+• The identity must be configured as a database user and granted the required permissions.
+• Managed Identity does NOT automatically grant access to database tables.
+
+C) ENCRYPTION
+• TLS: Protects data in transit.
+• TDE (Transparent Data Encryption): Protects data at rest.
+• Always Encrypted: Protects selected sensitive data and requires appropriate client/application support.
+
+D) AUDITING AND THREAT PROTECTION
+• SQL Auditing: Records configured database events for security and compliance investigations.
+• Microsoft Defender for SQL: Provides security posture and threat-detection capabilities depending on configuration and plan.
+• Azure Monitor: Provides operational metrics, logs and alerts.
+
+INTERVIEW: How would you secure a production SQL Database?
+ANSWER:
+Private Endpoint + Private DNS + Public Access Disabled + Microsoft Entra ID/Managed Identity + Least-Privilege Permissions + Encryption + Auditing + Monitoring.
+
+============================================================
+6. COMPUTE, PRICING AND SERVICE TIERS
+============================================================
+PURCHASING MODELS:
+• vCore: Provides control over compute capacity; storage is configured separately within supported limits.
+• DTU (Database Transaction Unit): Bundles compute, memory and I/O resources into a combined performance measure.
+
+COMPUTE OPTIONS:
+• Provisioned: Compute capacity is allocated in advance.
+• Serverless: Compute can automatically scale within configured limits; supported configurations can automatically pause when idle.
+
+SERVICE TIERS:
+• General Purpose: Balanced cost and performance for many standard workloads.
+• Business Critical: Designed for demanding workloads requiring low latency and higher performance.
+• Hyperscale: Designed for very large databases and a scalable storage architecture.
+• Elastic Pool: Multiple databases share a pool of compute resources.
+
+INTERVIEW: Which tier would you choose?
+ANSWER: Based on workload, database size, performance requirements, availability needs and budget. Validate the choice using monitoring data and workload testing.
+
+============================================================
+7. HIGH AVAILABILITY (HA) VS DISASTER RECOVERY (DR)
+============================================================
+HA = Keeps the service available during supported failures.
+DR = Recovers the service after major disruptions, including regional outages.
+
+• Built-in High Availability: Azure SQL Database manages underlying platform resilience and recovery.
+• Zone Redundancy: Helps protect against availability-zone failures where supported and configured.
+• Active Geo-Replication: Maintains secondary databases in another region or supported location.
+• Failover Groups: Provide coordinated geo-replication and failover for groups of databases using listener endpoints.
+• Geo-Restore: Restores a database using geo-redundant backups when available.
+
+INTERVIEW: Does automated backup provide instant regional failover?
+ANSWER: No. Backup-based recovery and configured geo-replication/failover are different recovery mechanisms.
+
+RPO (Recovery Point Objective):
+Maximum acceptable data loss measured in time.
+
+RTO (Recovery Time Objective):
+Maximum acceptable time to restore service.
+
+INTERVIEW: How do you plan DR?
+ANSWER:
+Identify RPO/RTO → Select a suitable HA/DR design → Configure replication or backup options → Document failover steps → Test recovery → Validate application connectivity.
+
+============================================================
+8. BACKUP AND RESTORE
+============================================================
+• Azure SQL Database automatically performs backups.
+• PITR (Point-in-Time Restore): Restores a database to a selected point within the available retention period.
+• LTR (Long-Term Retention): Retains selected backups for extended periods according to configured policies.
+• Backup storage redundancy must align with recovery and regional resilience requirements.
+• Test restores and document recovery procedures.
+
+INTERVIEW: A production table was accidentally deleted. What will you do?
+ANSWER:
+1. Assess impact and coordinate with the application/DBA team.
+2. Identify the required recovery point.
+3. Restore the database to a separate database.
+4. Validate the required data.
+5. Recover the necessary data using an approved procedure.
+6. Perform controlled recovery and verify application functionality.
+
+IMPORTANT:
+PITR generally restores a database copy; it does not automatically undo one table deletion in the existing database.
+
+INTERVIEW: Backup vs Replication?
+ANSWER:
+Backup    → Recovery from accidental deletion, corruption and data loss.
+Replication → Supports availability and/or read access, depending on the configuration.
+
+============================================================
+9. MONITORING AND ALERTING
+============================================================
+Azure Monitor:
+• Collects metrics and configured diagnostic data.
+• Supports alerting on resource conditions and performance indicators.
+
+Log Analytics:
+• Centralizes supported logs for investigation when diagnostic settings are configured.
+
+Monitor:
+• CPU and compute utilization.
+• Data I/O and storage consumption.
+• Connection failures and timeouts.
+• Resource limits and throttling symptoms.
+• Query performance indicators where available.
+• Configured audit events and diagnostic logs.
+
+INTERVIEW: Application is slow, but SQL Database is online. What will you check?
+ANSWER:
+1. Check application latency and recent deployment changes.
+2. Check SQL compute, I/O and storage metrics.
+3. Check connection failures, timeouts and throttling.
+4. Verify network latency and connectivity.
+5. Escalate query plans, indexing and SQL-level diagnosis to the DBA/application team when necessary.
+
+============================================================
+10. REAL-WORLD INFRASTRUCTURE TROUBLESHOOTING
+============================================================
+SCENARIO 1: AKS POD CANNOT CONNECT TO AZURE SQL
+
+1. Verify the SQL FQDN and application connection configuration.
+2. Check DNS resolution from the pod or an appropriate diagnostic environment.
+3. Confirm that the FQDN resolves to the expected private IP.
+4. Verify Private Endpoint approval and Private DNS Zone links.
+5. Check NSGs, UDRs, Azure Firewall and the network route.
+6. Test TCP connectivity to the required SQL port.
+7. If networking works, investigate authentication and database permissions.
+
+SCENARIO 2: PRIVATE ENDPOINT EXISTS, BUT CONNECTION FAILS
+
+Check in this order:
+DNS → Private Endpoint Status → Routing/NSG/Firewall → TCP Connectivity → Authentication → Database Permissions.
+
+IMPORTANT:
+A Private Endpoint alone does not guarantee private connectivity. DNS, routing and access configuration must also be correct.
+
+SCENARIO 3: DATABASE IS SLOW
+
+• Check Azure Monitor metrics and resource limits.
+• Investigate throttling, connection failures and application latency.
+• Check recent infrastructure or application changes.
+• Escalate query execution plans and indexing to the DBA/application team.
+
+SCENARIO 4: REGIONAL OUTAGE
+
+• Follow the approved DR runbook.
+• Check the configured geo-replication, failover group or backup-based recovery options.
+• Confirm recovery objectives and secondary-region readiness.
+• Validate application connection strings, listener endpoints and DNS behavior.
+• Verify application functionality after recovery.
+
+SCENARIO 5: UNEXPECTED HIGH COST
+
+• Review compute tier and vCore/DTU sizing.
+• Review serverless configuration and auto-pause eligibility.
+• Check storage consumption and backup retention.
+• Review Elastic Pool utilization.
+• Right-size resources using actual workload metrics.
+
+============================================================
+11. TERRAFORM – INFRASTRUCTURE ENGINEER LEVEL
+============================================================
+Common AzureRM resource types:
+
+azurerm_mssql_server
+  → Creates the logical SQL server.
+
+azurerm_mssql_database
+  → Creates the SQL database.
+
+azurerm_mssql_firewall_rule
+  → Configures a SQL server firewall rule.
+
+azurerm_private_endpoint
+  → Creates the Private Endpoint.
+
+azurerm_private_dns_zone
+  → Creates the Private DNS Zone.
+
+azurerm_private_dns_zone_virtual_network_link
+  → Links the DNS Zone to a VNet.
+
+Infrastructure best practices:
+• Store Terraform state securely in Azure Storage.
+• Use least-privilege access for deployment identities.
+• Use secure authentication in CI/CD pipelines.
+• Do not hardcode SQL administrator passwords in Terraform files.
+• Never commit credentials to Git repositories.
+• Remember that sensitive values can still be stored in Terraform state.
+• Review the current AzureRM provider documentation before implementation.
+
+============================================================
+12. INTERVIEW QUESTIONS – QUICK REVISION
+============================================================
+Q1. What is Azure SQL Database?
+A. A fully managed PaaS relational database service.
+
+Q2. What is the default SQL FQDN?
+A. <server-name>.database.windows.net
+
+Q3. What is the default TCP port?
+A. 1433.
+
+Q4. What does a Private Endpoint provide?
+A. A private IP in a VNet for connectivity to a supported PaaS service through Private Link.
+
+Q5. Does creating a Private Endpoint disable public access?
+A. No. Public network access must be disabled separately when required.
+
+Q6. Why use a Private DNS Zone?
+A. To resolve the SQL hostname to the private endpoint IP for private connectivity.
+
+Q7. What is the difference between HA and DR?
+A. HA addresses availability during failures; DR addresses recovery from major disruptions.
+
+Q8. What is PITR?
+A. Point-in-time database restoration within the available backup retention window.
+
+Q9. What is a Failover Group?
+A. A configured geo-replication and failover mechanism for a group of Azure SQL databases.
+
+Q10. Why use Managed Identity?
+A. To authenticate an application without storing a database password, while granting only the required permissions.
+
+Q11. How do you secure production SQL?
+A. Private connectivity, restricted public access, identity controls, least privilege, encryption, auditing and monitoring.
+
+Q12. What is the difference between Azure SQL Database and SQL Server on a VM?
+A. SQL Database is PaaS; SQL Server on a VM is IaaS and requires more customer management.
+
+Q13. What would you check if SQL connectivity suddenly stopped?
+A. DNS, routing, NSG, firewall, Private Endpoint status, TCP connectivity, authentication and database permissions.
+
+Q14. What is an Elastic Pool?
+A. A shared compute pool for multiple databases with varying workload demands.
+
+Q15. What is the difference between geo-replication and backup?
+A. Geo-replication supports availability and failover; backups support restoration to a recoverable point.
+
+============================================================
+13. MICROSOFT LEARN – OFFICIAL DOCUMENTATION
+============================================================
+1. Azure SQL Database Overview:
+https://learn.microsoft.com/en-us/azure/azure-sql/database/sql-database-paas-overview
+
+2. Secure Azure SQL Database:
+https://learn.microsoft.com/en-us/azure/azure-sql/database/secure-database
+
+3. Private Endpoint Overview:
+https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview
+
+4. Network Access Controls:
+https://learn.microsoft.com/en-us/azure/azure-sql/database/network-access-controls-overview
+
+5. High Availability and Disaster Recovery:
+https://learn.microsoft.com/en-us/azure/azure-sql/database/business-continuity-high-availability-disaster-recover-hadr-overview
+
+6. Azure SQL Database Reliability:
+https://learn.microsoft.com/en-us/azure/reliability/reliability-sql-database
+
+7. Microsoft Entra-Only Authentication:
+https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-azure-ad-only-authentication
+
+============================================================
+FINAL INTERVIEW PRIORITY
+============================================================
+MUST KNOW:
+• PaaS vs IaaS
+• Private Endpoint + Private DNS
+• Public network access and SQL firewall rules
+• Managed Identity and database permissions
+• HA vs DR, RPO vs RTO
+• PITR and automated backups
+• Azure Monitor and troubleshooting
+• AKS-to-SQL private connectivity
+
+SHOULD KNOW:
+• vCore vs DTU
+• Service tiers and Elastic Pools
+• Geo-Replication and Failover Groups
+• Terraform resource types
+• SQL security and auditing
+
+NOT YOUR MAIN FOCUS:
+• Complex SQL queries
+• Index design
+• Query execution-plan tuning
+• Detailed database administration
+============================================================

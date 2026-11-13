@@ -1,0 +1,43 @@
+parameters:
+  - name: stageName
+    type: string
+    default: 'TerraformApply'
+  - name: displayName
+    type: string
+    default: 'Terraform Apply'
+  - name: dependsOn
+    type: object
+    default:
+      - ManualApproval
+  - name: condition
+    type: string
+    default: "and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))"
+  - name: workingDirectory
+    type: string
+  - name: backendServiceArm
+    type: string
+  - name: backendAzureRmResourceGroupName
+    type: string
+  - name: backendAzureRmStorageAccountName
+    type: string
+  - name: backendAzureRmContainerName
+    type: string
+  - name: backendAzureRmKey
+    type: string
+
+stages:
+  - stage: ${{ parameters.stageName }}
+    displayName: ${{ parameters.displayName }}
+    dependsOn: ${{ parameters.dependsOn }}
+    condition: ${{ parameters.condition }}
+    jobs:
+      - template: ../jobs/terraform-apply.yml
+        parameters:
+          jobName: TerraformApply
+          displayName: Terraform Apply
+          workingDirectory: ${{ parameters.workingDirectory }}
+          backendServiceArm: ${{ parameters.backendServiceArm }}
+          backendAzureRmResourceGroupName: ${{ parameters.backendAzureRmResourceGroupName }}
+          backendAzureRmStorageAccountName: ${{ parameters.backendAzureRmStorageAccountName }}
+          backendAzureRmContainerName: ${{ parameters.backendAzureRmContainerName }}
+          backendAzureRmKey: ${{ parameters.backendAzureRmKey }}

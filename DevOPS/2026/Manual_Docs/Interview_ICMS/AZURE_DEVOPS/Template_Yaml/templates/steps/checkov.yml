@@ -1,0 +1,8 @@
+steps:
+  - task: PowerShell@2
+    displayName: 'Checkov Scan'
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "===== Scan Checkov ====="
+        checkov -d . --soft-fail

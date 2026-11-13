@@ -1,0 +1,24 @@
+parameters:
+  - name: stageName
+    type: string
+    default: 'CheckovScan'
+  - name: displayName
+    type: string
+    default: 'Checkov Scan'
+  - name: condition
+    type: string
+    default: 'true'
+  - name: dependsOn
+    type: object
+    default: []
+
+stages:
+  - stage: ${{ parameters.stageName }}
+    displayName: ${{ parameters.displayName }}
+    condition: ${{ parameters.condition }}
+    dependsOn: ${{ parameters.dependsOn }}
+    jobs:
+      - template: ../jobs/checkov.yml
+        parameters:
+          jobName: ${{ parameters.stageName }}
+          displayName: ${{ parameters.displayName }}

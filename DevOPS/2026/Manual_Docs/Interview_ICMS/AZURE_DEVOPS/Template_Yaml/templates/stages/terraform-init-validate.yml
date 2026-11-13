@@ -1,0 +1,41 @@
+parameters:
+  - name: stageName
+    type: string
+    default: 'TerraformInitAndValidate'
+  - name: displayName
+    type: string
+    default: 'TerraformInitAndValidate'
+  - name: dependsOn
+    type: object
+    default:
+      - TflintScan
+      - CheckovScan
+      - TfsecScan
+  - name: workingDirectory
+    type: string
+  - name: backendServiceArm
+    type: string
+  - name: backendAzureRmResourceGroupName
+    type: string
+  - name: backendAzureRmStorageAccountName
+    type: string
+  - name: backendAzureRmContainerName
+    type: string
+  - name: backendAzureRmKey
+    type: string
+
+stages:
+  - stage: ${{ parameters.stageName }}
+    displayName: ${{ parameters.displayName }}
+    dependsOn: ${{ parameters.dependsOn }}
+    jobs:
+      - template: ../jobs/terraform-init-validate.yml
+        parameters:
+          jobName: TerraformInit
+          displayName: TerraformInit
+          workingDirectory: ${{ parameters.workingDirectory }}
+          backendServiceArm: ${{ parameters.backendServiceArm }}
+          backendAzureRmResourceGroupName: ${{ parameters.backendAzureRmResourceGroupName }}
+          backendAzureRmStorageAccountName: ${{ parameters.backendAzureRmStorageAccountName }}
+          backendAzureRmContainerName: ${{ parameters.backendAzureRmContainerName }}
+          backendAzureRmKey: ${{ parameters.backendAzureRmKey }}

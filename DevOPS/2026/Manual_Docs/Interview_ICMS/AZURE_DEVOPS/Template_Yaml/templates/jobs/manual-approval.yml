@@ -1,0 +1,22 @@
+parameters:
+  - name: jobName
+    type: string
+    default: 'ManualValidate'
+  - name: displayName
+    type: string
+    default: 'Manual Validate'
+  - name: approvers
+    type: string
+  - name: allowApproversToApproveTheirOwnRuns
+    type: boolean
+    default: true
+
+jobs:
+  - job: ${{ parameters.jobName }}
+    displayName: ${{ parameters.displayName }}
+    pool: server
+    steps:
+      - template: ../steps/manual-validation.yml
+        parameters:
+          approvers: ${{ parameters.approvers }}
+          allowApproversToApproveTheirOwnRuns: ${{ parameters.allowApproversToApproveTheirOwnRuns }}

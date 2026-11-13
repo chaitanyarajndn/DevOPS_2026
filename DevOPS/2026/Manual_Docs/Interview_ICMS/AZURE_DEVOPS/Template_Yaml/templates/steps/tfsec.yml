@@ -1,0 +1,10 @@
+steps:
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "===== tfsec Version ====="
+        tfsec --version
+
+        Write-Host "===== Scan tfsec ====="
+        tfsec .

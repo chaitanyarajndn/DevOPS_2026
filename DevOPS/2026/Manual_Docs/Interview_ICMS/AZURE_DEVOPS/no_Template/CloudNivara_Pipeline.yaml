@@ -1,0 +1,216 @@
+pool: CloudNivara-SelfHosted
+
+
+parameters:
+- name: environment
+  type: string
+  default: dev
+  values:
+    - dev
+    - prod
+
+- name: RunTflintScan
+  displayName: Run TflintScan
+  type: boolean
+
+- name: RunCheckovScan
+  displayName: Run CheckovScan
+  type: boolean
+
+- name: RunTfsecScan
+  displayName: Run TfsecScan
+  type: boolean
+
+- name: RunTerraformInitAndValidate
+  displayName: Run Terraform Init And Validate
+  type: boolean
+
+- name: RunTerraformPlan
+  displayName: Run Terraform Plan
+  type: boolean
+
+- name: RunTerraformApply
+  displayName: Run Terraform Apply
+  type: boolean
+
+
+trigger:
+  branches:
+    include:
+    - main
+    - feature/*
+
+
+variables:
+  - group: "VG-CloudNivara-KeyVault"
+
+  - name: WORKING_DIRECTORY
+    value: '$(System.DefaultWorkingDirectory)/environment/${{ parameters.environment }}'
+
+  - name: BACKEND_SERVICE_ARM
+    value: 'CloudNivara-Terraform-Azure'
+
+
+stages:
+  - stage: TflintScan
+    displayName: Tflint Scan
+    condition: ${{ parameters.RunTflintScan }}
+    dependsOn: []
+    jobs:
+      - job: TflintScan
+        displayName: Tflint Scan
+        steps:
+        - task: PowerShell@2
+          displayName: Tflint Scan
+          inputs:
+            targetType: 'inline'
+            script: |
+              Write-Host "===== Initialize Tflint ====="
+              tflint --init
+              
+              Write-Host "===== TFLINT VERSION ====="
+              tflint --version
+              
+              Write-Host "===== Scan Tflint ====="
+              tflint --recursive --force
+
+  - stage: CheckovScan
+    displayName: Checkov Scan
+    condition: ${{ parameters.RunCheckovScan }}
+    dependsOn: []
+    jobs:
+      - job: CheckovScan
+        displayName: Checkov Scan
+        steps:
+        - task: PowerShell@2
+          displayName: Checkov Scan
+          inputs:
+            targetType: 'inline'
+            script: |
+              Write-Host "===== Scan Checkov ====="
+              checkov -d . --soft-fail
+
+  - stage: TfsecScan
+    displayName: Tfsec Scan
+    condition: ${{ parameters.RunTfsecScan }}
+    dependsOn: []
+    jobs:
+      - job: TfsecScan
+        displayName: Tfsec Scan
+        steps:
+        - task: PowerShell@2
+          inputs:
+            targetType: 'inline'
+            script: |
+              Write-Host "===== tfsec Version ====="
+              tfsec --version
+
+              Write-Host "===== Scan tfsec ====="
+              tfsec .
+
+  - stage: TerraformInitAndValidate
+    displayName: TerraformInitAndValidate
+    dependsOn:
+      - TflintScan
+      - CheckovScan
+      - TfsecScan
+    jobs:
+      - job: TerraformInit
+        displayName: TerraformInit
+        steps:
+        - task: TerraformTask@5
+          displayName: Terraform Init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(WORKING_DIRECTORY)'
+            backendServiceArm: '$(BACKEND_SERVICE_ARM)'
+            backendAzureRmResourceGroupName: '$(BACKEND-RESOURCE-GROUP-NAME)'
+            backendAzureRmStorageAccountName: '$(BACKEND-STORAGE-ACCOUNT-NAME)'
+            backendAzureRmContainerName: '$(BACKEND-CONTAINER-NAME)'
+            backendAzureRmKey: '$(BACKEND-TFSTATE-FILE-NAME)'
+
+        - task: TerraformTask@5
+          displayName: Terraform Validate
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+            workingDirectory: '$(WORKING_DIRECTORY)'
+
+  - stage: TerraformPlan
+    displayName: Terraform Plan
+    dependsOn:
+      - TflintScan
+      - CheckovScan
+      - TfsecScan
+      - TerraformInitAndValidate
+    jobs:
+      - job: TerraformPlan
+        displayName: Terraform Plan
+        steps:
+        - task: TerraformTask@5
+          displayName: Terraform Init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(WORKING_DIRECTORY)'
+            backendServiceArm: '$(BACKEND_SERVICE_ARM)'
+            backendAzureRmResourceGroupName: '$(BACKEND-RESOURCE-GROUP-NAME)'
+            backendAzureRmStorageAccountName: '$(BACKEND-STORAGE-ACCOUNT-NAME)'
+            backendAzureRmContainerName: '$(BACKEND-CONTAINER-NAME)'
+            backendAzureRmKey: '$(BACKEND-TFSTATE-FILE-NAME)'
+        - task: TerraformTask@5
+          displayName: Terraform Plan
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            workingDirectory: '$(WORKING_DIRECTORY)'
+            environmentServiceNameAzureRM: '$(BACKEND_SERVICE_ARM)'
+
+  - stage: ManualApproval
+    displayName: Manual Validate
+    dependsOn:
+      - TflintScan
+      - CheckovScan
+      - TfsecScan
+      - TerraformInitAndValidate
+      - TerraformPlan
+    jobs:
+      - job: ManualValidate
+        displayName: Manual Validate
+        pool: server
+        steps:
+        - task: ManualValidation@1
+          displayName: Manual Validation
+          inputs:
+            approvers: 'pim-test-user@chaitanyarajndngmail.onmicrosoft.com'
+            allowApproversToApproveTheirOwnRuns: true
+
+  - stage: TerraformApply
+    displayName: Terraform Apply
+    dependsOn: ManualApproval
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - job: TerraformApply
+        displayName: Terraform Apply
+        steps:
+        - task: TerraformTask@5
+          displayName: Terraform Init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(WORKING_DIRECTORY)'
+            backendServiceArm: '$(BACKEND_SERVICE_ARM)'
+            backendAzureRmResourceGroupName: '$(BACKEND-RESOURCE-GROUP-NAME)'
+            backendAzureRmStorageAccountName: '$(BACKEND-STORAGE-ACCOUNT-NAME)'
+            backendAzureRmContainerName: '$(BACKEND-CONTAINER-NAME)'
+            backendAzureRmKey: '$(BACKEND-TFSTATE-FILE-NAME)'
+
+        - task: TerraformTask@5
+          displayName: Terraform Apply
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            workingDirectory: '$(WORKING_DIRECTORY)'
+            environmentServiceNameAzureRM: '$(BACKEND_SERVICE_ARM)'
+

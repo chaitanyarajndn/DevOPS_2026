@@ -1,0 +1,101 @@
+pool: CloudNivara-SelfHosted
+
+
+parameters:
+- name: environment
+  type: string
+  default: dev
+  values:
+    - dev
+    - prod
+
+- name: RunTflintScan
+  displayName: Run TflintScan
+  type: boolean
+
+- name: RunCheckovScan
+  displayName: Run CheckovScan
+  type: boolean
+
+- name: RunTfsecScan
+  displayName: Run TfsecScan
+  type: boolean
+
+- name: RunTerraformInitAndValidate
+  displayName: Run Terraform Init And Validate
+  type: boolean
+
+- name: RunTerraformPlan
+  displayName: Run Terraform Plan
+  type: boolean
+
+- name: RunTerraformApply
+  displayName: Run Terraform Apply
+  type: boolean
+
+- name: approvers
+  displayName: Approver username(s), separated by semicolons
+  type: string
+  default: ''
+
+
+trigger:
+  branches:
+    include:
+    - main
+    - feature/*
+
+
+variables:
+  - group: "VG-CloudNivara-KeyVault"
+
+  - name: WORKING_DIRECTORY
+    value: '$(System.DefaultWorkingDirectory)/environment/${{ parameters.environment }}'
+
+  - name: BACKEND_SERVICE_ARM
+    value: 'CloudNivara-Terraform-Azure'
+
+
+stages:
+  - template: templates/stages/tflint.yml
+    parameters:
+      condition: ${{ parameters.RunTflintScan }}
+
+  - template: templates/stages/checkov.yml
+    parameters:
+      condition: ${{ parameters.RunCheckovScan }}
+
+  - template: templates/stages/tfsec.yml
+    parameters:
+      condition: ${{ parameters.RunTfsecScan }}
+
+  - template: templates/stages/terraform-init-validate.yml
+    parameters:
+      workingDirectory: $(WORKING_DIRECTORY)
+      backendServiceArm: $(BACKEND_SERVICE_ARM)
+      backendAzureRmResourceGroupName: $(BACKEND-RESOURCE-GROUP-NAME)
+      backendAzureRmStorageAccountName: $(BACKEND-STORAGE-ACCOUNT-NAME)
+      backendAzureRmContainerName: $(BACKEND-CONTAINER-NAME)
+      backendAzureRmKey: $(BACKEND-TFSTATE-FILE-NAME)
+
+  - template: templates/stages/terraform-plan.yml
+    parameters:
+      workingDirectory: $(WORKING_DIRECTORY)
+      backendServiceArm: $(BACKEND_SERVICE_ARM)
+      backendAzureRmResourceGroupName: $(BACKEND-RESOURCE-GROUP-NAME)
+      backendAzureRmStorageAccountName: $(BACKEND-STORAGE-ACCOUNT-NAME)
+      backendAzureRmContainerName: $(BACKEND-CONTAINER-NAME)
+      backendAzureRmKey: $(BACKEND-TFSTATE-FILE-NAME)
+
+  - template: templates/stages/manual-approval.yml
+    parameters:
+      approvers: ${{ parameters.approvers }}
+
+  - template: templates/stages/terraform-apply.yml
+    parameters:
+      workingDirectory: $(WORKING_DIRECTORY)
+      backendServiceArm: $(BACKEND_SERVICE_ARM)
+      backendAzureRmResourceGroupName: $(BACKEND-RESOURCE-GROUP-NAME)
+      backendAzureRmStorageAccountName: $(BACKEND-STORAGE-ACCOUNT-NAME)
+      backendAzureRmContainerName: $(BACKEND-CONTAINER-NAME)
+      backendAzureRmKey: $(BACKEND-TFSTATE-FILE-NAME)

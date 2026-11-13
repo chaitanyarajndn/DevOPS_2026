@@ -1,0 +1,36 @@
+parameters:
+  - name: jobName
+    type: string
+    default: 'TerraformInit'
+  - name: displayName
+    type: string
+    default: 'TerraformInit'
+  - name: workingDirectory
+    type: string
+  - name: backendServiceArm
+    type: string
+  - name: backendAzureRmResourceGroupName
+    type: string
+  - name: backendAzureRmStorageAccountName
+    type: string
+  - name: backendAzureRmContainerName
+    type: string
+  - name: backendAzureRmKey
+    type: string
+
+jobs:
+  - job: ${{ parameters.jobName }}
+    displayName: ${{ parameters.displayName }}
+    steps:
+      - template: ../steps/terraform-init.yml
+        parameters:
+          workingDirectory: ${{ parameters.workingDirectory }}
+          backendServiceArm: ${{ parameters.backendServiceArm }}
+          backendAzureRmResourceGroupName: ${{ parameters.backendAzureRmResourceGroupName }}
+          backendAzureRmStorageAccountName: ${{ parameters.backendAzureRmStorageAccountName }}
+          backendAzureRmContainerName: ${{ parameters.backendAzureRmContainerName }}
+          backendAzureRmKey: ${{ parameters.backendAzureRmKey }}
+
+      - template: ../steps/terraform-validate.yml
+        parameters:
+          workingDirectory: ${{ parameters.workingDirectory }}

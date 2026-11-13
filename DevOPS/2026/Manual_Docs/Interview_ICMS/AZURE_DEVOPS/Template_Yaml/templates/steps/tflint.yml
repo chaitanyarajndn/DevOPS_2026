@@ -1,0 +1,14 @@
+steps:
+  - task: PowerShell@2
+    displayName: 'Tflint Scan'
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "===== Initialize Tflint ====="
+        tflint --init
+        
+        Write-Host "===== TFLINT VERSION ====="
+        tflint --version
+        
+        Write-Host "===== Scan Tflint ====="
+        tflint --recursive --force
